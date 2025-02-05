@@ -23,6 +23,11 @@ class PacketHandler
 
         foreach (var playerInfo in spawnPacket.Players)
         {
+            // 여기에서 localPlayer 설정이 작동하지 않는 버그가 발생 하여 해당 예외처리를 추가함.
+            if (TownManager.Instance.MyPlayer != null &&
+            playerInfo.PlayerId == TownManager.Instance.MyPlayer.PlayerId)
+                continue;
+
             Vector3 spawnPosition = new Vector3(playerInfo.Transform.PosX, playerInfo.Transform.PosY, playerInfo.Transform.PosZ);
             var player = TownManager.Instance.CreatePlayer(playerInfo, spawnPosition);
             player.SetIsMine(false);
@@ -77,7 +82,7 @@ class PacketHandler
     {
 
         if (packet is not S_EnterDungeon pkt) return;
- 
+
         Scene currentScene = SceneManager.GetActiveScene();
 
 
