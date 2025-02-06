@@ -15,6 +15,8 @@ public class UIStart : MonoBehaviour
     [SerializeField] private TMP_InputField inputPort;
     [SerializeField] private TMP_Text txtMessage;
 
+    [SerializeField] private GameObject UILogin;
+
     private TMP_Text placeHolder;
 
     private int classIdx = 0;
@@ -38,7 +40,7 @@ public class UIStart : MonoBehaviour
     }
 
     private void Update()
-    {
+    { 
         if (Input.GetKeyUp(KeyCode.Return))
         {
             if (inputNickname.IsActive())
@@ -69,7 +71,7 @@ public class UIStart : MonoBehaviour
         btnConfirm.onClick.AddListener(ConfirmServer);
     }
 
-    private void SetNicknameUI()
+    public void SetNicknameUI()
     {
         UpdateUI(WelcomeMessage, Color.white, DefaultNicknameMessage, true, false);
         btnConfirm.onClick.RemoveAllListeners();
@@ -94,8 +96,10 @@ public class UIStart : MonoBehaviour
     {
         serverUrl = "127.0.0.1";
         port = "3000";
-        localServerBtn.gameObject.SetActive(false);
-        SetNicknameUI();
+        //localServerBtn.gameObject.SetActive(false);
+        //SetNicknameUI();
+        gameObject.SetActive(false);
+		UILogin.SetActive(true);
     }
 
     private void ConfirmServer()

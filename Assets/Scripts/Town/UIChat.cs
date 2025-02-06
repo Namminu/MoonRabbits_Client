@@ -73,7 +73,7 @@ public class UIChat : MonoBehaviour
     {
         if (string.IsNullOrWhiteSpace(inputChat.text)) return;
 
-        player.SendMessage(inputChat.text);
+        player.SendChatMessage(inputChat.text);
 
         inputChat.text = string.Empty; 
         ActivateInputFieldProperly();  
