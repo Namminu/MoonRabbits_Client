@@ -70,8 +70,15 @@ class PacketHandler
     {
         if (packet is not S_Chat chatPacket) return;
 
-        var player = TownManager.Instance.GetPlayerAvatarById(chatPacket.PlayerId);
-        player?.RecvMessage(chatPacket.ChatMsg);
+        if (chatPacket.PlayerId > 0)
+        {
+            var player = TownManager.Instance.GetPlayerAvatarById(chatPacket.PlayerId);
+            player?.RecvMessage(chatPacket.ChatMsg);
+        }
+        else
+        {
+            TownManager.Instance.UiChat.PushMessage("System", chatPacket.ChatMsg, true);
+        }
     }
 
     #endregion
