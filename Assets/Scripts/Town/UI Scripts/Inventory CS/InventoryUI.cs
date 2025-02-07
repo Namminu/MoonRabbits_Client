@@ -21,6 +21,7 @@ public class InventoryUI : MonoBehaviour
 
 	private void InitSlots()
 	{
+		// ½½·Ô ÇÁ¸®ÆÕ ¼³Á¤
 		slotPrefab.TryGetComponent(out RectTransform slotRect);
 		slotRect.sizeDelta = new Vector2(slotSize, slotSize);
 
@@ -28,5 +29,11 @@ public class InventoryUI : MonoBehaviour
 		if (itemSlot == null) slotPrefab.AddComponent<ItemSlotUI>();
 
 		slotPrefab.SetActive(false);
+
+		//
+		Vector2 beginPos = new Vector2(slotInitPadding, slotInitPadding);
+		Vector2 curPos = beginPos;
+
+		//slotUIList = 
 	}
 }

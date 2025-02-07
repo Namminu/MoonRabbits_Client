@@ -77,8 +77,8 @@ public class UILogIn : MonoBehaviour
         {
 			//var dataPacket = new C_Login
 			//{
-			//             Email = userEmail.text,
-			//             Password = userPW.text
+			//	Email = userEmail.text,
+			//	Password = userPW.text
 			//};
 			//GameManager.Network.Send(dataPacket);
 
@@ -93,9 +93,9 @@ public class UILogIn : MonoBehaviour
 			//{
 			//	Email = userEmail.text,
 			//	Password = userPW.text,
-			//             ConfirmPassword = userPWC.text
+			//	ConfirmPassword = userPWC.text
 			//};
-			//         GameManager.Network.Send(dataPacket);
+			//GameManager.Network.Send(dataPacket);
 
 			// Temp Code
 			string userData = userEmail.text + userPW.text + userPWC.text;
