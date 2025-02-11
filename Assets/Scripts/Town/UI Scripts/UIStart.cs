@@ -96,9 +96,8 @@ public class UIStart : MonoBehaviour
     {
         serverUrl = "127.0.0.1";
         port = "3000";
-        //localServerBtn.gameObject.SetActive(false);
-        //SetNicknameUI();
-        gameObject.SetActive(false);
+		TownManager.Instance.TryConnectToServer(serverUrl, port);
+		gameObject.SetActive(false);
 		UILogin.SetActive(true);
     }
 
@@ -112,7 +111,8 @@ public class UIStart : MonoBehaviour
 
         serverUrl = inputNickname.text;
         port = inputPort.text;
-        SetNicknameUI();
+		TownManager.Instance.TryConnectToServer(serverUrl, port);
+		SetNicknameUI();
     }
 
     private void ConfirmNickname()
@@ -130,8 +130,8 @@ public class UIStart : MonoBehaviour
         }
 
         nickname = inputNickname.text;
-        TownManager.Instance.GameStart(serverUrl, port, nickname, classIdx);
-        gameObject.SetActive(false);
+		TownManager.Instance.GameStart(nickname, classIdx, serverUrl);
+		gameObject.SetActive(false);
     }
 
     private void DisplayError(string errorMessage)
