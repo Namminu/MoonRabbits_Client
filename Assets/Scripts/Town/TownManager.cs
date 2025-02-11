@@ -83,7 +83,7 @@ public class TownManager : MonoBehaviour
         GameManager.Instance.ClassIdx = classIdx + 1001;
         txtServer.text = gameServer;
         Connected();
-    }
+	  }
 
     public void Connected()
     {

@@ -139,4 +139,13 @@ public class UIStart : MonoBehaviour
         txtMessage.text = errorMessage;
         txtMessage.color = Color.red;
     }
+
+    /// <summary>
+    /// Return nickname, classIdx, serverUrl, port
+    /// </summary>
+	public (string nickname, int classIdx, string serverUrl, string port) GetSomeInfo()
+	{
+		return (nickname, classIdx, serverUrl, port);
+	}
+
 }
