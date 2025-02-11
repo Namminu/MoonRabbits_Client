@@ -36,7 +36,7 @@ class PacketManager
 		_handler.Add((ushort)MsgId.SMove, PacketHandler.S_MoveHandler);		
 		_onRecv.Add((ushort)MsgId.SAnimation, MakePacket<S_Animation>);
 		_handler.Add((ushort)MsgId.SAnimation, PacketHandler.S_AnimationHandler);		
-		_onRecv.Add((ushort)MsgId.SChangeCostume, MakePacket<S_ChangeCostume>);
+		// _onRecv.Add((ushort)MsgId.SChangeCostume, MakePacket<S_ChangeCostume>);
 		_handler.Add((ushort)MsgId.SChangeCostume, PacketHandler.S_ChangeCostumeHandler);		
 		_onRecv.Add((ushort)MsgId.SChat, MakePacket<S_Chat>);
 		_handler.Add((ushort)MsgId.SChat, PacketHandler.S_ChatHandler);		
@@ -60,6 +60,8 @@ class PacketManager
 		_handler.Add((ushort)MsgId.SPlayerAction, PacketHandler.S_PlayerActionHandler);		
 		_onRecv.Add((ushort)MsgId.SMonsterAction, MakePacket<S_MonsterAction>);
 		_handler.Add((ushort)MsgId.SMonsterAction, PacketHandler.S_MonsterActionHandler);
+        _onRecv.Add((ushort)MsgId.SRegister, MakePacket<S_Register>);
+        _handler.Add((ushort)MsgId.SRegister, PacketHandler.S_RegisterHandler);
 
         Debug.Log("핸들러 등록 완료");
     }

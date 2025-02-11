@@ -181,4 +181,10 @@ class PacketHandler
     }
 
     #endregion
+
+    public static void S_RegisterHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S_Register pkt) return;
+        Debug.Log($"S_Register 패킷 무사히 도착{pkt}");
+    }
 }

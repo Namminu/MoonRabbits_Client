@@ -7,6 +7,8 @@ using UnityEditor.Build;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
+using Google.Protobuf;
+using Google.Protobuf.Protocol;
 
 public class UILogIn : MonoBehaviour
 {
@@ -32,7 +34,7 @@ public class UILogIn : MonoBehaviour
     {
 		uiStartCS = UIStart.GetComponent<UIStart>();
 
-		isLogin = true;    // true : ·Î±×ÀÎ »óÅÂ, false : È¸¿ø°¡ÀÔ »óÅÂ
+		isLogin = true;    // true : ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, false : È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	}
 
     // Update is called once per frame
@@ -43,16 +45,16 @@ public class UILogIn : MonoBehaviour
 
     public void BackButton()
     {
-        if(isLogin) // ÇöÀç ·Î±×ÀÎ »óÅÂ¿¡¼­ µÚ·Î°¡±â
+        if(isLogin) // ï¿½ï¿½ï¿½ï¿½ ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ ï¿½Ú·Î°ï¿½ï¿½ï¿½
         {
             UIStart.gameObject.SetActive(true);
 
             gameObject.SetActive(false);
         }
-        else // È¸¿ø°¡ÀÔ »óÅÂ¿¡¼­ µÚ·Î°¡±â
+        else // È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ ï¿½Ú·Î°ï¿½ï¿½ï¿½
         {
             isLogin = true;
-			txt_Title.text = "·Î±×ÀÎ";
+			txt_Title.text = "ï¿½Î±ï¿½ï¿½ï¿½";
             ClearInputField();
 			userPWC.gameObject.SetActive(false);
 			btn_Reigster.gameObject.SetActive(true);
@@ -61,11 +63,11 @@ public class UILogIn : MonoBehaviour
 
     public void RegisterButton()
     {
-        // ·Î±×ÀÎ »óÅÂ¿¡¼­¸¸ Ç¥±âµÇ´Â ¹öÆ°, ¿¡·¯ ¹æÁö¿ë
+        // ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½Ç´ï¿½ ï¿½ï¿½Æ°, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (!isLogin) return;
 
         isLogin = false;
-        txt_Title.text = "È¸¿ø°¡ÀÔ";
+        txt_Title.text = "È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½";
         ClearInputField();
 		userPWC.gameObject.SetActive(true);
 		btn_Reigster.gameObject.SetActive(false);
@@ -73,7 +75,7 @@ public class UILogIn : MonoBehaviour
 
     public void ConfirmButton()
     {
-        if(isLogin) // ·Î±×ÀÎ »óÅÂ¿¡¼­ È®ÀÎ ¹öÆ°
+        if(isLogin) // ï¿½Î±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ È®ï¿½ï¿½ ï¿½ï¿½Æ°
         {
 			//var dataPacket = new C_Login
 			//{
@@ -84,23 +86,23 @@ public class UILogIn : MonoBehaviour
 
 			// Temp Code
 			string userData = userEmail.text + userPW.text;
-			Debug.Log("·Î±×ÀÎ ½Ãµµ : " + userData);
-            CheckHasChar(); //°èÁ¤ ³» Ä³¸¯ÅÍ »óÅÂ Ã¼Å©
+			Debug.Log("ï¿½Î±ï¿½ï¿½ï¿½ ï¿½Ãµï¿½ : " + userData);
+            CheckHasChar(); //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¼Å©
 		}
-        else //È¸¿ø°¡ÀÔ »óÅÂ¿¡¼­ È®ÀÎ¹öÆ°
+        else //È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ È®ï¿½Î¹ï¿½Æ°
         {
-			//var dataPacket = new C_Register
-			//{
-			//	Email = userEmail.text,
-			//	Password = userPW.text,
-			//	ConfirmPassword = userPWC.text
-			//};
-			//GameManager.Network.Send(dataPacket);
+			var dataPacket = new C_Register
+			{
+				Email = userEmail.text,
+				Pw = userPW.text,
+				PwCheck = userPWC.text
+			};
+			GameManager.Network.Send(dataPacket);
 
 			// Temp Code
 			string userData = userEmail.text + userPW.text + userPWC.text;
-			Debug.Log("È¸¿ø°¡ÀÔ ½Ãµµ : " + userData);
-            DisplayMessage("È¸¿ø°¡ÀÔ µÆ¾î¿ë");
+			Debug.Log("È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ãµï¿½ : " + userData);
+            DisplayMessage("È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ¾ï¿½ï¿½");
 		}
 	}
 
@@ -118,14 +120,14 @@ public class UILogIn : MonoBehaviour
 
     private void CheckHasChar()
     {
-		if (true)   // °èÁ¤ ³» º¸À¯ Ä³¸¯ÅÍ°¡ Á¸ÀçÇÏÁö ¾ÊÀ» °æ¿ì
+		if (true)   // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 		{
 			UIStart.SetActive(true);
 			uiStartCS.SetNicknameUI();
 			 
 			gameObject.SetActive(false);
 		}
-		//else // °èÁ¤ ³» »ý¼ºÇØµÐ Ä³¸¯ÅÍ°¡ Á¸ÀçÇÒ °æ¿ì
+		//else // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ Ä³ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 		//{
 		//	TownManager.Instance.GameStart(serverUrl, port, nickname, classIdx);
 		//	gameObject.SetActive(false);
