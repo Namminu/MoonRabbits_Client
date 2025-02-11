@@ -54,8 +54,8 @@ public class UILogIn : MonoBehaviour
         else // ȸ������ ���¿��� �ڷΰ���
         {
             isLogin = true;
-			txt_Title.text = "�α���";
-            ClearInputField();
+			txt_Title.text = "로그인";
+            ClearTextField();
 			userPWC.gameObject.SetActive(false);
 			btn_Reigster.gameObject.SetActive(true);
 		}
@@ -67,8 +67,8 @@ public class UILogIn : MonoBehaviour
         if (!isLogin) return;
 
         isLogin = false;
-        txt_Title.text = "ȸ������";
-        ClearInputField();
+        txt_Title.text = "회원가입";
+        ClearTextField();
 		userPWC.gameObject.SetActive(true);
 		btn_Reigster.gameObject.SetActive(false);
 	}
@@ -82,13 +82,8 @@ public class UILogIn : MonoBehaviour
 				Email = userEmail.text,
 				Pw = userPW.text
 			};
+			Debug.Log("로그인 시도 : " + userEmail.text + " " + userPW.text);
 			GameManager.Network.Send(dataPacket);
-
-			// Temp Code
-			string userData = userEmail.text + userPW.text;
-			Debug.Log("로그인 시도 : " + userData);
-
-            CheckHasChar(true); 
 		}
         else // 회원가입 시도
         {
@@ -98,33 +93,38 @@ public class UILogIn : MonoBehaviour
 				Pw = userPW.text,
 				PwCheck = userPWC.text
 			};
+			Debug.Log("회원가입 시도 : " + userEmail.text + " " + userPW.text + " " + userPWC.text);
 			GameManager.Network.Send(dataPacket);
-
-			// Temp Code
-			string userData = userEmail.text + userPW.text + userPWC.text;
-			Debug.Log("회원가입 시도 : " + userData);
-
-            DisplayMessage("회원가입 결과 메세지");
 		}
 	}
 
+	/// <summary>
+	/// Display Packet Message On Login UI
+	/// </summary>
+	/// <param name="msg"></param>
     public void DisplayMessage(string msg)
     {
 		txt_Error.text = msg;
     }
 
-    private void ClearInputField()
+    private void ClearTextField()
     {
 		userEmail.text = string.Empty;
 		userPW.text = string.Empty;
 		userPWC.text = string.Empty;
+
+		txt_Error.text = string.Empty;
 	}
 
     private void CheckHasChar(bool hasChar)
     {
 		if (hasChar)   // this Account has Character Already
 		{
-			//TownManager.Instance.GameStart(serverUrl, port, nickname, classIdx);
+			//TownManager.Instance.GameStart(nickname, classIdx, serverUrl);
+			TownManager.Instance.GameStart(
+				uiStartCS.GetSomeInfo().nickname, 
+				uiStartCS.GetSomeInfo().classIdx, 
+				uiStartCS.GetSomeInfo().serverUrl);
 			gameObject.SetActive(false);
 			UIStart.SetActive(false);
 		}
