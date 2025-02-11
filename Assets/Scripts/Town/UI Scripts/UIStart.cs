@@ -30,9 +30,9 @@ public class UIStart : MonoBehaviour
     private const string ShortNicknameError = "이름을 2글자 이상 입력해주세요!";
     private const string LongNicknameError = "이름을 10글자 이하로 입력해주세요!";
 
-    void Start()
+    void Awake()
     {
-        placeHolder = inputNickname.placeholder.GetComponent<TMP_Text>();
+		placeHolder = inputNickname.placeholder.GetComponent<TMP_Text>();
         btnBack.onClick.AddListener(SetServerUI);
         localServerBtn.onClick.AddListener(OnClickLocalServer);
         SetServerUI();

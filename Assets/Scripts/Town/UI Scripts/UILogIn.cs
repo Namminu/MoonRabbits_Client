@@ -21,7 +21,8 @@ public class UILogIn : MonoBehaviour
 	[SerializeField] private Button btn_Reigster;
 	[SerializeField] private Button btn_Confirm;
 	[SerializeField] private TMP_Text txt_Title;
-	[SerializeField] private static TMP_Text txt_Error;
+	private static TMP_Text txt_Error;
+	private GameObject txtErrorObj;
 
 	private bool isLogin;
 
@@ -34,14 +35,11 @@ public class UILogIn : MonoBehaviour
     {
 		uiStartCS = UIStart.GetComponent<UIStart>();
 
+		txtErrorObj = transform.Find("Image/Text_Error").gameObject;
+		txt_Error = txtErrorObj.GetComponent<TMP_Text>();
+		 
 		isLogin = true;
 	}
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void BackButton()
     {
@@ -98,7 +96,6 @@ public class UILogIn : MonoBehaviour
 		}
 	}
 
-
 	/// <summary>
 	/// Display Packet Message On Login UI
 	/// </summary>
@@ -117,24 +114,24 @@ public class UILogIn : MonoBehaviour
 		txt_Error.text = string.Empty;
 	}
 
-    private void CheckHasChar(bool hasChar)
+    public static void CheckHasChar(object[] hasChar)
     {
-		if (hasChar)   // this Account has Character Already
+		if (hasChar.Length > 0)   // this Account has Character Already
 		{
-			//TownManager.Instance.GameStart(nickname, classIdx, serverUrl);
-			TownManager.Instance.GameStart(
-				uiStartCS.GetSomeInfo().nickname, 
-				uiStartCS.GetSomeInfo().classIdx, 
-				uiStartCS.GetSomeInfo().serverUrl);
-			gameObject.SetActive(false);
-			UIStart.SetActive(false);
+			Debug.Log("hasChar : " + hasChar);
+			Debug.Log("캐릭터가 있어요");
+			//TownManager.Instance.GameStart(userName, classIdx, serverUrl);
+
+			//gameObject.SetActive(false);
+			//UIStart.SetActive(false);
 		}
 		else // this Account has to create Character
 		{
-			UIStart.SetActive(true);
-			uiStartCS.SetNicknameUI();
+			Debug.Log("캐릭터가 없어요");
+			//UIStart.SetActive(true);
+			//uiStartCS.SetNicknameUI();
 
-			gameObject.SetActive(false);
+			//gameObject.SetActive(false);
 		}
 	}
 }
