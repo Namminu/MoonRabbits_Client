@@ -32,8 +32,8 @@ public class ServerSession : PacketSession
 	{
 		Debug.Log($"OnConnected : {endPoint}");
 		IsConnected = true;
-				
-		//TownManager.Instance.Connected();
+		
+		// TownManager.Instance.Connected();
 		
 		PacketManager.Instance.CustomHandler = (s, m, i) =>
 		{

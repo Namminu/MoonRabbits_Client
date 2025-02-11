@@ -21,7 +21,7 @@ public class UILogIn : MonoBehaviour
 	[SerializeField] private Button btn_Reigster;
 	[SerializeField] private Button btn_Confirm;
 	[SerializeField] private TMP_Text txt_Title;
-	[SerializeField] private TMP_Text txt_Error;
+	[SerializeField] private static TMP_Text txt_Error;
 
 	private bool isLogin;
 
@@ -98,13 +98,14 @@ public class UILogIn : MonoBehaviour
 		}
 	}
 
+
 	/// <summary>
 	/// Display Packet Message On Login UI
 	/// </summary>
 	/// <param name="msg"></param>
-    public void DisplayMessage(string msg)
+    public static void DisplayMessage(string msg)
     {
-		txt_Error.text = msg;
+		  txt_Error.text = msg;
     }
 
     private void ClearTextField()
