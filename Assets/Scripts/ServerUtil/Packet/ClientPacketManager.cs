@@ -62,6 +62,8 @@ class PacketManager
 		_handler.Add((ushort)MsgId.SMonsterAction, PacketHandler.S_MonsterActionHandler);
         _onRecv.Add((ushort)MsgId.SRegister, MakePacket<S_Register>);
         _handler.Add((ushort)MsgId.SRegister, PacketHandler.S_RegisterHandler);
+        _onRecv.Add((ushort)MsgId.SLogin, MakePacket<S_Login>);
+        _handler.Add((ushort)MsgId.SLogin, PacketHandler.S_LoginHandler);
 
         Debug.Log("핸들러 등록 완료");
     }
