@@ -34,7 +34,7 @@ public class UILogIn : MonoBehaviour
     {
 		uiStartCS = UIStart.GetComponent<UIStart>();
 
-		isLogin = true;    // true : �α��� ����, false : ȸ������ ����
+		isLogin = true;
 	}
 
     // Update is called once per frame
@@ -75,21 +75,22 @@ public class UILogIn : MonoBehaviour
 
     public void ConfirmButton()
     {
-        if(isLogin) // �α��� ���¿��� Ȯ�� ��ư
-        {
-			//var dataPacket = new C_Login
-			//{
-			//	Email = userEmail.text,
-			//	Password = userPW.text
-			//};
-			//GameManager.Network.Send(dataPacket);
+        if(isLogin) // 로그인 시도
+		{
+			var dataPacket = new C_Login
+			{
+				Email = userEmail.text,
+				Pw = userPW.text
+			};
+			GameManager.Network.Send(dataPacket);
 
 			// Temp Code
 			string userData = userEmail.text + userPW.text;
-			Debug.Log("�α��� �õ� : " + userData);
-            CheckHasChar(); //���� �� ĳ���� ���� üũ
+			Debug.Log("로그인 시도 : " + userData);
+
+            CheckHasChar(true); 
 		}
-        else //ȸ������ ���¿��� Ȯ�ι�ư
+        else // 회원가입 시도
         {
 			var dataPacket = new C_Register
 			{
@@ -101,8 +102,9 @@ public class UILogIn : MonoBehaviour
 
 			// Temp Code
 			string userData = userEmail.text + userPW.text + userPWC.text;
-			Debug.Log("ȸ������ �õ� : " + userData);
-            DisplayMessage("ȸ������ �ƾ��");
+			Debug.Log("회원가입 시도 : " + userData);
+
+            DisplayMessage("회원가입 결과 메세지");
 		}
 	}
 
@@ -118,20 +120,20 @@ public class UILogIn : MonoBehaviour
 		userPWC.text = string.Empty;
 	}
 
-    private void CheckHasChar()
+    private void CheckHasChar(bool hasChar)
     {
-		if (true)   // ���� �� ���� ĳ���Ͱ� �������� ���� ���
+		if (hasChar)   // this Account has Character Already
+		{
+			//TownManager.Instance.GameStart(serverUrl, port, nickname, classIdx);
+			gameObject.SetActive(false);
+			UIStart.SetActive(false);
+		}
+		else // this Account has to create Character
 		{
 			UIStart.SetActive(true);
 			uiStartCS.SetNicknameUI();
-			 
+
 			gameObject.SetActive(false);
 		}
-		//else // ���� �� �����ص� ĳ���Ͱ� ������ ���
-		//{
-		//	TownManager.Instance.GameStart(serverUrl, port, nickname, classIdx);
-		//	gameObject.SetActive(false);
-		//	UIStart.SetActive(false);
-		//}
 	}
 }
