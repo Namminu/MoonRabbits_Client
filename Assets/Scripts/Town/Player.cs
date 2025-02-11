@@ -104,7 +104,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void SendMessage(string msg)
+    public void SendChatMessage(string msg)
     {
         if (!IsMine) 
             return;
