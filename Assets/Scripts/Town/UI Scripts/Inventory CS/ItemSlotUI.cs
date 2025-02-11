@@ -11,8 +11,11 @@ public class ItemSlotUI : MonoBehaviour
     [SerializeField] private TMP_Text text_ItemAmount;  //아이템 수량
     private int itemCount;
 	[SerializeField] private Image itemImage;    //아이템 이미지
-    
-    //[SerializeField] private GameObject itemHighlighter;    // 아이템 하이라이트
+
+    [Space] // 아이템 하이라이트
+	[SerializeField] private Image itemHighlighter;    
+    [SerializeField] private float highLightAlpha = 0.5f;
+    [SerializeField] private float highLightTime = 0.2f;
 
     // Start is called before the first frame update
     void Start()
