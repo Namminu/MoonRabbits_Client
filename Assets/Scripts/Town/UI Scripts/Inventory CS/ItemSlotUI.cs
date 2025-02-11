@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemSlotUI : MonoBehaviour
+public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("Item Info")] 
     private Item item;  //획득 아이템 객체
@@ -13,9 +15,7 @@ public class ItemSlotUI : MonoBehaviour
 	[SerializeField] private Image itemImage;    //아이템 이미지
 
     [Space] // 아이템 하이라이트
-	[SerializeField] private Image itemHighlighter;    
-    [SerializeField] private float highLightAlpha = 0.5f;
-    [SerializeField] private float highLightTime = 0.2f;
+	[SerializeField] private Image itemHighLighter;
 
     // Start is called before the first frame update
     void Start()
@@ -24,8 +24,8 @@ public class ItemSlotUI : MonoBehaviour
         // AddItem(DB에서 받아온 정보)?
     }
 
-    // 아이템 등록 시 이미지 객체의 투명도 조절을 위한 메서드
-    private void SetItemImageColor(float alpha)
+	// 아이템 등록 시 이미지 객체의 투명도 조절을 위한 메서드
+	private void SetItemImageAlpha(float alpha)
     {
         Color newColor = itemImage.color;
         newColor.a = alpha;
@@ -42,6 +42,15 @@ public class ItemSlotUI : MonoBehaviour
 
         text_ItemAmount.text = insertItemCount.ToString();
 
-		SetItemImageColor(1);
+        SetItemImageAlpha(1);
+	}
+
+	public void OnPointerEnter(PointerEventData eventData)
+	{
+		itemHighLighter.gameObject.SetActive(true);
+	}
+    public void OnPointerExit(PointerEventData eventData)
+	{
+		itemHighLighter.gameObject.SetActive(false);
 	}
 }
