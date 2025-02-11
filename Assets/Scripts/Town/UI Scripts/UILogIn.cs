@@ -9,19 +9,22 @@ using UnityEngine;
 using UnityEngine.UI;
 using Google.Protobuf;
 using Google.Protobuf.Protocol;
+using Unity.VisualScripting;
 
 public class UILogIn : MonoBehaviour
 {
+	private static UILogIn _instance;
+    public static UILogIn Instance => _instance;
 	[SerializeField] private GameObject UIStart;
     private UIStart uiStartCS;
     [SerializeField] private InputField userEmail;
 	[SerializeField] private InputField userPW;
 	[SerializeField] private InputField userPWC;
 	[SerializeField] private Button btn_Back;
-	[SerializeField] private Button btn_Reigster;
+	[SerializeField] private Button btn_Register;
 	[SerializeField] private Button btn_Confirm;
 	[SerializeField] private TMP_Text txt_Title;
-	private static TMP_Text txt_Error;
+	private TMP_Text txt_Error;
 	private GameObject txtErrorObj;
 
 	private bool isLogin;
@@ -33,11 +36,21 @@ public class UILogIn : MonoBehaviour
 	// Start is called before the first frame update
 	void Awake()
     {
+			if (_instance == null)
+        {
+            _instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
 		uiStartCS = UIStart.GetComponent<UIStart>();
 
 		txtErrorObj = transform.Find("Image/Text_Error").gameObject;
 		txt_Error = txtErrorObj.GetComponent<TMP_Text>();
-		 
+		
 		isLogin = true;
 	}
 
@@ -53,9 +66,10 @@ public class UILogIn : MonoBehaviour
         {
             isLogin = true;
 			txt_Title.text = "로그인";
+			Debug.Log($"!!! {_instance}");
             ClearTextField();
 			userPWC.gameObject.SetActive(false);
-			btn_Reigster.gameObject.SetActive(true);
+			btn_Register.gameObject.SetActive(true);
 		}
     }
 
@@ -66,9 +80,10 @@ public class UILogIn : MonoBehaviour
 
         isLogin = false;
         txt_Title.text = "회원가입";
-        ClearTextField();
+				Debug.Log($"!!! {_instance}");
+         ClearTextField();
 		userPWC.gameObject.SetActive(true);
-		btn_Reigster.gameObject.SetActive(false);
+		btn_Register.gameObject.SetActive(false);
 	}
 
     public void ConfirmButton()
@@ -100,7 +115,7 @@ public class UILogIn : MonoBehaviour
 	/// Display Packet Message On Login UI
 	/// </summary>
 	/// <param name="msg"></param>
-    public static void DisplayMessage(string msg)
+    public void DisplayMessage(string msg)
     {
 		  txt_Error.text = msg;
     }
@@ -114,24 +129,21 @@ public class UILogIn : MonoBehaviour
 		txt_Error.text = string.Empty;
 	}
 
-    public static void CheckHasChar(object[] hasChar)
+    public void CheckHasChar(object[] ownedCharacters)
     {
-		if (hasChar.Length > 0)   // this Account has Character Already
+		if (ownedCharacters.Length > 0)   // this Account has Character Already
 		{
-			Debug.Log("hasChar : " + hasChar);
-			Debug.Log("캐릭터가 있어요");
-			//TownManager.Instance.GameStart(userName, classIdx, serverUrl);
+			var character = ownedCharacters[0] as Google.Protobuf.Protocol.OwnedCharacters;
+			gameObject.SetActive(false);
+			UIStart.SetActive(false);
+			TownManager.Instance.GameStart(character.Nickname,character.Class-1001,"127.0.0.1");
 
-			//gameObject.SetActive(false);
-			//UIStart.SetActive(false);
 		}
 		else // this Account has to create Character
 		{
-			Debug.Log("캐릭터가 없어요");
-			//UIStart.SetActive(true);
-			//uiStartCS.SetNicknameUI();
-
-			//gameObject.SetActive(false);
+			gameObject.SetActive(false);
+			UIStart.SetActive(true);
+			uiStartCS.SetNicknameUI();
 		}
 	}
 }
