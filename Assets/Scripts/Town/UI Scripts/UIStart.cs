@@ -131,6 +131,14 @@ public class UIStart : MonoBehaviour
 
         nickname = inputNickname.text;
 		TownManager.Instance.GameStart(nickname, classIdx);
+		/* 캐릭터 생성 패킷 전송 필요
+		var dataPacket = C_Enter?
+        {
+            Nickname = nickname,
+            Class = classIdx
+        };
+        GameManager.Network.Send(dataPacket);
+        */
 		gameObject.SetActive(false);
     }
 

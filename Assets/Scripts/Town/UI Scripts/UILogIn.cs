@@ -80,7 +80,6 @@ public class UILogIn : MonoBehaviour
 				Email = userEmail.text,
 				Pw = userPW.text
 			};
-			Debug.Log("로그인 시도 : " + userEmail.text + " " + userPW.text);
 			GameManager.Network.Send(dataPacket);
 		}
         else // 회원가입 시도
@@ -91,7 +90,6 @@ public class UILogIn : MonoBehaviour
 				Pw = userPW.text,
 				PwCheck = userPWC.text
 			};
-			Debug.Log("회원가입 시도 : " + userEmail.text + " " + userPW.text + " " + userPWC.text);
 			GameManager.Network.Send(dataPacket);
 		}
 	}
@@ -116,13 +114,10 @@ public class UILogIn : MonoBehaviour
 
 	public void CheckHasChar(List<Google.Protobuf.Protocol.OwnedCharacters> charsInfo)
 	{
-		Debug.Log("CHC charsInfo : " + charsInfo);
 		if (charsInfo.Count > 0)   // this Account has Character Already
 		{
-			Debug.Log("캐릭터가 있어요");
 			/* The content will need to be revised once the multi-character 
 			 * design is finalized right before the project's completion */
-			Debug.Log("NickName : " + charsInfo[0].Nickname + "classdix : " + (charsInfo[0].Class - 1001));
 			TownManager.Instance.GameStart(charsInfo[0].Nickname, charsInfo[0].Class - 1001); 
 
 			gameObject.SetActive(false);
@@ -130,7 +125,6 @@ public class UILogIn : MonoBehaviour
 		}
 		else // this Account has to create Character
 		{
-			Debug.Log("캐릭터가 없어요");
 			UIStart.SetActive(true); 
 			uiStartCS.SetNicknameUI();
 
