@@ -21,7 +21,7 @@ public class UILogIn : MonoBehaviour
 	[SerializeField] private Button btn_Reigster;
 	[SerializeField] private Button btn_Confirm;
 	[SerializeField] private TMP_Text txt_Title;
-	private static TMP_Text txt_Error;
+	[SerializeField] private TMP_Text txt_Error;
 	private GameObject txtErrorObj;
 
 	private bool isLogin;
@@ -100,9 +100,9 @@ public class UILogIn : MonoBehaviour
 	/// Display Packet Message On Login UI
 	/// </summary>
 	/// <param name="msg"></param>
-    public static void DisplayMessage(string msg)
+    public void DisplayMessage(string msg)
     {
-		  txt_Error.text = msg;
+		txt_Error.text = msg;
     }
 
     private void ClearTextField()
@@ -111,27 +111,41 @@ public class UILogIn : MonoBehaviour
 		userPW.text = string.Empty;
 		userPWC.text = string.Empty;
 
-		txt_Error.text = string.Empty;
+		DisplayMessage(string.Empty);
 	}
 
-    public static void CheckHasChar(object[] hasChar)
-    {
-		if (hasChar.Length > 0)   // this Account has Character Already
+	public void CheckHasChar(List<Google.Protobuf.Protocol.OwnedCharacters> charsInfo)
+	{
+		Debug.Log("CHC charsInfo : " + charsInfo);
+		if (charsInfo.Count > 0)   // this Account has Character Already
 		{
-			Debug.Log("hasChar : " + hasChar);
 			Debug.Log("캐릭터가 있어요");
-			//TownManager.Instance.GameStart(userName, classIdx, serverUrl);
+			/* The content will need to be revised once the multi-character 
+			 * design is finalized right before the project's completion */
+			Debug.Log("NickName : " + charsInfo[0].Nickname + "classdix : " + (charsInfo[0].Class - 1001));
+			TownManager.Instance.GameStart(charsInfo[0].Nickname, charsInfo[0].Class - 1001); 
 
-			//gameObject.SetActive(false);
-			//UIStart.SetActive(false);
+			gameObject.SetActive(false);
+			UIStart.SetActive(false);
 		}
 		else // this Account has to create Character
 		{
 			Debug.Log("캐릭터가 없어요");
-			//UIStart.SetActive(true);
-			//uiStartCS.SetNicknameUI();
+			UIStart.SetActive(true); 
+			uiStartCS.SetNicknameUI();
 
-			//gameObject.SetActive(false);
+			gameObject.SetActive(false);
 		}
+	}
+
+	private void OnEnable()
+	{
+		EventManager.Subscribe("CheckHasChar", (List<Google.Protobuf.Protocol.OwnedCharacters> charsInfo) => CheckHasChar(charsInfo));
+		EventManager.Subscribe("DisplayMessage", (string msg) => DisplayMessage(msg));
+	}
+	private void OnDisable() 
+	{
+		EventManager.Unsubscribe("CheckHasChar", (List<Google.Protobuf.Protocol.OwnedCharacters> charsInfo) => CheckHasChar(charsInfo));
+		EventManager.Unsubscribe("DisplayMessage", (string msg) => DisplayMessage(msg));
 	}
 }

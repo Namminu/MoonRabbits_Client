@@ -130,7 +130,7 @@ public class UIStart : MonoBehaviour
         }
 
         nickname = inputNickname.text;
-		TownManager.Instance.GameStart(nickname, classIdx, serverUrl);
+		TownManager.Instance.GameStart(nickname, classIdx);
 		gameObject.SetActive(false);
     }
 

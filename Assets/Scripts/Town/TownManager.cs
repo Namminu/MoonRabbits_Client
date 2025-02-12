@@ -72,16 +72,16 @@ public class TownManager : MonoBehaviour
 	public void TryConnectToServer(string gameServer, string port)
     { 
 		GameManager.Network.Init(gameServer, port);
+		txtServer.text = gameServer;
 	}
 
 	/// <summary>
 	/// MW - After Login Success, Try Method To Join In Game 
 	/// </summary>
-	public void GameStart(string userName, int classIdx, string gameServer)
+	public void GameStart(string userName, int classIdx)
     {
         GameManager.Instance.UserName = userName;
-        GameManager.Instance.ClassIdx = classIdx + 1001;
-        txtServer.text = gameServer;
+        GameManager.Instance.ClassIdx = classIdx + 1001; 
         Connected();
 	  }
 
