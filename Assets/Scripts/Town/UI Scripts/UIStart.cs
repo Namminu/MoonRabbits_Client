@@ -1,21 +1,38 @@
 using System;
 using System.Collections.Generic;
+using Google.Protobuf.Protocol;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UIStart : MonoBehaviour
 {
-    [SerializeField] private GameObject charList;
-    [SerializeField] private Button[] charBtns;
-    [SerializeField] private Button localServerBtn;
-    [SerializeField] private Button btnConfirm;
-    [SerializeField] private Button btnBack;
-    [SerializeField] private TMP_InputField inputNickname;
-    [SerializeField] private TMP_InputField inputPort;
-    [SerializeField] private TMP_Text txtMessage;
+    [SerializeField]
+    private GameObject charList;
 
-    [SerializeField] private GameObject UILogin;
+    [SerializeField]
+    private Button[] charBtns;
+
+    [SerializeField]
+    private Button localServerBtn;
+
+    [SerializeField]
+    private Button btnConfirm;
+
+    [SerializeField]
+    private Button btnBack;
+
+    [SerializeField]
+    private TMP_InputField inputNickname;
+
+    [SerializeField]
+    private TMP_InputField inputPort;
+
+    [SerializeField]
+    private TMP_Text txtMessage;
+
+    [SerializeField]
+    private GameObject UILogin;
 
     private TMP_Text placeHolder;
 
@@ -32,7 +49,7 @@ public class UIStart : MonoBehaviour
 
     void Awake()
     {
-		placeHolder = inputNickname.placeholder.GetComponent<TMP_Text>();
+        placeHolder = inputNickname.placeholder.GetComponent<TMP_Text>();
         btnBack.onClick.AddListener(SetServerUI);
         localServerBtn.onClick.AddListener(OnClickLocalServer);
         SetServerUI();
@@ -40,7 +57,7 @@ public class UIStart : MonoBehaviour
     }
 
     private void Update()
-    { 
+    {
         if (Input.GetKeyUp(KeyCode.Return))
         {
             if (inputNickname.IsActive())
@@ -66,19 +83,25 @@ public class UIStart : MonoBehaviour
 
     private void SetServerUI()
     {
-        UpdateUI(WelcomeMessage, Color.white, DefaultServerMessage, false, true);
+        UpdateUI(WelcomeMessage, UnityEngine.Color.white, DefaultServerMessage, false, true);
         btnConfirm.onClick.RemoveAllListeners();
         btnConfirm.onClick.AddListener(ConfirmServer);
     }
 
     public void SetNicknameUI()
     {
-        UpdateUI(WelcomeMessage, Color.white, DefaultNicknameMessage, true, false);
+        UpdateUI(WelcomeMessage, UnityEngine.Color.white, DefaultNicknameMessage, true, false);
         btnConfirm.onClick.RemoveAllListeners();
         btnConfirm.onClick.AddListener(ConfirmNickname);
     }
 
-    private void UpdateUI(string message, Color messageColor, string placeholderText, bool showCharList, bool showPortInput)
+    private void UpdateUI(
+        string message,
+        UnityEngine.Color messageColor,
+        string placeholderText,
+        bool showCharList,
+        bool showPortInput
+    )
     {
         txtMessage.text = message;
         txtMessage.color = messageColor;
@@ -96,9 +119,9 @@ public class UIStart : MonoBehaviour
     {
         serverUrl = "127.0.0.1";
         port = "3000";
-		TownManager.Instance.TryConnectToServer(serverUrl, port);
-		gameObject.SetActive(false);
-		UILogin.SetActive(true);
+        TownManager.Instance.TryConnectToServer(serverUrl, port);
+        gameObject.SetActive(false);
+        UILogin.SetActive(true);
     }
 
     private void ConfirmServer()
@@ -111,8 +134,8 @@ public class UIStart : MonoBehaviour
 
         serverUrl = inputNickname.text;
         port = inputPort.text;
-		TownManager.Instance.TryConnectToServer(serverUrl, port);
-		SetNicknameUI();
+        TownManager.Instance.TryConnectToServer(serverUrl, port);
+        SetNicknameUI();
     }
 
     private void ConfirmNickname()
@@ -129,31 +152,36 @@ public class UIStart : MonoBehaviour
             return;
         }
 
+        /* 캐릭터 생성 패킷 전송 필요
+                var dataPacket = C_Enter?
+                {
+                    Nickname = nickname,
+                    Class = classIdx
+                };
+                GameManager.Network.Send(dataPacket);
+                */
+
         nickname = inputNickname.text;
-		TownManager.Instance.GameStart(nickname, classIdx);
-		/* 캐릭터 생성 패킷 전송 필요
-		var dataPacket = C_Enter?
-        {
-            Nickname = nickname,
-            Class = classIdx
-        };
+
+        var dataPacket = new C_CreateCharacter { Nickname = nickname, Class = classIdx + 1001 };
         GameManager.Network.Send(dataPacket);
-        */
-		gameObject.SetActive(false);
+
+        // TownManager.Instance.GameStart(nickname, classIdx);
+
+        gameObject.SetActive(false);
     }
 
     private void DisplayError(string errorMessage)
     {
         txtMessage.text = errorMessage;
-        txtMessage.color = Color.red;
+        txtMessage.color = UnityEngine.Color.red;
     }
 
     /// <summary>
     /// Return nickname, classIdx, serverUrl, port
     /// </summary>
-	public (string nickname, int classIdx, string serverUrl, string port) GetSomeInfo()
-	{
-		return (nickname, classIdx, serverUrl, port);
-	}
-
+    public (string nickname, int classIdx, string serverUrl, string port) GetSomeInfo()
+    {
+        return (nickname, classIdx, serverUrl, port);
+    }
 }
