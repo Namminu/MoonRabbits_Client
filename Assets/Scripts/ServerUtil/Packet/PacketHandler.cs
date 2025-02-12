@@ -202,7 +202,6 @@ class PacketHandler
         }
 
         List<Google.Protobuf.Protocol.OwnedCharacters> charsInfo = pkt.OwnedCharacters.ToList();
-        Debug.Log("charsInfo : " + charsInfo);
 		EventManager.Trigger("CheckHasChar", charsInfo);
 	}
 }

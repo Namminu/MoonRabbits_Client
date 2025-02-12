@@ -130,7 +130,6 @@ public class UIStart : MonoBehaviour
         }
 
         nickname = inputNickname.text;
-		TownManager.Instance.GameStart(nickname, classIdx);
 		/* 캐릭터 생성 패킷 전송 필요
 		var dataPacket = C_Enter?
         {
@@ -148,12 +147,16 @@ public class UIStart : MonoBehaviour
         txtMessage.color = Color.red;
     }
 
-    /// <summary>
-    /// Return nickname, classIdx, serverUrl, port
-    /// </summary>
-	public (string nickname, int classIdx, string serverUrl, string port) GetSomeInfo()
-	{
-		return (nickname, classIdx, serverUrl, port);
-	}
-
+  //  public void TryMakeChar(/* 패킷 할당 */)
+  //  {
+  //      if(pkt.isSuccess)
+  //      {
+		//	TownManager.Instance.GameStart(nickname, classIdx);
+		//}
+  //      else
+  //      {
+  //          DisplayError(pkt.msg);
+		//	inputNickname.text = string.Empty;
+		//}
+  //  }
 }
