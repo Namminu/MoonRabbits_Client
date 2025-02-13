@@ -3,6 +3,7 @@ using Cinemachine;
 using Google.Protobuf.Protocol;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.EventSystems;
 
 public class TownManager : MonoBehaviour
@@ -107,8 +108,11 @@ public class TownManager : MonoBehaviour
         string playerResPath = playerDb.GetValueOrDefault(playerInfo.Class, DefaultPlayerPath);
         Player playerPrefab = Resources.Load<Player>(playerResPath);
 
-        var player = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
-        player.Move(spawnPos, Quaternion.identity);
+        // NavMesh 위의 가장 가까운 위치 찾기
+        Vector3 validatedSpawnPos = GetNearestNavMeshPosition(spawnPos, 3.0f);
+
+        var player = Instantiate(playerPrefab, validatedSpawnPos, Quaternion.identity);
+        player.Move(validatedSpawnPos, Quaternion.identity);
         player.SetPlayerId(playerInfo.PlayerId);
         player.SetNickname(playerInfo.Nickname);
 
@@ -124,6 +128,22 @@ public class TownManager : MonoBehaviour
 
         return player;
     }
+
+    // NavMesh 위에서 가장 가까운 위치를 찾는 함수
+    private Vector3 GetNearestNavMeshPosition(Vector3 position, float maxSearchDistance)
+    {
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(position, out hit, maxSearchDistance, NavMesh.AllAreas))
+        {
+            return hit.position; // NavMesh 위의 가장 가까운 위치 반환
+        }
+        else
+        {
+            Debug.LogWarning("NavMesh 위의 위치를 찾을 수 없음, 기본 안전한 위치 반환");
+            return new Vector3(-5, 1, 137); // NavMesh가 있는 기본 안전한 위치로 변경
+        }
+    }
+
 
     public void ReleasePlayer(int playerId)
     {

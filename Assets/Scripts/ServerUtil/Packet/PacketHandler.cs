@@ -51,9 +51,14 @@ class PacketHandler
         TransformInfo transform = locationPacket.Transform;
         Vector3 position = new Vector3(transform.PosX, transform.PosY, transform.PosZ);
         Quaternion rotation = Quaternion.Euler(0, transform.Rot, 0);
+        // Quaternion rotation = Quaternion.Euler(0, 300, 0);
 
         var player = TownManager.Instance.GetPlayerAvatarById(locationPacket.PlayerId);
-        player?.Move(position, rotation);
+        if (player != null)
+        {
+            player?.Move(position, rotation);
+            // player?.MoveToTargetPosition(position);
+        }
     }
 
     // public static void S_MoveHandler(PacketSession session, IMessage packet)

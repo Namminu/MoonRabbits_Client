@@ -29,22 +29,21 @@ public class Player : MonoBehaviour
     private bool isInitialized = false;
 
     private Vector3 lastPos;
-    private Coroutine locationCoroutine;
+    private NavMeshAgent agent;
+    private Vector3 lastTargetPosition;
+    private Vector3 targetPosition; // 목표 위치 저장
+    private float moveSpeed = 10f; // 이동 속도
+
+    void Awake()
+    {
+        agent = GetComponent<NavMeshAgent>();
+    }
+
 
     private void Start()
     {
         Avatar = GetComponent<Avatar>();
         animator = GetComponent<Animator>();
-        // 코루틴 시작
-        locationCoroutine = StartCoroutine(SendLocationRoutine());
-    }
-    IEnumerator SendLocationRoutine()
-    {
-        while (true) // 무한 루프 (게임이 실행되는 동안 계속 실행)
-        {
-            SendLocationPacket(); // 위치 패킷 전송
-            yield return new WaitForSeconds(0.5f); // 0.5초 대기
-        }
     }
 
     public void SetPlayerId(int playerId)
@@ -73,6 +72,22 @@ public class Player : MonoBehaviour
 
         uiChat = TownManager.Instance.UiChat;
         isInitialized = true;
+    }
+
+    public void UpdateLastTargetPosition(Vector3 position)
+    {
+        lastTargetPosition = position;
+    }
+
+    public void MoveToLastTargetPosition()
+    {
+        agent.SetDestination(lastTargetPosition);
+
+    }
+    public void MoveToTargetPosition(Vector3 position)
+    {
+        goalPos = position; // 목표 위치 업데이트
+
     }
 
     private void Update()
@@ -105,31 +120,6 @@ public class Player : MonoBehaviour
         {
             transform.position = Vector3.Lerp(transform.position, goalPos, Time.deltaTime * SmoothMoveSpeed);
         }
-
-        // var movePacket = new C_Move
-        // {
-        //     StartPosX = transform.position.x,
-        //     StartPosY = transform.position.y,
-        //     TargetPosX = goalPos.x,
-        //     TargetPosY = goalPos.y,
-        //     TargetPosZ = goalPos.z
-        // };
-
-        // GameManager.Network.Send(movePacket);
-    }
-
-    private void SendLocationPacket()
-    {
-        var tr = new TransformInfo
-        {
-            PosX = transform.position.x,
-            PosY = transform.position.y,
-            PosZ = transform.position.z,
-            Rot = transform.eulerAngles.y
-        };
-
-        var locationPacket = new C_Location { Transform = tr };
-        GameManager.Network.Send(locationPacket);
     }
 
     private void RotateSmoothly()

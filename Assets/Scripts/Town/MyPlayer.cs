@@ -1,4 +1,5 @@
 
+using System.Collections;
 using System.Collections.Generic;
 using Google.Protobuf.Protocol;
 using Unity.AI.Navigation;
@@ -13,7 +14,8 @@ public class MyPlayer : MonoBehaviour
     private EventSystem eSystem;
     private Animator animator;
     private Vector3 lastPos;
-
+    private Coroutine locationCoroutine;
+    private Vector3 targetPosition;
     private readonly List<int> animHash = new List<int>();
 
     void Awake()
@@ -24,14 +26,22 @@ public class MyPlayer : MonoBehaviour
 
         InitializeCamera();
         lastPos = transform.position;
+        targetPosition = transform.position;
 
         LoadAnimationHashes();
+    }
+
+    void Start()
+    {
+        locationCoroutine = StartCoroutine(SendLocationRoutine());
     }
 
     void Update()
     {
         HandleInput();
-        CheckMove();
+
+        // SmoothMove();
+
     }
 
     private void InitializeCamera()
@@ -59,7 +69,15 @@ public class MyPlayer : MonoBehaviour
         {
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
             {
+                targetPosition = rayHit.point;
                 agent.SetDestination(rayHit.point);
+
+                Player player = GetComponent<Player>();
+                if (player != null)
+                {
+                    player.UpdateLastTargetPosition(rayHit.point);
+                }
+
                 var movePacket = new C_Move
                 {
                     StartPosX = transform.position.x,
@@ -71,34 +89,18 @@ public class MyPlayer : MonoBehaviour
                 };
 
                 GameManager.Network.Send(movePacket);
+
             }
         }
     }
 
-    public void ExecuteAnimation(int animIdx)
+    IEnumerator SendLocationRoutine()
     {
-        if (animIdx < 0 || animIdx >= animHash.Count)
-            return;
-
-        int animKey = animHash[animIdx];
-        agent.SetDestination(transform.position);
-
-        var animationPacket = new C_Animation { AnimCode = animKey };
-        GameManager.Network.Send(animationPacket);
-    }
-
-
-    private void CheckMove()
-    {
-        float distanceMoved = Vector3.Distance(lastPos, transform.position);
-        animator.SetFloat(Constants.TownPlayerMove, distanceMoved * 100);
-
-        if (distanceMoved > 0.01f)
+        while (true)
         {
             SendLocationPacket();
+            yield return new WaitForSeconds(0.5f);
         }
-
-        lastPos = transform.position;
     }
 
     private void SendLocationPacket()
@@ -114,4 +116,29 @@ public class MyPlayer : MonoBehaviour
         var locationPacket = new C_Location { Transform = tr };
         GameManager.Network.Send(locationPacket);
     }
+
+    public void ExecuteAnimation(int animIdx)
+    {
+        if (animIdx < 0 || animIdx >= animHash.Count)
+            return;
+
+        int animKey = animHash[animIdx];
+        agent.SetDestination(transform.position);
+
+        var animationPacket = new C_Animation { AnimCode = animKey };
+        GameManager.Network.Send(animationPacket);
+    }
+
+    // private void CheckMove()
+    // {
+    //     float distanceMoved = Vector3.Distance(lastPos, transform.position);
+    //     animator.SetFloat(Constants.TownPlayerMove, distanceMoved * 100);
+
+    //     if (distanceMoved > 0.01f)
+    //     {
+    //         SendLocationPacket();
+    //     }
+
+    //     lastPos = transform.position;
+    // }
 }
