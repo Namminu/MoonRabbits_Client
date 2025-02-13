@@ -1,3 +1,4 @@
+using System.Collections;
 using Google.Protobuf.Protocol;
 using UnityEngine;
 using UnityEngine.AI;
@@ -28,11 +29,22 @@ public class Player : MonoBehaviour
     private bool isInitialized = false;
 
     private Vector3 lastPos;
+    private Coroutine locationCoroutine;
 
     private void Start()
     {
         Avatar = GetComponent<Avatar>();
         animator = GetComponent<Animator>();
+        // 코루틴 시작
+        locationCoroutine = StartCoroutine(SendLocationRoutine());
+    }
+    IEnumerator SendLocationRoutine()
+    {
+        while (true) // 무한 루프 (게임이 실행되는 동안 계속 실행)
+        {
+            SendLocationPacket(); // 위치 패킷 전송
+            yield return new WaitForSeconds(0.5f); // 0.5초 대기
+        }
     }
 
     public void SetPlayerId(int playerId)
@@ -87,12 +99,37 @@ public class Player : MonoBehaviour
 
         if (distance > TeleportDistanceThreshold)
         {
-            transform.position = goalPos; 
+            transform.position = goalPos;
         }
         else
         {
             transform.position = Vector3.Lerp(transform.position, goalPos, Time.deltaTime * SmoothMoveSpeed);
         }
+
+        // var movePacket = new C_Move
+        // {
+        //     StartPosX = transform.position.x,
+        //     StartPosY = transform.position.y,
+        //     TargetPosX = goalPos.x,
+        //     TargetPosY = goalPos.y,
+        //     TargetPosZ = goalPos.z
+        // };
+
+        // GameManager.Network.Send(movePacket);
+    }
+
+    private void SendLocationPacket()
+    {
+        var tr = new TransformInfo
+        {
+            PosX = transform.position.x,
+            PosY = transform.position.y,
+            PosZ = transform.position.z,
+            Rot = transform.eulerAngles.y
+        };
+
+        var locationPacket = new C_Location { Transform = tr };
+        GameManager.Network.Send(locationPacket);
     }
 
     private void RotateSmoothly()
@@ -106,7 +143,7 @@ public class Player : MonoBehaviour
 
     public void SendMessage(string msg)
     {
-        if (!IsMine) 
+        if (!IsMine)
             return;
 
         var chatPacket = new C_Chat
