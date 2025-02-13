@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 19
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 67786810abbfe724296435e7e5d7a5cc, type: 2}
   m_sharedMaterial: {fileID: 655808461212083387, guid: 67786810abbfe724296435e7e5d7a5cc,
@@ -188,6 +188,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text_ItemAmount: {fileID: 5457597349266031113}
   itemImage: {fileID: 2225382797944255628}
+  itemHighLighter: {fileID: 7360285403492351492}
+  highLightAlpha: 0.6
+  highLightTime: 0.1
 --- !u!1 &1840060800256102427
 GameObject:
   m_ObjectHideFlags: 0
@@ -280,7 +283,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5530505672715899840
 RectTransform:
   m_ObjectHideFlags: 0
@@ -290,7 +293,7 @@ RectTransform:
   m_GameObject: {fileID: 2539742340816464983}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.95, y: 0.95, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9102892620496601484}

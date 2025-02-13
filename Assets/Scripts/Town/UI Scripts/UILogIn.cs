@@ -9,22 +9,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using Google.Protobuf;
 using Google.Protobuf.Protocol;
-using Unity.VisualScripting;
 
 public class UILogIn : MonoBehaviour
 {
-	private static UILogIn _instance;
-    public static UILogIn Instance => _instance;
 	[SerializeField] private GameObject UIStart;
     private UIStart uiStartCS;
     [SerializeField] private InputField userEmail;
 	[SerializeField] private InputField userPW;
 	[SerializeField] private InputField userPWC;
 	[SerializeField] private Button btn_Back;
-	[SerializeField] private Button btn_Register;
+	[SerializeField] private Button btn_Reigster;
 	[SerializeField] private Button btn_Confirm;
 	[SerializeField] private TMP_Text txt_Title;
-	private TMP_Text txt_Error;
+	[SerializeField] private TMP_Text txt_Error;
 	private GameObject txtErrorObj;
 
 	private bool isLogin;
@@ -36,21 +33,11 @@ public class UILogIn : MonoBehaviour
 	// Start is called before the first frame update
 	void Awake()
     {
-			if (_instance == null)
-        {
-            _instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-
 		uiStartCS = UIStart.GetComponent<UIStart>();
 
 		txtErrorObj = transform.Find("Image/Text_Error").gameObject;
 		txt_Error = txtErrorObj.GetComponent<TMP_Text>();
-		
+		 
 		isLogin = true;
 	}
 
@@ -66,10 +53,9 @@ public class UILogIn : MonoBehaviour
         {
             isLogin = true;
 			txt_Title.text = "로그인";
-			Debug.Log($"!!! {_instance}");
             ClearTextField();
 			userPWC.gameObject.SetActive(false);
-			btn_Register.gameObject.SetActive(true);
+			btn_Reigster.gameObject.SetActive(true);
 		}
     }
 
@@ -80,10 +66,9 @@ public class UILogIn : MonoBehaviour
 
         isLogin = false;
         txt_Title.text = "회원가입";
-				Debug.Log($"!!! {_instance}");
-         ClearTextField();
+        ClearTextField();
 		userPWC.gameObject.SetActive(true);
-		btn_Register.gameObject.SetActive(false);
+		btn_Reigster.gameObject.SetActive(false);
 	}
 
     public void ConfirmButton()
@@ -95,7 +80,6 @@ public class UILogIn : MonoBehaviour
 				Email = userEmail.text,
 				Pw = userPW.text
 			};
-			Debug.Log("로그인 시도 : " + userEmail.text + " " + userPW.text);
 			GameManager.Network.Send(dataPacket);
 		}
         else // 회원가입 시도
@@ -106,7 +90,6 @@ public class UILogIn : MonoBehaviour
 				Pw = userPW.text,
 				PwCheck = userPWC.text
 			};
-			Debug.Log("회원가입 시도 : " + userEmail.text + " " + userPW.text + " " + userPWC.text);
 			GameManager.Network.Send(dataPacket);
 		}
 	}
@@ -117,7 +100,7 @@ public class UILogIn : MonoBehaviour
 	/// <param name="msg"></param>
     public void DisplayMessage(string msg)
     {
-		  txt_Error.text = msg;
+		txt_Error.text = msg;
     }
 
     private void ClearTextField()
@@ -126,24 +109,37 @@ public class UILogIn : MonoBehaviour
 		userPW.text = string.Empty;
 		userPWC.text = string.Empty;
 
-		txt_Error.text = string.Empty;
+		DisplayMessage(string.Empty);
 	}
 
-    public void CheckHasChar(object[] ownedCharacters)
-    {
-		if (ownedCharacters.Length > 0)   // this Account has Character Already
+	public void CheckHasChar(List<Google.Protobuf.Protocol.OwnedCharacters> charsInfo)
+	{
+		if (charsInfo.Count > 0)   // this Account has Character Already
 		{
-			var character = ownedCharacters[0] as Google.Protobuf.Protocol.OwnedCharacters;
+			/* The content will need to be revised once the multi-character 
+			 * design is finalized right before the project's completion */
+			TownManager.Instance.GameStart(charsInfo[0].Nickname, charsInfo[0].Class - 1001); 
+
 			gameObject.SetActive(false);
 			UIStart.SetActive(false);
-			TownManager.Instance.GameStart(character.Nickname,character.Class-1001,"127.0.0.1");
-
 		}
 		else // this Account has to create Character
 		{
-			gameObject.SetActive(false);
-			UIStart.SetActive(true);
+			UIStart.SetActive(true); 
 			uiStartCS.SetNicknameUI();
+
+			gameObject.SetActive(false);
 		}
+	}
+
+	private void OnEnable()
+	{
+		EventManager.Subscribe("CheckHasChar", (List<Google.Protobuf.Protocol.OwnedCharacters> charsInfo) => CheckHasChar(charsInfo));
+		EventManager.Subscribe("DisplayMessage", (string msg) => DisplayMessage(msg));
+	}
+	private void OnDisable() 
+	{
+		EventManager.Unsubscribe("CheckHasChar", (List<Google.Protobuf.Protocol.OwnedCharacters> charsInfo) => CheckHasChar(charsInfo));
+		EventManager.Unsubscribe("DisplayMessage", (string msg) => DisplayMessage(msg));
 	}
 }

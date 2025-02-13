@@ -187,9 +187,8 @@ class PacketHandler
     {
         if (packet is not S_Register pkt) return;
         Debug.Log($"S_Register 패킷 무사히 도착{pkt}");
-        Debug.Log($"!!! {UILogIn.Instance}");
-        UILogIn.Instance.DisplayMessage(pkt.Msg);
-    }
+		EventManager.Trigger("DisplayMessage", pkt.Msg);
+	}
 
     public static void S_LoginHandler(PacketSession session, IMessage packet)
     {
@@ -198,16 +197,11 @@ class PacketHandler
 
         if (!pkt.IsSuccess)
         {
-            Debug.Log($"!!! {UILogIn.Instance}");
-            UILogIn.Instance.DisplayMessage(pkt.Msg);
+            EventManager.Trigger("DisplayMessage", pkt.Msg);
             return;
-        } 
-        else 
-        {
-            Debug.Log($"!!! {UILogIn.Instance}");
-		    object[] ownedCharacters = pkt.OwnedCharacters.ToArray();
-            UILogIn.Instance.CheckHasChar(ownedCharacters);
         }
 
+        List<Google.Protobuf.Protocol.OwnedCharacters> charsInfo = pkt.OwnedCharacters.ToList();
+		EventManager.Trigger("CheckHasChar", charsInfo);
 	}
 }
