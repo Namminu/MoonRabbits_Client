@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Cinemachine;
 using Google.Protobuf.Protocol;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
@@ -66,13 +67,24 @@ public class TownManager : MonoBehaviour
         playerDb[1005] = "Player/Player5";
     }
 
-    public void GameStart(string gameServer, string port, string userName, int classIdx)
+    /// <summary>
+    /// MW - After Click Confirm/LocalServer btn, Try Method To Connect Server
+    /// </summary>
+	public void TryConnectToServer(string gameServer, string port)
+    { 
+		GameManager.Network.Init(gameServer, port);
+		txtServer.text = gameServer;
+	}
+
+	/// <summary>
+	/// MW - After Login Success, Try Method To Join In Game 
+	/// </summary>
+	public void GameStart(string userName, int classIdx)
     {
-        GameManager.Network.Init(gameServer, port);
         GameManager.Instance.UserName = userName;
-        GameManager.Instance.ClassIdx = classIdx + 1001;
-        txtServer.text = gameServer;
-    }
+        GameManager.Instance.ClassIdx = classIdx + 1001; 
+        Connected();
+	  }
 
     public void Connected()
     {

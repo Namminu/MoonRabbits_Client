@@ -1,15 +1,18 @@
+using System;
+using System.Collections.Generic;
 using Google.Protobuf;
 using Google.Protobuf.Protocol;
 using ServerCore;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 class PacketManager
 {
     #region Singleton
     static PacketManager _instance = new PacketManager();
-    public static PacketManager Instance { get { return _instance; } }
+    public static PacketManager Instance
+    {
+        get { return _instance; }
+    }
     #endregion
 
     PacketManager()
@@ -17,8 +20,10 @@ class PacketManager
         Register();
     }
 
-    Dictionary<ushort, Action<PacketSession, ArraySegment<byte>, ushort>> _onRecv = new Dictionary<ushort, Action<PacketSession, ArraySegment<byte>, ushort>>();
-    Dictionary<ushort, Action<PacketSession, IMessage>> _handler = new Dictionary<ushort, Action<PacketSession, IMessage>>();
+    Dictionary<ushort, Action<PacketSession, ArraySegment<byte>, ushort>> _onRecv =
+        new Dictionary<ushort, Action<PacketSession, ArraySegment<byte>, ushort>>();
+    Dictionary<ushort, Action<PacketSession, IMessage>> _handler =
+        new Dictionary<ushort, Action<PacketSession, IMessage>>();
 
     public Action<PacketSession, IMessage, ushort> CustomHandler { get; set; }
 
@@ -28,12 +33,12 @@ class PacketManager
         _handler.Add((ushort)MsgId.SEnter, PacketHandler.S_EnterHandler);
         _onRecv.Add((ushort)MsgId.SSpawn, MakePacket<S_Spawn>);
         _handler.Add((ushort)MsgId.SSpawn, PacketHandler.S_SpawnHandler);
-        // _onRecv.Add((ushort)MsgId.SLeave, MakePacket<S_Leave>);
+        _onRecv.Add((ushort)MsgId.SLeave, MakePacket<S_Leave>);
         _handler.Add((ushort)MsgId.SLeave, PacketHandler.S_LeaveHandler);
         _onRecv.Add((ushort)MsgId.SDespawn, MakePacket<S_Despawn>);
         _handler.Add((ushort)MsgId.SDespawn, PacketHandler.S_DespawnHandler);
         _onRecv.Add((ushort)MsgId.SMove, MakePacket<S_Move>);
-        // _handler.Add((ushort)MsgId.SMove, PacketHandler.S_MoveHandler);
+        _handler.Add((ushort)MsgId.SMove, PacketHandler.S_MoveHandler);
         _onRecv.Add((ushort)MsgId.SAnimation, MakePacket<S_Animation>);
         _handler.Add((ushort)MsgId.SAnimation, PacketHandler.S_AnimationHandler);
         // _onRecv.Add((ushort)MsgId.SChangeCostume, MakePacket<S_ChangeCostume>);
@@ -60,16 +65,21 @@ class PacketManager
         _handler.Add((ushort)MsgId.SPlayerAction, PacketHandler.S_PlayerActionHandler);
         _onRecv.Add((ushort)MsgId.SMonsterAction, MakePacket<S_MonsterAction>);
         _handler.Add((ushort)MsgId.SMonsterAction, PacketHandler.S_MonsterActionHandler);
-        _onRecv.Add((ushort)MsgId.SLocation, MakePacket<S_Location>);
-        _handler.Add((ushort)MsgId.SLocation, PacketHandler.S_LocationHandler);
-
+        _onRecv.Add((ushort)MsgId.SRegister, MakePacket<S_Register>);
+        _handler.Add((ushort)MsgId.SRegister, PacketHandler.S_RegisterHandler);
+        _onRecv.Add((ushort)MsgId.SLogin, MakePacket<S_Login>);
+        _handler.Add((ushort)MsgId.SLogin, PacketHandler.S_LoginHandler);
+        _onRecv.Add((ushort)MsgId.SCreateCharacter, MakePacket<S_CreateCharacter>);
+        _handler.Add((ushort)MsgId.SCreateCharacter, PacketHandler.S_CreateCharacterHandler);
 
         Debug.Log("핸들러 등록 완료");
     }
 
     public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)
     {
-        Debug.Log($"PacketManager.OnRecvPacket 호출: {BitConverter.ToString(buffer.Array, buffer.Offset, buffer.Count)}");
+        Debug.Log(
+            $"PacketManager.OnRecvPacket 호출: {BitConverter.ToString(buffer.Array, buffer.Offset, buffer.Count)}"
+        );
 
         ushort count = 0;
 
@@ -97,8 +107,6 @@ class PacketManager
 
         Action<PacketSession, ArraySegment<byte>, ushort> action = null;
 
-
-
         if (_onRecv.TryGetValue(id, out action))
         {
             Debug.Log($"패킷 핸들러 실행: {id}");
@@ -110,7 +118,8 @@ class PacketManager
         }
     }
 
-    void MakePacket<T>(PacketSession session, ArraySegment<byte> buffer, ushort id) where T : IMessage, new()
+    void MakePacket<T>(PacketSession session, ArraySegment<byte> buffer, ushort id)
+        where T : IMessage, new()
     {
         try
         {
