@@ -64,11 +64,7 @@ class PacketHandler
         bool isValidTransform = locationPacket.IsValidTransform;
 
         var player = TownManager.Instance.GetPlayerAvatarById(locationPacket.PlayerId);
-
-        if (isValidTransform == false)
-        {
-            player?.Move(position, rotation);
-        }
+        player?.Move(position, rotation);
     }
 
     public static void S_AnimationHandler(PacketSession session, IMessage packet)
