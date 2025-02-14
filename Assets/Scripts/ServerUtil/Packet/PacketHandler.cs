@@ -51,29 +51,15 @@ class PacketHandler
         TransformInfo transform = locationPacket.Transform;
         Vector3 position = new Vector3(transform.PosX, transform.PosY, transform.PosZ);
         Quaternion rotation = Quaternion.Euler(0, transform.Rot, 0);
-        // Quaternion rotation = Quaternion.Euler(0, 300, 0);
+        bool isValidTransform = locationPacket.IsValidTransform;
 
         var player = TownManager.Instance.GetPlayerAvatarById(locationPacket.PlayerId);
-        if (player != null)
+
+        if (isValidTransform == false)
         {
             player?.Move(position, rotation);
-            // player?.MoveToTargetPosition(position);
         }
     }
-
-    // public static void S_MoveHandler(PacketSession session, IMessage packet)
-    // {
-    //     if (packet is not S_Move movePacket) return;
-
-    //     foreach (var path in movePacket.Path)
-    //     {
-    //         Vector3 position = new Vector3(path.PosX, path.PosY, path.PosZ);
-    //         Quaternion rotation = Quaternion.Euler(0, path.Rot, 0);
-
-    //         var player = TownManager.Instance.GetPlayerAvatarById(movePacket.PlayerId);
-    //         player?.Move(position, rotation);
-    //     }
-    // }
 
     public static void S_AnimationHandler(PacketSession session, IMessage packet)
     {

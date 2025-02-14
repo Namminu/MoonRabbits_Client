@@ -24,6 +24,10 @@ public class MyPlayer : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
 
+        // 장애물 회피 설정 낮추기(서버와 경로를 최대한 비슷하게 만들기 위함)
+        agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
+        agent.avoidancePriority = 0; // 회피 우선순위 낮게 설정
+
         InitializeCamera();
         lastPos = transform.position;
         targetPosition = transform.position;
@@ -33,13 +37,13 @@ public class MyPlayer : MonoBehaviour
 
     void Start()
     {
-        locationCoroutine = StartCoroutine(SendLocationRoutine());
+        // locationCoroutine = StartCoroutine(SendLocationRoutine());
     }
 
     void Update()
     {
         HandleInput();
-
+        CheckMove();
         // SmoothMove();
 
     }
@@ -94,14 +98,14 @@ public class MyPlayer : MonoBehaviour
         }
     }
 
-    IEnumerator SendLocationRoutine()
-    {
-        while (true)
-        {
-            SendLocationPacket();
-            yield return new WaitForSeconds(0.5f);
-        }
-    }
+    // IEnumerator SendLocationRoutine()
+    // {
+    //     while (true)
+    //     {
+    //         SendLocationPacket();
+    //         yield return new WaitForSeconds(0.1f);
+    //     }
+    // }
 
     private void SendLocationPacket()
     {
@@ -129,16 +133,16 @@ public class MyPlayer : MonoBehaviour
         GameManager.Network.Send(animationPacket);
     }
 
-    // private void CheckMove()
-    // {
-    //     float distanceMoved = Vector3.Distance(lastPos, transform.position);
-    //     animator.SetFloat(Constants.TownPlayerMove, distanceMoved * 100);
+    private void CheckMove()
+    {
+        float distanceMoved = Vector3.Distance(lastPos, transform.position);
+        animator.SetFloat(Constants.TownPlayerMove, distanceMoved * 100);
 
-    //     if (distanceMoved > 0.01f)
-    //     {
-    //         SendLocationPacket();
-    //     }
+        if (distanceMoved > 0.01f)
+        {
+            SendLocationPacket();
+        }
 
-    //     lastPos = transform.position;
-    // }
+        lastPos = transform.position;
+    }
 }
