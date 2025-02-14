@@ -1,4 +1,3 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using Google.Protobuf.Protocol;
@@ -9,7 +8,8 @@ using UnityEngine.EventSystems;
 
 public class MyPlayer : MonoBehaviour
 {
-    [SerializeField] private NavMeshAgent agent;
+    [SerializeField]
+    private NavMeshAgent agent;
     private RaycastHit rayHit;
     private EventSystem eSystem;
     private Animator animator;
@@ -45,7 +45,6 @@ public class MyPlayer : MonoBehaviour
     {
         HandleInput();
         CheckMove();
-
     }
 
     private void InitializeCamera()
@@ -77,17 +76,16 @@ public class MyPlayer : MonoBehaviour
                 agent.SetDestination(targetPosition);
 
                 // 패킷 전송
-                var movePacket = new C_Move
+                var movePacket = new C2SPlayerMove
                 {
                     StartPosX = transform.position.x,
                     StartPosY = transform.position.y,
                     StartPosZ = transform.position.z,
                     TargetPosX = targetPosition.x,
                     TargetPosY = targetPosition.y,
-                    TargetPosZ = targetPosition.z
+                    TargetPosZ = targetPosition.z,
                 };
                 GameManager.Network.Send(movePacket);
-
             }
         }
     }
@@ -136,10 +134,10 @@ public class MyPlayer : MonoBehaviour
             PosX = transform.position.x,
             PosY = transform.position.y,
             PosZ = transform.position.z,
-            Rot = transform.eulerAngles.y
+            Rot = transform.eulerAngles.y,
         };
 
-        var locationPacket = new C_Location { Transform = tr };
+        var locationPacket = new C2SPlayerLocation { Transform = tr };
         GameManager.Network.Send(locationPacket);
     }
 
@@ -151,7 +149,7 @@ public class MyPlayer : MonoBehaviour
         int animKey = animHash[animIdx];
         agent.SetDestination(transform.position);
 
-        var animationPacket = new C_Animation { AnimCode = animKey };
+        var animationPacket = new C2SAnimation { AnimCode = animKey };
         GameManager.Network.Send(animationPacket);
     }
 

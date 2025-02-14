@@ -6,7 +6,8 @@ using UnityEngine.AI;
 public class Player : MonoBehaviour
 {
     [Header("Player Settings")]
-    [SerializeField] private UINameChat uiNameChat;
+    [SerializeField]
+    private UINameChat uiNameChat;
 
     [Header("Movement Settings")]
     public float SmoothMoveSpeed = 10f; // 위치 보간 속도
@@ -38,7 +39,6 @@ public class Player : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
     }
-
 
     private void Start()
     {
@@ -77,12 +77,12 @@ public class Player : MonoBehaviour
     public void MoveToTargetPosition(Vector3 position)
     {
         goalPos = position; // 목표 위치 업데이트
-
     }
 
     private void Update()
     {
-        if (!isInitialized) return;
+        if (!isInitialized)
+            return;
 
         if (!IsMine)
         {
@@ -108,7 +108,11 @@ public class Player : MonoBehaviour
         }
         else
         {
-            transform.position = Vector3.Lerp(transform.position, goalPos, Time.deltaTime * SmoothMoveSpeed);
+            transform.position = Vector3.Lerp(
+                transform.position,
+                goalPos,
+                Time.deltaTime * SmoothMoveSpeed
+            );
         }
     }
 
@@ -126,11 +130,11 @@ public class Player : MonoBehaviour
         if (!IsMine)
             return;
 
-        var chatPacket = new C_Chat
+        var chatPacket = new C2SChat
         {
             PlayerId = PlayerId,
             SenderName = nickname,
-            ChatMsg = msg
+            ChatMsg = msg,
         };
 
         GameManager.Network.Send(chatPacket);
