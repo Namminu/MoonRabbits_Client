@@ -74,16 +74,6 @@ public class Player : MonoBehaviour
         isInitialized = true;
     }
 
-    public void UpdateLastTargetPosition(Vector3 position)
-    {
-        lastTargetPosition = position;
-    }
-
-    public void MoveToLastTargetPosition()
-    {
-        agent.SetDestination(lastTargetPosition);
-
-    }
     public void MoveToTargetPosition(Vector3 position)
     {
         goalPos = position; // 목표 위치 업데이트

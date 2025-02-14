@@ -14,9 +14,11 @@ public class MyPlayer : MonoBehaviour
     private EventSystem eSystem;
     private Animator animator;
     private Vector3 lastPos;
-    private Coroutine locationCoroutine;
     private Vector3 targetPosition;
+    private Vector3 lastTargetPosition;
     private readonly List<int> animHash = new List<int>();
+    private int frameCount = 0;
+    private const int targetFrames = 10; // 10 프레임마다 실행
 
     void Awake()
     {
@@ -30,21 +32,19 @@ public class MyPlayer : MonoBehaviour
 
         InitializeCamera();
         lastPos = transform.position;
-        targetPosition = transform.position;
 
         LoadAnimationHashes();
     }
 
     void Start()
     {
-        // locationCoroutine = StartCoroutine(SendLocationRoutine());
+        StartCoroutine(ExecuteEvery10Frames());
     }
 
     void Update()
     {
         HandleInput();
         CheckMove();
-        // SmoothMove();
 
     }
 
@@ -74,38 +74,47 @@ public class MyPlayer : MonoBehaviour
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
             {
                 targetPosition = rayHit.point;
-                agent.SetDestination(rayHit.point);
-
-                Player player = GetComponent<Player>();
-                if (player != null)
-                {
-                    player.UpdateLastTargetPosition(rayHit.point);
-                }
-
-                var movePacket = new C_Move
-                {
-                    StartPosX = transform.position.x,
-                    StartPosY = transform.position.y,
-                    StartPosZ = transform.position.z,
-                    TargetPosX = rayHit.point.x,
-                    TargetPosY = rayHit.point.y,
-                    TargetPosZ = rayHit.point.z
-                };
-
-                GameManager.Network.Send(movePacket);
 
             }
         }
     }
 
-    // IEnumerator SendLocationRoutine()
-    // {
-    //     while (true)
-    //     {
-    //         SendLocationPacket();
-    //         yield return new WaitForSeconds(0.1f);
-    //     }
-    // }
+    IEnumerator ExecuteEvery10Frames()
+    {
+        while (true)
+        {
+            yield return null; // 1 프레임 대기
+            frameCount++;
+
+            // 마지막으로 전송했던 좌표(lastTargetPosition)와 달라졌을 때에만 실행
+            if (frameCount >= targetFrames && targetPosition != lastTargetPosition)
+            {
+                frameCount = 0;
+                MoveAndSendMovePacket();
+            }
+        }
+    }
+
+    private void MoveAndSendMovePacket()
+    {
+        // 플레이어 이동시키기
+        agent.SetDestination(targetPosition);
+
+        // 마지막으로 전송했던 좌표 기억해두기
+        lastTargetPosition = targetPosition;
+
+        // 패킷 전송
+        var movePacket = new C_Move
+        {
+            StartPosX = transform.position.x,
+            StartPosY = transform.position.y,
+            StartPosZ = transform.position.z,
+            TargetPosX = targetPosition.x,
+            TargetPosY = targetPosition.y,
+            TargetPosZ = targetPosition.z
+        };
+        GameManager.Network.Send(movePacket);
+    }
 
     private void SendLocationPacket()
     {
