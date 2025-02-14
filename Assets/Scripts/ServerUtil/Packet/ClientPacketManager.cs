@@ -38,7 +38,7 @@ class PacketManager
         _onRecv.Add((ushort)MsgId.SDespawn, MakePacket<S_Despawn>);
         _handler.Add((ushort)MsgId.SDespawn, PacketHandler.S_DespawnHandler);
         _onRecv.Add((ushort)MsgId.SMove, MakePacket<S_Move>);
-        _handler.Add((ushort)MsgId.SMove, PacketHandler.S_MoveHandler);
+        // _handler.Add((ushort)MsgId.SMove, PacketHandler.S_MoveHandler);
         _onRecv.Add((ushort)MsgId.SAnimation, MakePacket<S_Animation>);
         _handler.Add((ushort)MsgId.SAnimation, PacketHandler.S_AnimationHandler);
         // _onRecv.Add((ushort)MsgId.SChangeCostume, MakePacket<S_ChangeCostume>);
@@ -71,6 +71,8 @@ class PacketManager
         _handler.Add((ushort)MsgId.SLogin, PacketHandler.S_LoginHandler);
         _onRecv.Add((ushort)MsgId.SCreateCharacter, MakePacket<S_CreateCharacter>);
         _handler.Add((ushort)MsgId.SCreateCharacter, PacketHandler.S_CreateCharacterHandler);
+        _onRecv.Add((ushort)MsgId.SLocation, MakePacket<S_Location>);
+        _handler.Add((ushort)MsgId.SLocation, PacketHandler.S_LocationHandler);
 
         Debug.Log("핸들러 등록 완료");
     }
