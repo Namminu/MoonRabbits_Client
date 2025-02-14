@@ -7,12 +7,15 @@ using UnityEngine.UI;
 public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
 {
 	[SerializeField] private Transform targetUI;
+	[Space]
+	[SerializeField] private Button btn_Sort;
+	[SerializeField] private Button btn_Decom;
 	[SerializeField] private Button btn_Close;
 
 	// 인벤 UI의 위치 이동을 위한 변수
 	private Vector2 beginPos;
 	private Vector2 moveBegin;
-	private GameObject InvenUI;
+	[SerializeField] [ReadOnly] private GameObject InvenUI;
 	// 인벤 UI의 위치 원상복귀를 위한 변수
 	private Vector2 initPos;
 
@@ -22,6 +25,9 @@ public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
 
 		if (targetUI == null) targetUI = transform.parent;
 		if (InvenUI == null) InvenUI = targetUI.parent.gameObject;
+
+		btn_Sort.onClick.AddListener(SortButton);
+		btn_Decom.onClick.AddListener(DecomButton);
 		btn_Close.onClick.AddListener(CloseInvenUI);
 
 		initPos = targetUI.position;
@@ -43,7 +49,19 @@ public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
 		if(InvenUI != null) InvenUI.SetActive(false);
 	}
 
-	void OnEnable()
+	private void SortButton()
+	{
+		Debug.Log("Item Sort Btn Click");
+		InvenUI.GetComponent<InventoryUI>().SortItemList();
+	}
+
+	private void DecomButton()
+	{
+		Debug.Log("Item Decom Btn Click");
+		InvenUI.GetComponent<InventoryUI>().DecomItems();
+	}
+
+	private void OnEnable()
 	{
 		targetUI.position = initPos;
 	}

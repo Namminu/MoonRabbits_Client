@@ -11,7 +11,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     [Header("Item Info")] 
     private Item item;  //획득 아이템 객체
     [SerializeField] private TMP_Text text_ItemAmount;  //아이템 수량
-	[ReadOnly] public int itemCount;
+	[SerializeField] [ReadOnly] private int itemCount;
 	[SerializeField] private Image itemImage;    //아이템 이미지
 
     [Space] // 아이템 하이라이트
@@ -83,4 +83,11 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 	{
 		itemHighLighter.gameObject.SetActive(false);
 	}
+
+
+	#region Getter
+	public Item GetItem() {  return item; }
+
+	public bool HasItem() {  return item != null; }
+	#endregion
 }
