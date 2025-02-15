@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
 {
     [Header("Item Info")] 
     private Item item;  //»πµÊ æ∆¿Ã≈€ ∞¥√º
@@ -48,6 +48,14 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 	}
 
 	/// <summary>
+	/// Destroy Item Method When EndDrag Over Inven UI
+	/// </summary>
+	private void DestroyItem()
+	{
+		Debug.Log("Destory Item! " +  item);
+	}
+
+	/// <summary>
 	/// Update Item Count Method, When Count Under/Equal 0, auto call ClearSlot()
 	/// </summary>
 	public int UpdateItemCount(int newItemCount)
@@ -63,7 +71,7 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 	}
 
 	/// <summary>
-	/// Clear Item Slot Method When Item Count <= 0
+	/// Clear Item Slot Method
 	/// </summary>
 	private void ClearSlot()
 	{
@@ -75,19 +83,90 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 		text_ItemAmount.text = string.Empty;
 	}
 
+	private void ChangeSlot()
+	{
+		Item tempItem = item;
+		int tempItemCount = itemCount;
+
+		AddItem(DragSlot.instance.dragSlot.item, DragSlot.instance.dragSlot.itemCount);
+
+		if (tempItem != null)
+		{
+			DragSlot.instance.dragSlot.AddItem(tempItem, tempItemCount);
+		}
+		else
+		{
+			DragSlot.instance.dragSlot.ClearSlot();
+		}
+		Debug.Log("Item Slot Change : " + this.name + DragSlot.instance.dragSlot.name);
+	}
+
+	#region Mouse Event
 	public void OnPointerEnter(PointerEventData eventData)
 	{
 		itemHighLighter.gameObject.SetActive(true);
 	}
-    public void OnPointerExit(PointerEventData eventData)
+	public void OnPointerExit(PointerEventData eventData)
 	{
 		itemHighLighter.gameObject.SetActive(false);
 	}
 
+	public void OnBeginDrag(PointerEventData eventData)
+	{
+		if (item == null) return;
+
+		// Image copy process when dragging starts from an item slot
+		DragSlot.instance.dragSlot = this;
+		DragSlot.instance.DragSetImage(itemImage);
+		DragSlot.instance.transform.position = eventData.position;
+	}
+	public void OnDrag(PointerEventData eventData)
+	{
+		if (item == null) return;
+
+		DragSlot.instance.transform.position = eventData.position;
+	}
+	public void OnEndDrag(PointerEventData eventData)
+	{
+		DragSlot.instance.SetItemImageAlpha(0);
+		DragSlot.instance.dragSlot = null;
+
+		if (!IsPointerInsideInventory(eventData)) DestroyItem();
+	}
+
+	public void OnDrop(PointerEventData eventData)
+	{
+		if (DragSlot.instance.dragSlot != null)
+			ChangeSlot();
+	}
+	#endregion
 
 	#region Getter
 	public Item GetItem() {  return item; }
-
 	public bool HasItem() {  return item != null; }
+	#endregion
+
+	#region Local Method
+
+	/// <summary>
+	/// Return True When eventData Out of Inventory UI Range
+	/// </summary>
+	private bool IsPointerInsideInventory(PointerEventData eventData)
+	{
+		RectTransform tr_InvenUI = null;
+		GameObject Inventory = GameObject.Find("Inventory");
+		if (Inventory != null)
+		{
+			tr_InvenUI = Inventory.GetComponent<RectTransform>();
+		}
+		else Debug.Log("ItemSlotUI : Not Found Inventory GameObject");
+
+		if(tr_InvenUI == null) return false;
+
+		return RectTransformUtility.RectangleContainsScreenPoint(
+			tr_InvenUI, 
+			eventData.position, 
+			eventData.pressEventCamera);
+	}
 	#endregion
 }
