@@ -92,10 +92,10 @@ public class TownManager : MonoBehaviour
     /// <summary>
     /// MW - After Login Success, Try Method To Join In Game
     /// </summary>
-    public void GameStart(string userName, int classIdx)
+    public void GameStart(string userName, int classCode)
     {
         GameManager.Instance.UserName = userName;
-        GameManager.Instance.ClassIdx = classIdx + 1001;
+        GameManager.Instance.ClassCode = classCode;
         Connected();
     }
 
@@ -104,7 +104,7 @@ public class TownManager : MonoBehaviour
         var enterPacket = new C2STownEnter
         {
             Nickname = GameManager.Instance.UserName,
-            ClassCode = GameManager.Instance.ClassIdx,
+            ClassCode = GameManager.Instance.ClassCode,
         };
 
         GameManager.Network.Send(enterPacket);
@@ -130,7 +130,7 @@ public class TownManager : MonoBehaviour
 
     public Player CreatePlayer(PlayerInfo playerInfo, Vector3 spawnPos)
     {
-        string playerResPath = playerDb.GetValueOrDefault(playerInfo.Class, DefaultPlayerPath);
+        string playerResPath = playerDb.GetValueOrDefault(playerInfo.ClassCode, DefaultPlayerPath);
         Player playerPrefab = Resources.Load<Player>(playerResPath);
 
         // NavMesh 위의 가장 가까운 위치 찾기

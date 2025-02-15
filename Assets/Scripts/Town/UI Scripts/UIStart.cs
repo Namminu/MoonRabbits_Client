@@ -170,6 +170,9 @@ public class UIStart : MonoBehaviour
         };
         GameManager.Network.Send(dataPacket);
 
+        // GameManager.Instance.UserName = nickname;
+        // GameManager.Instance.ClassIdx = classIdx;
+
         // TownManager.Instance.GameStart(nickname, classIdx);
 
         gameObject.SetActive(false);

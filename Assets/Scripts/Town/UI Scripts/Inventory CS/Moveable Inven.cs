@@ -6,45 +6,52 @@ using UnityEngine.UI;
 
 public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
 {
-	[SerializeField] private Transform targetUI;
-	[SerializeField] private Button btn_Close;
+    [SerializeField]
+    private Transform targetUI;
 
-	// ÀÎº¥ UIÀÇ À§Ä¡ ÀÌµ¿À» À§ÇÑ º¯¼ö
-	private Vector2 beginPos;
-	private Vector2 moveBegin;
-	private GameObject InvenUI;
-	// ÀÎº¥ UIÀÇ À§Ä¡ ¿ø»óº¹±Í¸¦ À§ÇÑ º¯¼ö
-	private Vector2 initPos;
+    [SerializeField]
+    private Button btn_Close;
 
-	private void Awake()
-	{
-		Debug.Log("ÀÎº¥Åä¸® Çì´õ È°¼ºÈ­");
+    // ì¸ë²¤ UIì˜ ìœ„ì¹˜ ì´ë™ì„ ìœ„í•œ ë³€ìˆ˜
+    private Vector2 beginPos;
+    private Vector2 moveBegin;
+    private GameObject InvenUI;
 
-		if (targetUI == null) targetUI = transform.parent;
-		if (InvenUI == null) InvenUI = targetUI.parent.gameObject;
-		btn_Close.onClick.AddListener(CloseInvenUI);
+    // ì¸ë²¤ UIì˜ ìœ„ì¹˜ ì›ìƒë³µê·€ë¥¼ ìœ„í•œ ë³€ìˆ˜
+    private Vector2 initPos;
 
-		initPos = targetUI.position;
-	}
+    private void Awake()
+    {
+        Debug.Log("ì¸ë²¤í† ë¦¬ í—¤ë” í™œì„±í™”");
 
-	void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
-	{
-		beginPos = targetUI.position;
-		moveBegin = eventData.position;
-	}
+        if (targetUI == null)
+            targetUI = transform.parent;
+        if (InvenUI == null)
+            InvenUI = targetUI.parent.gameObject;
+        btn_Close.onClick.AddListener(CloseInvenUI);
 
-	void IDragHandler.OnDrag(PointerEventData eventData)
-	{
-		targetUI.position = beginPos + (eventData.position - moveBegin);
-	}
+        initPos = targetUI.position;
+    }
 
-	void CloseInvenUI()
-	{
-		if(InvenUI != null) InvenUI.SetActive(false);
-	}
+    void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
+    {
+        beginPos = targetUI.position;
+        moveBegin = eventData.position;
+    }
 
-	void OnEnable()
-	{
-		targetUI.position = initPos;
-	}
+    void IDragHandler.OnDrag(PointerEventData eventData)
+    {
+        targetUI.position = beginPos + (eventData.position - moveBegin);
+    }
+
+    void CloseInvenUI()
+    {
+        if (InvenUI != null)
+            InvenUI.SetActive(false);
+    }
+
+    void OnEnable()
+    {
+        targetUI.position = initPos;
+    }
 }

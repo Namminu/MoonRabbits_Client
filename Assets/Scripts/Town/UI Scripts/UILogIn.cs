@@ -132,7 +132,7 @@ public class UILogIn : MonoBehaviour
         {
             /* The content will need to be revised once the multi-character
              * design is finalized right before the project's completion */
-            TownManager.Instance.GameStart(charsInfo[0].Nickname, charsInfo[0].Class);
+            TownManager.Instance.GameStart(charsInfo[0].Nickname, charsInfo[0].ClassCode);
 
             gameObject.SetActive(false);
             UIStart.SetActive(false);

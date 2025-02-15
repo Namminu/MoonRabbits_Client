@@ -29,20 +29,6 @@ class PacketHandler
             return;
         }
 
-        /*
-          신규 유저, 즉 회원가입 -> 로그인 -> 캐릭터 생성을 거친 사람은 무조건 1001번 주황색 넘만 걸리는 상황이었고,
-          찾아보니 GameManager의 UserName과 ClassIdx가 최신화가 안 되기 때문이었슴다
-          S2CCreateCharacterHandler에서 해줘야 할 일인데 임시로 맞춰놓았슴다
-          S2CCreateCharacter 패킷에도 nickname과 classCode가 있어야 하더라구요
-          기환 님이 왜 서버의 캐릭터 생성 핸들러 마지막에 S2CLogin 패킷을 보냈는지 이해했슴다
-          패킷 수정이 또 필요할 듯 한데, 기획이 달라질 수 있으니 그 때 한 번에 수정하는 걸로...
-         */
-        if (pkt.Msg == "캐릭터 생성에 성공했습니다.")
-        {
-            GameManager.Instance.UserName = pkt.OwnedCharacters[0].Nickname;
-            GameManager.Instance.ClassIdx = pkt.OwnedCharacters[0].Class;
-        }
-
         List<Google.Protobuf.Protocol.OwnedCharacters> charsInfo = pkt.OwnedCharacters.ToList();
         Debug.Log("charsInfo : " + charsInfo);
         EventManager.Trigger("CheckHasChar", charsInfo);

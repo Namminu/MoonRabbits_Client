@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     public S2CDungeonEnter Pkt;
 
     public string UserName;
-    public int ClassIdx;
+    public int ClassCode;
 
     private void Awake()
     {
