@@ -35,6 +35,16 @@ public class Player : MonoBehaviour
     private Vector3 targetPosition; // 목표 위치 저장
     private float moveSpeed = 10f; // 이동 속도
 
+    [Header("Skill Settings")]
+    /* 섬광탄 관련 변수 */
+    public Transform throwPoint;
+    public int throwPower;
+    private bool grenadeInput;
+    private bool trapInput;
+    private bool isThrow = false;
+    public GameObject grenade;
+    public GameObject trap;
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -81,15 +91,20 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (!isInitialized)
-            return;
+        // if (!isInitialized)
+        //     return;
 
-        if (!IsMine)
-        {
-            SmoothMoveAndRotate();
-        }
+        // 인풋 키 받는 함수 (스킬이나 조작 추가시 여기에 추가)
+        GetInput();
+
+        // if (!IsMine)
+        // {
+        //     SmoothMoveAndRotate();
+        // }
 
         CheckMove();
+
+        Throw();
     }
 
     private void SmoothMoveAndRotate()
@@ -162,5 +177,49 @@ public class Player : MonoBehaviour
         float dist = Vector3.Distance(lastPos, transform.position);
         animator.SetFloat(Constants.TownPlayerMove, dist * 100);
         lastPos = transform.position;
+    }
+
+    private void GetInput()
+    {
+        grenadeInput = Input.GetButtonDown("Grenade");
+        trapInput = Input.GetButtonDown("Trap");
+    }
+
+    private void Throw()
+    {
+        if (!isThrow && (grenadeInput || trapInput))
+        {
+            Debug.Log("Throw 진입");
+            isThrow = true;
+
+            if (grenadeInput)
+            {
+                Debug.Log("Grenade 진입");
+                GameObject currentObj = Instantiate(
+                    grenade,
+                    throwPoint.position,
+                    throwPoint.rotation
+                );
+
+                Rigidbody rigid = currentObj.GetComponent<Rigidbody>();
+
+                Vector3 forceVec = throwPoint.forward * throwPower + throwPoint.up * throwPower / 2;
+
+                rigid.AddForce(forceVec, ForceMode.Impulse);
+                rigid.AddTorque(Vector3.right, ForceMode.Impulse);
+            }
+            else if (trapInput)
+            {
+                // currentObj = Instantiate(trap, throwPoint.position, throwPoint.rotation);
+            }
+
+            Invoke(nameof(ThrowEnd), 3f);
+        }
+    }
+
+    private void ThrowEnd()
+    {
+        Debug.Log("ThrowEnd 진입");
+        isThrow = false;
     }
 }
