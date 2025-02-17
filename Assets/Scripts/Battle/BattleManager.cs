@@ -74,13 +74,13 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void ConfigureGame(S2CDungeonEnter pkt)
+    public void ConfigureGame(S2CSectorEnter pkt)
     {
         Debug.Log("Entering Dungeon");
 
-        if (pkt.DungeonInfo != null)
+        if (pkt.SectorInfo != null)
         {
-            ConfigureDungeon(pkt.DungeonInfo);
+            ConfigureDungeon(pkt.SectorInfo);
         }
 
         if (pkt.Player != null)
@@ -116,10 +116,10 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void ConfigureDungeon(DungeonInfo dungeonInfo)
+    public void ConfigureDungeon(SectorInfo SectorInfo)
     {
-        ConfigureMap(dungeonInfo.DungeonCode);
-        ConfigureMonsters(dungeonInfo.Monsters);
+        ConfigureMap(SectorInfo.SectorId);
+        ConfigureMonsters(SectorInfo.Monsters);
     }
 
     private void ResetMonsters()

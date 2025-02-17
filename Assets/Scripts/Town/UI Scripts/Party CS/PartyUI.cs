@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Google.Protobuf.Protocol;
 
 public class PartyUI : MonoBehaviour
 {
@@ -49,8 +50,7 @@ public class PartyUI : MonoBehaviour
   {
     Debug.Log("파티 생성 버튼 클릭됨");
 
-    
-
+    SendCreatePartyPacket();
     isInParty = true;
     UpdatePartyUI();
     SetPartyMemberInfo("테스트 닉네임", 10);
@@ -84,6 +84,12 @@ public class PartyUI : MonoBehaviour
   {
     partyWindow.SetActive(true);
     UpdatePartyUI();
+  }
+
+  private void SendCreatePartyPacket()
+  {
+    var createPartyPacket = new C2SCreateParty { };
+    GameManager.Network.Send(createPartyPacket);
   }
 
   // 파티원 정보를 설정하는 함수

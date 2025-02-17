@@ -101,20 +101,20 @@ public class MyPlayer : MonoBehaviour
         // 마지막으로 전송했던 좌표 기억해두기
         lastTargetPosition = targetPosition;
 
-                // 패킷 전송
-                var movePacket = new C2SPlayerMove
-                {
-                    StartPosX = transform.position.x,
-                    StartPosY = transform.position.y,
-                    StartPosZ = transform.position.z,
-                    TargetPosX = targetPosition.x,
-                    TargetPosY = targetPosition.y,
-                    TargetPosZ = targetPosition.z,
-                };
-                GameManager.Network.Send(movePacket);
-            }
-        }
+        // 패킷 전송
+        var movePacket = new C2SPlayerMove
+        {
+            StartPosX = transform.position.x,
+            StartPosY = transform.position.y,
+            StartPosZ = transform.position.z,
+            TargetPosX = targetPosition.x,
+            TargetPosY = targetPosition.y,
+            TargetPosZ = targetPosition.z,
+        };
+        GameManager.Network.Send(movePacket);
     }
+
+
 
     // IEnumerator ExecuteEvery10Frames()
     // {
