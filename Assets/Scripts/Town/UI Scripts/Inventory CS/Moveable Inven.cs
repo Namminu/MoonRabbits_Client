@@ -7,43 +7,62 @@ using UnityEngine.UI;
 public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
 {
 	[SerializeField] private Transform targetUI;
+	[Space]
+	[SerializeField] private Button btn_Sort;
+	[SerializeField] private Button btn_Decom;
 	[SerializeField] private Button btn_Close;
 
-	// ÀÎº¥ UIÀÇ À§Ä¡ ÀÌµ¿À» À§ÇÑ º¯¼ö
+	// ï¿½Îºï¿½ UIï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	private Vector2 beginPos;
 	private Vector2 moveBegin;
-	private GameObject InvenUI;
-	// ÀÎº¥ UIÀÇ À§Ä¡ ¿ø»óº¹±Í¸¦ À§ÇÑ º¯¼ö
+	[SerializeField] [ReadOnly] private GameObject InvenUI;
+	// ï¿½Îºï¿½ UIï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½óº¹±Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	private Vector2 initPos;
 
-	private void Awake()
-	{
-		Debug.Log("ÀÎº¥Åä¸® Çì´õ È°¼ºÈ­");
+    // ì¸ë²¤ UIì˜ ìœ„ì¹˜ ì´ë™ì„ ìœ„í•œ ë³€ìˆ˜
+    private Vector2 beginPos;
+    private Vector2 moveBegin;
+    private GameObject InvenUI;
 
 		if (targetUI == null) targetUI = transform.parent;
 		if (InvenUI == null) InvenUI = targetUI.parent.gameObject;
+
+		btn_Sort.onClick.AddListener(SortButton);
+		btn_Decom.onClick.AddListener(DecomButton);
 		btn_Close.onClick.AddListener(CloseInvenUI);
 
-		initPos = targetUI.position;
-	}
+    private void Awake()
+    {
+        Debug.Log("ì¸ë²¤í† ë¦¬ í—¤ë” í™œì„±í™”");
 
-	void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
+        if (targetUI == null)
+            targetUI = transform.parent;
+        if (InvenUI == null)
+            InvenUI = targetUI.parent.gameObject;
+        btn_Close.onClick.AddListener(CloseInvenUI);
+
+        initPos = targetUI.position;
+    }
+
+    void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
+    {
+        beginPos = targetUI.position;
+        moveBegin = eventData.position;
+    }
+
+	private void SortButton()
 	{
-		beginPos = targetUI.position;
-		moveBegin = eventData.position;
+		Debug.Log("Item Sort Btn Click");
+		InvenUI.GetComponent<InventoryUI>().SortItemList();
 	}
 
-	void IDragHandler.OnDrag(PointerEventData eventData)
+	private void DecomButton()
 	{
-		targetUI.position = beginPos + (eventData.position - moveBegin);
+		Debug.Log("Item Decom Btn Click");
+		InvenUI.GetComponent<InventoryUI>().DecomItems();
 	}
 
-	void CloseInvenUI()
-	{
-		if(InvenUI != null) InvenUI.SetActive(false);
-	}
-
-	void OnEnable()
+	private void OnEnable()
 	{
 		targetUI.position = initPos;
 	}

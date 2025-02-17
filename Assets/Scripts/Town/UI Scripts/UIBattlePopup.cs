@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class UIBattlePopup : MonoBehaviour
 {
-    [SerializeField] private Button[] btns;
+    [SerializeField]
+    private Button[] btns;
 
     private void Start()
     {
@@ -16,7 +17,7 @@ public class UIBattlePopup : MonoBehaviour
     {
         for (int i = 0; i < btns.Length; i++)
         {
-            int dungeonIndex = i + 1; 
+            int dungeonIndex = i + 1;
             btns[i].onClick.AddListener(() => OnButtonClicked(dungeonIndex));
         }
     }
@@ -32,7 +33,7 @@ public class UIBattlePopup : MonoBehaviour
     /// <param name="dungeonIndex">입장할 던전의 코드</param>
     private void EnterDungeon(int dungeonIndex)
     {
-        C_EnterDungeon enterPacket = new C_EnterDungeon { DungeonCode = dungeonIndex };
+        C2SDungeonEnter enterPacket = new C2SDungeonEnter { DungeonCode = dungeonIndex };
         GameManager.Network.Send(enterPacket);
     }
 }
