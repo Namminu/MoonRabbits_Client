@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
 {
 	[SerializeField] private Transform targetUI;
+	[SerializeField] private GameObject DecomUI;
 	[Space]
 	[SerializeField] private Button btn_Sort;
 	[SerializeField] private Button btn_Decom;
@@ -57,8 +58,14 @@ public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
 
 	private void DecomButton()
 	{
-		Debug.Log("Item Decom Btn Click");
-		InvenUI.GetComponent<InventoryUI>().DecomItems();
+		if(DecomUI != null)
+		{
+			if(DecomUI.activeSelf)
+			{
+				DecomUI.SetActive(false);
+			}
+			else DecomUI.SetActive(true);
+		}
 	}
 
 	private void OnEnable()

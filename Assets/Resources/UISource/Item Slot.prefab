@@ -186,11 +186,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2866da32accb65a49a709dafad3e41cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isInven: 1
   text_ItemAmount: {fileID: 5457597349266031113}
   itemImage: {fileID: 2225382797944255628}
+  itemCount: 0
   itemHighLighter: {fileID: 7360285403492351492}
-  highLightAlpha: 0.6
-  highLightTime: 0.1
+  PopupUI: {fileID: 0}
 --- !u!1 &1840060800256102427
 GameObject:
   m_ObjectHideFlags: 0
