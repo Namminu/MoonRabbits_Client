@@ -49,7 +49,8 @@ public class UIScreen : MonoBehaviour
             }
             else
             {
-                SendResponse(0);
+                /* 패킷 제거로 사용되지 않는 메서드 */
+                // SendResponse(0);
             }
         }
     }
@@ -98,11 +99,12 @@ public class UIScreen : MonoBehaviour
         CompleteMessageDisplay();
     }
 
-    private void SendResponse(int responseCode)
-    {
-        var response = new C_PlayerResponse { ResponseCode = responseCode };
-        GameManager.Network.Send(response);
-    }
+    /* 패킷 수정으로 보류된 메서드 */
+    // private void SendResponse(int responseCode)
+    // {
+    //     var response = new C_PlayerResponse { ResponseCode = responseCode };
+    //     GameManager.Network.Send(response);
+    // }
 
     private void SetBackgroundColor(byte r, byte g, byte b)
     {

@@ -10,22 +10,30 @@ public class BattleManager : MonoBehaviour
     private static BattleManager _instance = null;
     public static BattleManager Instance => _instance;
 
-    [SerializeField] private UIScreen uiScreen;
-    [SerializeField] private UIBattleLog uiBattleLog;
-    [SerializeField] private UIPlayerInformation uiPlayerInformation;
+    [SerializeField]
+    private UIScreen uiScreen;
+
+    [SerializeField]
+    private UIBattleLog uiBattleLog;
+
+    [SerializeField]
+    private UIPlayerInformation uiPlayerInformation;
 
     public UIScreen UiScreen => uiScreen;
     public UIBattleLog UiBattleLog => uiBattleLog;
     public UIPlayerInformation UiPlayerInformation => uiPlayerInformation;
 
-    [SerializeField] private Maps map;
+    [SerializeField]
+    private Maps map;
 
-    [SerializeField] private Transform[] players;
+    [SerializeField]
+    private Transform[] players;
     private Animator playerAnimator;
 
     private readonly Dictionary<int, string> monsterDb = new Dictionary<int, string>();
 
-    [SerializeField] private Transform[] monsterSpawnPos;
+    [SerializeField]
+    private Transform[] monsterSpawnPos;
     private readonly List<Monster> monsterObjs = new List<Monster>();
 
     private readonly List<UIMonsterInformation> monsterUis = new List<UIMonsterInformation>();
@@ -36,7 +44,7 @@ public class BattleManager : MonoBehaviour
     {
         Constants.PlayerBattleAttack1,
         Constants.PlayerBattleDie,
-        Constants.PlayerBattleHit
+        Constants.PlayerBattleHit,
     };
 
     private void Awake()
@@ -66,7 +74,7 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void ConfigureGame(S_EnterDungeon pkt)
+    public void ConfigureGame(S2CDungeonEnter pkt)
     {
         Debug.Log("Entering Dungeon");
 
@@ -81,15 +89,16 @@ public class BattleManager : MonoBehaviour
             ConfigurePlayer(pkt.Player.PlayerClass);
         }
 
-        if (pkt.ScreenText != null)
-        {
-            uiScreen.Display(pkt.ScreenText);
-        }
+        /* !!! 패킷 수정에 따라 제거된 데이터들임다 !!! */
+        // if (pkt.ScreenText != null)
+        // {
+        //     uiScreen.Display(pkt.ScreenText);
+        // }
 
-        if (pkt.BattleLog != null)
-        {
-            uiBattleLog.Initialize(pkt.BattleLog);
-        }
+        // if (pkt.BattleLog != null)
+        // {
+        //     uiBattleLog.Initialize(pkt.BattleLog);
+        // }
     }
 
     private void ConfigurePlayer(int classCode)

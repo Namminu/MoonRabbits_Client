@@ -163,8 +163,15 @@ public class UIStart : MonoBehaviour
 
         nickname = inputNickname.text;
 
-        var dataPacket = new C_CreateCharacter { Nickname = nickname, Class = classIdx + 1001 };
+        var dataPacket = new C2SCreateCharacter
+        {
+            Nickname = nickname,
+            ClassCode = classIdx + 1001,
+        };
         GameManager.Network.Send(dataPacket);
+
+        // GameManager.Instance.UserName = nickname;
+        // GameManager.Instance.ClassIdx = classIdx;
 
         // TownManager.Instance.GameStart(nickname, classIdx);
 

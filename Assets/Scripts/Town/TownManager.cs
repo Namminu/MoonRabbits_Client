@@ -12,13 +12,26 @@ public class TownManager : MonoBehaviour
     private static TownManager _instance;
     public static TownManager Instance => _instance;
 
-    [SerializeField] private CinemachineFreeLook freeLook;
-    [SerializeField] private Transform spawnArea;
-    [SerializeField] private EventSystem eSystem;
-    [SerializeField] private UIStart uiStart;
-    [SerializeField] private UIAnimation uiAnimation;
-    [SerializeField] private UIChat uiChat;
-    [SerializeField] private TMP_Text txtServer;
+    [SerializeField]
+    private CinemachineFreeLook freeLook;
+
+    [SerializeField]
+    private Transform spawnArea;
+
+    [SerializeField]
+    private EventSystem eSystem;
+
+    [SerializeField]
+    private UIStart uiStart;
+
+    [SerializeField]
+    private UIAnimation uiAnimation;
+
+    [SerializeField]
+    private UIChat uiChat;
+
+    [SerializeField]
+    private TMP_Text txtServer;
 
     private const string DefaultPlayerPath = "Player/Player1";
 
@@ -70,28 +83,28 @@ public class TownManager : MonoBehaviour
     /// <summary>
     /// MW - After Click Confirm/LocalServer btn, Try Method To Connect Server
     /// </summary>
-	public void TryConnectToServer(string gameServer, string port)
-    { 
-		GameManager.Network.Init(gameServer, port);
-		txtServer.text = gameServer;
-	}
+    public void TryConnectToServer(string gameServer, string port)
+    {
+        GameManager.Network.Init(gameServer, port);
+        txtServer.text = gameServer;
+    }
 
-	/// <summary>
-	/// MW - After Login Success, Try Method To Join In Game 
-	/// </summary>
-	public void GameStart(string userName, int classIdx)
+    /// <summary>
+    /// MW - After Login Success, Try Method To Join In Game
+    /// </summary>
+    public void GameStart(string userName, int classCode)
     {
         GameManager.Instance.UserName = userName;
-        GameManager.Instance.ClassIdx = classIdx + 1001; 
+        GameManager.Instance.ClassCode = classCode;
         Connected();
-	  }
+    }
 
     public void Connected()
     {
-        var enterPacket = new C_Enter
+        var enterPacket = new C2STownEnter
         {
             Nickname = GameManager.Instance.UserName,
-            Class = GameManager.Instance.ClassIdx
+            ClassCode = GameManager.Instance.ClassCode,
         };
 
         GameManager.Network.Send(enterPacket);
@@ -117,7 +130,7 @@ public class TownManager : MonoBehaviour
 
     public Player CreatePlayer(PlayerInfo playerInfo, Vector3 spawnPos)
     {
-        string playerResPath = playerDb.GetValueOrDefault(playerInfo.Class, DefaultPlayerPath);
+        string playerResPath = playerDb.GetValueOrDefault(playerInfo.ClassCode, DefaultPlayerPath);
         Player playerPrefab = Resources.Load<Player>(playerResPath);
 
         // NavMesh 위의 가장 가까운 위치 찾기
@@ -156,10 +169,10 @@ public class TownManager : MonoBehaviour
         }
     }
 
-
     public void ReleasePlayer(int playerId)
     {
-        if (!playerList.TryGetValue(playerId, out var player)) return;
+        if (!playerList.TryGetValue(playerId, out var player))
+            return;
 
         playerList.Remove(playerId);
         Destroy(player.gameObject);

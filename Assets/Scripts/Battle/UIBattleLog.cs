@@ -11,10 +11,17 @@ using Color = UnityEngine.Color;
 
 public class UIBattleLog : MonoBehaviour
 {
-    [SerializeField] private TMP_Text txtLog;
-    [SerializeField] private Button[] btns;
-    [SerializeField] private TMP_Text[] btnTexts;
-    [SerializeField] private Image imgContinue;
+    [SerializeField]
+    private TMP_Text txtLog;
+
+    [SerializeField]
+    private Button[] btns;
+
+    [SerializeField]
+    private TMP_Text[] btnTexts;
+
+    [SerializeField]
+    private Image imgContinue;
 
     private BtnInfo[] btnInfos;
     private bool isLogComplete;
@@ -55,7 +62,8 @@ public class UIBattleLog : MonoBehaviour
             }
             else if (btnInfos == null)
             {
-                SendResponse(0);
+                /* 패킷 수정으로 보류된 메서드 */
+                // SendResponse(0);
             }
         }
     }
@@ -71,7 +79,8 @@ public class UIBattleLog : MonoBehaviour
 
         if (useTypingAnimation)
         {
-            txtLog.DOText(currentMessage, currentMessage.Length / 20f)
+            txtLog
+                .DOText(currentMessage, currentMessage.Length / 20f)
                 .SetEase(Ease.Linear)
                 .OnComplete(OnLogComplete);
         }
@@ -120,14 +129,16 @@ public class UIBattleLog : MonoBehaviour
 
     private void OnButtonClick(int index)
     {
-        SendResponse(index);
+        /* 패킷 수정으로 보류된 메서드 */
+        // SendResponse(index);
     }
 
-    private void SendResponse(int index)
-    {
-        var response = new C_PlayerResponse { ResponseCode = index };
-        GameManager.Network.Send(response);
-    }
+    /* 패킷 수정으로 보류된 메서드 */
+    // private void SendResponse(int index)
+    // {
+    //     var response = new C_PlayerResponse { ResponseCode = index };
+    //     GameManager.Network.Send(response);
+    // }
 
     private static void SetImageAlpha(Image image, float alpha)
     {
