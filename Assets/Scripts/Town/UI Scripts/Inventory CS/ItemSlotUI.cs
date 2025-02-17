@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.ShaderGraph.Internal;
+// using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,22 +9,22 @@ using UnityEngine.UI;
 public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [Header("Item Info")] 
-    private Item item;  //È¹µæ ¾ÆÀÌÅÛ °´Ã¼
-    [SerializeField] private TMP_Text text_ItemAmount;  //¾ÆÀÌÅÛ ¼ö·®
+    private Item item;  //È¹ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼
+    [SerializeField] private TMP_Text text_ItemAmount;  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private int itemCount;
-	[SerializeField] private Image itemImage;    //¾ÆÀÌÅÛ ÀÌ¹ÌÁö
+	[SerializeField] private Image itemImage;    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½
 
-    [Space] // ¾ÆÀÌÅÛ ÇÏÀÌ¶óÀÌÆ®
+    [Space] // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ï¿½Æ®
 	[SerializeField] private Image itemHighLighter;
 
     // Start is called before the first frame update
     void Start()
     {
-        // DB¿¡¼­ ÀÎº¥Åä¸® Á¤º¸ ¹Þ¾Æ¿À´Â °úÁ¤..?
-        // AddItem(DB¿¡¼­ ¹Þ¾Æ¿Â Á¤º¸)?
+        // DBï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½..?
+        // AddItem(DBï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ ï¿½ï¿½ï¿½ï¿½)?
     }
 
-	// ¾ÆÀÌÅÛ µî·Ï ½Ã ÀÌ¹ÌÁö °´Ã¼ÀÇ Åõ¸íµµ Á¶ÀýÀ» À§ÇÑ ¸Þ¼­µå
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
 	private void SetItemImageAlpha(float alpha)
     {
         Color newColor = itemImage.color;
@@ -32,12 +32,12 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         itemImage.color = newColor;
 	}
 
-    // ¾ÆÀÌÅÛ µî·Ï ¸Þ¼­µå
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
     public void AddItem(Item insertItem, int insertItemCount = 1)
     {
         item = insertItem;
         itemCount = insertItemCount;
-        /* ½½·Ô UI¿¡ ¾ÆÀÌÅÛ ÀÌ¹ÌÁö¸¦ Ãß°¡ÇÏ´Â °úÁ¤ - Item ÄÚµå ¿Ï¼º ¹× DB ¿¬µ¿°úÁ¤ ÇÊ¿ä
+        /* ï¿½ï¿½ï¿½ï¿½ UIï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ - Item ï¿½Úµï¿½ ï¿½Ï¼ï¿½ ï¿½ï¿½ DB ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
 		//itemImage.sprite = insertItem.itemImage;  */
 
         text_ItemAmount.text = insertItemCount.ToString();
