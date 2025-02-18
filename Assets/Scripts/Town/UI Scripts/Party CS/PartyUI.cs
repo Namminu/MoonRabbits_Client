@@ -171,9 +171,10 @@ public class PartyUI : MonoBehaviour
     else
     {
       if (leaveButton != null) leaveButton.gameObject.SetActive(false);
+      // 내 카드가 아닌 경우
       if (Party.instance.leaderId == Party.instance.GetMyPlayerId())
       {
-        // **파티장인 경우: 강퇴 버튼 활성화**
+        // 내가 파티장인 경우: 강퇴 버튼 활성화
         if (kickOutButton != null)
         {
           kickOutButton.gameObject.SetActive(true);
@@ -182,6 +183,7 @@ public class PartyUI : MonoBehaviour
       }
       else
       {
+        // 내가 파티장이 아닌 경우
         if (kickOutButton != null) kickOutButton.gameObject.SetActive(false);
       }
     }
