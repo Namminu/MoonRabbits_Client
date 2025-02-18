@@ -192,6 +192,7 @@ MonoBehaviour:
   itemCount: 0
   itemHighLighter: {fileID: 7360285403492351492}
   PopupUI: {fileID: 0}
+  tooltipUI: {fileID: 0}
 --- !u!1 &1840060800256102427
 GameObject:
   m_ObjectHideFlags: 0

@@ -25,7 +25,9 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 	[Header("Popup UI")]
 	[SerializeField] private GameObject PopupUI;
 	private PopupUI popupUICs;
-
+	 
+	[SerializeField][ReadOnly]private TooltipUI tooltipUI;
+	private RectTransform rectTransform;
 	private GameObject DecomUI;
 	private ItemSlotUI originSlot;
 
@@ -39,6 +41,9 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 	// Start is called before the first frame update
 	void Start()
     {
+		tooltipUI = FindObjectOfType<TooltipUI>(true);
+		rectTransform = GetComponent<RectTransform>();
+
 		// DB에서 인벤토리 정보 받아오는 과정..?
 		// AddItem(DB에서 받아온 정보)?
 	}
@@ -126,15 +131,25 @@ public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 		Debug.Log("Item Slot Change : " + this.name + DragSlot.instance.dragSlot.name);
 	}
 
+	private void UpdateTooltipUI()
+	{
+		//tooltipUI.SetItemDesc(item.GetItemData());
+		tooltipUI.SetTooltipUIPos(rectTransform);
+		tooltipUI.Show();
+	}
 
 	#region Mouse Event
 	public void OnPointerEnter(PointerEventData eventData)
 	{
+		// if (item == null) return;
+
 		itemHighLighter.gameObject.SetActive(true);
+		UpdateTooltipUI();
 	}
 	public void OnPointerExit(PointerEventData eventData)
 	{
 		itemHighLighter.gameObject.SetActive(false);
+		tooltipUI.Hide();
 	}
 
 	public void OnBeginDrag(PointerEventData eventData)
