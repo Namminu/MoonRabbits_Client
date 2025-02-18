@@ -29,7 +29,7 @@ public class UILogIn : MonoBehaviour
     private Button btn_Back;
 
     [SerializeField]
-    private Button btn_Reigster;
+    private Button btn_Register;
 
     [SerializeField]
     private Button btn_Confirm;
@@ -72,7 +72,7 @@ public class UILogIn : MonoBehaviour
             txt_Title.text = "로그인";
             ClearTextField();
             userPWC.gameObject.SetActive(false);
-            btn_Reigster.gameObject.SetActive(true);
+            btn_Register.gameObject.SetActive(true);
         }
     }
 
@@ -86,7 +86,7 @@ public class UILogIn : MonoBehaviour
         txt_Title.text = "회원가입";
         ClearTextField();
         userPWC.gameObject.SetActive(true);
-        btn_Reigster.gameObject.SetActive(false);
+        btn_Register.gameObject.SetActive(false);
     }
 
     public void ConfirmButton()

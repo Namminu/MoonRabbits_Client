@@ -26,18 +26,18 @@ public class UIEntrance : MonoBehaviour
         switch(sceneName)
         {
             case "Battle":
-                sceneText = "ÀüÅõÁö¿ª";
+                sceneText = "ì „íˆ¬ì§€ì—­";
                 break;
             case "MyHouse":
-				sceneText = "Áı";
+				sceneText = "ì§‘";
 				break;
             case "Town":
-				sceneText = "±¤Àå";
+				sceneText = "ê´‘ì¥";
 				break;
             default: break;
         }
 		nextSceneName = sceneName;
-        LoadSceneText.text = sceneText + "À¸·Î ÀÌµ¿ÇÏ½Ã°Ú½À´Ï±î?";
+        LoadSceneText.text = sceneText + "ìœ¼ë¡œ ì´ë™í•˜ì‹œê² ìŠµë‹ˆê¹Œ?";
 	}
 
     private void YesButton()
