@@ -1104,39 +1104,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 224688544}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &227296379 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8712224059146468640, guid: 7668c87dcd01ded4e84265f811a5323e,
-    type: 3}
-  m_PrefabInstance: {fileID: 1007058285}
-  m_PrefabAsset: {fileID: 0}
---- !u!54 &227296384
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 227296379}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!4 &240321842 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3004362939999295092, guid: 634866599cc6db94faa712172387c512,
@@ -2265,11 +2232,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: BattleBee
       objectReference: {fileID: 0}
-    - target: {fileID: 3206856972369708563, guid: 7668c87dcd01ded4e84265f811a5323e,
-        type: 3}
-      propertyPath: m_TagString
-      value: Monster
-      objectReference: {fileID: 0}
     - target: {fileID: 3593600299313454251, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
       propertyPath: monsterArea
@@ -2324,11 +2286,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5867071260382139506, guid: 7668c87dcd01ded4e84265f811a5323e,
-        type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4282,16 +4239,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: BattleBee (10)
       objectReference: {fileID: 0}
-    - target: {fileID: 3206856972369708563, guid: 7668c87dcd01ded4e84265f811a5323e,
-        type: 3}
-      propertyPath: m_TagString
-      value: Monster
-      objectReference: {fileID: 0}
-    - target: {fileID: 3593600299313454251, guid: 7668c87dcd01ded4e84265f811a5323e,
-        type: 3}
-      propertyPath: id
-      value: 11
-      objectReference: {fileID: 0}
     - target: {fileID: 3593600299313454251, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
       propertyPath: monsterArea
@@ -4347,19 +4294,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5867071260382139506, guid: 7668c87dcd01ded4e84265f811a5323e,
-        type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8712224059146468640, guid: 7668c87dcd01ded4e84265f811a5323e,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 227296384}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7668c87dcd01ded4e84265f811a5323e, type: 3}
 --- !u!1001 &1012804417
 PrefabInstance:
