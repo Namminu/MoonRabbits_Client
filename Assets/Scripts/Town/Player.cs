@@ -205,7 +205,7 @@ public class Player : MonoBehaviour
 
                 Vector3 forceVec = throwPoint.forward * throwPower + throwPoint.up * throwPower / 2;
 
-                rigid.AddForce(forceVec, ForceMode.Impulse);
+                rigid.AddForce(forceVec, ForceMode.VelocityChange);
                 rigid.AddTorque(Vector3.right, ForceMode.Impulse);
             }
             else if (trapInput)
