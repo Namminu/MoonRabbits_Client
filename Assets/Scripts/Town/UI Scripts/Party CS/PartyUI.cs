@@ -13,6 +13,8 @@ public class PartyUI : MonoBehaviour
   public GameObject inPartyPanel; // "현재 참가 중인 파티" 패널
 
   public Button createPartyButton; // 파티 생성 버튼
+  public Button invitePartyButton; // 파티 생성 버튼
+
   public Button joinPartyButton;   // ID로 파티 참가 버튼
   public Button closeButton;       // 닫기 버튼
 
@@ -56,6 +58,8 @@ public class PartyUI : MonoBehaviour
     {
       noPartyPanel.SetActive(false);
       inPartyPanel.SetActive(true);
+      Button invitePartyButton = inPartyPanel.transform.Find("InvitePartyBtn").GetComponent<Button>();
+      invitePartyButton.onClick.AddListener(OnInvitePartyClicked);
     }
     else
     {
@@ -82,6 +86,13 @@ public class PartyUI : MonoBehaviour
     isInParty = true;
     UpdatePartyUI();
     AddPartyMember("테스트 닉네임", 10);
+  }
+
+  // 파티 초대 버튼 클릭 시 실행
+  void OnInvitePartyClicked()
+  {
+    Debug.Log("파티 초대 버튼 클릭됨");
+    AddPartyMember("테스트", 1);
   }
 
   // 파티 탈퇴 버튼 클릭 시 실행

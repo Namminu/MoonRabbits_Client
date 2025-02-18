@@ -173,8 +173,10 @@ class PacketHandler
             return;
         Debug.Log($"S2CCreateParty 패킷 무사 도착 : {pkt}");
         var player = TownManager.Instance.GetPlayerAvatarById(pkt.LeaderId);
+        string nickname = player.nickname;
+        int level = player.level;
 
-        PartyUI.Instance.AddPartyMember(player.nickname, 1);
+        PartyUI.Instance.AddPartyMember(nickname, level);
     }
 
     public static void S2CInvitePartyHandler(PacketSession session, IMessage packet)
