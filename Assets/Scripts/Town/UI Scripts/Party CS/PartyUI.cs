@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Google.Protobuf.Protocol;
 using TMPro;
 using UnityEngine;
@@ -23,6 +24,7 @@ public class PartyUI : MonoBehaviour
   public Button closeButton;       // 닫기 버튼
 
   public bool isInParty = false; // 파티 참가 여부
+  private int memberId = 100;
 
   private void Awake()
   {
@@ -51,6 +53,7 @@ public class PartyUI : MonoBehaviour
       noPartyPanel.SetActive(false);
       inPartyPanel.SetActive(true);
       Button invitePartyButton = inPartyPanel.transform.Find("InvitePartyBtn").GetComponent<Button>();
+      invitePartyButton.onClick.RemoveAllListeners();
       invitePartyButton.onClick.AddListener(OnInvitePartyClicked);
 
       // 기존 멤버 카드 삭제
@@ -68,6 +71,8 @@ public class PartyUI : MonoBehaviour
       inPartyPanel.SetActive(false);
       ClearPartyMembers();
     }
+
+    // UpdateScrollView();
   }
 
   // 파티 생성 버튼 클릭 시 실행
@@ -100,7 +105,16 @@ public class PartyUI : MonoBehaviour
   void OnInvitePartyClicked()
   {
     Debug.Log("파티 초대 버튼 클릭됨");
-    CreateMemberCard(100, "테스트", true, false);
+    // CreateMemberCard(memberId++, "테스트", true, false);
+
+    var memberData = new MemberCardInfo
+    {
+      Id = memberId++,
+      Nickname = "테스트",
+      IsPartyLeader = false,
+      IsMine = false
+    };
+    Party.instance.InvitePartyData(memberData);
   }
 
   // 파티 창 닫기
@@ -116,7 +130,7 @@ public class PartyUI : MonoBehaviour
   }
 
 
-  public void CreateMemberCard(int playerId, string nickname, bool isLeader, bool isMine)
+  private void CreateMemberCard(int playerId, string nickname, bool isLeader, bool isMine)
   {
     if (memberCardPrefab == null || partyMemberContainer == null)
     {
@@ -157,7 +171,7 @@ public class PartyUI : MonoBehaviour
     else
     {
       if (leaveButton != null) leaveButton.gameObject.SetActive(false);
-      if (isLeader)
+      if (Party.instance.leaderId == Party.instance.GetMyPlayerId())
       {
         // **파티장인 경우: 강퇴 버튼 활성화**
         if (kickOutButton != null)
@@ -172,6 +186,7 @@ public class PartyUI : MonoBehaviour
       }
     }
   }
+
 
   // 기존 멤버 삭제
   private void ClearPartyMembers()
@@ -194,7 +209,7 @@ public class PartyUI : MonoBehaviour
     };
 
     // SetPartyData 호출 (빈 멤버 리스트 적용)
-    Party.instance.SetPartyData(newPartyData);
+    Party.instance.CreatePartyData(newPartyData);
 
     isInParty = false;
     UpdateUI();
@@ -213,4 +228,10 @@ public class PartyUI : MonoBehaviour
     UpdateUI();
   }
 
+  void UpdateScrollView()
+  {
+    // 스크롤을 맨 아래로 이동 (새로운 멤버가 추가될 때 자동 스크롤)
+    Canvas.ForceUpdateCanvases();
+    scrollRect.verticalNormalizedPosition = 0f;
+  }
 }

@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using Google.Protobuf.Protocol;
+using Unity.VisualScripting;
 using UnityEngine;
 public class Party : MonoBehaviour
 {
@@ -18,7 +20,7 @@ public class Party : MonoBehaviour
   }
 
   // 서버에서 받은 데이터로 파티 정보 업데이트
-  public void SetPartyData(S2CCreateParty partyData)
+  public void CreatePartyData(S2CCreateParty partyData)
   {
     partyId = partyData.PartyId;
     leaderId = partyData.LeaderId;
@@ -36,10 +38,27 @@ public class Party : MonoBehaviour
     PartyUI.instance.UpdateUI();
   }
 
+  public void InvitePartyData(MemberCardInfo memberCardInfo)
+  {
+    members.Add(new MemberCardInfo { Id = memberCardInfo.Id, Nickname = memberCardInfo.Nickname, IsMine = memberCardInfo.IsMine });
+
+    // UI 업데이트 요청 (PartyUI에서 처리)
+    PartyUI.instance.isInParty = true;
+    PartyUI.instance.UpdateUI();
+  }
+
   public void RemoveMember(int playerId)
   {
     members.RemoveAll(m => m.Id == playerId);
     memberCount = members.Count;
   }
+  public int GetMyPlayerId()
+  {
+    return GetMyPlayer()?.PlayerId ?? -1;
+  }
 
+  private Player GetMyPlayer()
+  {
+    return FindObjectsOfType<Player>().FirstOrDefault(p => p.IsMine);
+  }
 }

@@ -176,8 +176,7 @@ class PacketHandler
         string nickname = player.nickname;
         int level = player.level;
 
-        Party.instance.SetPartyData(pkt);
-        // PartyUI.instance.CreateMemberCard(pkt.LeaderId, nickname, true, true);
+        Party.instance.CreatePartyData(pkt);
     }
 
     public static void S2CInvitePartyHandler(PacketSession session, IMessage packet)
@@ -185,6 +184,8 @@ class PacketHandler
         if (packet is not S2CInviteParty pkt)
             return;
         Debug.Log($"S2CInviteParty 패킷 무사 도착 : {pkt}");
+
+        // Party.instance.InvitePartyData();
     }
 
     public static void S2CJoinPartyHandler(PacketSession session, IMessage packet)
