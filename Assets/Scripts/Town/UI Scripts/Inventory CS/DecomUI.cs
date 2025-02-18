@@ -40,11 +40,11 @@ public class DecomUI : MonoBehaviour
 	private void OnEnable()
 	{
 		popupUICs = PopupUI.GetComponent<PopupUI>();
-		EventManager.Subscribe("DecomItem", OnDecomItem);
+		EventManager.Subscribe("OnDecomItem", OnDecomItem);
 	}
 
 	private void OnDisable()
 	{
-		EventManager.Unsubscribe("DecomItem", OnDecomItem);
+		EventManager.Unsubscribe("OnDecomItem", OnDecomItem);
 	}
 }

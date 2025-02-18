@@ -98,12 +98,12 @@ public class UILogIn : MonoBehaviour
 	/// Display Packet Message On Login UI
 	/// </summary>
 	/// <param name="msg"></param>
-    public void DisplayMessage(string msg)
+	public void DisplayMessage(string msg)
     {
 		txt_Error.text = msg;
     }
 
-    private void ClearTextField()
+	private void ClearTextField()
     {
 		userEmail.text = string.Empty;
 		userPW.text = string.Empty;
