@@ -13,6 +13,10 @@ public class PartyUI : MonoBehaviour
   public GameObject noPartyPanel;
   public GameObject inPartyPanel;
 
+  // 팝업창
+  public GameObject invitePartyPopUp;
+  public GameObject allowInvitePopUp;
+
   public Transform partyMemberContainer;
   public GameObject memberCardPrefab;
   public ScrollRect scrollRect;
@@ -102,19 +106,56 @@ public class PartyUI : MonoBehaviour
   // }
 
   // 파티 초대 버튼 클릭 시 실행
+  // void OnInvitePartyClicked()
+  // {
+  //   Debug.Log("파티 초대 버튼 클릭됨");
+  //   // CreateMemberCard(memberId++, "테스트", true, false);
+
+  //   var memberData = new MemberCardInfo
+  //   {
+  //     Id = memberId++,
+  //     Nickname = "테스트",
+  //     IsPartyLeader = false,
+  //     IsMine = false
+  //   };
+  //   Party.instance.InvitePartyData(memberData);
+  // }
+
+  // 파티 초대 버튼 클릭 시 실행
   void OnInvitePartyClicked()
   {
     Debug.Log("파티 초대 버튼 클릭됨");
-    // CreateMemberCard(memberId++, "테스트", true, false);
+    invitePartyPopUp.SetActive(true);
+    Button submitBtn = invitePartyPopUp.transform.Find("SubmitBtn").GetComponent<Button>();
 
-    var memberData = new MemberCardInfo
-    {
-      Id = memberId++,
-      Nickname = "테스트",
-      IsPartyLeader = false,
-      IsMine = false
-    };
-    Party.instance.InvitePartyData(memberData);
+    submitBtn.onClick.AddListener(OnSubmitClicked);
+  }
+
+  void OnSubmitClicked()
+  {
+    TMP_InputField inviteNickname = invitePartyPopUp.transform.Find("InviteNickname").GetComponent<TMP_InputField>();
+    string nickname = inviteNickname.text;
+
+    SendInvitePartyPacket(nickname);
+  }
+
+  public void CloseInvitePopUp()
+  {
+    invitePartyPopUp.SetActive(false);
+    UpdateUI();
+  }
+
+  public void OpenAllowInvitePopUp(string partyId, string leaderNickname, int memberId)
+  {
+    allowInvitePopUp.SetActive(true);
+
+    TMP_Text allowText = allowInvitePopUp.transform.Find("RawImage/AllowText").GetComponent<TMP_Text>();
+    allowText.text = $"{leaderNickname}님이 초대했습니다.";
+
+    Button allowBtn = allowInvitePopUp.transform.Find("AllowBtn").GetComponent<Button>();
+
+    allowBtn.onClick.RemoveAllListeners();
+    allowBtn.onClick.AddListener(() => SendAllowInvitePacket(partyId, memberId));
   }
 
   // 파티 창 닫기
@@ -127,6 +168,18 @@ public class PartyUI : MonoBehaviour
   {
     var createPartyPacket = new C2SCreateParty { };
     GameManager.Network.Send(createPartyPacket);
+  }
+
+  private void SendAllowInvitePacket(string partyId, int memberId)
+  {
+    var allowInvitePacket = new C2SAllowInvite { PartyId = partyId, MemberId = memberId };
+    GameManager.Network.Send(allowInvitePacket);
+  }
+
+  private void SendInvitePartyPacket(string nickname)
+  {
+    var invitePartyPacket = new C2SInviteParty { PartyId = Party.instance.partyId, Nickname = nickname };
+    GameManager.Network.Send(invitePartyPacket);
   }
 
 

@@ -181,7 +181,20 @@ class PacketHandler
             return;
         Debug.Log($"S2CInviteParty 패킷 무사 도착 : {pkt}");
 
-        // Party.instance.InvitePartyData();
+        string leaderNickname = pkt.LeaderNickname;
+        string partyId = pkt.PartyId;
+        int memberId = pkt.MemberId;
+
+        // 수락 팝업창 띄우기
+        PartyUI.instance.OpenAllowInvitePopUp(partyId, leaderNickname, memberId);
+    }
+
+    public static void S2CAllowInviteHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CAllowInvite pkt)
+            return;
+        Debug.Log($"S2CAllowInvite 패킷 무사 도착 : {pkt}");
+        Party.instance.AllowInviteData(pkt);
     }
 
     public static void S2CJoinPartyHandler(PacketSession session, IMessage packet)

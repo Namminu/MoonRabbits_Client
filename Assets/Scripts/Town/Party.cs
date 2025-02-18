@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 public class Party : MonoBehaviour
 {
-  public int partyId { get; private set; }
+  public string partyId { get; private set; }
   public int leaderId { get; private set; }
   public int memberCount { get; private set; }
   public List<MemberCardInfo> members { get; private set; } = new List<MemberCardInfo>();
@@ -38,14 +38,40 @@ public class Party : MonoBehaviour
     PartyUI.instance.UpdateUI();
   }
 
-  public void InvitePartyData(MemberCardInfo memberCardInfo)
+  public void AllowInviteData(S2CAllowInvite partyData)
   {
-    members.Add(new MemberCardInfo { Id = memberCardInfo.Id, Nickname = memberCardInfo.Nickname, IsMine = memberCardInfo.IsMine });
+    partyId = partyData.PartyId;
+    leaderId = partyData.LeaderId;
+    memberCount = partyData.MemberCount;
+
+    // 기존 멤버 리스트 초기화 후 새 데이터로 채우기
+    members.Clear();
+    foreach (var member in partyData.Members)
+    {
+      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, IsMine = member.IsMine });
+    }
 
     // UI 업데이트 요청 (PartyUI에서 처리)
     PartyUI.instance.isInParty = true;
     PartyUI.instance.UpdateUI();
   }
+
+  // public void InvitePartyData(S2CInviteParty partyData)
+  // {
+  //   partyId = partyData.PartyId;
+  //   leaderId = partyData.LeaderId;
+  //   memberCount = partyData.MemberCount;
+
+  //   // 기존 멤버 리스트 초기화 후 새 데이터로 채우기
+  //   members.Clear();
+  //   foreach (var member in partyData.Members)
+  //   {
+  //     members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, IsMine = member.IsMine });
+  //   }
+
+  //   // UI 업데이트 요청 (PartyUI에서 처리)
+  //   PartyUI.instance.CloseInvitePopUp();
+  // }
 
   public void RemoveMember(int playerId)
   {
