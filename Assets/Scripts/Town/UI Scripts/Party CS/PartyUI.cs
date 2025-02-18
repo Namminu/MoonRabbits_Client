@@ -21,6 +21,7 @@ public class PartyUI : MonoBehaviour
 
   public Transform partyMemberContainer; // 멤버 카드가 추가될 부모 오브젝트
   public GameObject memberCardPrefab; // MemberCard 프리팹
+  public ScrollRect scrollRect;
 
   private List<GameObject> partyMembers = new List<GameObject>(); // 생성된 파티원 리스트
   private bool isInParty = false; // 파티 참가 여부
@@ -131,6 +132,8 @@ public class PartyUI : MonoBehaviour
     if (nameText != null) nameText.text = nickname;
     if (levelText != null) levelText.text = level + " Lv.";
     if (leaveButton != null) leaveButton.onClick.AddListener(OnLeavePartyClicked);
+
+    UpdateScrollView();
   }
 
   // 파티원 제거 함수
@@ -148,6 +151,8 @@ public class PartyUI : MonoBehaviour
       isInParty = false;
       UpdatePartyUI();
     }
+
+    UpdateScrollView();
   }
 
   // 기존 파티원 UI 초기화
@@ -158,6 +163,16 @@ public class PartyUI : MonoBehaviour
       Destroy(member);
     }
     partyMembers.Clear();
+
+    UpdateScrollView();
   }
+
+  void UpdateScrollView()
+  {
+    // 스크롤을 맨 아래로 이동 (새로운 멤버가 추가될 때 자동 스크롤)
+    Canvas.ForceUpdateCanvases();
+    scrollRect.verticalNormalizedPosition = 0f;
+  }
+
 }
 
