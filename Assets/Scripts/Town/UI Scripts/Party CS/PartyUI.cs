@@ -1,16 +1,20 @@
+using System.Collections.Generic;
+using Google.Protobuf.Protocol;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using Google.Protobuf.Protocol;
-using System.Collections.Generic;
 
 public class PartyUI : MonoBehaviour
 {
-  private static PartyUI _instance;
-  public static PartyUI Instance => _instance;
-  public GameObject partyWindow;  // 파티 창
-  public GameObject noPartyPanel; // "참가 중인 파티가 없습니다" 패널
-  public GameObject inPartyPanel; // "현재 참가 중인 파티" 패널
+  public static PartyUI instance { get; private set; }
+
+  public GameObject partyWindow;
+  public GameObject noPartyPanel;
+  public GameObject inPartyPanel;
+
+  public Transform partyMemberContainer;
+  public GameObject memberCardPrefab;
+  public ScrollRect scrollRect;
 
   public Button createPartyButton; // 파티 생성 버튼
   public Button invitePartyButton; // 파티 생성 버튼
@@ -18,54 +22,51 @@ public class PartyUI : MonoBehaviour
   public Button joinPartyButton;   // ID로 파티 참가 버튼
   public Button closeButton;       // 닫기 버튼
 
-  public TMP_Text memberNickname; // 파티원 닉네임 텍스트
-  public TMP_Text memberLevel;    // 파티원 레벨 텍스트
+  public bool isInParty = false; // 파티 참가 여부
 
-  public Transform partyMemberContainer; // 멤버 카드가 추가될 부모 오브젝트
-  public GameObject memberCardPrefab; // MemberCard 프리팹
-  public ScrollRect scrollRect;
-
-  private List<GameObject> partyMembers = new List<GameObject>(); // 생성된 파티원 리스트
-  private bool isInParty = false; // 파티 참가 여부
-
-  void Awake()
+  private void Awake()
   {
-    if (_instance == null)
-    {
-      _instance = this;
-    }
-    else
-    {
-      Destroy(gameObject);
-      return;
-    }
+    instance = this;
   }
 
   void Start()
   {
     // 초기 UI 상태 설정
-    UpdatePartyUI();
+    UpdateUI();
 
     // 버튼 클릭 이벤트 연결
     createPartyButton.onClick.AddListener(OnCreatePartyClicked);
-    joinPartyButton.onClick.AddListener(OnJoinPartyClicked);
+    // joinPartyButton.onClick.AddListener(OnJoinPartyClicked);
     closeButton.onClick.AddListener(ClosePartyWindow);
   }
 
-  void UpdatePartyUI()
+  // Party 인스턴스에서 데이터를 가져와 UI 업데이트
+  public void UpdateUI()
   {
+    // 현재 파티 정보 가져오기
+    Party party = Party.instance;
+
     if (isInParty)
     {
       noPartyPanel.SetActive(false);
       inPartyPanel.SetActive(true);
       Button invitePartyButton = inPartyPanel.transform.Find("InvitePartyBtn").GetComponent<Button>();
       invitePartyButton.onClick.AddListener(OnInvitePartyClicked);
+
+      // 기존 멤버 카드 삭제
+      ClearPartyMembers();
+
+      // 새로운 멤버 추가
+      foreach (var member in party.members)
+      {
+        CreateMemberCard(member.Id, member.Nickname, member.Id == party.leaderId, member.IsMine);
+      }
     }
     else
     {
       noPartyPanel.SetActive(true);
       inPartyPanel.SetActive(false);
-      ClearPartyMembers(); // 파티 탈퇴 시 기존 멤버 카드 제거
+      ClearPartyMembers();
     }
   }
 
@@ -73,34 +74,33 @@ public class PartyUI : MonoBehaviour
   void OnCreatePartyClicked()
   {
     Debug.Log("파티 생성 버튼 클릭됨");
-
     SendCreatePartyPacket();
-    isInParty = true;
-    UpdatePartyUI();
+    UpdateUI();
   }
 
   // ID로 파티 참가 버튼 클릭 시 실행
-  void OnJoinPartyClicked()
-  {
-    Debug.Log("ID로 파티 참가 버튼 클릭됨");
-    isInParty = true;
-    UpdatePartyUI();
-    AddPartyMember("테스트 닉네임", 10);
-  }
+  // void OnJoinPartyClicked()
+  // {
+  //   Debug.Log("ID로 파티 참가 버튼 클릭됨");
+  //   isInParty = true;
+
+  //   var memberData = new S2CCreateParty
+  //   {
+  //     PartyId = 1234,
+  //     LeaderId = 0, // 파티장이 없어짐
+  //     MemberCount = 0,
+  //   };
+  //   Party.instance.SetPartyData(memberData);
+
+  //   CreateMemberCard(100, "테스트", false, false);
+  //   UpdateUI();
+  // }
 
   // 파티 초대 버튼 클릭 시 실행
   void OnInvitePartyClicked()
   {
     Debug.Log("파티 초대 버튼 클릭됨");
-    AddPartyMember("테스트", 1);
-  }
-
-  // 파티 탈퇴 버튼 클릭 시 실행
-  void OnLeavePartyClicked()
-  {
-    Debug.Log("파티 탈퇴 버튼 클릭됨");
-    isInParty = false;
-    UpdatePartyUI();
+    CreateMemberCard(100, "테스트", true, false);
   }
 
   // 파티 창 닫기
@@ -109,21 +109,14 @@ public class PartyUI : MonoBehaviour
     partyWindow.SetActive(false);
   }
 
-  // 파티 창 열기
-  public void OpenPartyWindow()
-  {
-    partyWindow.SetActive(true);
-    UpdatePartyUI();
-  }
-
   private void SendCreatePartyPacket()
   {
     var createPartyPacket = new C2SCreateParty { };
     GameManager.Network.Send(createPartyPacket);
   }
 
-  // 파티원 추가 함수
-  public void AddPartyMember(string nickname, int level)
+
+  public void CreateMemberCard(int playerId, string nickname, bool isLeader, bool isMine)
   {
     if (memberCardPrefab == null || partyMemberContainer == null)
     {
@@ -131,59 +124,93 @@ public class PartyUI : MonoBehaviour
       return;
     }
 
+    isInParty = true;
+
     // 새로운 멤버 카드 생성
     GameObject newMemberCard = Instantiate(memberCardPrefab, partyMemberContainer);
-    partyMembers.Add(newMemberCard);
 
-    // MemberCard 내의 UI 요소 설정
+    // MemberCard 내의 UI 요소 가져오기
+    Image leaderIcon = newMemberCard.transform.Find("LeaderIcon").GetComponent<Image>();
     TMP_Text nameText = newMemberCard.transform.Find("MemberNickname").GetComponent<TMP_Text>();
-    TMP_Text levelText = newMemberCard.transform.Find("MemberLv").GetComponent<TMP_Text>();
     Button leaveButton = newMemberCard.transform.Find("PartyLeaveBtn").GetComponent<Button>();
+    Button kickOutButton = newMemberCard.transform.Find("KickOutBtn").GetComponent<Button>();
 
+    // 닉네임 설정
     if (nameText != null) nameText.text = nickname;
-    if (levelText != null) levelText.text = level + " Lv.";
-    if (leaveButton != null) leaveButton.onClick.AddListener(OnLeavePartyClicked);
 
-    UpdateScrollView();
-  }
-
-  // 파티원 제거 함수
-  void RemovePartyMember(GameObject memberCard)
-  {
-    if (partyMembers.Contains(memberCard))
+    // **리더 아이콘 설정**
+    if (leaderIcon != null)
     {
-      partyMembers.Remove(memberCard);
-      Destroy(memberCard);
+      leaderIcon.gameObject.SetActive(isLeader);
     }
 
-    // 파티원이 모두 나가면 파티 종료
-    if (partyMembers.Count == 0)
+    // **내 카드일 경우 탈퇴 버튼 활성화**
+    if (isMine)
     {
-      isInParty = false;
-      UpdatePartyUI();
+      if (leaveButton != null)
+      {
+        leaveButton.gameObject.SetActive(true);
+        leaveButton.onClick.AddListener(OnLeavePartyClicked);
+      }
+      if (kickOutButton != null) kickOutButton.gameObject.SetActive(false);
     }
-
-    UpdateScrollView();
+    else
+    {
+      if (leaveButton != null) leaveButton.gameObject.SetActive(false);
+      if (isLeader)
+      {
+        // **파티장인 경우: 강퇴 버튼 활성화**
+        if (kickOutButton != null)
+        {
+          kickOutButton.gameObject.SetActive(true);
+          kickOutButton.onClick.AddListener(delegate { RemovePartyMember(newMemberCard, playerId); });
+        }
+      }
+      else
+      {
+        if (kickOutButton != null) kickOutButton.gameObject.SetActive(false);
+      }
+    }
   }
 
-  // 기존 파티원 UI 초기화
-  void ClearPartyMembers()
+  // 기존 멤버 삭제
+  private void ClearPartyMembers()
   {
-    foreach (GameObject member in partyMembers)
+    foreach (Transform child in partyMemberContainer)
     {
-      Destroy(member);
+      Destroy(child.gameObject);
     }
-    partyMembers.Clear();
-
-    UpdateScrollView();
   }
 
-  void UpdateScrollView()
+  // 파티 탈퇴 버튼 클릭 시
+  public void OnLeavePartyClicked()
   {
-    // 스크롤을 맨 아래로 이동 (새로운 멤버가 추가될 때 자동 스크롤)
-    Canvas.ForceUpdateCanvases();
-    scrollRect.verticalNormalizedPosition = 0f;
+    // 새로운 PartyData를 생성하여 members를 개별적으로 추가
+    S2CCreateParty newPartyData = new S2CCreateParty
+    {
+      PartyId = Party.instance.partyId,
+      LeaderId = 0, // 파티장이 없어짐
+      MemberCount = 0
+    };
+
+    // SetPartyData 호출 (빈 멤버 리스트 적용)
+    Party.instance.SetPartyData(newPartyData);
+
+    isInParty = false;
+    UpdateUI();
+  }
+
+
+  // 파티원 강퇴
+  private void RemovePartyMember(GameObject memberCard, int playerId)
+  {
+    Party.instance.RemoveMember(playerId);
+
+    // UI에서 멤버 카드 제거
+    Destroy(memberCard);
+
+    // UI 업데이트
+    UpdateUI();
   }
 
 }
-
