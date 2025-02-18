@@ -83,21 +83,21 @@ public class UIStart : MonoBehaviour
 
     private void SetServerUI()
     {
-        UpdateUI(WelcomeMessage, UnityEngine.Color.white, DefaultServerMessage, false, true);
+        UpdateUI(WelcomeMessage, Color.white, DefaultServerMessage, false, true);
         btnConfirm.onClick.RemoveAllListeners();
         btnConfirm.onClick.AddListener(ConfirmServer);
     }
 
     public void SetNicknameUI()
     {
-        UpdateUI(WelcomeMessage, UnityEngine.Color.white, DefaultNicknameMessage, true, false);
+        UpdateUI(WelcomeMessage, Color.white, DefaultNicknameMessage, true, false);
         btnConfirm.onClick.RemoveAllListeners();
         btnConfirm.onClick.AddListener(ConfirmNickname);
     }
 
     private void UpdateUI(
         string message,
-        UnityEngine.Color messageColor,
+        Color messageColor,
         string placeholderText,
         bool showCharList,
         bool showPortInput
@@ -181,7 +181,7 @@ public class UIStart : MonoBehaviour
     private void DisplayError(string errorMessage)
     {
         txtMessage.text = errorMessage;
-        txtMessage.color = UnityEngine.Color.red;
+        txtMessage.color = Color.red;
     }
 
     /// <summary>
