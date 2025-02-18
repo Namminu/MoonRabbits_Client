@@ -172,6 +172,9 @@ class PacketHandler
         if (packet is not S2CCreateParty pkt)
             return;
         Debug.Log($"S2CCreateParty 패킷 무사 도착 : {pkt}");
+        var player = TownManager.Instance.GetPlayerAvatarById(pkt.LeaderId);
+
+        PartyUI.Instance.AddPartyMember(player.nickname, 1);
     }
 
     public static void S2CInvitePartyHandler(PacketSession session, IMessage packet)
