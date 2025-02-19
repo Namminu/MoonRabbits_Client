@@ -26,6 +26,7 @@ public class PartyUI : MonoBehaviour
 
   public Button joinPartyButton;   // ID로 파티 참가 버튼
   public Button closeButton;       // 닫기 버튼
+  private Button setLeaderButton; // 파티장 변경 버튼
 
   public bool isInParty = false; // 파티 참가 여부
   private int memberId = 100;
@@ -54,11 +55,19 @@ public class PartyUI : MonoBehaviour
 
     if (isInParty)
     {
+      // 파티 중일 때
       noPartyPanel.SetActive(false);
       inPartyPanel.SetActive(true);
+
+      // 파티 초대 버튼 클릭 이벤트리스너
       Button invitePartyButton = inPartyPanel.transform.Find("InvitePartyBtn").GetComponent<Button>();
       invitePartyButton.onClick.RemoveAllListeners();
       invitePartyButton.onClick.AddListener(OnInvitePartyClicked);
+
+      // 파티 해체 버튼 클릭 이벤트리스너
+      Button disbandPartyButton = inPartyPanel.transform.Find("DisbandPartyBtn").GetComponent<Button>();
+      disbandPartyButton.onClick.RemoveAllListeners();
+      disbandPartyButton.onClick.AddListener(OnDisbandPartyClicked);
 
       // 기존 멤버 카드 삭제
       ClearPartyMembers();
@@ -88,39 +97,11 @@ public class PartyUI : MonoBehaviour
     UpdateUI();
   }
 
-  // ID로 파티 참가 버튼 클릭 시 실행
-  // void OnJoinPartyClicked()
-  // {
-  //   Debug.Log("ID로 파티 참가 버튼 클릭됨");
-  //   isInParty = true;
-
-  //   var memberData = new S2CCreateParty
-  //   {
-  //     PartyId = 1234,
-  //     LeaderId = 0, // 파티장이 없어짐
-  //     MemberCount = 0,
-  //   };
-  //   Party.instance.SetPartyData(memberData);
-
-  //   CreateMemberCard(100, "테스트", false, false);
-  //   UpdateUI();
-  // }
-
-  // 파티 초대 버튼 클릭 시 실행
-  // void OnInvitePartyClicked()
-  // {
-  //   Debug.Log("파티 초대 버튼 클릭됨");
-  //   // CreateMemberCard(memberId++, "테스트", true, false);
-
-  //   var memberData = new MemberCardInfo
-  //   {
-  //     Id = memberId++,
-  //     Nickname = "테스트",
-  //     IsPartyLeader = false,
-  //     IsMine = false
-  //   };
-  //   Party.instance.InvitePartyData(memberData);
-  // }
+  void OnDisbandPartyClicked()
+  {
+    Debug.Log("파티 해체 버튼 클릭됨");
+    SendDisbandPartyPacket();
+  }
 
   // 파티 초대 버튼 클릭 시 실행
   void OnInvitePartyClicked()
@@ -217,6 +198,15 @@ public class PartyUI : MonoBehaviour
     if (leaderIcon != null)
     {
       leaderIcon.gameObject.SetActive(isLeader);
+
+      // 버튼 추가
+      setLeaderButton = leaderIcon.gameObject.GetComponent<Button>();
+      if (setLeaderButton == null)
+        setLeaderButton = leaderIcon.gameObject.AddComponent<Button>();
+
+      // 클릭 이벤트 리스너 추가
+      // setLeaderButton.onClick.AddListener(OnImageClick);
+
     }
 
     // 내 카드일 경우 탈퇴 버튼 활성화
@@ -314,6 +304,18 @@ public class PartyUI : MonoBehaviour
   {
     var leavePartyPacket = new C2SLeaveParty { PartyId = Party.instance.partyId, LeftPlayerId = memberId };
     GameManager.Network.Send(leavePartyPacket);
+  }
+
+  private void SendDisbandPartyPacket()
+  {
+    var disbandPartyPacket = new C2SDisbandParty { PartyId = Party.instance.partyId };
+    GameManager.Network.Send(disbandPartyPacket);
+  }
+  private void SendSetLeaderPacket(string nickname)
+  {
+    int memberId = GetPlayerIdByNickname(nickname).PlayerId;
+    var setLeaderPacket = new C2SSetPartyLeader { PartyId = Party.instance.partyId, MemberId = memberId };
+    GameManager.Network.Send(setLeaderPacket);
   }
   #endregion
 
