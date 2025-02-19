@@ -228,6 +228,7 @@ class PacketHandler
         if (packet is not S2CDisbandParty pkt)
             return;
         Debug.Log($"S2CDisbandParty 패킷 무사 도착 : {pkt}");
+        PartyUI.instance.KickedOut(pkt.Msg);
     }
     #endregion
 

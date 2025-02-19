@@ -182,6 +182,12 @@ public class PartyUI : MonoBehaviour
     isInParty = false;
     UpdateUI();
   }
+
+  public void KickedOut(string msg)
+  {
+    Party.instance.RemoveAllMembers();
+    TownManager.Instance.UiChat.PushMessage("System", msg, true);
+  }
   #endregion
 
   #region 멤버 카드 생성
@@ -235,7 +241,7 @@ public class PartyUI : MonoBehaviour
           kickOutButton.gameObject.SetActive(true);
           kickOutButton.onClick.RemoveAllListeners();
           kickOutButton.onClick.AddListener(delegate { RemovePartyMember(newMemberCard, playerId); });
-          kickOutButton.onClick.AddListener(SendKickOutPartyPacket);
+          kickOutButton.onClick.AddListener(() => SendKickOutPartyPacket(nameText.text));
         }
       }
       else
@@ -299,9 +305,16 @@ public class PartyUI : MonoBehaviour
     invitePartyPopUp.SetActive(false);
   }
 
-  private void SendKickOutPartyPacket()
+  private void SendKickOutPartyPacket(string nickname)
   {
-
+    int memberId = GetMemberIdByNickname(nickname).PlayerId;
+    var kickOutPartyPacket = new C2SKickOutMember { PartyId = Party.instance.partyId, MemberId = memberId };
+    GameManager.Network.Send(kickOutPartyPacket);
   }
   #endregion
+
+  private Player GetMemberIdByNickname(string nickname)
+  {
+    return FindObjectsOfType<Player>().FirstOrDefault(p => p.nickname == nickname);
+  }
 }

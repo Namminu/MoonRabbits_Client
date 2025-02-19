@@ -78,6 +78,17 @@ public class Party : MonoBehaviour
     members.RemoveAll(m => m.Id == playerId);
     memberCount = members.Count;
   }
+  public void RemoveAllMembers()
+  {
+    members.Clear();
+    memberCount = 0;
+
+    // UI 업데이트 요청
+    PartyUI.instance.isInParty = false;
+    PartyUI.instance.UpdateUI();
+  }
+
+
   public int GetMyPlayerId()
   {
     return GetMyPlayer()?.PlayerId ?? -1;
