@@ -44,7 +44,7 @@ public class MyPlayer : MonoBehaviour
     void Update()
     {
         HandleInput();
-        CheckMove();
+        // CheckMove();
     }
 
     private void InitializeCamera()
@@ -83,6 +83,8 @@ public class MyPlayer : MonoBehaviour
         {
             yield return null; // 1 프레임 대기
             frameCount++;
+
+            CheckMove();
 
             // 마지막으로 전송했던 좌표(lastTargetPosition)와 달라졌을 때에만 실행
             if (frameCount >= targetFrames && targetPosition != lastTargetPosition)

@@ -209,6 +209,7 @@ class PacketHandler
         if (packet is not S2CLeaveParty pkt)
             return;
         Debug.Log($"S2CLeaveParty 패킷 무사 도착 : {pkt}");
+        Party.instance.LeavePartyData(pkt);
     }
 
     public static void S2CSetPartyLeaderHandler(PacketSession session, IMessage packet)
@@ -222,6 +223,7 @@ class PacketHandler
         if (packet is not S2CKickOutMember pkt)
             return;
         Debug.Log($"S2CKickOutMember 패킷 무사 도착 : {pkt}");
+        Party.instance.KickedOutData(pkt);
     }
     public static void S2CDisbandPartyHandler(PacketSession session, IMessage packet)
     {

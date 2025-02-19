@@ -129,6 +129,7 @@ public class PartyUI : MonoBehaviour
     invitePartyPopUp.SetActive(true);
     Button submitBtn = invitePartyPopUp.transform.Find("SubmitBtn").GetComponent<Button>();
 
+    submitBtn.onClick.RemoveAllListeners();
     submitBtn.onClick.AddListener(OnSubmitClicked);
   }
 
@@ -136,8 +137,18 @@ public class PartyUI : MonoBehaviour
   {
     TMP_InputField inviteNickname = invitePartyPopUp.transform.Find("InviteNickname").GetComponent<TMP_InputField>();
     string nickname = inviteNickname.text;
+    string myNickname = Party.instance.GetMyPlayerNickname();
 
-    SendInvitePartyPacket(nickname);
+
+    // 내 닉네임이 아니고, 이미 참여 중인 파티원이 아닐 때
+    if (myNickname != nickname && Party.instance.GetMemberByNickname(nickname) == null)
+    {
+      SendInvitePartyPacket(nickname);
+    }
+    else
+    {
+      TownManager.Instance.UiChat.PushMessage("System", "초대를 보낼 수 없는 대상입니다.", true);
+    }
   }
 
   public void CloseInvitePopUp()
@@ -166,21 +177,10 @@ public class PartyUI : MonoBehaviour
   }
 
   // 파티 탈퇴 버튼 클릭 시
-  public void OnLeavePartyClicked()
+  public void OnLeavePartyClicked(string nickname)
   {
-    // 새로운 PartyData를 생성하여 members를 개별적으로 추가
-    S2CCreateParty newPartyData = new S2CCreateParty
-    {
-      PartyId = Party.instance.partyId,
-      LeaderId = 0, // 파티장이 없어짐
-      MemberCount = 0
-    };
-
-    // SetPartyData 호출 (빈 멤버 리스트 적용)
-    Party.instance.CreatePartyData(newPartyData);
-
-    isInParty = false;
-    UpdateUI();
+    MemberCardInfo member = Party.instance.GetMemberByNickname(nickname);
+    SendLeavePartyPacket(member.Id);
   }
 
   public void KickedOut(string msg)
@@ -213,19 +213,20 @@ public class PartyUI : MonoBehaviour
     // 닉네임 설정
     if (nameText != null) nameText.text = nickname;
 
-    // **리더 아이콘 설정**
+    // 리더 아이콘 설정
     if (leaderIcon != null)
     {
       leaderIcon.gameObject.SetActive(isLeader);
     }
 
-    // **내 카드일 경우 탈퇴 버튼 활성화**
+    // 내 카드일 경우 탈퇴 버튼 활성화
     if (isMine)
     {
       if (leaveButton != null)
       {
         leaveButton.gameObject.SetActive(true);
-        leaveButton.onClick.AddListener(OnLeavePartyClicked);
+        leaveButton.onClick.RemoveAllListeners();
+        leaveButton.onClick.AddListener(() => OnLeavePartyClicked(nameText.text));
       }
       if (kickOutButton != null) kickOutButton.gameObject.SetActive(false);
     }
@@ -261,9 +262,6 @@ public class PartyUI : MonoBehaviour
       Destroy(child.gameObject);
     }
   }
-
-
-
 
   // 파티원 강퇴
   private void RemovePartyMember(GameObject memberCard, int playerId)
@@ -307,13 +305,19 @@ public class PartyUI : MonoBehaviour
 
   private void SendKickOutPartyPacket(string nickname)
   {
-    int memberId = GetMemberIdByNickname(nickname).PlayerId;
+    int memberId = GetPlayerIdByNickname(nickname).PlayerId;
     var kickOutPartyPacket = new C2SKickOutMember { PartyId = Party.instance.partyId, MemberId = memberId };
     GameManager.Network.Send(kickOutPartyPacket);
   }
+
+  private void SendLeavePartyPacket(int memberId)
+  {
+    var leavePartyPacket = new C2SLeaveParty { PartyId = Party.instance.partyId, LeftPlayerId = memberId };
+    GameManager.Network.Send(leavePartyPacket);
+  }
   #endregion
 
-  private Player GetMemberIdByNickname(string nickname)
+  private Player GetPlayerIdByNickname(string nickname)
   {
     return FindObjectsOfType<Player>().FirstOrDefault(p => p.nickname == nickname);
   }

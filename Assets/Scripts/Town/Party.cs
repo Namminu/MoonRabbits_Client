@@ -56,6 +56,42 @@ public class Party : MonoBehaviour
     PartyUI.instance.UpdateUI();
   }
 
+  public void LeavePartyData(S2CLeaveParty partyData)
+  {
+    partyId = partyData.PartyId;
+    leaderId = partyData.LeaderId;
+    memberCount = partyData.MemberCount;
+
+    // 기존 멤버 리스트 초기화 후 새 데이터로 채우기
+    members.Clear();
+    foreach (var member in partyData.Members)
+    {
+      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, IsMine = member.IsMine });
+    }
+
+    // UI 업데이트 요청 (PartyUI에서 처리)
+    PartyUI.instance.isInParty = true;
+    PartyUI.instance.UpdateUI();
+  }
+
+  public void KickedOutData(S2CKickOutMember partyData)
+  {
+    partyId = partyData.PartyId;
+    leaderId = partyData.LeaderId;
+    memberCount = partyData.MemberCount;
+
+    // 기존 멤버 리스트 초기화 후 새 데이터로 채우기
+    members.Clear();
+    foreach (var member in partyData.Members)
+    {
+      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, IsMine = member.IsMine });
+    }
+
+    // UI 업데이트 요청 (PartyUI에서 처리)
+    PartyUI.instance.isInParty = true;
+    PartyUI.instance.UpdateUI();
+  }
+
   // public void InvitePartyData(S2CInviteParty partyData)
   // {
   //   partyId = partyData.PartyId;
@@ -93,6 +129,17 @@ public class Party : MonoBehaviour
   {
     return GetMyPlayer()?.PlayerId ?? -1;
   }
+
+  public string GetMyPlayerNickname()
+  {
+    return GetMyPlayer()?.nickname ?? null;
+  }
+
+  public MemberCardInfo GetMemberByNickname(string nickname)
+  {
+    return members.FirstOrDefault(m => m.Nickname == nickname);
+  }
+
 
   private Player GetMyPlayer()
   {
