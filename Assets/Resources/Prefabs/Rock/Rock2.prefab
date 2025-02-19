@@ -13,6 +13,10 @@ PrefabInstance:
       value: Rock2
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 3a9199b3a66a2c54c9a43fe04b5d722f, type: 3}
+      propertyPath: m_TagString
+      value: Resource
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3a9199b3a66a2c54c9a43fe04b5d722f, type: 3}
       propertyPath: m_NavMeshLayer
       value: 1
       objectReference: {fileID: 0}
