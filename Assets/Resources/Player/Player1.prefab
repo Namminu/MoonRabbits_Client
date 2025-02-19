@@ -7620,13 +7620,18 @@ PrefabInstance:
     - target: {fileID: 1014066274466906402, guid: 4791108410405e44aacce22266b6214b,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1518367933773013239, guid: 4791108410405e44aacce22266b6214b,
         type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1518367933773013239, guid: 4791108410405e44aacce22266b6214b,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: cf9f2797796262343a7ff2a7b94c465d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
