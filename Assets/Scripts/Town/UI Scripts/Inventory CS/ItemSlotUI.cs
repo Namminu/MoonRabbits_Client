@@ -1,93 +1,104 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ItemSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    [Header("Item Info")] 
-    private Item item;  //È¹µæ ¾ÆÀÌÅÛ °´Ã¼
-    [SerializeField] private TMP_Text text_ItemAmount;  //¾ÆÀÌÅÛ ¼ö·®
-	[SerializeField] [ReadOnly] private int itemCount;
-	[SerializeField] private Image itemImage;    //¾ÆÀÌÅÛ ÀÌ¹ÌÁö
+    [Header("Item Info")]
+    private Item item; //È¹ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼
 
-    [Space] // ¾ÆÀÌÅÛ ÇÏÀÌ¶óÀÌÆ®
-	[SerializeField] private Image itemHighLighter;
+    [SerializeField]
+    private TMP_Text text_ItemAmount; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+
+    [SerializeField]
+    [ReadOnly]
+    private int itemCount;
+
+    [SerializeField]
+    private Image itemImage; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½
+
+    [Space] // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ï¿½Æ®
+    [SerializeField]
+    private Image itemHighLighter;
 
     // Start is called before the first frame update
     void Start()
     {
-        // DB¿¡¼­ ÀÎº¥Åä¸® Á¤º¸ ¹Þ¾Æ¿À´Â °úÁ¤..?
-        // AddItem(DB¿¡¼­ ¹Þ¾Æ¿Â Á¤º¸)?
+        // DBï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½..?
+        // AddItem(DBï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ ï¿½ï¿½ï¿½ï¿½)?
     }
 
-	// ¾ÆÀÌÅÛ µî·Ï ½Ã ÀÌ¹ÌÁö °´Ã¼ÀÇ Åõ¸íµµ Á¶ÀýÀ» À§ÇÑ ¸Þ¼­µå
-	private void SetItemImageAlpha(float alpha)
-	{
-		Color newColor = itemImage.color;
-		newColor.a = alpha;
-		itemImage.color = newColor;
-	}
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
+    private void SetItemImageAlpha(float alpha)
+    {
+        Color newColor = itemImage.color;
+        newColor.a = alpha;
+        itemImage.color = newColor;
+    }
 
-	/// <summary>
-	/// Add Item to Slot Method
-	/// </summary>
-	public void AddItem(Item insertItem, int insertItemCount = 1)
+    /// <summary>
+    /// Add Item to Slot Method
+    /// </summary>
+    public void AddItem(Item insertItem, int insertItemCount = 1)
     {
         item = insertItem;
         itemCount = insertItemCount;
-        /* //½½·Ô UI¿¡ ¾ÆÀÌÅÛ ÀÌ¹ÌÁö¸¦ Ãß°¡ÇÏ´Â °úÁ¤ - Item ÄÚµå ¿Ï¼º ¹× DB ¿¬µ¿°úÁ¤ ÇÊ¿ä
-		itemImage.sprite = insertItem.GetItemImage().sprite; */
+        /* //ï¿½ï¿½ï¿½ï¿½ UIï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ - Item ï¿½Úµï¿½ ï¿½Ï¼ï¿½ ï¿½ï¿½ DB ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
+        itemImage.sprite = insertItem.GetItemImage().sprite; */
 
         text_ItemAmount.text = insertItemCount.ToString();
 
         SetItemImageAlpha(1);
-	}
+    }
 
-	/// <summary>
-	/// Update Item Count Method, When Count Under/Equal 0, auto call ClearSlot()
-	/// </summary>
-	public int UpdateItemCount(int newItemCount)
-	{
-		itemCount += newItemCount;
-		if (itemCount <= 0)
-		{
-			ClearSlot();
-			return -1;
-		}
-		text_ItemAmount.text = itemCount.ToString();
-		return itemCount;
-	}
+    /// <summary>
+    /// Update Item Count Method, When Count Under/Equal 0, auto call ClearSlot()
+    /// </summary>
+    public int UpdateItemCount(int newItemCount)
+    {
+        itemCount += newItemCount;
+        if (itemCount <= 0)
+        {
+            ClearSlot();
+            return -1;
+        }
+        text_ItemAmount.text = itemCount.ToString();
+        return itemCount;
+    }
 
-	/// <summary>
-	/// Clear Item Slot Method When Item Count <= 0
-	/// </summary>
-	private void ClearSlot()
-	{
-		item = null;
-		itemCount = 0;
-		itemImage.sprite = null;
-		SetItemImageAlpha(0);
+    /// <summary>
+    /// Clear Item Slot Method When Item Count <= 0
+    /// </summary>
+    private void ClearSlot()
+    {
+        item = null;
+        itemCount = 0;
+        itemImage.sprite = null;
+        SetItemImageAlpha(0);
 
-		text_ItemAmount.text = string.Empty;
-	}
+        text_ItemAmount.text = string.Empty;
+    }
 
-	public void OnPointerEnter(PointerEventData eventData)
-	{
-		itemHighLighter.gameObject.SetActive(true);
-	}
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        itemHighLighter.gameObject.SetActive(true);
+    }
+
     public void OnPointerExit(PointerEventData eventData)
-	{
-		itemHighLighter.gameObject.SetActive(false);
-	}
+    {
+        itemHighLighter.gameObject.SetActive(false);
+    }
 
+    #region Getter
+    public Item GetItem()
+    {
+        return item;
+    }
 
-	#region Getter
-	public Item GetItem() {  return item; }
-
-	public bool HasItem() {  return item != null; }
-	#endregion
+    public bool HasItem()
+    {
+        return item != null;
+    }
+    #endregion
 }

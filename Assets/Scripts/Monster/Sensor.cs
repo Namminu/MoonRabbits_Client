@@ -16,12 +16,12 @@ public class Sensor : MonoBehaviour
         monsterController = transform.parent.GetComponent<MonsterController>();
     }
 
-    public bool IsDuplicate(Transform tr)
+    public bool IsDuplicate(Transform tr) // 새로 발견한 녀석이 이미 감지한 녀석인지 체크하는 함수
     {
         return targetList.Contains(tr) ? false : true;
     }
 
-    private Transform FindTarget()
+    private Transform FindTarget() // 타겟리스트에서 랜덤 타겟 반환하는 함수
     {
         if (targetList.Count == 0)
         {
@@ -31,7 +31,7 @@ public class Sensor : MonoBehaviour
         return targetList[Random.Range(0, targetList.Count)];
     }
 
-    IEnumerator SetTarget()
+    IEnumerator SetTarget() // 3초 대기 후 타겟 설정하는 함수
     {
         yield return new WaitForSeconds(3f);
         monsterController.Target = FindTarget();

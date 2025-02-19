@@ -35,10 +35,10 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CLogin, PacketHandler.S2CLoginHandler);
         _onRecv.Add((ushort)MsgId.S2CCreateCharacter, MakePacket<S2CCreateCharacter>);
         _handler.Add((ushort)MsgId.S2CCreateCharacter, PacketHandler.S2CCreateCharacterHandler);
-        _onRecv.Add((ushort)MsgId.S2CTownEnter, MakePacket<S2CTownEnter>);
-        _handler.Add((ushort)MsgId.S2CTownEnter, PacketHandler.S2CTownEnterHandler);
-        _onRecv.Add((ushort)MsgId.S2CTownLeave, MakePacket<S2CTownLeave>);
-        _handler.Add((ushort)MsgId.S2CTownLeave, PacketHandler.S2CTownLeaveHandler);
+        _onRecv.Add((ushort)MsgId.S2CEnter, MakePacket<S2CEnter>);
+        _handler.Add((ushort)MsgId.S2CEnter, PacketHandler.S2CTownEnterHandler);
+        _onRecv.Add((ushort)MsgId.S2CLeave, MakePacket<S2CLeave>);
+        _handler.Add((ushort)MsgId.S2CLeave, PacketHandler.S2CTownLeaveHandler);
         _onRecv.Add((ushort)MsgId.S2CAnimation, MakePacket<S2CAnimation>);
         _handler.Add((ushort)MsgId.S2CAnimation, PacketHandler.S2CAnimationHandler);
         _onRecv.Add((ushort)MsgId.S2CChat, MakePacket<S2CChat>);

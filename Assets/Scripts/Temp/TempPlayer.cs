@@ -57,7 +57,11 @@ public class TempPlayer : MonoBehaviour
     private void GetInput()
     {
         if (!isAlive)
+        {
+            hAxis = 0;
+            vAxis = 0;
             return;
+        }
         hAxis = Input.GetAxisRaw("Horizontal");
         vAxis = Input.GetAxisRaw("Vertical");
 

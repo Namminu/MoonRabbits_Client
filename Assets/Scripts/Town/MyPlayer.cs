@@ -49,10 +49,12 @@ public class MyPlayer : MonoBehaviour
 
     private void InitializeCamera()
     {
-        var freeLook = TownManager.Instance.FreeLook;
-        freeLook.Follow = transform;
-        freeLook.LookAt = transform;
-        freeLook.gameObject.SetActive(true);
+        Camera.main.gameObject.GetComponent<TempCamera>().target = transform;
+
+        // var freeLook = TownManager.Instance.FreeLook;
+        // freeLook.Follow = transform;
+        // freeLook.LookAt = transform;
+        // freeLook.gameObject.SetActive(true);
     }
 
     private void LoadAnimationHashes()
@@ -68,6 +70,8 @@ public class MyPlayer : MonoBehaviour
     // 충돌한 위치로 NavMeshAgent를 이동시킴 (agent.SetDestination(rayHit.point);
     private void HandleInput()
     {
+        Debug.Log($"마우스 눌림? : {Input.GetMouseButtonDown(0)}");
+        Debug.Log($"이벤트시스템? : {!eSystem.IsPointerOverGameObject()}");
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
         {
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))

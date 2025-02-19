@@ -54,7 +54,7 @@ public class MonsterController : MonoBehaviour
         ControlLocation();
     }
 
-    private void Chase()
+    private void Chase() // 타겟 추적하는 함수
     {
         if (target != null)
         {
@@ -69,7 +69,7 @@ public class MonsterController : MonoBehaviour
         }
     }
 
-    private void ControlLocation()
+    private void ControlLocation() // 담당 구역 이탈 시 복귀하는 함수
     {
         float distance = Vector3.Distance(transform.position, monsterArea.position);
         if (distance >= maxDistance)
@@ -79,7 +79,7 @@ public class MonsterController : MonoBehaviour
         }
     }
 
-    IEnumerator DefaultMove()
+    IEnumerator DefaultMove() // 평상 시 이동
     {
         while (true)
         {

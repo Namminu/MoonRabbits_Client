@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Google.Protobuf;
 using Google.Protobuf.Protocol;
@@ -45,16 +46,24 @@ class PacketHandler
     #region Town
     public static void S2CTownEnterHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CTownEnter pkt)
+        if (packet is not S2CEnter pkt)
             return;
         Debug.Log($"S2CTownEnter 패킷 무사 도착 : {pkt}");
 
-        TownManager.Instance.Spawn(pkt.Player);
+        switch (pkt.Player.CurrentScene)
+        {
+            case 1:
+                TownManager.Instance.Spawn(pkt.Player);
+                break;
+            case 2:
+                ASectorManager.Instance.Spawn(pkt.Player);
+                break;
+        }
     }
 
     public static void S2CTownLeaveHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CTownLeave pkt)
+        if (packet is not S2CLeave pkt)
             return;
         Debug.Log($"S2CTownLeave 패킷 무사 도착 : {pkt}");
     }
@@ -96,20 +105,44 @@ class PacketHandler
 
         foreach (var playerInfo in pkt.Players)
         {
-            // 여기에서 localPlayer 설정이 작동하지 않는 버그가 발생 하여 해당 예외처리를 추가함.
-            if (
-                TownManager.Instance.MyPlayer != null
-                && playerInfo.PlayerId == TownManager.Instance.MyPlayer.PlayerId
-            )
-                continue;
+            switch (playerInfo.CurrentScene)
+            {
+                case 1:
+                    if (
+                        TownManager.Instance.MyPlayer != null
+                        && playerInfo.PlayerId == TownManager.Instance.MyPlayer.PlayerId
+                    )
+                        continue;
 
-            Vector3 spawnPosition = new Vector3(
-                playerInfo.Transform.PosX,
-                playerInfo.Transform.PosY,
-                playerInfo.Transform.PosZ
-            );
-            var player = TownManager.Instance.CreatePlayer(playerInfo, spawnPosition);
-            player.SetIsMine(false);
+                    Vector3 spawnPosTown = new Vector3(
+                        playerInfo.Transform.PosX,
+                        playerInfo.Transform.PosY,
+                        playerInfo.Transform.PosZ
+                    );
+                    var townPlayer = TownManager.Instance.CreatePlayer(playerInfo, spawnPosTown);
+                    townPlayer.SetIsMine(false);
+                    break;
+                case 2:
+                    if (
+                        ASectorManager.Instance.MyPlayer != null
+                        && playerInfo.PlayerId == ASectorManager.Instance.MyPlayer.PlayerId
+                    )
+                        continue;
+
+                    Vector3 spawnPosSectorA = new Vector3(
+                        playerInfo.Transform.PosX,
+                        playerInfo.Transform.PosY,
+                        playerInfo.Transform.PosZ
+                    );
+                    var sectorPlayer = ASectorManager.Instance.CreatePlayer(
+                        playerInfo,
+                        spawnPosSectorA
+                    );
+                    sectorPlayer.SetIsMine(false);
+                    break;
+            }
+
+            // 여기에서 localPlayer 설정이 작동하지 않는 버그가 발생 하여 해당 예외처리를 추가함.
         }
     }
 
@@ -118,10 +151,22 @@ class PacketHandler
         if (packet is not S2CPlayerDespawn pkt)
             return;
         Debug.Log($"S2CPlayerDespawn 패킷 무사 도착 : {pkt}");
+        Debug.Log($"디스폰 플레이어 아이디 : {pkt.PlayerIds}");
 
-        foreach (int playerId in pkt.PlayerIds)
+        switch (pkt.CurrentScene)
         {
-            TownManager.Instance.ReleasePlayer(playerId);
+            case 1:
+                foreach (int playerId in pkt.PlayerIds)
+                {
+                    TownManager.Instance.ReleasePlayer(playerId);
+                }
+                break;
+            case 2:
+                foreach (int playerId in pkt.PlayerIds)
+                {
+                    ASectorManager.Instance.ReleasePlayer(playerId);
+                }
+                break;
         }
     }
     #endregion
@@ -145,8 +190,17 @@ class PacketHandler
         Quaternion rotation = Quaternion.Euler(0, transform.Rot, 0);
         bool isValidTransform = pkt.IsValidTransform;
 
-        var player = TownManager.Instance.GetPlayerAvatarById(pkt.PlayerId);
-        player?.Move(position, rotation);
+        switch (pkt.CurrentScene)
+        {
+            case 1:
+                var townPlayer = TownManager.Instance.GetPlayerAvatarById(pkt.PlayerId);
+                townPlayer?.Move(position, rotation);
+                break;
+            case 2:
+                var sectorPlayer = ASectorManager.Instance.GetPlayerAvatarById(pkt.PlayerId);
+                sectorPlayer?.Move(position, rotation);
+                break;
+        }
     }
     #endregion
 
