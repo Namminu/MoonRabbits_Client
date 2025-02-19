@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 8265484491085760674}
   - component: {fileID: 8265484491086858850}
   - component: {fileID: 3242570256281837802}
-  - component: {fileID: 8245311282834225274}
   m_Layer: 0
   m_Name: Plane_07
   m_TagString: Untagged
@@ -107,19 +106,3 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: a5b5d1af96c5d02418d13119a9605376, type: 3}
---- !u!208 &8245311282834225274
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8265484491084600482}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 50.344, y: 15.215001, z: 50.322002}
-  m_MoveThreshold: 0.1
-  m_Carve: 0
-  m_CarveOnlyStationary: 1
-  m_Center: {x: 0.23300001, y: 15.199, z: -0.034}
-  m_TimeToStationary: 0.5

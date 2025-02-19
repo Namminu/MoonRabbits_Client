@@ -106,7 +106,7 @@ public class MyPlayer : MonoBehaviour
         lastTargetPosition = targetPosition;
 
         // 패킷 전송
-        var movePacket = new C2SMove
+        var movePacket = new C2SPlayerMove
         {
             StartPosX = transform.position.x,
             StartPosY = transform.position.y,
@@ -155,5 +155,19 @@ public class MyPlayer : MonoBehaviour
         }
 
         lastPos = transform.position;
+    }
+
+    public void SendMonsterLocation()
+    {
+        var tr = new TransformInfo
+        {
+            PosX = transform.position.x,
+            PosY = transform.position.y,
+            PosZ = transform.position.z,
+            Rot = transform.eulerAngles.y,
+        };
+
+        var locationPacket = new C2SMonsterLocation { Transform = tr };
+        GameManager.Network.Send(locationPacket);
     }
 }

@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 2088096300360215599}
   - component: {fileID: 4821624206592321384}
   - component: {fileID: 3867983940789543464}
-  - component: {fileID: 3358008515839952110}
   m_Layer: 0
   m_Name: Crystal1
   m_TagString: Untagged
@@ -108,19 +107,3 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 43592441560658700, guid: 6f2abdb9812f6504680a47e35288c123, type: 2}
---- !u!208 &3358008515839952110
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8970397375008115036}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.36600003, y: 0.577, z: 0.43800002}
-  m_MoveThreshold: 0.1
-  m_Carve: 0
-  m_CarveOnlyStationary: 1
-  m_Center: {x: -0.056, y: 0.66400003, z: 0.021000002}
-  m_TimeToStationary: 0.5
