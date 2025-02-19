@@ -112,7 +112,9 @@ public class MyPlayer : MonoBehaviour
         {
             yield return null; // 1 프레임 대기
             frameCount++;
+
             CheckMove();
+
             // 마지막으로 전송했던 좌표(lastTargetPosition)와 달라졌을 때에만 실행
             if (frameCount >= targetFrames && targetPosition != lastTargetPosition)
             {
@@ -186,12 +188,10 @@ public class MyPlayer : MonoBehaviour
     {
         if (!isThrow && (grenadeInput || trapInput))
         {
-            Debug.Log("Throw 진입");
             isThrow = true;
 
             if (grenadeInput)
             {
-                Debug.Log("Grenade 진입");
                 GameObject currentObj = Instantiate(
                     grenade,
                     throwPoint.position,
@@ -216,7 +216,6 @@ public class MyPlayer : MonoBehaviour
 
     private void ThrowEnd()
     {
-        Debug.Log("ThrowEnd 진입");
         isThrow = false;
     }
 }

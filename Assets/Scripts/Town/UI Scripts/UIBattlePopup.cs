@@ -39,7 +39,7 @@ public class UIBattlePopup : MonoBehaviour
     /// <param name="dungeonIndex">입장할 던전의 코드</param>
     private void EnterDungeon(int dungeonIndex)
     {
-        C2SDungeonEnter enterPacket = new C2SDungeonEnter { DungeonCode = dungeonIndex };
+        C2SSectorEnter enterPacket = new C2SSectorEnter { SectorId = dungeonIndex };
         GameManager.Network.Send(enterPacket);
     }
 }

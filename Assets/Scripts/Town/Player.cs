@@ -17,7 +17,8 @@ public class Player : MonoBehaviour
     public Avatar Avatar { get; private set; }
     public MyPlayer MPlayer { get; private set; }
 
-    private string nickname;
+    public string nickname;
+    public int level;
     private UIChat uiChat;
 
     private Vector3 goalPos;
@@ -59,6 +60,11 @@ public class Player : MonoBehaviour
     {
         this.nickname = nickname;
         uiNameChat.SetName(nickname);
+    }
+
+    public void SetLevel(int level)
+    {
+        this.level = level;
     }
 
     public void SetIsMine(bool isMine)
