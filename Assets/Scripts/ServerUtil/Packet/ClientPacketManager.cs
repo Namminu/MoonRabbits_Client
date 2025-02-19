@@ -67,6 +67,12 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CSetPartyLeader, PacketHandler.S2CSetPartyLeaderHandler);
         _onRecv.Add((ushort)MsgId.S2CBuff, MakePacket<S2CBuff>);
         _handler.Add((ushort)MsgId.S2CBuff, PacketHandler.S2CBuffHandler);
+        _onRecv.Add((ushort)MsgId.S2CAddExp, MakePacket<S2CAddExp>);
+        _handler.Add((ushort)MsgId.S2CAddExp, PacketHandler.S2CAddExpHandler);
+        _onRecv.Add((ushort)MsgId.S2CLevelUp, MakePacket<S2CLevelUp>);
+        _handler.Add((ushort)MsgId.S2CLevelUp, PacketHandler.S2CLevelUpHandler);
+        _onRecv.Add((ushort)MsgId.S2CSelectAp, MakePacket<S2CSelectAP>);
+        _handler.Add((ushort)MsgId.S2CSelectAp, PacketHandler.S2CSelectAPHandler);
         _onRecv.Add((ushort)MsgId.S2CDungeonEnter, MakePacket<S2CDungeonEnter>);
         _handler.Add((ushort)MsgId.S2CDungeonEnter, PacketHandler.S2CDungeonEnterHandler);
         _onRecv.Add((ushort)MsgId.S2CDungeonLeave, MakePacket<S2CDungeonLeave>);

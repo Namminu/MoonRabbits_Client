@@ -24,6 +24,8 @@ public class TownManager : MonoBehaviour
 
     [SerializeField]
     private UIStart uiStart;
+    [SerializeField]
+    private UiTest uiTest;
 
     [SerializeField]
     private UIAnimation uiAnimation;
@@ -141,6 +143,7 @@ public class TownManager : MonoBehaviour
         player.Move(validatedSpawnPos, Quaternion.identity);
         player.SetPlayerId(playerInfo.PlayerId);
         player.SetNickname(playerInfo.Nickname);
+        uiTest.SetNickname(playerInfo.Nickname);
 
         if (playerList.TryGetValue(playerInfo.PlayerId, out var existingPlayer))
         {
@@ -184,10 +187,21 @@ public class TownManager : MonoBehaviour
         uiStart.gameObject.SetActive(false);
         uiChat.gameObject.SetActive(true);
         uiAnimation.gameObject.SetActive(true);
+        uiTest.gameObject.SetActive(true);
     }
 
     public Player GetPlayerAvatarById(int playerId)
     {
         return playerList.TryGetValue(playerId, out var player) ? player : null;
+    }
+
+    public void UpdateExp(int updatedExp)
+    {
+        uiTest.SetExp(updatedExp);
+    }
+
+    public void LevelUp(int newLevel, int newTargetExp, int updatedExp, int abilityPoint)
+    {
+        uiTest.LevelUp(newLevel, newTargetExp, updatedExp, abilityPoint);
     }
 }

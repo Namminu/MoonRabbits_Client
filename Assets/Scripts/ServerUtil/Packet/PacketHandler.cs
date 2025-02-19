@@ -271,6 +271,31 @@ class PacketHandler
         Debug.Log($"S2CMonsterLocation 패킷 무사 도착 : {pkt}");
     }
     #endregion
+    
+    public static void S2CAddExpHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CAddExp pkt)
+            return;
+        Debug.Log($"S2CAddExp 패킷 무사 도착 : {pkt}");
+
+        TownManager.Instance.UpdateExp(pkt.UpdatedExp);
+    }
+    
+    public static void S2CLevelUpHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CLevelUp pkt)
+            return;
+        Debug.Log($"S2CLevelUp 패킷 무사 도착 : {pkt}");
+
+        TownManager.Instance.LevelUp(pkt.UpdatedLevel, pkt.NewTargetExp, pkt.UpdatedExp, pkt.AbilityPoint);
+    }
+    
+    public static void S2CSelectAPHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CSelectAP pkt)
+            return;
+        Debug.Log($"S2CSelectAP 패킷 무사 도착 : {pkt}");
+    }
 
     /* !!! 패킷 수정으로 보류된 핸들러 목록 !!! */
     // public static void S_ScreenTextHandler(PacketSession session, IMessage packet)
