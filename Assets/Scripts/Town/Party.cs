@@ -53,7 +53,7 @@ public class Party : MonoBehaviour
 
     // UI 업데이트 요청 (PartyUI에서 처리)
     PartyUI.instance.isInParty = true;
-    PartyUI.instance.AllovInvite();
+    PartyUI.instance.UpdateUI();
   }
 
   // public void InvitePartyData(S2CInviteParty partyData)

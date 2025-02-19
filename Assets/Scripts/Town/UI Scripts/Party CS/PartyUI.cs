@@ -79,6 +79,7 @@ public class PartyUI : MonoBehaviour
     // UpdateScrollView();
   }
 
+  #region 상호작용 이벤트 함수
   // 파티 생성 버튼 클릭 시 실행
   void OnCreatePartyClicked()
   {
@@ -158,38 +159,32 @@ public class PartyUI : MonoBehaviour
     allowBtn.onClick.AddListener(() => SendAllowInvitePacket(partyId, memberId));
   }
 
-  public void AllovInvite()
-  {
-    UpdateUI();
-  }
-
   // 파티 창 닫기
   void ClosePartyWindow()
   {
     partyWindow.SetActive(false);
   }
 
-  private void SendCreatePartyPacket()
+  // 파티 탈퇴 버튼 클릭 시
+  public void OnLeavePartyClicked()
   {
-    var createPartyPacket = new C2SCreateParty { };
-    GameManager.Network.Send(createPartyPacket);
+    // 새로운 PartyData를 생성하여 members를 개별적으로 추가
+    S2CCreateParty newPartyData = new S2CCreateParty
+    {
+      PartyId = Party.instance.partyId,
+      LeaderId = 0, // 파티장이 없어짐
+      MemberCount = 0
+    };
+
+    // SetPartyData 호출 (빈 멤버 리스트 적용)
+    Party.instance.CreatePartyData(newPartyData);
+
+    isInParty = false;
+    UpdateUI();
   }
+  #endregion
 
-  private void SendAllowInvitePacket(string partyId, int memberId)
-  {
-    var allowInvitePacket = new C2SAllowInvite { PartyId = partyId, MemberId = memberId };
-    GameManager.Network.Send(allowInvitePacket);
-    allowInvitePopUp.SetActive(false);
-  }
-
-  private void SendInvitePartyPacket(string nickname)
-  {
-    var invitePartyPacket = new C2SInviteParty { PartyId = Party.instance.partyId, Nickname = nickname };
-    GameManager.Network.Send(invitePartyPacket);
-    invitePartyPopUp.SetActive(false);
-  }
-
-
+  #region 멤버 카드 생성
   private void CreateMemberCard(int playerId, string nickname, bool isLeader, bool isMine)
   {
     if (memberCardPrefab == null || partyMemberContainer == null)
@@ -238,7 +233,9 @@ public class PartyUI : MonoBehaviour
         if (kickOutButton != null)
         {
           kickOutButton.gameObject.SetActive(true);
+          kickOutButton.onClick.RemoveAllListeners();
           kickOutButton.onClick.AddListener(delegate { RemovePartyMember(newMemberCard, playerId); });
+          kickOutButton.onClick.AddListener(SendKickOutPartyPacket);
         }
       }
       else
@@ -248,7 +245,7 @@ public class PartyUI : MonoBehaviour
       }
     }
   }
-
+  #endregion
 
   // 기존 멤버 삭제
   private void ClearPartyMembers()
@@ -259,23 +256,7 @@ public class PartyUI : MonoBehaviour
     }
   }
 
-  // 파티 탈퇴 버튼 클릭 시
-  public void OnLeavePartyClicked()
-  {
-    // 새로운 PartyData를 생성하여 members를 개별적으로 추가
-    S2CCreateParty newPartyData = new S2CCreateParty
-    {
-      PartyId = Party.instance.partyId,
-      LeaderId = 0, // 파티장이 없어짐
-      MemberCount = 0
-    };
 
-    // SetPartyData 호출 (빈 멤버 리스트 적용)
-    Party.instance.CreatePartyData(newPartyData);
-
-    isInParty = false;
-    UpdateUI();
-  }
 
 
   // 파티원 강퇴
@@ -296,4 +277,31 @@ public class PartyUI : MonoBehaviour
     Canvas.ForceUpdateCanvases();
     scrollRect.verticalNormalizedPosition = 0f;
   }
+
+  #region 패킷 전송 함수
+  private void SendCreatePartyPacket()
+  {
+    var createPartyPacket = new C2SCreateParty { };
+    GameManager.Network.Send(createPartyPacket);
+  }
+
+  private void SendAllowInvitePacket(string partyId, int memberId)
+  {
+    var allowInvitePacket = new C2SAllowInvite { PartyId = partyId, MemberId = memberId };
+    GameManager.Network.Send(allowInvitePacket);
+    allowInvitePopUp.SetActive(false);
+  }
+
+  private void SendInvitePartyPacket(string nickname)
+  {
+    var invitePartyPacket = new C2SInviteParty { PartyId = Party.instance.partyId, Nickname = nickname };
+    GameManager.Network.Send(invitePartyPacket);
+    invitePartyPopUp.SetActive(false);
+  }
+
+  private void SendKickOutPartyPacket()
+  {
+
+  }
+  #endregion
 }
