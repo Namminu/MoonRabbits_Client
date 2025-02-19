@@ -91,16 +91,16 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        // if (!isInitialized)
-        //     return;
+        if (!isInitialized)
+            return;
 
         // 인풋 키 받는 함수 (스킬이나 조작 추가시 여기에 추가)
         GetInput();
 
-        // if (!IsMine)
-        // {
-        //     SmoothMoveAndRotate();
-        // }
+        if (!IsMine)
+        {
+            SmoothMoveAndRotate();
+        }
 
         CheckMove();
 

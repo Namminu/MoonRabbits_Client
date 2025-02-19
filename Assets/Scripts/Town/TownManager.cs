@@ -176,8 +176,12 @@ public class TownManager : MonoBehaviour
         if (!playerList.TryGetValue(playerId, out var player))
             return;
 
+        if (player != null && player.gameObject != null)
+        {
+            Destroy(player.gameObject);
+        }
+
         playerList.Remove(playerId);
-        // Destroy(player.gameObject);
     }
 
     private void ActivateGameUI()

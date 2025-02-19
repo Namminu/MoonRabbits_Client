@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Google.Protobuf.Protocol;
@@ -44,7 +45,7 @@ public class MyPlayer : MonoBehaviour
     void Update()
     {
         HandleInput();
-        CheckMove();
+        // CheckMove();
     }
 
     private void InitializeCamera()
@@ -70,11 +71,18 @@ public class MyPlayer : MonoBehaviour
     // 충돌한 위치로 NavMeshAgent를 이동시킴 (agent.SetDestination(rayHit.point);
     private void HandleInput()
     {
-        Debug.Log($"마우스 눌림? : {Input.GetMouseButtonDown(0)}");
-        Debug.Log($"이벤트시스템? : {!eSystem.IsPointerOverGameObject()}");
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
         {
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
+            int layerMask = 1 << LayerMask.NameToLayer("Ground");
+
+            if (
+                Physics.Raycast(
+                    Camera.main.ScreenPointToRay(Input.mousePosition),
+                    out rayHit,
+                    Mathf.Infinity,
+                    layerMask
+                )
+            )
             {
                 targetPosition = rayHit.point;
             }
@@ -87,7 +95,7 @@ public class MyPlayer : MonoBehaviour
         {
             yield return null; // 1 프레임 대기
             frameCount++;
-
+            CheckMove();
             // 마지막으로 전송했던 좌표(lastTargetPosition)와 달라졌을 때에만 실행
             if (frameCount >= targetFrames && targetPosition != lastTargetPosition)
             {
@@ -106,7 +114,7 @@ public class MyPlayer : MonoBehaviour
         lastTargetPosition = targetPosition;
 
         // 패킷 전송
-        var movePacket = new C2SMove
+        var movePacket = new C2SPlayerMove
         {
             StartPosX = transform.position.x,
             StartPosY = transform.position.y,
@@ -147,7 +155,7 @@ public class MyPlayer : MonoBehaviour
     private void CheckMove()
     {
         float distanceMoved = Vector3.Distance(lastPos, transform.position);
-        animator.SetFloat(Constants.TownPlayerMove, distanceMoved * 100);
+        // animator.SetFloat(Constants.TownPlayerMove, distanceMoved * 100);
 
         if (distanceMoved > 0.01f)
         {

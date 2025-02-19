@@ -37,34 +37,34 @@ public class Sensor : MonoBehaviour
         monsterController.Target = FindTarget();
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            var player = other.GetComponent<TempPlayer>();
+    // private void OnTriggerEnter(Collider other)
+    // {
+    //     if (other.gameObject.CompareTag("Player"))
+    //     {
+    //         var player = other.GetComponent<TempPlayer>();
 
-            if (IsDuplicate(other.transform) && player.IsAlive)
-            {
-                targetList.Add(other.transform);
-            }
+    //         if (IsDuplicate(other.transform) && player.IsAlive)
+    //         {
+    //             targetList.Add(other.transform);
+    //         }
 
-            monsterController.Target = FindTarget();
-        }
-    }
+    //         monsterController.Target = FindTarget();
+    //     }
+    // }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            targetList.Remove(other.transform);
+    // private void OnTriggerExit(Collider other)
+    // {
+    //     if (other.gameObject.CompareTag("Player"))
+    //     {
+    //         targetList.Remove(other.transform);
 
-            if (coSetTarget != null)
-            {
-                StopCoroutine(coSetTarget);
-                coSetTarget = null;
-            }
+    //         if (coSetTarget != null)
+    //         {
+    //             StopCoroutine(coSetTarget);
+    //             coSetTarget = null;
+    //         }
 
-            coSetTarget = StartCoroutine(SetTarget());
-        }
-    }
+    //         coSetTarget = StartCoroutine(SetTarget());
+    //     }
+    // }
 }

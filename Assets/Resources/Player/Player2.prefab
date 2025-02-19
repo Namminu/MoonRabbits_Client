@@ -5700,8 +5700,8 @@ GameObject:
   - component: {fileID: 14842854845680553}
   - component: {fileID: 1520978321727987765}
   - component: {fileID: -261817834069105863}
-  - component: {fileID: 8542288063260461585}
-  - component: {fileID: 8248996008979069159}
+  - component: {fileID: -3790289419171033283}
+  - component: {fileID: 4046102001127525354}
   m_Layer: 10
   m_Name: Player2
   m_TagString: Player
@@ -5759,9 +5759,9 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 4
+  m_Speed: 7
   m_Acceleration: 7
-  avoidancePriority: 50
+  avoidancePriority: 20
   m_AngularSpeed: 300
   m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
@@ -5769,7 +5769,7 @@ NavMeshAgent:
   m_AutoRepath: 1
   m_Height: 2
   m_BaseOffset: 0
-  m_WalkableMask: 4294967295
+  m_WalkableMask: 7
   m_ObstacleAvoidanceType: 4
 --- !u!114 &-261817834069105863
 MonoBehaviour:
@@ -5791,7 +5791,7 @@ MonoBehaviour:
   throwPower: 10
   grenade: {fileID: 3125930997733802295, guid: d7713fb2e1661914b9273d87082c1e83, type: 3}
   trap: {fileID: 0}
---- !u!54 &8542288063260461585
+--- !u!54 &-3790289419171033283
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5814,11 +5814,11 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!136 &8248996008979069159
+--- !u!136 &4046102001127525354
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5837,10 +5837,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.34
-  m_Height: 1.68
+  m_Radius: 0.5
+  m_Height: 1
   m_Direction: 1
-  m_Center: {x: 0, y: 1.02, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7485381894851704194
 GameObject:
   m_ObjectHideFlags: 0

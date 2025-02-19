@@ -83,15 +83,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100000, guid: 3a9199b3a66a2c54c9a43fe04b5d722f,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1408277735931272487}
-    - targetCorrespondingSourceObject: {fileID: 100000, guid: 3a9199b3a66a2c54c9a43fe04b5d722f,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1116358010846522748}
     - targetCorrespondingSourceObject: {fileID: 100000, guid: 3a9199b3a66a2c54c9a43fe04b5d722f,
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8954040785925173613}
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: 3a9199b3a66a2c54c9a43fe04b5d722f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5792420539665007363}
   m_SourcePrefab: {fileID: 100100000, guid: 3a9199b3a66a2c54c9a43fe04b5d722f, type: 3}
 --- !u!1 &8492229326555069999 stripped
 GameObject:
@@ -99,22 +99,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 8492229326555166863}
   m_PrefabAsset: {fileID: 0}
---- !u!208 &1408277735931272487
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8492229326555069999}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.36600003, y: 0.577, z: 0.43800002}
-  m_MoveThreshold: 0.1
-  m_Carve: 0
-  m_CarveOnlyStationary: 1
-  m_Center: {x: -0.056, y: 0.66400003, z: 0.021000002}
-  m_TimeToStationary: 0.5
 --- !u!136 &1116358010846522748
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -150,3 +134,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6eebf15910120d47ab1439622d4f586, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5792420539665007363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8492229326555069999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 1
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.21333332
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: 109d1eaed668a2b4787b6c703ccecb49, type: 2}
+  m_BuildHeightMesh: 0

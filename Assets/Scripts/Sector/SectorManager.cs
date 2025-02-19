@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 
 public class ASectorManager : MonoBehaviour
 {
-    private static ASectorManager _instance = null;
+    private static ASectorManager _instance;
     public static ASectorManager Instance => _instance;
 
     [SerializeField]
@@ -115,8 +115,12 @@ public class ASectorManager : MonoBehaviour
         if (!playerList.TryGetValue(playerId, out var player))
             return;
 
+        if (player != null && player.gameObject != null)
+        {
+            Destroy(player.gameObject);
+        }
+
         playerList.Remove(playerId);
-        Destroy(player.gameObject);
     }
 
     public Player GetPlayerAvatarById(int playerId)

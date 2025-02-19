@@ -27,7 +27,7 @@ public class MonsterController : MonoBehaviour
         set { target = value; }
     }
 
-    private Rigidbody rigid;
+    // private Rigidbody rigid;
 
     private Animator anim;
 
@@ -37,7 +37,7 @@ public class MonsterController : MonoBehaviour
 
     private void Start()
     {
-        rigid = GetComponent<Rigidbody>();
+        // rigid = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
 
