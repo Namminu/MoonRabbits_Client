@@ -4,13 +4,14 @@
 // using UnityEngine.EventSystems;
 // using UnityEngine.UI;
 
-// public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
-// {
-// 	[SerializeField] private Transform targetUI;
-// 	[Space]
-// 	[SerializeField] private Button btn_Sort;
-// 	[SerializeField] private Button btn_Decom;
-// 	[SerializeField] private Button btn_Close;
+public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
+{
+	[SerializeField] private Transform targetUI;
+	[SerializeField] private GameObject DecomUI;
+	[Space]
+	[SerializeField] private Button btn_Sort;
+	[SerializeField] private Button btn_Decom;
+	[SerializeField] private Button btn_Close;
 
 // 	// �κ� UI�� ��ġ �̵��� ���� ����
 // 	private Vector2 beginPos;
@@ -56,11 +57,17 @@
 // 		InvenUI.GetComponent<InventoryUI>().SortItemList();
 // 	}
 
-// 	private void DecomButton()
-// 	{
-// 		Debug.Log("Item Decom Btn Click");
-// 		InvenUI.GetComponent<InventoryUI>().DecomItems();
-// 	}
+	private void DecomButton()
+	{
+		if(DecomUI != null)
+		{
+			if(DecomUI.activeSelf)
+			{
+				DecomUI.SetActive(false);
+			}
+			else DecomUI.SetActive(true);
+		}
+	}
 
 // 	private void OnEnable()
 // 	{
