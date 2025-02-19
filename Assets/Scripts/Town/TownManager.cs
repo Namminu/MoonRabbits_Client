@@ -141,6 +141,7 @@ public class TownManager : MonoBehaviour
         player.Move(validatedSpawnPos, Quaternion.identity);
         player.SetPlayerId(playerInfo.PlayerId);
         player.SetNickname(playerInfo.Nickname);
+        player.SetLevel(playerInfo.Level);
 
         if (playerList.TryGetValue(playerInfo.PlayerId, out var existingPlayer))
         {

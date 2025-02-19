@@ -38,13 +38,13 @@ public class MyPlayer : MonoBehaviour
 
     void Start()
     {
-        // StartCoroutine(ExecuteEvery10Frames());
+        StartCoroutine(ExecuteEvery10Frames());
     }
 
     void Update()
     {
         HandleInput();
-        CheckMove();
+        // CheckMove();
     }
 
     private void InitializeCamera()
@@ -73,59 +73,48 @@ public class MyPlayer : MonoBehaviour
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
             {
                 targetPosition = rayHit.point;
-                agent.SetDestination(targetPosition);
-
-                // 패킷 전송
-                var movePacket = new C2SPlayerMove
-                {
-                    StartPosX = transform.position.x,
-                    StartPosY = transform.position.y,
-                    StartPosZ = transform.position.z,
-                    TargetPosX = targetPosition.x,
-                    TargetPosY = targetPosition.y,
-                    TargetPosZ = targetPosition.z,
-                };
-                GameManager.Network.Send(movePacket);
             }
         }
     }
 
-    // IEnumerator ExecuteEvery10Frames()
-    // {
-    //     while (true)
-    //     {
-    //         yield return null; // 1 프레임 대기
-    //         frameCount++;
+    IEnumerator ExecuteEvery10Frames()
+    {
+        while (true)
+        {
+            yield return null; // 1 프레임 대기
+            frameCount++;
 
-    //         // 마지막으로 전송했던 좌표(lastTargetPosition)와 달라졌을 때에만 실행
-    //         if (frameCount >= targetFrames && targetPosition != lastTargetPosition)
-    //         {
-    //             frameCount = 0;
-    //             MoveAndSendMovePacket();
-    //         }
-    //     }
-    // }
+            CheckMove();
 
-    // private void MoveAndSendMovePacket()
-    // {
-    //     // 플레이어 이동시키기
-    //     agent.SetDestination(targetPosition);
+            // 마지막으로 전송했던 좌표(lastTargetPosition)와 달라졌을 때에만 실행
+            if (frameCount >= targetFrames && targetPosition != lastTargetPosition)
+            {
+                frameCount = 0;
+                MoveAndSendMovePacket();
+            }
+        }
+    }
 
-    //     // 마지막으로 전송했던 좌표 기억해두기
-    //     lastTargetPosition = targetPosition;
+    private void MoveAndSendMovePacket()
+    {
+        // 플레이어 이동시키기
+        agent.SetDestination(targetPosition);
 
-    //     // 패킷 전송
-    //     var movePacket = new C_Move
-    //     {
-    //         StartPosX = transform.position.x,
-    //         StartPosY = transform.position.y,
-    //         StartPosZ = transform.position.z,
-    //         TargetPosX = targetPosition.x,
-    //         TargetPosY = targetPosition.y,
-    //         TargetPosZ = targetPosition.z
-    //     };
-    //     GameManager.Network.Send(movePacket);
-    // }
+        // 마지막으로 전송했던 좌표 기억해두기
+        lastTargetPosition = targetPosition;
+
+        // 패킷 전송
+        var movePacket = new C2SPlayerMove
+        {
+            StartPosX = transform.position.x,
+            StartPosY = transform.position.y,
+            StartPosZ = transform.position.z,
+            TargetPosX = targetPosition.x,
+            TargetPosY = targetPosition.y,
+            TargetPosZ = targetPosition.z,
+        };
+        GameManager.Network.Send(movePacket);
+    }
 
     private void SendLocationPacket()
     {

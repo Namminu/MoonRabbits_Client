@@ -172,6 +172,7 @@ class PacketHandler
         if (packet is not S2CCreateParty pkt)
             return;
         Debug.Log($"S2CCreateParty 패킷 무사 도착 : {pkt}");
+        Party.instance.CreatePartyData(pkt);
     }
 
     public static void S2CInvitePartyHandler(PacketSession session, IMessage packet)
@@ -179,6 +180,21 @@ class PacketHandler
         if (packet is not S2CInviteParty pkt)
             return;
         Debug.Log($"S2CInviteParty 패킷 무사 도착 : {pkt}");
+
+        string leaderNickname = pkt.LeaderNickname;
+        string partyId = pkt.PartyId;
+        int memberId = pkt.MemberId;
+
+        // 수락 팝업창 띄우기
+        PartyUI.instance.OpenAllowInvitePopUp(partyId, leaderNickname, memberId);
+    }
+
+    public static void S2CAllowInviteHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CAllowInvite pkt)
+            return;
+        Debug.Log($"S2CAllowInvite 패킷 무사 도착 : {pkt}");
+        Party.instance.AllowInviteData(pkt);
     }
 
     public static void S2CJoinPartyHandler(PacketSession session, IMessage packet)
@@ -193,6 +209,7 @@ class PacketHandler
         if (packet is not S2CLeaveParty pkt)
             return;
         Debug.Log($"S2CLeaveParty 패킷 무사 도착 : {pkt}");
+        Party.instance.LeavePartyData(pkt);
     }
 
     public static void S2CSetPartyLeaderHandler(PacketSession session, IMessage packet)
@@ -201,42 +218,49 @@ class PacketHandler
             return;
         Debug.Log($"S2CSetPartyLeader 패킷 무사 도착 : {pkt}");
     }
-
-    public static void S2CBuffHandler(PacketSession session, IMessage packet)
+    public static void S2CKickOutMemberHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CBuff pkt)
+        if (packet is not S2CKickOutMember pkt)
             return;
-        Debug.Log($"S2CBuff 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CKickOutMember 패킷 무사 도착 : {pkt}");
+        Party.instance.KickedOutData(pkt);
+    }
+    public static void S2CDisbandPartyHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CDisbandParty pkt)
+            return;
+        Debug.Log($"S2CDisbandParty 패킷 무사 도착 : {pkt}");
+        PartyUI.instance.KickedOut(pkt.Msg);
     }
     #endregion
 
-    #region Dungeon
-    public static void S2CDungeonEnterHandler(PacketSession session, IMessage packet)
+    #region Sector
+    public static void S2CSectorEnterHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CDungeonEnter pkt)
+        if (packet is not S2CSectorEnter pkt)
             return;
-        Debug.Log($"S2CDungeonEnter 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CSectorEnter 패킷 무사 도착 : {pkt}");
 
-        Scene currentScene = SceneManager.GetActiveScene();
+        // Scene currentScene = SceneManager.GetActiveScene();
 
-        if (currentScene.name == GameManager.BattleScene)
-        {
-            BattleManager.Instance.ConfigureGame(pkt);
-        }
-        else
-        {
-            GameManager.Instance.Pkt = pkt;
-            SceneManager.LoadScene(GameManager.BattleScene);
-        }
+        // if (currentScene.name == GameManager.BattleScene)
+        // {
+        //     BattleManager.Instance.ConfigureGame(pkt);
+        // }
+        // else
+        // {
+        //     GameManager.Instance.Pkt = pkt;
+        //     SceneManager.LoadScene(GameManager.BattleScene);
+        // }
     }
 
-    public static void S2CDungeonLeaveHandler(PacketSession session, IMessage packet)
+    public static void S2CSectorLeaveHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CDungeonLeave pkt)
+        if (packet is not S2CSectorLeave pkt)
             return;
-        Debug.Log($"S2CDungeonLeave 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CSectorLeave 패킷 무사 도착 : {pkt}");
 
-        SceneManager.LoadScene(GameManager.TownScene);
+        // SceneManager.LoadScene(GameManager.TownScene);
     }
     #endregion
 
