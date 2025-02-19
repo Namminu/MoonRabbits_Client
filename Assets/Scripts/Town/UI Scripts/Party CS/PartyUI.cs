@@ -158,6 +158,11 @@ public class PartyUI : MonoBehaviour
     allowBtn.onClick.AddListener(() => SendAllowInvitePacket(partyId, memberId));
   }
 
+  public void AllovInvite()
+  {
+    UpdateUI();
+  }
+
   // 파티 창 닫기
   void ClosePartyWindow()
   {
@@ -174,12 +179,14 @@ public class PartyUI : MonoBehaviour
   {
     var allowInvitePacket = new C2SAllowInvite { PartyId = partyId, MemberId = memberId };
     GameManager.Network.Send(allowInvitePacket);
+    allowInvitePopUp.SetActive(false);
   }
 
   private void SendInvitePartyPacket(string nickname)
   {
     var invitePartyPacket = new C2SInviteParty { PartyId = Party.instance.partyId, Nickname = nickname };
     GameManager.Network.Send(invitePartyPacket);
+    invitePartyPopUp.SetActive(false);
   }
 
 

@@ -69,6 +69,8 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CKickOutMember, PacketHandler.S2CKickOutMemberHandler);
         _onRecv.Add((ushort)MsgId.S2CDisbandParty, MakePacket<S2CDisbandParty>);
         _handler.Add((ushort)MsgId.S2CDisbandParty, PacketHandler.S2CDisbandPartyHandler);
+        _onRecv.Add((ushort)MsgId.S2CAllowInvite, MakePacket<S2CAllowInvite>);
+        _handler.Add((ushort)MsgId.S2CAllowInvite, PacketHandler.S2CAllowInviteHandler);
         _onRecv.Add((ushort)MsgId.S2CSectorEnter, MakePacket<S2CSectorEnter>);
         _handler.Add((ushort)MsgId.S2CSectorEnter, PacketHandler.S2CSectorEnterHandler);
         _onRecv.Add((ushort)MsgId.S2CSectorLeave, MakePacket<S2CSectorLeave>);
