@@ -23,9 +23,21 @@ public class EventManager : MonoBehaviour
 		}
 		DontDestroyOnLoad(gameObject);
 	}
+
 	public static void Subscribe<T>(string eventName, Action<T> listener)
 	{
 		if(events.ContainsKey(eventName))
+		{
+			events[eventName] = Delegate.Combine(events[eventName], listener);
+		}
+		else
+		{
+			events[eventName] = listener;
+		}
+	}
+	public static void Subscribe(string eventName, Action listener)
+	{
+		if (events.ContainsKey(eventName))
 		{
 			events[eventName] = Delegate.Combine(events[eventName], listener);
 		}
@@ -50,12 +62,34 @@ public class EventManager : MonoBehaviour
 			}
 		}
 	}
+	public static void Unsubscribe(string eventName, Action listener)
+	{
+		if (events.ContainsKey(eventName))
+		{
+			var currentDelegate = Delegate.Remove(events[eventName], listener);
+			if (currentDelegate == null)
+			{
+				events.Remove(eventName);
+			}
+			else
+			{
+				events[eventName] = currentDelegate;
+			}
+		}
+	}
 
 	public static void Trigger<T>(string eventName, T arg)
 	{
 		if(events.ContainsKey(eventName) && events[eventName] is Action<T> action)
 		{
 			action.Invoke(arg);
+		}
+	}
+	public static void Trigger(string eventName)
+	{
+		if (events.ContainsKey(eventName) && events[eventName] is Action action)
+		{
+			action.Invoke();
 		}
 	}
 }

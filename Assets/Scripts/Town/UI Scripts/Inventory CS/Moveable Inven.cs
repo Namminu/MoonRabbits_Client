@@ -1,69 +1,75 @@
-// using System.Collections;
-// using System.Collections.Generic;
-// using UnityEngine;
-// using UnityEngine.EventSystems;
-// using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-// public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
-// {
-// 	[SerializeField] private Transform targetUI;
-// 	[Space]
-// 	[SerializeField] private Button btn_Sort;
-// 	[SerializeField] private Button btn_Decom;
-// 	[SerializeField] private Button btn_Close;
+public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
+{
+	[SerializeField] private Transform targetUI;
+	[SerializeField] private GameObject DecomUI;
+	[Space]
+	[SerializeField] private Button btn_Sort;
+	[SerializeField] private Button btn_Decom;
+	[SerializeField] private Button btn_Close;
 
-// 	// ï¿½Îºï¿½ UIï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-// 	private Vector2 beginPos;
-// 	private Vector2 moveBegin;
-// 	[SerializeField] [ReadOnly] private GameObject InvenUI;
-// 	// ï¿½Îºï¿½ UIï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½óº¹±Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-// 	private Vector2 initPos;
+	// ÀÎº¥ UIÀÇ À§Ä¡ ÀÌµ¿À» À§ÇÑ º¯¼ö
+	private Vector2 beginPos;
+	private Vector2 moveBegin;
+	[SerializeField] [ReadOnly] private GameObject InvenUI;
+	// ÀÎº¥ UIÀÇ À§Ä¡ ¿ø»óº¹±Í¸¦ À§ÇÑ º¯¼ö
+	private Vector2 initPos;
 
-//     // ì¸ë²¤ UIì˜ ìœ„ì¹˜ ì´ë™ì„ ìœ„í•œ ë³€ìˆ˜
-//     private Vector2 beginPos;
-//     private Vector2 moveBegin;
-//     private GameObject InvenUI;
+	private void Awake()
+	{
+		Debug.Log("ÀÎº¥Åä¸® Çì´õ È°¼ºÈ­");
 
-// 		if (targetUI == null) targetUI = transform.parent;
-// 		if (InvenUI == null) InvenUI = targetUI.parent.gameObject;
+		if (targetUI == null) targetUI = transform.parent;
+		if (InvenUI == null) InvenUI = targetUI.parent.gameObject;
 
-// 		btn_Sort.onClick.AddListener(SortButton);
-// 		btn_Decom.onClick.AddListener(DecomButton);
-// 		btn_Close.onClick.AddListener(CloseInvenUI);
+		btn_Sort.onClick.AddListener(SortButton);
+		btn_Decom.onClick.AddListener(DecomButton);
+		btn_Close.onClick.AddListener(CloseInvenUI);
 
-//     private void Awake()
-//     {
-//         Debug.Log("ì¸ë²¤í† ë¦¬ í—¤ë” í™œì„±í™”");
+		initPos = targetUI.position;
+	}
 
-//         if (targetUI == null)
-//             targetUI = transform.parent;
-//         if (InvenUI == null)
-//             InvenUI = targetUI.parent.gameObject;
-//         btn_Close.onClick.AddListener(CloseInvenUI);
+	void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
+	{
+		beginPos = targetUI.position;
+		moveBegin = eventData.position;
+	}
 
-//         initPos = targetUI.position;
-//     }
+	void IDragHandler.OnDrag(PointerEventData eventData)
+	{
+		targetUI.position = beginPos + (eventData.position - moveBegin);
+	}
 
-//     void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
-//     {
-//         beginPos = targetUI.position;
-//         moveBegin = eventData.position;
-//     }
+	void CloseInvenUI()
+	{
+		if(InvenUI != null) InvenUI.SetActive(false);
+	}
 
-// 	private void SortButton()
-// 	{
-// 		Debug.Log("Item Sort Btn Click");
-// 		InvenUI.GetComponent<InventoryUI>().SortItemList();
-// 	}
+	private void SortButton()
+	{
+		Debug.Log("Item Sort Btn Click");
+		InvenUI.GetComponent<InventoryUI>().SortItemList();
+	}
 
-// 	private void DecomButton()
-// 	{
-// 		Debug.Log("Item Decom Btn Click");
-// 		InvenUI.GetComponent<InventoryUI>().DecomItems();
-// 	}
+	private void DecomButton()
+	{
+		if(DecomUI != null)
+		{
+			if(DecomUI.activeSelf)
+			{
+				DecomUI.SetActive(false);
+			}
+			else DecomUI.SetActive(true);
+		}
+	}
 
-// 	private void OnEnable()
-// 	{
-// 		targetUI.position = initPos;
-// 	}
-// }
+	private void OnEnable()
+	{
+		targetUI.position = initPos;
+	}
+}

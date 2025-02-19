@@ -7,17 +7,10 @@ public class Item : MonoBehaviour
 {
     private int itemCode;
     private Image itemImage;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private ItemData itemData;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public Image GetItemImage() { return itemImage; } 
+
+    public ItemData GetItemData() { return itemData; }
 }
