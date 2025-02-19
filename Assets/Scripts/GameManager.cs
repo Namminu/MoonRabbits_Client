@@ -8,41 +8,37 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager _instance = null;
     public static GameManager Instance => _instance;
- 
-    
+
     private NetworkManager network;
     public static NetworkManager Network => _instance.network;
-
 
     public const string BattleScene = "Battle";
     public const string TownScene = "Town";
 
-    public S_EnterDungeon Pkt;
-    
+    public S2CSectorEnter Pkt;
+
     public string UserName;
-    public int ClassIdx;
-    
+    public int ClassCode;
+
     private void Awake()
     {
         if (_instance == null)
         {
             _instance = this;
-        
+
             network = new NetworkManager();
-        
+
             DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
         }
-        
     }
 
     private void Update()
     {
-        if(network != null)
+        if (network != null)
             network.Update();
     }
-
 }

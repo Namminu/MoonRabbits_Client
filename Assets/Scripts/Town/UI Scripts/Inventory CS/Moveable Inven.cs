@@ -13,16 +13,16 @@ public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
 	[SerializeField] private Button btn_Decom;
 	[SerializeField] private Button btn_Close;
 
-	// ÀÎº¥ UIÀÇ À§Ä¡ ÀÌµ¿À» À§ÇÑ º¯¼ö
+	// ì¸ë²¤ UIì˜ ìœ„ì¹˜ ì´ë™ì„ ìœ„í•œ ë³€ìˆ˜
 	private Vector2 beginPos;
 	private Vector2 moveBegin;
-	[SerializeField] [ReadOnly] private GameObject InvenUI;
-	// ÀÎº¥ UIÀÇ À§Ä¡ ¿ø»óº¹±Í¸¦ À§ÇÑ º¯¼ö
+	[SerializeField][ReadOnly] private GameObject InvenUI;
+	// ì¸ë²¤ UIì˜ ìœ„ì¹˜ ì›ìƒë³µê·€ë¥¼ ìœ„í•œ ë³€ìˆ˜
 	private Vector2 initPos;
 
 	private void Awake()
 	{
-		Debug.Log("ÀÎº¥Åä¸® Çì´õ È°¼ºÈ­");
+		Debug.Log("ì¸ë²¤í† ë¦¬ í—¤ë” í™œì„±í™”");
 
 		if (targetUI == null) targetUI = transform.parent;
 		if (InvenUI == null) InvenUI = targetUI.parent.gameObject;
@@ -47,7 +47,7 @@ public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
 
 	void CloseInvenUI()
 	{
-		if(InvenUI != null) InvenUI.SetActive(false);
+		if (InvenUI != null) InvenUI.SetActive(false);
 	}
 
 	private void SortButton()
@@ -58,9 +58,9 @@ public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
 
 	private void DecomButton()
 	{
-		if(DecomUI != null)
+		if (DecomUI != null)
 		{
-			if(DecomUI.activeSelf)
+			if (DecomUI.activeSelf)
 			{
 				DecomUI.SetActive(false);
 			}
