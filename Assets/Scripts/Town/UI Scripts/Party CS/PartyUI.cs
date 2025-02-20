@@ -83,10 +83,6 @@ public class PartyUI : MonoBehaviour
       noPartyPanel.SetActive(true);
       inPartyPanel.SetActive(false);
       ClearPartyMembers();
-
-      // 파티 참가 버튼 클릭 이벤트 리스너
-      Button joinPartyButton = noPartyPanel.transform.Find("JoinPartyBtn").GetComponent<Button>();
-
     }
 
     // UpdateScrollView();
