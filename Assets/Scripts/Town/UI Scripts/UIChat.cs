@@ -6,15 +6,32 @@ using UnityEngine.UI;
 
 public class UIChat : MonoBehaviour
 {
-    [SerializeField] private Scrollbar scroll;
-    [SerializeField] private RectTransform rectBg;
-    [SerializeField] private Transform chatItemRoot;
-    [SerializeField] private TMP_Text txtChatItemBase;
-    [SerializeField] private TMP_InputField inputChat;
-    [SerializeField] private Button btnSend;
-    [SerializeField] private Button btnToggle;
-    [SerializeField] private Transform icon;
-    [SerializeField] private Transform alarm;
+    [SerializeField]
+    private Scrollbar scroll;
+
+    [SerializeField]
+    private RectTransform rectBg;
+
+    [SerializeField]
+    private Transform chatItemRoot;
+
+    [SerializeField]
+    private TMP_Text txtChatItemBase;
+
+    [SerializeField]
+    private TMP_InputField inputChat;
+
+    [SerializeField]
+    private Button btnSend;
+
+    [SerializeField]
+    private Button btnToggle;
+
+    [SerializeField]
+    private Transform icon;
+
+    [SerializeField]
+    private Transform alarm;
 
     private float baseChatItemWidth;
     private Player player;
@@ -28,13 +45,15 @@ public class UIChat : MonoBehaviour
         btnSend.onClick.AddListener(SendMessage);
         btnToggle.onClick.AddListener(ToggleChatWindow);
 
-        inputChat.onSubmit.AddListener((text) =>
-        {
-            if (!string.IsNullOrWhiteSpace(text))
+        inputChat.onSubmit.AddListener(
+            (text) =>
             {
-                SendMessage();
+                if (!string.IsNullOrWhiteSpace(text))
+                {
+                    SendMessage();
+                }
             }
-        });
+        );
     }
 
     void Update()
@@ -71,20 +90,20 @@ public class UIChat : MonoBehaviour
 
     public void SendMessage()
     {
-        if (string.IsNullOrWhiteSpace(inputChat.text)) return;
+        if (string.IsNullOrWhiteSpace(inputChat.text))
+            return;
 
         player.SendChatMessage(inputChat.text);
 
-        inputChat.text = string.Empty; 
-        ActivateInputFieldProperly();  
+        inputChat.text = string.Empty;
+        ActivateInputFieldProperly();
     }
-
 
     private void ActivateInputFieldProperly()
     {
-        inputChat.ActivateInputField(); 
-        inputChat.caretPosition = 0;  
-        ResetIME();                    
+        inputChat.ActivateInputField();
+        inputChat.caretPosition = 0;
+        ResetIME();
     }
 
     public void PushMessage(string nickName, string msg, bool myChat)
@@ -119,7 +138,10 @@ public class UIChat : MonoBehaviour
 
         if (textComp.textInfo.lineCount > 1)
         {
-            textComp.rectTransform.sizeDelta = new Vector2(baseChatItemWidth, textComp.preferredHeight + 12);
+            textComp.rectTransform.sizeDelta = new Vector2(
+                baseChatItemWidth,
+                textComp.preferredHeight + 12
+            );
         }
     }
 

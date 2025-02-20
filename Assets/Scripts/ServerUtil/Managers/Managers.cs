@@ -52,7 +52,8 @@ public class Managers : MonoBehaviour
     // 초기화 메서드
     private static void Init()
     {
-        if (_isInitialized) return;
+        if (_isInitialized)
+            return;
 
         if (s_instance == null)
         {
@@ -67,7 +68,7 @@ public class Managers : MonoBehaviour
             s_instance = go.GetComponent<Managers>();
 
             // 개별 매니저 초기화
-            s_instance._network?.Init();
+            // s_instance._network?.Init();
             s_instance._pool?.Init();
             s_instance._sound?.Init();
         }

@@ -36,6 +36,10 @@ public class Player : MonoBehaviour
     private Vector3 targetPosition; // 목표 위치 저장
     private float moveSpeed = 10f; // 이동 속도
 
+    [Header("Throw Item")]
+    public GameObject grenade;
+    public GameObject trap;
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
