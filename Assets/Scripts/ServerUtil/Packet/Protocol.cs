@@ -277,8 +277,8 @@ namespace Google.Protobuf.Protocol {
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.C2SAddExp), global::Google.Protobuf.Protocol.C2SAddExp.Parser, new[]{ "Count" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.S2CAddExp), global::Google.Protobuf.Protocol.S2CAddExp.Parser, new[]{ "UpdatedExp" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.S2CLevelUp), global::Google.Protobuf.Protocol.S2CLevelUp.Parser, new[]{ "PlayerId", "UpdatedLevel", "NewTargetExp", "UpdatedExp", "AbilityPoint" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.C2SSelectAp), global::Google.Protobuf.Protocol.C2SSelectAp.Parser, new[]{ "InvestPoints" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.S2CSelectAp), global::Google.Protobuf.Protocol.S2CSelectAp.Parser, new[]{ "StatInfo" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.C2SInvestPoint), global::Google.Protobuf.Protocol.C2SInvestPoint.Parser, new[]{ "StatCode" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.S2CInvestPoint), global::Google.Protobuf.Protocol.S2CInvestPoint.Parser, new[]{ "StatInfo" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.PlayerInfo), global::Google.Protobuf.Protocol.PlayerInfo.Parser, new[]{ "PlayerId", "Nickname", "Level", "ClassCode", "Transform", "StatInfo", "CurrentScene" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.PlayerRank), global::Google.Protobuf.Protocol.PlayerRank.Parser, new[]{ "Rank", "PlayerId", "Nickname", "Exp" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.RankingList), global::Google.Protobuf.Protocol.RankingList.Parser, null, null, null, null, null),
@@ -294,7 +294,6 @@ namespace Google.Protobuf.Protocol {
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.CollisionPushInfo), global::Google.Protobuf.Protocol.CollisionPushInfo.Parser, new[]{ "HasCollision", "PushDirection", "PushDistance" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.Vec3), global::Google.Protobuf.Protocol.Vec3.Parser, new[]{ "X", "Y", "Z" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.Resource), global::Google.Protobuf.Protocol.Resource.Parser, new[]{ "ResourceIdx", "ResourceId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.InvestPoint), global::Google.Protobuf.Protocol.InvestPoint.Parser, new[]{ "StatCode", "Point" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.StatInfo), global::Google.Protobuf.Protocol.StatInfo.Parser, new[]{ "Level", "Stamina", "PickSpeed", "MoveSpeed", "AbilityPoint" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.MonsterStatus), global::Google.Protobuf.Protocol.MonsterStatus.Parser, new[]{ "MonsterId", "MonsterModel", "MonsterName", "MonsterMoveSpeed" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.PartyInfo), global::Google.Protobuf.Protocol.PartyInfo.Parser, new[]{ "PartyId", "LeaderId", "MemberCount" }, null, null, null, null)
@@ -378,8 +377,8 @@ namespace Google.Protobuf.Protocol {
     [pbr::OriginalName("C2S_ADD_EXP")] C2SAddExp = 200,
     [pbr::OriginalName("S2C_ADD_EXP")] S2CAddExp = 201,
     [pbr::OriginalName("S2C_LEVEL_UP")] S2CLevelUp = 202,
-    [pbr::OriginalName("C2S_SELECT_AP")] C2SSelectAp = 203,
-    [pbr::OriginalName("S2C_SELECT_AP")] S2CSelectAp = 204,
+    [pbr::OriginalName("C2S_INVEST_POINT")] C2SInvestPoint = 203,
+    [pbr::OriginalName("S2C_INVEST_POINT")] S2CInvestPoint = 204,
   }
 
   #endregion
@@ -17493,16 +17492,16 @@ namespace Google.Protobuf.Protocol {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class C2SSelectAp : pb::IMessage<C2SSelectAp>
+  public sealed partial class C2SInvestPoint : pb::IMessage<C2SInvestPoint>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<C2SSelectAp> _parser = new pb::MessageParser<C2SSelectAp>(() => new C2SSelectAp());
+    private static readonly pb::MessageParser<C2SInvestPoint> _parser = new pb::MessageParser<C2SInvestPoint>(() => new C2SInvestPoint());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<C2SSelectAp> Parser { get { return _parser; } }
+    public static pb::MessageParser<C2SInvestPoint> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -17518,7 +17517,7 @@ namespace Google.Protobuf.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public C2SSelectAp() {
+    public C2SInvestPoint() {
       OnConstruction();
     }
 
@@ -17526,44 +17525,45 @@ namespace Google.Protobuf.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public C2SSelectAp(C2SSelectAp other) : this() {
-      investPoints_ = other.investPoints_.Clone();
+    public C2SInvestPoint(C2SInvestPoint other) : this() {
+      statCode_ = other.statCode_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public C2SSelectAp Clone() {
-      return new C2SSelectAp(this);
+    public C2SInvestPoint Clone() {
+      return new C2SInvestPoint(this);
     }
 
-    /// <summary>Field number for the "investPoints" field.</summary>
-    public const int InvestPointsFieldNumber = 1;
-    private static readonly pb::FieldCodec<global::Google.Protobuf.Protocol.InvestPoint> _repeated_investPoints_codec
-        = pb::FieldCodec.ForMessage(10, global::Google.Protobuf.Protocol.InvestPoint.Parser);
-    private readonly pbc::RepeatedField<global::Google.Protobuf.Protocol.InvestPoint> investPoints_ = new pbc::RepeatedField<global::Google.Protobuf.Protocol.InvestPoint>();
+    /// <summary>Field number for the "statCode" field.</summary>
+    public const int StatCodeFieldNumber = 1;
+    private int statCode_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::Google.Protobuf.Protocol.InvestPoint> InvestPoints {
-      get { return investPoints_; }
+    public int StatCode {
+      get { return statCode_; }
+      set {
+        statCode_ = value;
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as C2SSelectAp);
+      return Equals(other as C2SInvestPoint);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(C2SSelectAp other) {
+    public bool Equals(C2SInvestPoint other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if(!investPoints_.Equals(other.investPoints_)) return false;
+      if (StatCode != other.StatCode) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -17571,7 +17571,7 @@ namespace Google.Protobuf.Protocol {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override int GetHashCode() {
       int hash = 1;
-      hash ^= investPoints_.GetHashCode();
+      if (StatCode != 0) hash ^= StatCode.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -17590,7 +17590,10 @@ namespace Google.Protobuf.Protocol {
     #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       output.WriteRawMessage(this);
     #else
-      investPoints_.WriteTo(output, _repeated_investPoints_codec);
+      if (StatCode != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(StatCode);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -17601,7 +17604,10 @@ namespace Google.Protobuf.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
-      investPoints_.WriteTo(ref output, _repeated_investPoints_codec);
+      if (StatCode != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(StatCode);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -17612,7 +17618,9 @@ namespace Google.Protobuf.Protocol {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public int CalculateSize() {
       int size = 0;
-      size += investPoints_.CalculateSize(_repeated_investPoints_codec);
+      if (StatCode != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(StatCode);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -17621,11 +17629,13 @@ namespace Google.Protobuf.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(C2SSelectAp other) {
+    public void MergeFrom(C2SInvestPoint other) {
       if (other == null) {
         return;
       }
-      investPoints_.Add(other.investPoints_);
+      if (other.StatCode != 0) {
+        StatCode = other.StatCode;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -17645,8 +17655,8 @@ namespace Google.Protobuf.Protocol {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
-          case 10: {
-            investPoints_.AddEntriesFrom(input, _repeated_investPoints_codec);
+          case 8: {
+            StatCode = input.ReadInt32();
             break;
           }
         }
@@ -17668,8 +17678,8 @@ namespace Google.Protobuf.Protocol {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
-          case 10: {
-            investPoints_.AddEntriesFrom(ref input, _repeated_investPoints_codec);
+          case 8: {
+            StatCode = input.ReadInt32();
             break;
           }
         }
@@ -17680,16 +17690,16 @@ namespace Google.Protobuf.Protocol {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
-  public sealed partial class S2CSelectAp : pb::IMessage<S2CSelectAp>
+  public sealed partial class S2CInvestPoint : pb::IMessage<S2CInvestPoint>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
   #endif
   {
-    private static readonly pb::MessageParser<S2CSelectAp> _parser = new pb::MessageParser<S2CSelectAp>(() => new S2CSelectAp());
+    private static readonly pb::MessageParser<S2CInvestPoint> _parser = new pb::MessageParser<S2CInvestPoint>(() => new S2CInvestPoint());
     private pb::UnknownFieldSet _unknownFields;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public static pb::MessageParser<S2CSelectAp> Parser { get { return _parser; } }
+    public static pb::MessageParser<S2CInvestPoint> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
@@ -17705,7 +17715,7 @@ namespace Google.Protobuf.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public S2CSelectAp() {
+    public S2CInvestPoint() {
       OnConstruction();
     }
 
@@ -17713,15 +17723,15 @@ namespace Google.Protobuf.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public S2CSelectAp(S2CSelectAp other) : this() {
+    public S2CInvestPoint(S2CInvestPoint other) : this() {
       statInfo_ = other.statInfo_ != null ? other.statInfo_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public S2CSelectAp Clone() {
-      return new S2CSelectAp(this);
+    public S2CInvestPoint Clone() {
+      return new S2CInvestPoint(this);
     }
 
     /// <summary>Field number for the "statInfo" field.</summary>
@@ -17739,12 +17749,12 @@ namespace Google.Protobuf.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
-      return Equals(other as S2CSelectAp);
+      return Equals(other as S2CInvestPoint);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public bool Equals(S2CSelectAp other) {
+    public bool Equals(S2CInvestPoint other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -17817,7 +17827,7 @@ namespace Google.Protobuf.Protocol {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public void MergeFrom(S2CSelectAp other) {
+    public void MergeFrom(S2CInvestPoint other) {
       if (other == null) {
         return;
       }

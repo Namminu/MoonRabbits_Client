@@ -30,6 +30,9 @@ public class TownManager : MonoBehaviour
     private UIChat uiChat;
 
     [SerializeField]
+    private UIPlayer uiPlayer;
+
+    [SerializeField]
     private TMP_Text txtServer;
 
     private const string DefaultPlayerPath = "Player/Player1";
@@ -37,6 +40,7 @@ public class TownManager : MonoBehaviour
     public CinemachineFreeLook FreeLook => freeLook;
     public EventSystem E_System => eSystem;
     public UIChat UiChat => uiChat;
+    public UIPlayer UiPlayer => uiPlayer;
 
     private Dictionary<int, Player> playerList = new();
     private Dictionary<int, string> playerDb = new();
@@ -118,6 +122,7 @@ public class TownManager : MonoBehaviour
 
         MyPlayer = CreatePlayer(playerInfo, spawnPos);
         MyPlayer.SetIsMine(true);
+        uiPlayer.SetNickname(playerInfo.Nickname);
 
         ActivateGameUI();
     }
@@ -190,6 +195,7 @@ public class TownManager : MonoBehaviour
         uiStart.gameObject.SetActive(false);
         uiChat.gameObject.SetActive(true);
         uiAnimation.gameObject.SetActive(true);
+        uiPlayer.gameObject.SetActive(true);
     }
 
     public Player GetPlayerAvatarById(int playerId)
