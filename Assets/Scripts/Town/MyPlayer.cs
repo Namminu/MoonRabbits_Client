@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Google.Protobuf.Protocol;
@@ -20,11 +21,24 @@ public class MyPlayer : MonoBehaviour
     private int frameCount = 0;
     private const int targetFrames = 10; // 10 프레임마다 실행
 
+    /* 섬광탄 관련 변수 */
+    private Transform throwPoint;
+    private int throwPower = 15;
+    private bool grenadeInput;
+    private bool trapInput;
+    private bool isThrow = false;
+    private GameObject grenade;
+    private GameObject trap;
+
     void Awake()
     {
         eSystem = TownManager.Instance.E_System;
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+
+        throwPoint = transform.Find("ThrowPoint").transform;
+        grenade = GetComponentInParent<Player>().grenade;
+        trap = GetComponentInParent<Player>().trap;
 
         // 장애물 회피 설정 낮추기(서버와 경로를 최대한 비슷하게 만들기 위함)
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
@@ -44,15 +58,18 @@ public class MyPlayer : MonoBehaviour
     void Update()
     {
         HandleInput();
+        Throw();
         // CheckMove();
     }
 
     private void InitializeCamera()
     {
-        var freeLook = TownManager.Instance.FreeLook;
-        freeLook.Follow = transform;
-        freeLook.LookAt = transform;
-        freeLook.gameObject.SetActive(true);
+        Camera.main.gameObject.GetComponent<TempCamera>().target = transform;
+
+        // var freeLook = TownManager.Instance.FreeLook;
+        // freeLook.Follow = transform;
+        // freeLook.LookAt = transform;
+        // freeLook.gameObject.SetActive(true);
     }
 
     private void LoadAnimationHashes()
@@ -70,11 +87,23 @@ public class MyPlayer : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
         {
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit))
+            int layerMask = 1 << LayerMask.NameToLayer("Ground");
+
+            if (
+                Physics.Raycast(
+                    Camera.main.ScreenPointToRay(Input.mousePosition),
+                    out rayHit,
+                    Mathf.Infinity,
+                    layerMask
+                )
+            )
             {
                 targetPosition = rayHit.point;
             }
         }
+
+        grenadeInput = Input.GetButtonDown("Grenade");
+        trapInput = Input.GetButtonDown("Trap");
     }
 
     IEnumerator ExecuteEvery10Frames()
@@ -145,7 +174,7 @@ public class MyPlayer : MonoBehaviour
     private void CheckMove()
     {
         float distanceMoved = Vector3.Distance(lastPos, transform.position);
-        animator.SetFloat(Constants.TownPlayerMove, distanceMoved * 100);
+        // animator.SetFloat(Constants.TownPlayerMove, distanceMoved * 100);
 
         if (distanceMoved > 0.01f)
         {
@@ -153,5 +182,40 @@ public class MyPlayer : MonoBehaviour
         }
 
         lastPos = transform.position;
+    }
+
+    private void Throw()
+    {
+        if (!isThrow && (grenadeInput || trapInput))
+        {
+            isThrow = true;
+
+            if (grenadeInput)
+            {
+                GameObject currentObj = Instantiate(
+                    grenade,
+                    throwPoint.position,
+                    throwPoint.rotation
+                );
+
+                Rigidbody rigid = currentObj.GetComponent<Rigidbody>();
+
+                Vector3 forceVec = throwPoint.forward * throwPower + throwPoint.up * throwPower / 2;
+
+                rigid.AddForce(forceVec, ForceMode.VelocityChange);
+                rigid.AddTorque(Vector3.right, ForceMode.Impulse);
+            }
+            else if (trapInput)
+            {
+                // currentObj = Instantiate(trap, throwPoint.position, throwPoint.rotation);
+            }
+
+            Invoke(nameof(ThrowEnd), 3f);
+        }
+    }
+
+    private void ThrowEnd()
+    {
+        isThrow = false;
     }
 }

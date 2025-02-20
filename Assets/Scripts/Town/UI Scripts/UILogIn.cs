@@ -1,12 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
-using Google.Protobuf;
 using Google.Protobuf.Protocol;
 using TMPro;
-// using UnityEditor.Build;
-// using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,7 +23,7 @@ public class UILogIn : MonoBehaviour
     private Button btn_Back;
 
     [SerializeField]
-    private Button btn_Register;
+    private Button btn_Reigster;
 
     [SerializeField]
     private Button btn_Confirm;
@@ -72,7 +66,7 @@ public class UILogIn : MonoBehaviour
             txt_Title.text = "로그인";
             ClearTextField();
             userPWC.gameObject.SetActive(false);
-            btn_Register.gameObject.SetActive(true);
+            btn_Reigster.gameObject.SetActive(true);
         }
     }
 
@@ -86,7 +80,7 @@ public class UILogIn : MonoBehaviour
         txt_Title.text = "회원가입";
         ClearTextField();
         userPWC.gameObject.SetActive(true);
-        btn_Register.gameObject.SetActive(false);
+        btn_Reigster.gameObject.SetActive(false);
     }
 
     public void ConfirmButton()
@@ -108,16 +102,16 @@ public class UILogIn : MonoBehaviour
         }
     }
 
-	/// <summary>
-	/// Display Packet Message On Login UI
-	/// </summary>
-	/// <param name="msg"></param>
-	public void DisplayMessage(string msg)
+    /// <summary>
+    /// Display Packet Message On Login UI
+    /// </summary>
+    /// <param name="msg"></param>
+    public void DisplayMessage(string msg)
     {
         txt_Error.text = msg;
     }
 
-	private void ClearTextField()
+    private void ClearTextField()
     {
         userEmail.text = string.Empty;
         userPW.text = string.Empty;
@@ -126,7 +120,7 @@ public class UILogIn : MonoBehaviour
         DisplayMessage(string.Empty);
     }
 
-    public void CheckHasChar(List<Google.Protobuf.Protocol.OwnedCharacters> charsInfo)
+    public void CheckHasChar(List<Google.Protobuf.Protocol.OwnedCharacter> charsInfo)
     {
         if (charsInfo.Count > 0) // this Account has Character Already
         {
@@ -150,7 +144,7 @@ public class UILogIn : MonoBehaviour
     {
         EventManager.Subscribe(
             "CheckHasChar",
-            (List<Google.Protobuf.Protocol.OwnedCharacters> charsInfo) => CheckHasChar(charsInfo)
+            (List<Google.Protobuf.Protocol.OwnedCharacter> charsInfo) => CheckHasChar(charsInfo)
         );
         EventManager.Subscribe("DisplayMessage", (string msg) => DisplayMessage(msg));
     }
@@ -159,7 +153,7 @@ public class UILogIn : MonoBehaviour
     {
         EventManager.Unsubscribe(
             "CheckHasChar",
-            (List<Google.Protobuf.Protocol.OwnedCharacters> charsInfo) => CheckHasChar(charsInfo)
+            (List<Google.Protobuf.Protocol.OwnedCharacter> charsInfo) => CheckHasChar(charsInfo)
         );
         EventManager.Unsubscribe("DisplayMessage", (string msg) => DisplayMessage(msg));
     }
