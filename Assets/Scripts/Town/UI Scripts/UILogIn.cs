@@ -102,16 +102,16 @@ public class UILogIn : MonoBehaviour
         }
     }
 
-	/// <summary>
-	/// Display Packet Message On Login UI
-	/// </summary>
-	/// <param name="msg"></param>
-	public void DisplayMessage(string msg)
+    /// <summary>
+    /// Display Packet Message On Login UI
+    /// </summary>
+    /// <param name="msg"></param>
+    public void DisplayMessage(string msg)
     {
         txt_Error.text = msg;
     }
 
-	private void ClearTextField()
+    private void ClearTextField()
     {
         userEmail.text = string.Empty;
         userPW.text = string.Empty;
@@ -120,7 +120,7 @@ public class UILogIn : MonoBehaviour
         DisplayMessage(string.Empty);
     }
 
-    public void CheckHasChar(List<Google.Protobuf.Protocol.OwnedCharacters> charsInfo)
+    public void CheckHasChar(List<Google.Protobuf.Protocol.OwnedCharacter> charsInfo)
     {
         if (charsInfo.Count > 0) // this Account has Character Already
         {
@@ -144,7 +144,7 @@ public class UILogIn : MonoBehaviour
     {
         EventManager.Subscribe(
             "CheckHasChar",
-            (List<Google.Protobuf.Protocol.OwnedCharacters> charsInfo) => CheckHasChar(charsInfo)
+            (List<Google.Protobuf.Protocol.OwnedCharacter> charsInfo) => CheckHasChar(charsInfo)
         );
         EventManager.Subscribe("DisplayMessage", (string msg) => DisplayMessage(msg));
     }
@@ -153,7 +153,7 @@ public class UILogIn : MonoBehaviour
     {
         EventManager.Unsubscribe(
             "CheckHasChar",
-            (List<Google.Protobuf.Protocol.OwnedCharacters> charsInfo) => CheckHasChar(charsInfo)
+            (List<Google.Protobuf.Protocol.OwnedCharacter> charsInfo) => CheckHasChar(charsInfo)
         );
         EventManager.Unsubscribe("DisplayMessage", (string msg) => DisplayMessage(msg));
     }

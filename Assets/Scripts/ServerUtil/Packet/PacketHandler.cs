@@ -30,8 +30,7 @@ class PacketHandler
             return;
         }
 
-        List<Google.Protobuf.Protocol.OwnedCharacters> charsInfo = pkt.OwnedCharacters.ToList();
-        Debug.Log("charsInfo : " + charsInfo);
+        List<Google.Protobuf.Protocol.OwnedCharacter> charsInfo = pkt.OwnedCharacters.ToList();
         EventManager.Trigger("CheckHasChar", charsInfo);
     }
 
@@ -43,12 +42,12 @@ class PacketHandler
     }
     #endregion
 
-    #region Town
-    public static void S2CTownEnterHandler(PacketSession session, IMessage packet)
+    #region Enter & Leave
+    public static void S2CEnterHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CEnter pkt)
             return;
-        Debug.Log($"S2CTownEnter 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CEnter 패킷 무사 도착 : {pkt}");
 
         switch (pkt.Player.CurrentScene)
         {
@@ -61,11 +60,11 @@ class PacketHandler
         }
     }
 
-    public static void S2CTownLeaveHandler(PacketSession session, IMessage packet)
+    public static void S2CLeaveHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CLeave pkt)
             return;
-        Debug.Log($"S2CTownLeave 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CLeave 패킷 무사 도착 : {pkt}");
     }
 
     public static void S2CAnimationHandler(PacketSession session, IMessage packet)
@@ -79,7 +78,7 @@ class PacketHandler
     }
     #endregion
 
-    #region Common - Chat & Spawn
+    #region Chat & Spawn
     public static void S2CChatHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CChat pkt)
@@ -151,7 +150,6 @@ class PacketHandler
         if (packet is not S2CPlayerDespawn pkt)
             return;
         Debug.Log($"S2CPlayerDespawn 패킷 무사 도착 : {pkt}");
-        Debug.Log($"디스폰 플레이어 아이디 : {pkt.PlayerIds}");
 
         switch (pkt.CurrentScene)
         {
@@ -171,7 +169,7 @@ class PacketHandler
     }
     #endregion
 
-    #region Common - Move(Player)
+    #region Move(Player)
     public static void S2CPlayerMoveHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CPlayerMove pkt)
@@ -202,9 +200,23 @@ class PacketHandler
                 break;
         }
     }
+
+    public static void S2CPlayerRunningHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CPlayerRunning pkt)
+            return;
+        Debug.Log($"S2CPlayerRunning 패킷 무사 도착 : {pkt}");
+    }
     #endregion
 
-    #region Common - Collision
+    public static void S2CUpdateRankingHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CUpdateRanking pkt)
+            return;
+        Debug.Log($"S2CUpdateRanking 패킷 무사 도착 : {pkt}");
+    }
+
+    #region Collision
     public static void S2CPlayerCollisionHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CPlayerCollision pkt)
@@ -217,6 +229,22 @@ class PacketHandler
         if (packet is not S2CMonsterCollision pkt)
             return;
         Debug.Log($"S2CMonsterCollision 패킷 무사 도착 : {pkt}");
+    }
+    #endregion
+
+    #region Store
+    public static void S2CSelectStoreHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CSelectStore pkt)
+            return;
+        Debug.Log($"S2CSelectStore 패킷 무사 도착 : {pkt}");
+    }
+
+    public static void S2CBuyItemHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CBuyItem pkt)
+            return;
+        Debug.Log($"S2CBuyItem 패킷 무사 도착 : {pkt}");
     }
     #endregion
 
@@ -272,6 +300,7 @@ class PacketHandler
             return;
         Debug.Log($"S2CSetPartyLeader 패킷 무사 도착 : {pkt}");
     }
+
     public static void S2CKickOutMemberHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CKickOutMember pkt)
@@ -279,6 +308,7 @@ class PacketHandler
         Debug.Log($"S2CKickOutMember 패킷 무사 도착 : {pkt}");
         Party.instance.KickedOutData(pkt);
     }
+
     public static void S2CDisbandPartyHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CDisbandParty pkt)
@@ -289,6 +319,62 @@ class PacketHandler
     #endregion
 
     #region Sector
+    public static void S2CMonsterLocationHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CMonsterLocation pkt)
+            return;
+        Debug.Log($"S2CMonsterLocation 패킷 무사 도착 : {pkt}");
+    }
+
+    public static void S2CDetectedPlayerHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CDetectedPlayer pkt)
+            return;
+        Debug.Log($"S2CDetectedPlayer 패킷 무사 도착 : {pkt}");
+    }
+
+    public static void S2CMissingPlayerHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CMissingPlayer pkt)
+            return;
+        Debug.Log($"S2CMissingPlayer 패킷 무사 도착 : {pkt}");
+    }
+
+    public static void S2CResourceListHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CResourceList pkt)
+            return;
+        Debug.Log($"S2CResourceList 패킷 무사 도착 : {pkt}");
+    }
+
+    public static void S2CUpdateDurabilityHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CUpdateDurability pkt)
+            return;
+        Debug.Log($"S2CUpdateDurability 패킷 무사 도착 : {pkt}");
+    }
+
+    public static void S2CGatheringStartHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CGatheringStart pkt)
+            return;
+        Debug.Log($"S2CGatheringStart 패킷 무사 도착 : {pkt}");
+    }
+
+    public static void S2CGatheringSkillCheckHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CGatheringSkillCheck pkt)
+            return;
+        Debug.Log($"S2CGatheringSkillCheck 패킷 무사 도착 : {pkt}");
+    }
+
+    public static void S2CGatheringDoneHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CGatheringDone pkt)
+            return;
+        Debug.Log($"S2CGatheringDone 패킷 무사 도착 : {pkt}");
+    }
+
     public static void S2CSectorEnterHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CSectorEnter pkt)
@@ -316,114 +402,35 @@ class PacketHandler
 
         // SceneManager.LoadScene(GameManager.TownScene);
     }
-    #endregion
 
-    #region Battle
-    public static void S2CAttackHandler(PacketSession session, IMessage packet)
+    public static void S2CInPortalHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CAttack pkt)
+        if (packet is not S2CInPortal pkt)
             return;
-        Debug.Log($"S2CAttack 패킷 무사 도착 : {pkt}");
-    }
-
-    public static void S2CHitHandler(PacketSession session, IMessage packet)
-    {
-        if (packet is not S2CHit pkt)
-            return;
-        Debug.Log($"S2CHit 패킷 무사 도착 : {pkt}");
-    }
-
-    public static void S2CDieHandler(PacketSession session, IMessage packet)
-    {
-        if (packet is not S2CDie pkt)
-            return;
-        Debug.Log($"S2CDie 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CInPortal 패킷 무사 도착 : {pkt}");
     }
     #endregion
 
-    #region Dungeon - Move(Monster)
-    public static void S2CMonsterLocationHandler(PacketSession session, IMessage packet)
+    #region LevelUp
+    public static void S2CAddExpHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CMonsterLocation pkt)
+        if (packet is not S2CAddExp pkt)
             return;
-        Debug.Log($"S2CMonsterLocation 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CAddExp 패킷 무사 도착 : {pkt}");
+    }
+
+    public static void S2CLevelUpHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CLevelUp pkt)
+            return;
+        Debug.Log($"S2CLevelUp 패킷 무사 도착 : {pkt}");
+    }
+
+    public static void S2CSelectApHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CSelectAp pkt)
+            return;
+        Debug.Log($"S2CSelectAp 패킷 무사 도착 : {pkt}");
     }
     #endregion
-
-    /* !!! 패킷 수정으로 보류된 핸들러 목록 !!! */
-    // public static void S_ScreenTextHandler(PacketSession session, IMessage packet)
-    // {
-    //     if (packet is not S_ScreenText pkt)
-    //         return;
-
-    //     BattleManager.Instance.UiScreen?.Display(pkt.ScreenText);
-    // }
-
-    // public static void S_ScreenDoneHandler(PacketSession session, IMessage packet)
-    // {
-    //     if (packet is not S_ScreenDone pkt)
-    //         return;
-
-    //     var uiScreen = BattleManager.Instance.UiScreen;
-    //     if (uiScreen != null)
-    //     {
-    //         uiScreen.gameObject.SetActive(false);
-    //     }
-    // }
-
-    // public static void S_BattleLogHandler(PacketSession session, IMessage packet)
-    // {
-    //     if (packet is not S_BattleLog pkt)
-    //         return;
-
-    //     BattleManager.Instance.UiBattleLog?.Initialize(pkt.BattleLog);
-    // }
-
-    // public static void S_SetPlayerHpHandler(PacketSession session, IMessage packet)
-    // {
-    //     if (packet is not S_SetPlayerHp pkt)
-    //         return;
-
-    //     BattleManager.Instance.UiPlayerInformation?.UpdateHP(pkt.Hp);
-    // }
-
-    // public static void S_SetPlayerMpHandler(PacketSession session, IMessage packet)
-    // {
-    //     if (packet is not S_SetPlayerMp pkt)
-    //         return;
-
-    //     BattleManager.Instance.UiPlayerInformation?.UpdateMP(pkt.Mp);
-    // }
-
-    // public static void S_SetMonsterHpHandler(PacketSession session, IMessage packet)
-    // {
-    //     if (packet is not S_SetMonsterHp pkt)
-    //         return;
-
-    //     BattleManager.Instance.UpdateMonsterHp(pkt.MonsterIdx, pkt.Hp);
-    // }
-
-    // public static void S_PlayerActionHandler(PacketSession session, IMessage packet)
-    // {
-    //     if (packet is not S_PlayerAction pkt)
-    //         return;
-
-    //     Monster monster = BattleManager.Instance.GetMonster(pkt.TargetMonsterIdx);
-    //     monster?.Hit();
-
-    //     BattleManager.Instance.TriggerPlayerAnimation(pkt.ActionSet.AnimCode);
-    //     EffectManager.Instance.SetEffectToMonster(pkt.TargetMonsterIdx, pkt.ActionSet.EffectCode);
-    // }
-
-    // public static void S_MonsterActionHandler(PacketSession session, IMessage packet)
-    // {
-    //     if (packet is not S_MonsterAction pkt)
-    //         return;
-
-    //     Monster monster = BattleManager.Instance.GetMonster(pkt.ActionMonsterIdx);
-    //     monster?.SetAnim(pkt.ActionSet.AnimCode);
-
-    //     BattleManager.Instance.TriggerPlayerHitAnimation();
-    //     EffectManager.Instance.SetEffectToPlayer(pkt.ActionSet.EffectCode);
-    // }
 }

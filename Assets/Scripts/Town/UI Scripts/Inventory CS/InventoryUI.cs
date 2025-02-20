@@ -1,8 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
+using UnityEditor.PackageManager;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class InventoryUI : MonoBehaviour
 {
@@ -23,29 +27,14 @@ public class InventoryUI : MonoBehaviour
             itemSlots = new List<ItemSlotUI>(contentArea.GetComponentsInChildren<ItemSlotUI>());
     }
 
-	private class ItemSortComparer : IComparer<Item>
-	{
-		public int Compare(Item x, Item y)
-		{
-			int itemX = x.GetItemData().ItemId;
-			int itemY = y.GetItemData().ItemId;
-
-			return itemX - itemY;
-		}
-	}
-	private readonly static ItemSortComparer _sortComparer = new();
-
-            return itemY - itemX;
-        }
-
-        public int GetSortWeight(Item item)
+    private class ItemSortComparer : IComparer<Item>
+    {
+        public int Compare(Item x, Item y)
         {
-            int weight = 0;
-            if (sortWeightDict.TryGetValue(item.GetType(), out int typeWeight))
-            {
-                weight += typeWeight;
-            }
-            return weight;
+            int itemX = x.GetItemData().ItemId;
+            int itemY = y.GetItemData().ItemId;
+
+            return itemX - itemY;
         }
     }
 
@@ -66,28 +55,53 @@ public class InventoryUI : MonoBehaviour
         return goldAmount;
     }
 
-			// Sorting process validation code 
-			for (int i = 0; i < filledSlots.Count - 1; i++)
-			{
-				int currentId = filledSlots[i].GetItem().GetItemData().ItemId;
-				int nextId = filledSlots[i + 1].GetItem().GetItemData().ItemId;
+    public int SortItemList()
+    {
+        Debug.Log("Item Sort Start");
+        try
+        {
+            if (itemSlots == null || itemSlots.Count == 0)
+            {
+                Debug.Log("Item Slots List NULL");
+                return -1;
+            }
+            List<ItemSlotUI> filledSlots = itemSlots.Where(slot => slot.HasItem()).ToList();
+            List<ItemSlotUI> emptySlots = itemSlots.Where(slot => !slot.HasItem()).ToList();
 
-				if (currentId > nextId)
-				{
-					Debug.LogWarning("Item Sort done to Not Correct Order");
-					SortItemList();
-					return -1;
-				}
-			}
+            if (filledSlots.Count == 0)
+            {
+                Debug.Log("No Item in Slots");
+                return -1;
+            }
 
             filledSlots.Sort((a, b) => _sortComparer.Compare(a.GetItem(), b.GetItem()));
 
-			return 0;
-		}
-		catch (Exception ex)
-		{
-			Debug.LogError("Sort Item Method Error" + ex);
-			return -1;
-		}
-	}
+            // Sorting process validation code
+            for (int i = 0; i < filledSlots.Count - 1; i++)
+            {
+                int currentId = filledSlots[i].GetItem().GetItemData().ItemId;
+                int nextId = filledSlots[i + 1].GetItem().GetItemData().ItemId;
+
+                if (currentId > nextId)
+                {
+                    Debug.LogWarning("Item Sort done to Not Correct Order");
+                    SortItemList();
+                    return -1;
+                }
+            }
+
+            int index = 0;
+            foreach (var slot in filledSlots)
+                slot.transform.SetSiblingIndex(index++);
+            foreach (var slot in emptySlots)
+                slot.transform.SetSiblingIndex(index++);
+
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Sort Item Method Error" + ex);
+            return -1;
+        }
+    }
 }

@@ -48,7 +48,7 @@ public class ItemSlotUI
 
     private readonly string destroyText = "파괴하시겠습니까?";
     private static ItemSlotUI selectedSlotToDestroy; //특정 슬롯만 파괴 수행하도록 자신 참조
-    private bool isSubscribe = false; // 현재 슬롯이 이벤트 구독 중인지 여부 
+    private bool isSubscribe = false; // 현재 슬롯이 이벤트 구독 중인지 여부
 
     //[Header("Test Method : AddItem")]
     //[SerializeField] private GameObject itemLowLighter;
@@ -126,11 +126,6 @@ public class ItemSlotUI
         SetItemImageAlpha(0);
 
         text_ItemAmount.text = string.Empty;
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        itemHighLighter.gameObject.SetActive(true);
     }
 
     private void ChangeSlot()
@@ -319,7 +314,7 @@ public class ItemSlotUI
                 return slot; // 빈 슬롯 찾기
         }
         return null; // 빈 슬롯 없음
-
+    }
     #endregion
 
     private void OnEnable()
