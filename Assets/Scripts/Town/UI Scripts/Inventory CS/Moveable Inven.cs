@@ -1,8 +1,8 @@
-// using System.Collections;
-// using System.Collections.Generic;
-// using UnityEngine;
-// using UnityEngine.EventSystems;
-// using UnityEngine.UI;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
 {
@@ -67,6 +67,7 @@ public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
 			else DecomUI.SetActive(true);
 		}
 	}
+}
 
 // 	private void OnEnable()
 // 	{
