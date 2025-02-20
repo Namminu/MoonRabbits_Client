@@ -87,6 +87,7 @@ class PacketHandler
 
         if (pkt.PlayerId > 0)
         {
+            Debug.Log("pkt.PlayerId : " + pkt.PlayerId);
             var player = TownManager.Instance.GetPlayerAvatarById(pkt.PlayerId);
             player?.RecvMessage(pkt.ChatMsg);
         }
