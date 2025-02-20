@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -652,6 +652,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 130986142}
   m_CullTransparentMesh: 1
+--- !u!1 &131856288 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7153137561161524884, guid: 2fc59957b1f92564195dd615e6d356c2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1076715374}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &131856291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 131856288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 869f7d7420d9f4c459aed2443c1846ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  target: {fileID: 0}
 --- !u!4 &156301286 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4627161435716007962, guid: b5b91c01fa5d926418c6a31ad938351b,
@@ -2828,37 +2848,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd07b3be1580f664f9eaf2dffd2e8ace, type: 3}
---- !u!1 &502121928
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 502121929}
-  m_Layer: 0
-  m_Name: TempTarget
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &502121929
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 502121928}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.7168384, y: 94.02613, z: -21.167406}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &512845073
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4342,11 +4331,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: BigTree1
       objectReference: {fileID: 0}
-    - target: {fileID: 1885434127277497042, guid: b5b91c01fa5d926418c6a31ad938351b,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 4627161435716007962, guid: b5b91c01fa5d926418c6a31ad938351b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4397,12 +4381,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5502277424317014290, guid: b5b91c01fa5d926418c6a31ad938351b,
-        type: 3}
-      propertyPath: m_NavMeshData
-      value: 
-      objectReference: {fileID: 23800000, guid: da5bf5e1ccaf38840b4733bc8c51810e,
-        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4537,7 +4515,7 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.2
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -6169,7 +6147,7 @@ PrefabInstance:
     - target: {fileID: 7425247205764167969, guid: 2fc59957b1f92564195dd615e6d356c2,
         type: 3}
       propertyPath: m_TagString
-      value: Player
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 8467434873633744513, guid: 2fc59957b1f92564195dd615e6d356c2,
         type: 3}
@@ -6224,7 +6202,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7153137561161524884, guid: 2fc59957b1f92564195dd615e6d356c2,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 131856291}
   m_SourcePrefab: {fileID: 100100000, guid: 2fc59957b1f92564195dd615e6d356c2, type: 3}
 --- !u!4 &1076715376 stripped
 Transform:
@@ -11466,4 +11448,3 @@ SceneRoots:
   - {fileID: 786472126}
   - {fileID: 87865780}
   - {fileID: 338278691}
-  - {fileID: 502121929}
