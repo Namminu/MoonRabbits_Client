@@ -113,6 +113,18 @@ public class Party : MonoBehaviour
   {
     members.RemoveAll(m => m.Id == playerId);
     memberCount = members.Count;
+
+    if (memberCount == 0)
+    {
+      // 마지막 멤버가 나간 경우, 파티 해산 처리
+      members.Clear();
+      memberCount = 0;
+      partyId = null; // 파티 ID 초기화
+      leaderId = -1;  // 리더 ID 초기화
+      PartyUI.instance.isInParty = false;
+    }
+    // UI 업데이트 요청
+    PartyUI.instance.UpdateUI();
   }
   public void RemoveAllMembers()
   {

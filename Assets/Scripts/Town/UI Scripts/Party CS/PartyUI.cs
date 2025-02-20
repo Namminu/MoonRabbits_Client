@@ -83,6 +83,10 @@ public class PartyUI : MonoBehaviour
       noPartyPanel.SetActive(true);
       inPartyPanel.SetActive(false);
       ClearPartyMembers();
+
+      // 파티 참가 버튼 클릭 이벤트 리스너
+      Button joinPartyButton = noPartyPanel.transform.Find("JoinPartyBtn").GetComponent<Button>();
+
     }
 
     // UpdateScrollView();
@@ -146,9 +150,13 @@ public class PartyUI : MonoBehaviour
     allowText.text = $"{leaderNickname}님이 초대했습니다.";
 
     Button allowBtn = allowInvitePopUp.transform.Find("AllowBtn").GetComponent<Button>();
+    Button rejectBtn = allowInvitePopUp.transform.Find("RejectBtn").GetComponent<Button>();
 
     allowBtn.onClick.RemoveAllListeners();
     allowBtn.onClick.AddListener(() => SendAllowInvitePacket(partyId, memberId));
+
+    rejectBtn.onClick.RemoveAllListeners();
+    rejectBtn.onClick.AddListener(() => allowInvitePopUp.SetActive(false));
   }
 
   // 파티 창 닫기
@@ -158,9 +166,11 @@ public class PartyUI : MonoBehaviour
   }
 
   // 파티 탈퇴 버튼 클릭 시
-  public void OnLeavePartyClicked(string nickname)
+  public void OnLeavePartyClicked(string nickname, int playerId)
   {
     MemberCardInfo member = Party.instance.GetMemberByNickname(nickname);
+    if (member == null) return;
+
     SendLeavePartyPacket(member.Id);
   }
 
@@ -216,7 +226,7 @@ public class PartyUI : MonoBehaviour
       {
         leaveButton.gameObject.SetActive(true);
         leaveButton.onClick.RemoveAllListeners();
-        leaveButton.onClick.AddListener(() => OnLeavePartyClicked(nameText.text));
+        leaveButton.onClick.AddListener(() => OnLeavePartyClicked(nameText.text, playerId));
       }
       if (kickOutButton != null) kickOutButton.gameObject.SetActive(false);
     }
@@ -265,13 +275,6 @@ public class PartyUI : MonoBehaviour
     UpdateUI();
   }
 
-  void UpdateScrollView()
-  {
-    // 스크롤을 맨 아래로 이동 (새로운 멤버가 추가될 때 자동 스크롤)
-    Canvas.ForceUpdateCanvases();
-    scrollRect.verticalNormalizedPosition = 0f;
-  }
-
   #region 패킷 전송 함수
   private void SendCreatePartyPacket()
   {
@@ -311,10 +314,9 @@ public class PartyUI : MonoBehaviour
     var disbandPartyPacket = new C2SDisbandParty { PartyId = Party.instance.partyId };
     GameManager.Network.Send(disbandPartyPacket);
   }
-  private void SendSetLeaderPacket(string nickname)
+  public void SendSetLeaderPacket(int newLeaderId)
   {
-    int memberId = GetPlayerIdByNickname(nickname).PlayerId;
-    var setLeaderPacket = new C2SSetPartyLeader { PartyId = Party.instance.partyId, MemberId = memberId };
+    var setLeaderPacket = new C2SSetPartyLeader { PartyId = Party.instance.partyId, MemberId = newLeaderId };
     GameManager.Network.Send(setLeaderPacket);
   }
   #endregion
