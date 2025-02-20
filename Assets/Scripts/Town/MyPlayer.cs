@@ -40,10 +40,6 @@ public class MyPlayer : MonoBehaviour
         grenade = GetComponentInParent<Player>().grenade;
         trap = GetComponentInParent<Player>().trap;
 
-        // 장애물 회피 설정 낮추기(서버와 경로를 최대한 비슷하게 만들기 위함)
-        agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
-        agent.avoidancePriority = 0; // 회피 우선순위 낮게 설정
-
         InitializeCamera();
         lastPos = transform.position;
 

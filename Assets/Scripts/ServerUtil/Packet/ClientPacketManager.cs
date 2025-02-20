@@ -105,8 +105,8 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CAddExp, PacketHandler.S2CAddExpHandler);
         _onRecv.Add((ushort)MsgId.S2CLevelUp, MakePacket<S2CLevelUp>);
         _handler.Add((ushort)MsgId.S2CLevelUp, PacketHandler.S2CLevelUpHandler);
-        _onRecv.Add((ushort)MsgId.S2CSelectAp, MakePacket<S2CSelectAp>);
-        _handler.Add((ushort)MsgId.S2CSelectAp, PacketHandler.S2CSelectApHandler);
+        _onRecv.Add((ushort)MsgId.S2CInvestPoint, MakePacket<S2CInvestPoint>);
+        _handler.Add((ushort)MsgId.S2CInvestPoint, PacketHandler.S2CInvestPointHandler);
         Debug.Log("핸들러 등록 완료");
     }
 
