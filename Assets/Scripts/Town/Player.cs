@@ -40,11 +40,6 @@ public class Player : MonoBehaviour
     public GameObject grenade;
     public GameObject trap;
 
-    void Awake()
-    {
-        agent = GetComponent<NavMeshAgent>();
-    }
-
     private void Start()
     {
         Avatar = GetComponent<Avatar>();
@@ -82,11 +77,6 @@ public class Player : MonoBehaviour
 
         uiChat = TownManager.Instance.UiChat;
         isInitialized = true;
-    }
-
-    public void MoveToTargetPosition(Vector3 position)
-    {
-        goalPos = position; // 목표 위치 업데이트
     }
 
     private void Update()
