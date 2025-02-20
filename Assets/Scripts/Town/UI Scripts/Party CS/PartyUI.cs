@@ -23,10 +23,9 @@ public class PartyUI : MonoBehaviour
 
   public Button createPartyButton; // 파티 생성 버튼
   public Button invitePartyButton; // 파티 생성 버튼
-
+  public Button checkPartyListButton;
   public Button joinPartyButton;   // ID로 파티 참가 버튼
   public Button closeButton;       // 닫기 버튼
-  private Button setLeaderButton; // 파티장 변경 버튼
 
   public bool isInParty = false; // 파티 참가 여부
   private int memberId = 100;
@@ -152,7 +151,7 @@ public class PartyUI : MonoBehaviour
     allowBtn.onClick.AddListener(() => SendAllowInvitePacket(partyId, memberId));
 
     rejectBtn.onClick.RemoveAllListeners();
-    rejectBtn.onClick.AddListener(() => allowInvitePopUp.SetActive(false));
+    rejectBtn.onClick.AddListener(() => OnRejectClicked(memberId));
   }
 
   // 파티 창 닫기
@@ -174,6 +173,12 @@ public class PartyUI : MonoBehaviour
   {
     Party.instance.RemoveAllMembers();
     TownManager.Instance.UiChat.PushMessage("System", msg, true);
+  }
+
+  private void OnRejectClicked(int memberId)
+  {
+    SendRejectInvitePacket(memberId);
+    allowInvitePopUp.SetActive(false);
   }
   #endregion
 
@@ -204,15 +209,6 @@ public class PartyUI : MonoBehaviour
     if (leaderIcon != null)
     {
       leaderIcon.gameObject.SetActive(isLeader);
-
-      // 버튼 추가
-      setLeaderButton = leaderIcon.gameObject.GetComponent<Button>();
-      if (setLeaderButton == null)
-        setLeaderButton = leaderIcon.gameObject.AddComponent<Button>();
-
-      // 클릭 이벤트 리스너 추가
-      // setLeaderButton.onClick.AddListener(OnImageClick);
-
     }
 
     // 내 카드일 경우 탈퇴 버튼 활성화
@@ -310,10 +306,20 @@ public class PartyUI : MonoBehaviour
     var disbandPartyPacket = new C2SDisbandParty { PartyId = Party.instance.partyId };
     GameManager.Network.Send(disbandPartyPacket);
   }
-  public void SendSetLeaderPacket(int newLeaderId)
+  private void SendRejectInvitePacket(int memberId)
   {
-    var setLeaderPacket = new C2SSetPartyLeader { PartyId = Party.instance.partyId, MemberId = newLeaderId };
-    GameManager.Network.Send(setLeaderPacket);
+    var rejectInvitePacket = new C2SRejectInvite { MemberId = memberId };
+    GameManager.Network.Send(rejectInvitePacket);
+  }
+  private void SendCheckPartyListPacket(int memberId)
+  {
+    var checkPartyListPacket = new C2SCheckPartyList { MemberId = memberId };
+    GameManager.Network.Send(checkPartyListPacket);
+  }
+
+  private void SendJoinPartyPacket()
+  {
+
   }
   #endregion
 
