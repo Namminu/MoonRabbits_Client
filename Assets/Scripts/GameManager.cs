@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     public const string BattleScene = "Battle";
     public const string TownScene = "Town";
 
-    public S2CDungeonEnter Pkt;
+    //public S2CDungeonEnter Pkt;
 
     public string UserName;
     public int ClassCode;

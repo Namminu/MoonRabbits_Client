@@ -59,9 +59,9 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
-        InitializeMonsterDatabase();
-        ConfigureGame(GameManager.Instance.Pkt);
-        GameManager.Instance.Pkt = null;
+        // InitializeMonsterDatabase();
+        // ConfigureGame(GameManager.Instance.Pkt);
+        // GameManager.Instance.Pkt = null;
     }
 
     private void InitializeMonsterDatabase()
@@ -74,32 +74,32 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void ConfigureGame(S2CDungeonEnter pkt)
-    {
-        Debug.Log("Entering Dungeon");
+    // public void ConfigureGame(S2CDungeonEnter pkt)
+    // {
+    //     Debug.Log("Entering Dungeon");
 
-        if (pkt.DungeonInfo != null)
-        {
-            ConfigureDungeon(pkt.DungeonInfo);
-        }
+    //     if (pkt.DungeonInfo != null)
+    //     {
+    //         ConfigureDungeon(pkt.DungeonInfo);
+    //     }
 
-        if (pkt.Player != null)
-        {
-            uiPlayerInformation.Configure(pkt.Player);
-            ConfigurePlayer(pkt.Player.PlayerClass);
-        }
+    //     if (pkt.Player != null)
+    //     {
+    //         uiPlayerInformation.Configure(pkt.Player);
+    //         ConfigurePlayer(pkt.Player.PlayerClass);
+    //     }
 
-        /* !!! 패킷 수정에 따라 제거된 데이터들임다 !!! */
-        // if (pkt.ScreenText != null)
-        // {
-        //     uiScreen.Display(pkt.ScreenText);
-        // }
+    //     /* !!! 패킷 수정에 따라 제거된 데이터들임다 !!! */
+    //     // if (pkt.ScreenText != null)
+    //     // {
+    //     //     uiScreen.Display(pkt.ScreenText);
+    //     // }
 
-        // if (pkt.BattleLog != null)
-        // {
-        //     uiBattleLog.Initialize(pkt.BattleLog);
-        // }
-    }
+    //     // if (pkt.BattleLog != null)
+    //     // {
+    //     //     uiBattleLog.Initialize(pkt.BattleLog);
+    //     // }
+    // }
 
     private void ConfigurePlayer(int classCode)
     {
@@ -116,11 +116,11 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void ConfigureDungeon(DungeonInfo dungeonInfo)
-    {
-        ConfigureMap(dungeonInfo.DungeonCode);
-        ConfigureMonsters(dungeonInfo.Monsters);
-    }
+    // public void ConfigureDungeon(DungeonInfo dungeonInfo)
+    // {
+    //     ConfigureMap(dungeonInfo.DungeonCode);
+    //     ConfigureMonsters(dungeonInfo.Monsters);
+    // }
 
     private void ResetMonsters()
     {

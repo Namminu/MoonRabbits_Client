@@ -202,42 +202,42 @@ class PacketHandler
         Debug.Log($"S2CSetPartyLeader 패킷 무사 도착 : {pkt}");
     }
 
-    public static void S2CBuffHandler(PacketSession session, IMessage packet)
-    {
-        if (packet is not S2CBuff pkt)
-            return;
-        Debug.Log($"S2CBuff 패킷 무사 도착 : {pkt}");
-    }
-    #endregion
+    // public static void S2CBuffHandler(PacketSession session, IMessage packet)
+    // {
+    //     if (packet is not S2CBuff pkt)
+    //         return;
+    //     Debug.Log($"S2CBuff 패킷 무사 도착 : {pkt}");
+    // }
+    // #endregion
 
-    #region Dungeon
-    public static void S2CDungeonEnterHandler(PacketSession session, IMessage packet)
-    {
-        if (packet is not S2CDungeonEnter pkt)
-            return;
-        Debug.Log($"S2CDungeonEnter 패킷 무사 도착 : {pkt}");
+    // #region Dungeon
+    // public static void S2CDungeonEnterHandler(PacketSession session, IMessage packet)
+    // {
+    //     if (packet is not S2CDungeonEnter pkt)
+    //         return;
+    //     Debug.Log($"S2CDungeonEnter 패킷 무사 도착 : {pkt}");
 
-        Scene currentScene = SceneManager.GetActiveScene();
+    //     Scene currentScene = SceneManager.GetActiveScene();
 
-        if (currentScene.name == GameManager.BattleScene)
-        {
-            BattleManager.Instance.ConfigureGame(pkt);
-        }
-        else
-        {
-            GameManager.Instance.Pkt = pkt;
-            SceneManager.LoadScene(GameManager.BattleScene);
-        }
-    }
+    //     if (currentScene.name == GameManager.BattleScene)
+    //     {
+    //         BattleManager.Instance.ConfigureGame(pkt);
+    //     }
+    //     else
+    //     {
+    //         GameManager.Instance.Pkt = pkt;
+    //         SceneManager.LoadScene(GameManager.BattleScene);
+    //     }
+    // }
 
-    public static void S2CDungeonLeaveHandler(PacketSession session, IMessage packet)
-    {
-        if (packet is not S2CDungeonLeave pkt)
-            return;
-        Debug.Log($"S2CDungeonLeave 패킷 무사 도착 : {pkt}");
+    // public static void S2CDungeonLeaveHandler(PacketSession session, IMessage packet)
+    // {
+    //     if (packet is not S2CDungeonLeave pkt)
+    //         return;
+    //     Debug.Log($"S2CDungeonLeave 패킷 무사 도착 : {pkt}");
 
-        SceneManager.LoadScene(GameManager.TownScene);
-    }
+    //     SceneManager.LoadScene(GameManager.TownScene);
+    // }
     #endregion
 
     #region Battle
@@ -290,11 +290,11 @@ class PacketHandler
         TownManager.Instance.LevelUp(pkt.UpdatedLevel, pkt.NewTargetExp, pkt.UpdatedExp, pkt.AbilityPoint);
     }
     
-    public static void S2CSelectAPHandler(PacketSession session, IMessage packet)
+    public static void S2CInvestPointHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CSelectAP pkt)
+        if (packet is not S2CInvestPoint pkt)
             return;
-        Debug.Log($"S2CSelectAP 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CInvestPoint 패킷 무사 도착 : {pkt}");
     }
 
     /* !!! 패킷 수정으로 보류된 핸들러 목록 !!! */
