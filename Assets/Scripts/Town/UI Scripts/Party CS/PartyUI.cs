@@ -12,6 +12,7 @@ public class PartyUI : MonoBehaviour
   public GameObject partyWindow;
   public GameObject noPartyPanel;
   public GameObject inPartyPanel;
+  public GameObject partyListPanel;
 
   // 팝업창
   public GameObject invitePartyPopUp;
@@ -19,6 +20,8 @@ public class PartyUI : MonoBehaviour
 
   public Transform partyMemberContainer;
   public GameObject memberCardPrefab;
+  public Transform partyListContainer;
+  public GameObject partyCardPrefab;
   public ScrollRect scrollRect;
 
   public Button createPartyButton; // 파티 생성 버튼
@@ -28,7 +31,6 @@ public class PartyUI : MonoBehaviour
   public Button closeButton;       // 닫기 버튼
 
   public bool isInParty = false; // 파티 참가 여부
-  private int memberId = 100;
 
   private void Awake()
   {
@@ -42,6 +44,7 @@ public class PartyUI : MonoBehaviour
 
     // 버튼 클릭 이벤트 연결
     createPartyButton.onClick.AddListener(OnCreatePartyClicked);
+    checkPartyListButton.onClick.AddListener(OnCheckPartyListClicked);
     // joinPartyButton.onClick.AddListener(OnJoinPartyClicked);
     closeButton.onClick.AddListener(ClosePartyWindow);
   }
@@ -180,6 +183,14 @@ public class PartyUI : MonoBehaviour
     SendRejectInvitePacket(memberId);
     allowInvitePopUp.SetActive(false);
   }
+
+  private void OnCheckPartyListClicked()
+  {
+    partyListPanel.SetActive(true);
+    noPartyPanel.SetActive(false);
+
+    SendCheckPartyListPacket();
+  }
   #endregion
 
   #region 멤버 카드 생성
@@ -246,6 +257,39 @@ public class PartyUI : MonoBehaviour
   }
   #endregion
 
+  #region 파티 카드 생성
+  public void createPartyCard(S2CCheckPartyList pkt)
+  {
+    if (partyCardPrefab == null || partyListContainer == null)
+    {
+      Debug.LogError("PartyCard 프리팹 또는 Parent가 설정되지 않았습니다!");
+      return;
+    }
+
+    foreach (var partyInfo in pkt.Partyinfos)
+    {
+      string partyId = partyInfo.PartyId;
+      int leaderId = partyInfo.LeaderId;
+      int memberCount = partyInfo.MemberCount;
+      string nickname = GetPlayerByPlayerId(leaderId).nickname;
+
+      // 새로운 파티 카드 생성
+      GameObject newPartyCard = Instantiate(partyCardPrefab, partyListContainer);
+
+      // PartyCard 내의 UI 요소 가져오기
+      TMP_Text partyName = newPartyCard.transform.Find("PartyName").GetComponent<TMP_Text>();
+      TMP_Text memberCountText = newPartyCard.transform.Find("MemberCount").GetComponent<TMP_Text>();
+      Button joinButton = newPartyCard.transform.Find("JoinBtn").GetComponent<Button>();
+
+      if (partyName != null) partyName.text = $"{nickname}님의 파티";
+      if (memberCountText != null) memberCountText.text = $"{memberCount}/5";
+
+      joinButton.onClick.RemoveAllListeners();
+      joinButton.onClick.AddListener(() => SendJoinPartyPacket(partyId, pkt.MemberId));
+    }
+  }
+  #endregion
+
   // 기존 멤버 삭제
   private void ClearPartyMembers()
   {
@@ -290,7 +334,7 @@ public class PartyUI : MonoBehaviour
 
   private void SendKickOutPartyPacket(string nickname)
   {
-    int memberId = GetPlayerIdByNickname(nickname).PlayerId;
+    int memberId = GetPlayerByNickname(nickname).PlayerId;
     var kickOutPartyPacket = new C2SKickOutMember { PartyId = Party.instance.partyId, MemberId = memberId };
     GameManager.Network.Send(kickOutPartyPacket);
   }
@@ -311,20 +355,25 @@ public class PartyUI : MonoBehaviour
     var rejectInvitePacket = new C2SRejectInvite { MemberId = memberId };
     GameManager.Network.Send(rejectInvitePacket);
   }
-  private void SendCheckPartyListPacket(int memberId)
+  private void SendCheckPartyListPacket()
   {
-    var checkPartyListPacket = new C2SCheckPartyList { MemberId = memberId };
+    var checkPartyListPacket = new C2SCheckPartyList { };
     GameManager.Network.Send(checkPartyListPacket);
   }
 
-  private void SendJoinPartyPacket()
+  private void SendJoinPartyPacket(string partyId, int memberId)
   {
-
+    var joinPartyPacket = new C2SJoinParty { PartyId = partyId, MemberId = memberId };
+    GameManager.Network.Send(joinPartyPacket);
   }
   #endregion
 
-  private Player GetPlayerIdByNickname(string nickname)
+  private Player GetPlayerByNickname(string nickname)
   {
     return FindObjectsOfType<Player>().FirstOrDefault(p => p.nickname == nickname);
+  }
+  private Player GetPlayerByPlayerId(int id)
+  {
+    return FindObjectsOfType<Player>().FirstOrDefault(p => p.PlayerId == id);
   }
 }

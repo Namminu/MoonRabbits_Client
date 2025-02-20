@@ -296,9 +296,16 @@ class PacketHandler
 
     public static void S2CCheckPartyListHandler(PacketSession session, IMessage packet)
     {
+        Debug.Log($"!!!! 패킷 !! : {packet}");
         if (packet is not S2CCheckPartyList pkt)
+        {
+            Debug.Log("S2CCheckPartyList 패킷의 상태가 이상하다.");
+
             return;
+        }
+
         Debug.Log($"S2CCheckPartyList 패킷 무사 도착 : {pkt}");
+        PartyUI.instance.createPartyCard(pkt);
     }
 
     public static void S2CKickOutMemberHandler(PacketSession session, IMessage packet)
