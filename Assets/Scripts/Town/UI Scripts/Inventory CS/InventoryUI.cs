@@ -22,29 +22,14 @@ public class InventoryUI : MonoBehaviour
 		if (contentArea != null) itemSlots = new List<ItemSlotUI>(contentArea.GetComponentsInChildren<ItemSlotUI>());	
 	}
 
-	/// <summary> Definition Variable of Sort Weight </summary>
-	private readonly static Dictionary<Type, int> sortWeightDict = new()
-	{
-		{typeof(CountableItem), 0 },
-		{typeof(UncountableItem), 1},
-	};
 	private class ItemSortComparer : IComparer<Item>
 	{
 		public int Compare(Item x, Item y)
 		{
-			int itemX = GetSortWeight(x);
-			int itemY = GetSortWeight(y);
+			int itemX = x.GetItemData().ItemId;
+			int itemY = y.GetItemData().ItemId;
 
-			return itemY - itemX;
-		}
-		public int GetSortWeight(Item item)
-		{
-			int weight = 0;
-			if(sortWeightDict.TryGetValue(item.GetType(), out int typeWeight))
-			{
-				weight += typeWeight;
-			}
-			return weight;
+			return itemX - itemY;
 		}
 	}
 	private readonly static ItemSortComparer _sortComparer = new();
@@ -87,12 +72,13 @@ public class InventoryUI : MonoBehaviour
 			// Sorting process validation code 
 			for (int i = 0; i < filledSlots.Count - 1; i++)
 			{
-				int currentWeight = _sortComparer.GetSortWeight(filledSlots[i].GetItem());
-				int nextWeight = _sortComparer.GetSortWeight(filledSlots[i + 1].GetItem());
+				int currentId = filledSlots[i].GetItem().GetItemData().ItemId;
+				int nextId = filledSlots[i + 1].GetItem().GetItemData().ItemId;
 
-				if (currentWeight < nextWeight)
+				if (currentId > nextId)
 				{
-					Debug.LogWarning("Not Correct Order in Sorting");
+					Debug.LogWarning("Item Sort done to Not Correct Order");
+					SortItemList();
 					return -1;
 				}
 			}
@@ -108,11 +94,5 @@ public class InventoryUI : MonoBehaviour
 			Debug.LogError("Sort Item Method Error" + ex);
 			return -1;
 		}
-	}
-
-	public int DecomItems()
-	{
-		Debug.Log("Item Decom : " /* + item.name */);
-		return -1;
 	}
 }
