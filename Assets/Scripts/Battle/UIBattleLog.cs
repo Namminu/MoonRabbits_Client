@@ -23,7 +23,7 @@ public class UIBattleLog : MonoBehaviour
     [SerializeField]
     private Image imgContinue;
 
-    private BtnInfo[] btnInfos;
+    // private BtnInfo[] btnInfos;
     private bool isLogComplete;
     private string currentMessage;
 
@@ -36,18 +36,18 @@ public class UIBattleLog : MonoBehaviour
         }
     }
 
-    public void Initialize(BattleLog battleLog)
-    {
-        btnInfos = battleLog.Btns?.ToArray();
+    // public void Initialize(BattleLog battleLog)
+    // {
+    //     btnInfos = battleLog.Btns?.ToArray();
 
-        if (btnInfos == null || btnInfos.Length == 0)
-        {
-            Debug.Log("No button info available");
-            btnInfos = null;
-        }
+    //     if (btnInfos == null || btnInfos.Length == 0)
+    //     {
+    //         Debug.Log("No button info available");
+    //         btnInfos = null;
+    //     }
 
-        DisplayLog(battleLog.Msg, battleLog.TypingAnimation);
-    }
+    //     DisplayLog(battleLog.Msg, battleLog.TypingAnimation);
+    // }
 
     private void Update()
     {
@@ -60,11 +60,10 @@ public class UIBattleLog : MonoBehaviour
             {
                 SkipTypingAnimation();
             }
-            else if (btnInfos == null)
-            {
-                /* 패킷 수정으로 보류된 메서드 */
-                // SendResponse(0);
-            }
+            // else if (btnInfos == null)
+            // {
+            //     SendResponse(0);
+            // }
         }
     }
 
@@ -95,30 +94,30 @@ public class UIBattleLog : MonoBehaviour
     {
         isLogComplete = true;
 
-        if (btnInfos == null)
-        {
-            imgContinue.DOFade(1, 0.7f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InQuad);
-        }
-        else
-        {
-            UpdateButtons(btnInfos);
-        }
+        // if (btnInfos == null)
+        // {
+        //     imgContinue.DOFade(1, 0.7f).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InQuad);
+        // }
+        // else
+        // {
+        //     UpdateButtons(btnInfos);
+        // }
     }
 
-    private void UpdateButtons(BtnInfo[] btnInfos)
-    {
-        for (int i = 0; i < btns.Length; i++)
-        {
-            bool isActive = i < btnInfos.Length;
-            btns[i].gameObject.SetActive(isActive);
+    // private void UpdateButtons(BtnInfo[] btnInfos)
+    // {
+    //     for (int i = 0; i < btns.Length; i++)
+    //     {
+    //         bool isActive = i < btnInfos.Length;
+    //         btns[i].gameObject.SetActive(isActive);
 
-            if (isActive)
-            {
-                btns[i].interactable = btnInfos[i].Enable;
-                btnTexts[i].text = btnInfos[i].Msg;
-            }
-        }
-    }
+    //         if (isActive)
+    //         {
+    //             btns[i].interactable = btnInfos[i].Enable;
+    //             btnTexts[i].text = btnInfos[i].Msg;
+    //         }
+    //     }
+    // }
 
     private void SkipTypingAnimation()
     {

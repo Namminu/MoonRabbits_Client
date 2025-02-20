@@ -1,6 +1,7 @@
 using System;
 using Google.Protobuf.Protocol;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIBattlePopup : MonoBehaviour
@@ -24,7 +25,12 @@ public class UIBattlePopup : MonoBehaviour
 
     private void OnButtonClicked(int dungeonIndex)
     {
-        EnterDungeon(dungeonIndex);
+        SceneManager.LoadScene("Test");
+
+        var pkt = new C2SLeave { };
+
+        GameManager.Network.Send(pkt);
+        // EnterDungeon(dungeonIndex);
     }
 
     /// <summary>

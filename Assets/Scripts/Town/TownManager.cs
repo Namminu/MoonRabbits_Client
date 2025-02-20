@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Cinemachine;
 using Google.Protobuf.Protocol;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
@@ -43,6 +42,8 @@ public class TownManager : MonoBehaviour
     private Dictionary<int, string> playerDb = new();
 
     public Player MyPlayer { get; private set; }
+
+    private int sceneCode = 1;
 
     private void Awake()
     {
@@ -101,10 +102,11 @@ public class TownManager : MonoBehaviour
 
     public void Connected()
     {
-        var enterPacket = new C2STownEnter
+        var enterPacket = new C2SEnter
         {
             Nickname = GameManager.Instance.UserName,
             ClassCode = GameManager.Instance.ClassCode,
+            TargetScene = sceneCode,
         };
 
         GameManager.Network.Send(enterPacket);
@@ -175,8 +177,12 @@ public class TownManager : MonoBehaviour
         if (!playerList.TryGetValue(playerId, out var player))
             return;
 
+        if (player != null && player.gameObject != null)
+        {
+            Destroy(player.gameObject);
+        }
+
         playerList.Remove(playerId);
-        Destroy(player.gameObject);
     }
 
     private void ActivateGameUI()
