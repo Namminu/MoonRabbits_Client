@@ -59,6 +59,7 @@ public class PartyUI : MonoBehaviour
     {
       // 파티 중일 때
       noPartyPanel.SetActive(false);
+      partyListPanel.SetActive(false);
       inPartyPanel.SetActive(true);
 
       // 파티 초대 버튼 클릭 이벤트리스너
@@ -84,6 +85,7 @@ public class PartyUI : MonoBehaviour
     {
       noPartyPanel.SetActive(true);
       inPartyPanel.SetActive(false);
+      partyListPanel.SetActive(false);
       ClearPartyMembers();
     }
 
@@ -160,6 +162,18 @@ public class PartyUI : MonoBehaviour
   // 파티 창 닫기
   void ClosePartyWindow()
   {
+    if (isInParty == false)
+    {
+      noPartyPanel.SetActive(true);
+      partyListPanel.SetActive(false);
+      inPartyPanel.SetActive(false);
+    }
+    else
+    {
+      inPartyPanel.SetActive(true);
+      noPartyPanel.SetActive(false);
+      partyListPanel.SetActive(false);
+    }
     partyWindow.SetActive(false);
   }
 
@@ -266,7 +280,14 @@ public class PartyUI : MonoBehaviour
       return;
     }
 
-    foreach (var partyInfo in pkt.Partyinfos)
+    // 기존 파티 리스트 초기화
+    foreach (Transform child in partyListContainer)
+    {
+      Destroy(child.gameObject);
+    }
+
+    // 새 파티 리스트 생성
+    foreach (var partyInfo in pkt.PartyInfos)
     {
       string partyId = partyInfo.PartyId;
       int leaderId = partyInfo.LeaderId;
@@ -278,7 +299,7 @@ public class PartyUI : MonoBehaviour
 
       // PartyCard 내의 UI 요소 가져오기
       TMP_Text partyName = newPartyCard.transform.Find("PartyName").GetComponent<TMP_Text>();
-      TMP_Text memberCountText = newPartyCard.transform.Find("MemberCount").GetComponent<TMP_Text>();
+      TMP_Text memberCountText = newPartyCard.transform.Find("PartyName/MemberCount").GetComponent<TMP_Text>();
       Button joinButton = newPartyCard.transform.Find("JoinBtn").GetComponent<Button>();
 
       if (partyName != null) partyName.text = $"{nickname}님의 파티";
