@@ -10,22 +10,30 @@ public class BattleManager : MonoBehaviour
     private static BattleManager _instance = null;
     public static BattleManager Instance => _instance;
 
-    [SerializeField] private UIScreen uiScreen;
-    [SerializeField] private UIBattleLog uiBattleLog;
-    [SerializeField] private UIPlayerInformation uiPlayerInformation;
+    [SerializeField]
+    private UIScreen uiScreen;
+
+    [SerializeField]
+    private UIBattleLog uiBattleLog;
+
+    [SerializeField]
+    private UIPlayerInformation uiPlayerInformation;
 
     public UIScreen UiScreen => uiScreen;
     public UIBattleLog UiBattleLog => uiBattleLog;
     public UIPlayerInformation UiPlayerInformation => uiPlayerInformation;
 
-    [SerializeField] private Maps map;
+    [SerializeField]
+    private Maps map;
 
-    [SerializeField] private Transform[] players;
+    [SerializeField]
+    private Transform[] players;
     private Animator playerAnimator;
 
     private readonly Dictionary<int, string> monsterDb = new Dictionary<int, string>();
 
-    [SerializeField] private Transform[] monsterSpawnPos;
+    [SerializeField]
+    private Transform[] monsterSpawnPos;
     private readonly List<Monster> monsterObjs = new List<Monster>();
 
     private readonly List<UIMonsterInformation> monsterUis = new List<UIMonsterInformation>();
@@ -36,7 +44,7 @@ public class BattleManager : MonoBehaviour
     {
         Constants.PlayerBattleAttack1,
         Constants.PlayerBattleDie,
-        Constants.PlayerBattleHit
+        Constants.PlayerBattleHit,
     };
 
     private void Awake()
@@ -52,7 +60,7 @@ public class BattleManager : MonoBehaviour
         }
 
         InitializeMonsterDatabase();
-        ConfigureGame(GameManager.Instance.Pkt);
+        // ConfigureGame(GameManager.Instance.Pkt);
         GameManager.Instance.Pkt = null;
     }
 
@@ -66,31 +74,32 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void ConfigureGame(S_EnterDungeon pkt)
-    {
-        Debug.Log("Entering Dungeon");
+    /* !!! 패킷 수정에 따라 제거된 데이터들임다 !!! */
+    // public void ConfigureGame(S2CSectorEnter pkt)
+    // {
+    //     Debug.Log("Entering Dungeon");
 
-        if (pkt.DungeonInfo != null)
-        {
-            ConfigureDungeon(pkt.DungeonInfo);
-        }
+    //     if (pkt.SectorInfo != null)
+    //     {
+    //         ConfigureDungeon(pkt.SectorInfo);
+    //     }
 
-        if (pkt.Player != null)
-        {
-            uiPlayerInformation.Configure(pkt.Player);
-            ConfigurePlayer(pkt.Player.PlayerClass);
-        }
+    //     if (pkt.Player != null)
+    //     {
+    //         uiPlayerInformation.Configure(pkt.Player);
+    //         ConfigurePlayer(pkt.Player.PlayerClass);
+    //     }
 
-        if (pkt.ScreenText != null)
-        {
-            uiScreen.Display(pkt.ScreenText);
-        }
+    // if (pkt.ScreenText != null)
+    // {
+    //     uiScreen.Display(pkt.ScreenText);
+    // }
 
-        if (pkt.BattleLog != null)
-        {
-            uiBattleLog.Initialize(pkt.BattleLog);
-        }
-    }
+    // if (pkt.BattleLog != null)
+    // {
+    //     uiBattleLog.Initialize(pkt.BattleLog);
+    // }
+    // }
 
     private void ConfigurePlayer(int classCode)
     {
@@ -107,11 +116,11 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-    public void ConfigureDungeon(DungeonInfo dungeonInfo)
-    {
-        ConfigureMap(dungeonInfo.DungeonCode);
-        ConfigureMonsters(dungeonInfo.Monsters);
-    }
+    // public void ConfigureDungeon(SectorInfo SectorInfo)
+    // {
+    //     ConfigureMap(SectorInfo.SectorId);
+    //     ConfigureMonsters(SectorInfo.Monsters);
+    // }
 
     private void ResetMonsters()
     {
@@ -127,24 +136,24 @@ public class BattleManager : MonoBehaviour
         monsterUis.Clear();
     }
 
-    public void ConfigureMonsters(RepeatedField<MonsterStatus> monsters)
-    {
-        ResetMonsters();
-        for (int i = 0; i < monsters.Count; i++)
-        {
-            var monsterInfo = monsters[i];
-            var monsterCode = monsterInfo.MonsterModel;
-            var monsterPath = monsterDb.GetValueOrDefault(monsterCode, BaseMonsterPath);
-            var monsterRes = Resources.Load<Monster>(monsterPath);
-            var monster = Instantiate(monsterRes, monsterSpawnPos[i]);
+    // public void ConfigureMonsters(RepeatedField<MonsterStatus> monsters)
+    // {
+    //     ResetMonsters();
+    //     for (int i = 0; i < monsters.Count; i++)
+    //     {
+    //         var monsterInfo = monsters[i];
+    //         var monsterCode = monsterInfo.MonsterModel;
+    //         var monsterPath = monsterDb.GetValueOrDefault(monsterCode, BaseMonsterPath);
+    //         var monsterRes = Resources.Load<Monster>(monsterPath);
+    //         var monster = Instantiate(monsterRes, monsterSpawnPos[i]);
 
-            monsterObjs.Add(monster);
-            monsterUis.Add(monster.UiMonsterInfo);
+    //         monsterObjs.Add(monster);
+    //         monsterUis.Add(monster.UiMonsterInfo);
 
-            monster.UiMonsterInfo.SetName(monsterInfo.MonsterName);
-            monster.UiMonsterInfo.SetFullHP(monsterInfo.MonsterHp);
-        }
-    }
+    //         monster.UiMonsterInfo.SetName(monsterInfo.MonsterName);
+    //         monster.UiMonsterInfo.SetFullHP(monsterInfo.MonsterHp);
+    //     }
+    // }
 
     public void UpdateMonsterHp(int idx, float hp)
     {

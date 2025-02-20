@@ -6,70 +6,88 @@ using UnityEngine.UI;
 
 public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
 {
-	[SerializeField] private Transform targetUI;
-	[SerializeField] private GameObject DecomUI;
-	[Space]
-	[SerializeField] private Button btn_Sort;
-	[SerializeField] private Button btn_Decom;
-	[SerializeField] private Button btn_Close;
+    [SerializeField]
+    private Transform targetUI;
 
-	// ¿Œ∫• UI¿« ¿ßƒ° ¿Ãµø¿ª ¿ß«— ∫Øºˆ
-	private Vector2 beginPos;
-	private Vector2 moveBegin;
-	[SerializeField] [ReadOnly] private GameObject InvenUI;
-	// ¿Œ∫• UI¿« ¿ßƒ° ø¯ªÛ∫π±Õ∏¶ ¿ß«— ∫Øºˆ
-	private Vector2 initPos;
+    [SerializeField]
+    private GameObject DecomUI;
 
-	private void Awake()
-	{
-		Debug.Log("¿Œ∫•≈‰∏Æ «Ï¥ı »∞º∫»≠");
+    [Space]
+    [SerializeField]
+    private Button btn_Sort;
 
-		if (targetUI == null) targetUI = transform.parent;
-		if (InvenUI == null) InvenUI = targetUI.parent.gameObject;
+    [SerializeField]
+    private Button btn_Decom;
 
-		btn_Sort.onClick.AddListener(SortButton);
-		btn_Decom.onClick.AddListener(DecomButton);
-		btn_Close.onClick.AddListener(CloseInvenUI);
+    [SerializeField]
+    private Button btn_Close;
 
-		initPos = targetUI.position;
-	}
+    // Ïù∏Î≤§ UIÏùò ÏúÑÏπò Ïù¥ÎèôÏùÑ ÏúÑÌïú Î≥ÄÏàò
+    private Vector2 beginPos;
+    private Vector2 moveBegin;
 
-	void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
-	{
-		beginPos = targetUI.position;
-		moveBegin = eventData.position;
-	}
+    [SerializeField]
+    [ReadOnly]
+    private GameObject InvenUI;
 
-	void IDragHandler.OnDrag(PointerEventData eventData)
-	{
-		targetUI.position = beginPos + (eventData.position - moveBegin);
-	}
+    // Ïù∏Î≤§ UIÏùò ÏúÑÏπò ÏõêÏÉÅÎ≥µÍ∑ÄÎ•º ÏúÑÌïú Î≥ÄÏàò
+    private Vector2 initPos;
 
-	void CloseInvenUI()
-	{
-		if(InvenUI != null) InvenUI.SetActive(false);
-	}
+    private void Awake()
+    {
+        Debug.Log("Ïù∏Î≤§ÌÜ†Î¶¨ Ìó§Îçî ÌôúÏÑ±Ìôî");
 
-	private void SortButton()
-	{
-		Debug.Log("Item Sort Btn Click");
-		InvenUI.GetComponent<InventoryUI>().SortItemList();
-	}
+        if (targetUI == null)
+            targetUI = transform.parent;
+        if (InvenUI == null)
+            InvenUI = targetUI.parent.gameObject;
 
-	private void DecomButton()
-	{
-		if(DecomUI != null)
-		{
-			if(DecomUI.activeSelf)
-			{
-				DecomUI.SetActive(false);
-			}
-			else DecomUI.SetActive(true);
-		}
-	}
+        // btn_Sort.onClick.AddListener(SortButton);
+        btn_Decom.onClick.AddListener(DecomButton);
+        btn_Close.onClick.AddListener(CloseInvenUI);
 
-	private void OnEnable()
-	{
-		targetUI.position = initPos;
-	}
+        initPos = targetUI.position;
+    }
+
+    void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
+    {
+        beginPos = targetUI.position;
+        moveBegin = eventData.position;
+    }
+
+    void IDragHandler.OnDrag(PointerEventData eventData)
+    {
+        targetUI.position = beginPos + (eventData.position - moveBegin);
+    }
+
+    void CloseInvenUI()
+    {
+        if (InvenUI != null)
+            InvenUI.SetActive(false);
+    }
+
+    // 	private void SortButton()
+    // 	{
+    // 		Debug.Log("Item Sort Btn Click");
+    // 		InvenUI.GetComponent<InventoryUI>().SortItemList();
+    // 	}
+
+    private void DecomButton()
+    {
+        if (DecomUI != null)
+        {
+            if (DecomUI.activeSelf)
+            {
+                DecomUI.SetActive(false);
+            }
+            else
+                DecomUI.SetActive(true);
+        }
+    }
+
+    // 	private void OnEnable()
+    // 	{
+    // 		targetUI.position = initPos;
+    // 	}
+    // }
 }

@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using Cinemachine;
 using Google.Protobuf.Protocol;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.EventSystems;
 
 public class TownManager : MonoBehaviour
@@ -11,24 +11,43 @@ public class TownManager : MonoBehaviour
     private static TownManager _instance;
     public static TownManager Instance => _instance;
 
-    [SerializeField] private CinemachineFreeLook freeLook;
-    [SerializeField] private Transform spawnArea;
-    [SerializeField] private EventSystem eSystem;
-    [SerializeField] private UIStart uiStart;
-    [SerializeField] private UIAnimation uiAnimation;
-    [SerializeField] private UIChat uiChat;
-    [SerializeField] private TMP_Text txtServer;
+    [SerializeField]
+    private CinemachineFreeLook freeLook;
+
+    [SerializeField]
+    private Transform spawnArea;
+
+    [SerializeField]
+    private EventSystem eSystem;
+
+    [SerializeField]
+    private UIStart uiStart;
+
+    [SerializeField]
+    private UIAnimation uiAnimation;
+
+    [SerializeField]
+    private UIChat uiChat;
+
+    [SerializeField]
+    private UIPlayer uiPlayer;
+
+    [SerializeField]
+    private TMP_Text txtServer;
 
     private const string DefaultPlayerPath = "Player/Player1";
 
     public CinemachineFreeLook FreeLook => freeLook;
     public EventSystem E_System => eSystem;
     public UIChat UiChat => uiChat;
+    public UIPlayer UiPlayer => uiPlayer;
 
     private Dictionary<int, Player> playerList = new();
     private Dictionary<int, string> playerDb = new();
 
     public Player MyPlayer { get; private set; }
+
+    private int sceneCode = 1;
 
     private void Awake()
     {
@@ -69,28 +88,29 @@ public class TownManager : MonoBehaviour
     /// <summary>
     /// MW - After Click Confirm/LocalServer btn, Try Method To Connect Server
     /// </summary>
-	public void TryConnectToServer(string gameServer, string port)
-    { 
-		GameManager.Network.Init(gameServer, port);
-		txtServer.text = gameServer;
-	}
+    public void TryConnectToServer(string gameServer, string port)
+    {
+        GameManager.Network.Init(gameServer, port);
+        txtServer.text = gameServer;
+    }
 
-	/// <summary>
-	/// MW - After Login Success, Try Method To Join In Game 
-	/// </summary>
-	public void GameStart(string userName, int classIdx)
+    /// <summary>
+    /// MW - After Login Success, Try Method To Join In Game
+    /// </summary>
+    public void GameStart(string userName, int classCode)
     {
         GameManager.Instance.UserName = userName;
-        GameManager.Instance.ClassIdx = classIdx + 1001; 
+        GameManager.Instance.ClassCode = classCode;
         Connected();
-	  }
+    }
 
     public void Connected()
     {
-        var enterPacket = new C_Enter
+        var enterPacket = new C2SEnter
         {
             Nickname = GameManager.Instance.UserName,
-            Class = GameManager.Instance.ClassIdx
+            ClassCode = GameManager.Instance.ClassCode,
+            TargetScene = sceneCode,
         };
 
         GameManager.Network.Send(enterPacket);
@@ -102,6 +122,7 @@ public class TownManager : MonoBehaviour
 
         MyPlayer = CreatePlayer(playerInfo, spawnPos);
         MyPlayer.SetIsMine(true);
+        uiPlayer.SetNickname(playerInfo.Nickname);
 
         ActivateGameUI();
     }
@@ -116,13 +137,17 @@ public class TownManager : MonoBehaviour
 
     public Player CreatePlayer(PlayerInfo playerInfo, Vector3 spawnPos)
     {
-        string playerResPath = playerDb.GetValueOrDefault(playerInfo.Class, DefaultPlayerPath);
+        string playerResPath = playerDb.GetValueOrDefault(playerInfo.ClassCode, DefaultPlayerPath);
         Player playerPrefab = Resources.Load<Player>(playerResPath);
 
-        var player = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
-        player.Move(spawnPos, Quaternion.identity);
+        // NavMesh 위의 가장 가까운 위치 찾기
+        Vector3 validatedSpawnPos = GetNearestNavMeshPosition(spawnPos, 3.0f);
+
+        var player = Instantiate(playerPrefab, validatedSpawnPos, Quaternion.identity);
+        player.Move(validatedSpawnPos, Quaternion.identity);
         player.SetPlayerId(playerInfo.PlayerId);
         player.SetNickname(playerInfo.Nickname);
+        player.SetLevel(playerInfo.Level);
 
         if (playerList.TryGetValue(playerInfo.PlayerId, out var existingPlayer))
         {
@@ -137,12 +162,32 @@ public class TownManager : MonoBehaviour
         return player;
     }
 
+    // NavMesh 위에서 가장 가까운 위치를 찾는 함수
+    private Vector3 GetNearestNavMeshPosition(Vector3 position, float maxSearchDistance)
+    {
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(position, out hit, maxSearchDistance, NavMesh.AllAreas))
+        {
+            return hit.position; // NavMesh 위의 가장 가까운 위치 반환
+        }
+        else
+        {
+            Debug.LogWarning("NavMesh 위의 위치를 찾을 수 없음, 기본 안전한 위치 반환");
+            return new Vector3(-5, 1, 137); // NavMesh가 있는 기본 안전한 위치로 변경
+        }
+    }
+
     public void ReleasePlayer(int playerId)
     {
-        if (!playerList.TryGetValue(playerId, out var player)) return;
+        if (!playerList.TryGetValue(playerId, out var player))
+            return;
+
+        if (player != null && player.gameObject != null)
+        {
+            Destroy(player.gameObject);
+        }
 
         playerList.Remove(playerId);
-        Destroy(player.gameObject);
     }
 
     private void ActivateGameUI()
@@ -150,6 +195,7 @@ public class TownManager : MonoBehaviour
         uiStart.gameObject.SetActive(false);
         uiChat.gameObject.SetActive(true);
         uiAnimation.gameObject.SetActive(true);
+        uiPlayer.gameObject.SetActive(true);
     }
 
     public Player GetPlayerAvatarById(int playerId)

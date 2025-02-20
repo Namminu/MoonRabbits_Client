@@ -7,37 +7,42 @@ using UnityEngine.UI;
 
 public class UIScreen : MonoBehaviour
 {
-    [SerializeField] private Image bg;
-    [SerializeField] private TMP_Text txtMessage;
-    [SerializeField] private TMP_Text txtContinue;
+    [SerializeField]
+    private Image bg;
+
+    [SerializeField]
+    private TMP_Text txtMessage;
+
+    [SerializeField]
+    private TMP_Text txtContinue;
 
     private bool isMessageComplete;
     private string currentMessage;
 
-    public void Display(ScreenText screenText)
-    {
-        if (!gameObject.activeSelf)
-        {
-            gameObject.SetActive(true);
-        }
+    // public void Display(ScreenText screenText)
+    // {
+    //     if (!gameObject.activeSelf)
+    //     {
+    //         gameObject.SetActive(true);
+    //     }
 
-        ConfigureText(screenText.Msg, screenText.TypingAnimation);
+    //     ConfigureText(screenText.Msg, screenText.TypingAnimation);
 
-        if (screenText.TextColor != null)
-        {
-            SetTextColor((byte)screenText.TextColor.R, (byte)screenText.TextColor.G, (byte)screenText.TextColor.B);
-        }
+    //     if (screenText.TextColor != null)
+    //     {
+    //         SetTextColor((byte)screenText.TextColor.R, (byte)screenText.TextColor.G, (byte)screenText.TextColor.B);
+    //     }
 
-        if (screenText.ScreenColor != null)
-        {
-            SetBackgroundColor((byte)screenText.ScreenColor.R, (byte)screenText.ScreenColor.G, (byte)screenText.ScreenColor.B);
-        }
+    //     if (screenText.ScreenColor != null)
+    //     {
+    //         SetBackgroundColor((byte)screenText.ScreenColor.R, (byte)screenText.ScreenColor.G, (byte)screenText.ScreenColor.B);
+    //     }
 
-        if (screenText.Alignment != null)
-        {
-            SetTextAlignment(screenText.Alignment.X, screenText.Alignment.Y);
-        }
-    }
+    //     if (screenText.Alignment != null)
+    //     {
+    //         SetTextAlignment(screenText.Alignment.X, screenText.Alignment.Y);
+    //     }
+    // }
 
     private void Update()
     {
@@ -49,7 +54,8 @@ public class UIScreen : MonoBehaviour
             }
             else
             {
-                SendResponse(0);
+                /* 패킷 제거로 사용되지 않는 메서드 */
+                // SendResponse(0);
             }
         }
     }
@@ -82,7 +88,10 @@ public class UIScreen : MonoBehaviour
 
         if (typingAnimation)
         {
-            txtMessage.DOText(message, message.Length / 10f).SetEase(Ease.Linear).OnComplete(CompleteMessageDisplay);
+            txtMessage
+                .DOText(message, message.Length / 10f)
+                .SetEase(Ease.Linear)
+                .OnComplete(CompleteMessageDisplay);
         }
         else
         {
@@ -98,11 +107,12 @@ public class UIScreen : MonoBehaviour
         CompleteMessageDisplay();
     }
 
-    private void SendResponse(int responseCode)
-    {
-        var response = new C_PlayerResponse { ResponseCode = responseCode };
-        GameManager.Network.Send(response);
-    }
+    /* 패킷 수정으로 보류된 메서드 */
+    // private void SendResponse(int responseCode)
+    // {
+    //     var response = new C_PlayerResponse { ResponseCode = responseCode };
+    //     GameManager.Network.Send(response);
+    // }
 
     private void SetBackgroundColor(byte r, byte g, byte b)
     {
@@ -120,21 +130,30 @@ public class UIScreen : MonoBehaviour
 
         if (horizontal == 0)
         {
-            if (vertical == 0) txtMessage.alignment = TextAlignmentOptions.TopLeft;
-            else if (vertical == 1) txtMessage.alignment = TextAlignmentOptions.MidlineLeft;
-            else if (vertical == 2) txtMessage.alignment = TextAlignmentOptions.BottomLeft;
+            if (vertical == 0)
+                txtMessage.alignment = TextAlignmentOptions.TopLeft;
+            else if (vertical == 1)
+                txtMessage.alignment = TextAlignmentOptions.MidlineLeft;
+            else if (vertical == 2)
+                txtMessage.alignment = TextAlignmentOptions.BottomLeft;
         }
         else if (horizontal == 1)
         {
-            if (vertical == 0) txtMessage.alignment = TextAlignmentOptions.Top;
-            else if (vertical == 1) txtMessage.alignment = TextAlignmentOptions.Midline;
-            else if (vertical == 2) txtMessage.alignment = TextAlignmentOptions.Bottom;
+            if (vertical == 0)
+                txtMessage.alignment = TextAlignmentOptions.Top;
+            else if (vertical == 1)
+                txtMessage.alignment = TextAlignmentOptions.Midline;
+            else if (vertical == 2)
+                txtMessage.alignment = TextAlignmentOptions.Bottom;
         }
         else if (horizontal == 2)
         {
-            if (vertical == 0) txtMessage.alignment = TextAlignmentOptions.TopRight;
-            else if (vertical == 1) txtMessage.alignment = TextAlignmentOptions.MidlineRight;
-            else if (vertical == 2) txtMessage.alignment = TextAlignmentOptions.BottomRight;
+            if (vertical == 0)
+                txtMessage.alignment = TextAlignmentOptions.TopRight;
+            else if (vertical == 1)
+                txtMessage.alignment = TextAlignmentOptions.MidlineRight;
+            else if (vertical == 2)
+                txtMessage.alignment = TextAlignmentOptions.BottomRight;
         }
     }
 }

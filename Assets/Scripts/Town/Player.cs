@@ -1,3 +1,4 @@
+using System.Collections;
 using Google.Protobuf.Protocol;
 using UnityEngine;
 using UnityEngine.AI;
@@ -5,7 +6,8 @@ using UnityEngine.AI;
 public class Player : MonoBehaviour
 {
     [Header("Player Settings")]
-    [SerializeField] private UINameChat uiNameChat;
+    [SerializeField]
+    private UINameChat uiNameChat;
 
     [Header("Movement Settings")]
     public float SmoothMoveSpeed = 10f; // 위치 보간 속도
@@ -15,7 +17,8 @@ public class Player : MonoBehaviour
     public Avatar Avatar { get; private set; }
     public MyPlayer MPlayer { get; private set; }
 
-    private string nickname;
+    public string nickname;
+    public int level;
     private UIChat uiChat;
 
     private Vector3 goalPos;
@@ -28,6 +31,14 @@ public class Player : MonoBehaviour
     private bool isInitialized = false;
 
     private Vector3 lastPos;
+    private NavMeshAgent agent;
+    private Vector3 lastTargetPosition;
+    private Vector3 targetPosition; // 목표 위치 저장
+    private float moveSpeed = 10f; // 이동 속도
+
+    [Header("Throw Item")]
+    public GameObject grenade;
+    public GameObject trap;
 
     private void Start()
     {
@@ -44,6 +55,11 @@ public class Player : MonoBehaviour
     {
         this.nickname = nickname;
         uiNameChat.SetName(nickname);
+    }
+
+    public void SetLevel(int level)
+    {
+        this.level = level;
     }
 
     public void SetIsMine(bool isMine)
@@ -65,7 +81,8 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (!isInitialized) return;
+        if (!isInitialized)
+            return;
 
         if (!IsMine)
         {
@@ -87,11 +104,15 @@ public class Player : MonoBehaviour
 
         if (distance > TeleportDistanceThreshold)
         {
-            transform.position = goalPos; 
+            transform.position = goalPos;
         }
         else
         {
-            transform.position = Vector3.Lerp(transform.position, goalPos, Time.deltaTime * SmoothMoveSpeed);
+            transform.position = Vector3.Lerp(
+                transform.position,
+                goalPos,
+                Time.deltaTime * SmoothMoveSpeed
+            );
         }
     }
 
@@ -106,14 +127,14 @@ public class Player : MonoBehaviour
 
     public void SendChatMessage(string msg)
     {
-        if (!IsMine) 
+        if (!IsMine)
             return;
 
-        var chatPacket = new C_Chat
+        var chatPacket = new C2SChat
         {
             PlayerId = PlayerId,
             SenderName = nickname,
-            ChatMsg = msg
+            ChatMsg = msg,
         };
 
         GameManager.Network.Send(chatPacket);
