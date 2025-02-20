@@ -1,50 +1,48 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+// using UnityEngine;
 
-public class RayCaster : MonoBehaviour
-{
-    private IMouseHoverable lastHoverObject;
-    // Start is called before the first frame update
-    void Start()
-    {
-        lastHoverObject = null;
-	}
+// public class RayCaster : MonoBehaviour
+// {
+//     private IMouseHoverable lastHoverObject;
+//     // Start is called before the first frame update
+//     void Start()
+//     {
+//         lastHoverObject = null;
+// 	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+//     // Update is called once per frame
+//     void Update()
+//     {
+//         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+//         RaycastHit hit;
 
-        if(Physics.Raycast(ray, out hit))
-        {
-            IMouseHoverable hoveredObject = hit.collider.GetComponent<IMouseHoverable>();
+//         if(Physics.Raycast(ray, out hit))
+//         {
+//             IMouseHoverable hoveredObject = hit.collider.GetComponent<IMouseHoverable>();
 
-            if(hoveredObject != lastHoverObject) 
-            {
-                /* ÀÌÀü ¿ÀºêÁ§Æ®¿¡¼­ ¹ş¾î³µ´Ù¸é Exit È£Ãâ */
-                lastHoverObject?.OnMouseHoverExit();
-				/* »õ·Î °¨ÁöÇÑ ¿ÀºêÁ§Æ®ÀÇ Enter È£Ãâ */
-				hoveredObject?.OnMouseHoverEnter();
-				/* »õ·Ó°Ô °¨ÁöµÈ ¿ÀºêÁ§Æ® ÀúÀå */
-				lastHoverObject = hoveredObject;
-            }
+//             if(hoveredObject != lastHoverObject) 
+//             {
+//                 /* ì´ì „ ì˜¤ë¸Œì íŠ¸ì—ì„œ ë²—ì–´ë‚¬ë‹¤ë©´ Exit í˜¸ì¶œ */
+//                 lastHoverObject?.OnMouseHoverExit();
+// 				/* ìƒˆë¡œ ê°ì§€í•œ ì˜¤ë¸Œì íŠ¸ì˜ Enter í˜¸ì¶œ */
+// 				hoveredObject?.OnMouseHoverEnter();
+// 				/* ìƒˆë¡­ê²Œ ê°ì§€ëœ ì˜¤ë¸Œì íŠ¸ ì €ì¥ */
+// 				lastHoverObject = hoveredObject;
+//             }
 
-            if(Input.GetMouseButtonDown(0))
-            {
-				hoveredObject?.OnMouseClicked();
-            }
-        }
-        else
-        {
-            /* ¸¶¿ì½º°¡ ¾Æ¹« ¿ÀºêÁ§Æ®¿¡µµ ´êÁö ¾ÊÀ¸¸é Exit È£Ãâ */
-            if(lastHoverObject != null) 
-            {
-                lastHoverObject.OnMouseHoverExit();
-                lastHoverObject = null;
+//             if(Input.GetMouseButtonDown(0))
+//             {
+// 				hoveredObject?.OnMouseClicked();
+//             }
+//         }
+//         else
+//         {
+//             /* ë§ˆìš°ìŠ¤ê°€ ì•„ë¬´ ì˜¤ë¸Œì íŠ¸ì—ë„ ë‹¿ì§€ ì•Šìœ¼ë©´ Exit í˜¸ì¶œ */
+//             if(lastHoverObject != null) 
+//             {
+//                 lastHoverObject.OnMouseHoverExit();
+//                 lastHoverObject = null;
 
-			}
-        }
-    }
-}
+// 			}
+//         }
+//     }
+// }
