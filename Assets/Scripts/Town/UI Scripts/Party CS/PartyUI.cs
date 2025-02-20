@@ -83,6 +83,10 @@ public class PartyUI : MonoBehaviour
       noPartyPanel.SetActive(true);
       inPartyPanel.SetActive(false);
       ClearPartyMembers();
+
+      // 파티 참가 버튼 클릭 이벤트 리스너
+      Button joinPartyButton = noPartyPanel.transform.Find("JoinPartyBtn").GetComponent<Button>();
+
     }
 
     // UpdateScrollView();
@@ -146,9 +150,13 @@ public class PartyUI : MonoBehaviour
     allowText.text = $"{leaderNickname}님이 초대했습니다.";
 
     Button allowBtn = allowInvitePopUp.transform.Find("AllowBtn").GetComponent<Button>();
+    Button rejectBtn = allowInvitePopUp.transform.Find("RejectBtn").GetComponent<Button>();
 
     allowBtn.onClick.RemoveAllListeners();
     allowBtn.onClick.AddListener(() => SendAllowInvitePacket(partyId, memberId));
+
+    rejectBtn.onClick.RemoveAllListeners();
+    rejectBtn.onClick.AddListener(() => allowInvitePopUp.SetActive(false));
   }
 
   // 파티 창 닫기
