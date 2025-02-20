@@ -123,14 +123,6 @@ public class Party : MonoBehaviour
       leaderId = -1;  // 리더 ID 초기화
       PartyUI.instance.isInParty = false;
     }
-
-    // 만약 떠난 멤버가 파티장이라면 다음 멤버에게 파티장 위임
-    if (leaderId == playerId && members.Count > 0)
-    {
-      leaderId = members[0].Id; // 첫 번째 멤버를 새로운 파티장으로 지정
-      PartyUI.instance.SendSetLeaderPacket(leaderId); // 서버에 새로운 파티장 정보 전달
-    }
-
     // UI 업데이트 요청
     PartyUI.instance.UpdateUI();
   }

@@ -164,12 +164,6 @@ public class PartyUI : MonoBehaviour
     if (member == null) return;
 
     SendLeavePartyPacket(member.Id);
-
-    // 만약 떠나는 멤버가 파티장이라면 새로운 파티장 위임
-    if (Party.instance.leaderId == playerId)
-    {
-      Party.instance.RemoveMember(playerId); // 멤버 제거 및 리더 위임
-    }
   }
 
   public void KickedOut(string msg)
