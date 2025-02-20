@@ -158,10 +158,18 @@ public class PartyUI : MonoBehaviour
   }
 
   // 파티 탈퇴 버튼 클릭 시
-  public void OnLeavePartyClicked(string nickname)
+  public void OnLeavePartyClicked(string nickname, int playerId)
   {
     MemberCardInfo member = Party.instance.GetMemberByNickname(nickname);
+    if (member == null) return;
+
     SendLeavePartyPacket(member.Id);
+
+    // 만약 떠나는 멤버가 파티장이라면 새로운 파티장 위임
+    if (Party.instance.leaderId == playerId)
+    {
+      Party.instance.RemoveMember(playerId); // 멤버 제거 및 리더 위임
+    }
   }
 
   public void KickedOut(string msg)
@@ -216,7 +224,7 @@ public class PartyUI : MonoBehaviour
       {
         leaveButton.gameObject.SetActive(true);
         leaveButton.onClick.RemoveAllListeners();
-        leaveButton.onClick.AddListener(() => OnLeavePartyClicked(nameText.text));
+        leaveButton.onClick.AddListener(() => OnLeavePartyClicked(nameText.text, playerId));
       }
       if (kickOutButton != null) kickOutButton.gameObject.SetActive(false);
     }
@@ -265,13 +273,6 @@ public class PartyUI : MonoBehaviour
     UpdateUI();
   }
 
-  void UpdateScrollView()
-  {
-    // 스크롤을 맨 아래로 이동 (새로운 멤버가 추가될 때 자동 스크롤)
-    Canvas.ForceUpdateCanvases();
-    scrollRect.verticalNormalizedPosition = 0f;
-  }
-
   #region 패킷 전송 함수
   private void SendCreatePartyPacket()
   {
@@ -311,10 +312,9 @@ public class PartyUI : MonoBehaviour
     var disbandPartyPacket = new C2SDisbandParty { PartyId = Party.instance.partyId };
     GameManager.Network.Send(disbandPartyPacket);
   }
-  private void SendSetLeaderPacket(string nickname)
+  public void SendSetLeaderPacket(int newLeaderId)
   {
-    int memberId = GetPlayerIdByNickname(nickname).PlayerId;
-    var setLeaderPacket = new C2SSetPartyLeader { PartyId = Party.instance.partyId, MemberId = memberId };
+    var setLeaderPacket = new C2SSetPartyLeader { PartyId = Party.instance.partyId, MemberId = newLeaderId };
     GameManager.Network.Send(setLeaderPacket);
   }
   #endregion
