@@ -16,7 +16,7 @@ public class PopupUI : MonoBehaviour
 	private void Awake()
 	{
 		btn_Yes.onClick.AddListener(YesButton);
-		btn_No.onClick.AddListener(() => gameObject.SetActive(false));
+		btn_No.onClick.AddListener(NoButton);
 	}
 
 	public int SetPopupUI(string _text, string eventName)
@@ -32,11 +32,18 @@ public class PopupUI : MonoBehaviour
 
 	private void YesButton()
 	{
+		Debug.Log("yes btn");
 		if (!string.IsNullOrEmpty(eventTrigger)) // 이벤트가 저장되어 있으면 실행
 		{
 			Debug.Log($"[PopupUI] '{eventTrigger}' 이벤트 실행");
 			EventManager.Trigger(eventTrigger); // 저장된 이벤트 실행
 			gameObject.SetActive(false);
 		}
+	}
+
+	private void NoButton()
+	{
+		Debug.Log("얘는 됨?");
+		gameObject.SetActive(false);
 	}
 }
