@@ -1,98 +1,124 @@
 using System.Collections;
-using System.Net;
+using System.Collections.Generic;
 using Google.Protobuf.Protocol;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 
 public class TempPlayer : MonoBehaviour
 {
-    public Avatar Avatar { get; private set; }
-    private Animator animator;
+    [SerializeField]
+    private NavMeshAgent agent;
+    public NavMeshAgent NavAgent
+    {
+        get => agent;
+    }
+    private RaycastHit rayHit;
+    private Animator anim;
     public Animator Anim
     {
-        get => animator;
+        get => anim;
     }
-    Vector3 moveVec;
-    float hAxis;
-    float vAxis;
-    public float moveSpeed; // 이동 속도
+    private Vector3 targetPosition;
 
-    private bool isAlive = true;
-    public bool IsAlive
-    {
-        get { return isAlive; }
-        set { isAlive = value; }
-    }
+    public bool IsAlive = false;
 
-    [Header("Skill Settings")]
     /* 섬광탄 관련 변수 */
-    public Transform throwPoint;
-    public int throwPower;
+    private Transform throwPoint;
+    private int throwPower = 15;
     private bool grenadeInput;
     private bool trapInput;
     private bool isThrow = false;
-    public GameObject grenade;
-    public GameObject trap;
+    private GameObject grenade;
+    private GameObject trap;
 
-    private void Start()
+    /* 상호작용 관련 변수 */
+    public GameObject axe;
+    public GameObject pickAxe;
+    public int currentEquip = (int)EquipState.none;
+
+    public enum EquipState
     {
-        Avatar = GetComponent<Avatar>();
-        animator = GetComponent<Animator>();
+        none = 0,
+        axe = 1,
+        pickAxe = 2,
     }
 
-    private void Update()
+    private bool equipChangeInput;
+    private bool interactInput;
+    public bool InteractInput
     {
-        // 인풋 키 받는 함수 (스킬이나 조작 추가시 여기에 추가)
-        GetInput();
-        Turn();
-        Move();
+        get => interactInput;
+    }
+    private TempInteractionManager interactManager;
+
+    void Awake()
+    {
+        agent = GetComponent<NavMeshAgent>();
+        anim = GetComponent<Animator>();
+
+        throwPoint = transform.Find("ThrowPoint").transform;
+        grenade = GetComponentInParent<Player>().grenade;
+        trap = GetComponentInParent<Player>().trap;
+        axe = GetComponentInParent<Player>().axe;
+        pickAxe = GetComponentInParent<Player>().pickAxe;
+
+        // 장애물 회피 설정 낮추기(서버와 경로를 최대한 비슷하게 만들기 위함)
+        agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
+        agent.avoidancePriority = 0; // 회피 우선순위 낮게 설정
+
+        InitializeCamera();
+
+        interactManager = GetComponentInChildren<TempInteractionManager>();
+    }
+
+    void Update()
+    {
+        HandleInput();
         Throw();
+        EquipChange();
+        Interact();
     }
 
-    public void PlayAnimation(int animCode)
+    private void InitializeCamera()
     {
-        animator?.SetTrigger(animCode);
+        Camera.main.gameObject.GetComponent<TempCamera>().target = transform;
     }
 
-    private void GetInput()
+    private void HandleInput()
     {
-        if (!isAlive)
+        if (Input.GetMouseButtonDown(0))
         {
-            hAxis = 0;
-            vAxis = 0;
-            return;
+            int layerMask = 1 << LayerMask.NameToLayer("Ground");
+
+            if (
+                Physics.Raycast(
+                    Camera.main.ScreenPointToRay(Input.mousePosition),
+                    out rayHit,
+                    Mathf.Infinity,
+                    layerMask
+                )
+            )
+            {
+                targetPosition = rayHit.point;
+                agent.SetDestination(targetPosition);
+            }
         }
-        hAxis = Input.GetAxisRaw("Horizontal");
-        vAxis = Input.GetAxisRaw("Vertical");
 
         grenadeInput = Input.GetButtonDown("Grenade");
         trapInput = Input.GetButtonDown("Trap");
-    }
-
-    public void Move()
-    {
-        moveVec = new Vector3(hAxis, 0, vAxis).normalized;
-
-        transform.position += moveSpeed * Time.deltaTime * moveVec;
-
-        animator.SetFloat("Move", 1);
-    }
-
-    void Turn()
-    {
-        transform.LookAt(transform.position + moveVec);
+        interactInput = Input.GetButtonDown("Interact");
+        equipChangeInput = Input.GetButtonDown("EquipChange");
     }
 
     private void Throw()
     {
         if (!isThrow && (grenadeInput || trapInput))
         {
-            Debug.Log("Throw 진입");
             isThrow = true;
 
             if (grenadeInput)
             {
-                Debug.Log("Grenade 진입");
                 GameObject currentObj = Instantiate(
                     grenade,
                     throwPoint.position,
@@ -103,7 +129,7 @@ public class TempPlayer : MonoBehaviour
 
                 Vector3 forceVec = throwPoint.forward * throwPower + throwPoint.up * throwPower / 2;
 
-                rigid.AddForce(forceVec, ForceMode.Impulse);
+                rigid.AddForce(forceVec, ForceMode.VelocityChange);
                 rigid.AddTorque(Vector3.right, ForceMode.Impulse);
             }
             else if (trapInput)
@@ -117,8 +143,19 @@ public class TempPlayer : MonoBehaviour
 
     private void ThrowEnd()
     {
-        Debug.Log("ThrowEnd 진입");
         isThrow = false;
+    }
+
+    private void EquipChange()
+    {
+        if (equipChangeInput)
+            interactManager.eventR.Invoke();
+    }
+
+    private void Interact()
+    {
+        if (interactInput)
+            interactManager.eventF.Invoke();
     }
 
     void OnCollisionEnter(Collision collision)
@@ -128,9 +165,6 @@ public class TempPlayer : MonoBehaviour
             var bounds = collision.gameObject.GetComponent<MeshCollider>().bounds;
             Debug.Log($"땅 크기 ??! {bounds}");
         }
-        if (collision.gameObject.CompareTag("Resource"))
-        {
-            
-        }
+        if (collision.gameObject.CompareTag("Resource")) { }
     }
 }

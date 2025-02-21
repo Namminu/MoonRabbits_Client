@@ -1,14 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Google.Protobuf.Protocol;
-using SRF.Helpers;
-using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
-using UnityEngine.Rendering;
 
 public class MyPlayer : MonoBehaviour
 {
