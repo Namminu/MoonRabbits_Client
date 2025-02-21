@@ -19,6 +19,7 @@ public class Party : MonoBehaviour
     instance = this;
   }
 
+  #region 파티 정보 업데이트
   // 서버에서 받은 데이터로 파티 정보 업데이트
   public void CreatePartyData(S2CCreateParty partyData)
   {
@@ -92,22 +93,26 @@ public class Party : MonoBehaviour
     PartyUI.instance.UpdateUI();
   }
 
-  // public void InvitePartyData(S2CInviteParty partyData)
-  // {
-  //   partyId = partyData.PartyId;
-  //   leaderId = partyData.LeaderId;
-  //   memberCount = partyData.MemberCount;
+  public void JoinPartyData(S2CJoinParty partyData)
+  {
+    partyId = partyData.PartyId;
+    leaderId = partyData.LeaderId;
+    memberCount = partyData.MemberCount;
 
-  //   // 기존 멤버 리스트 초기화 후 새 데이터로 채우기
-  //   members.Clear();
-  //   foreach (var member in partyData.Members)
-  //   {
-  //     members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, IsMine = member.IsMine });
-  //   }
+    // 기존 멤버 리스트 초기화 후 새 데이터로 채우기
+    members.Clear();
+    foreach (var member in partyData.Members)
+    {
+      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, IsMine = member.IsMine });
+    }
 
-  //   // UI 업데이트 요청 (PartyUI에서 처리)
-  //   PartyUI.instance.CloseInvitePopUp();
-  // }
+    // UI 업데이트 요청 (PartyUI에서 처리)
+    PartyUI.instance.isInParty = true;
+    PartyUI.instance.UpdateUI();
+  }
+  #endregion
+
+  #region 멤버 관리
 
   public void RemoveMember(int playerId)
   {
@@ -157,4 +162,5 @@ public class Party : MonoBehaviour
   {
     return FindObjectsOfType<Player>().FirstOrDefault(p => p.IsMine);
   }
+  #endregion
 }
