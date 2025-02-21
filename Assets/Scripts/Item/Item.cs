@@ -3,14 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Item : MonoBehaviour
+public abstract class Item : MonoBehaviour
 {
-    private int itemCode;
-    private Image itemImage;
-    private ItemData itemData;
+    public ItemData Data { get; private set; }
 
-
-    public Image GetItemImage() { return itemImage; } 
-
-    public ItemData GetItemData() { return itemData; }
+    public Item(ItemData data) => Data = data;
 }

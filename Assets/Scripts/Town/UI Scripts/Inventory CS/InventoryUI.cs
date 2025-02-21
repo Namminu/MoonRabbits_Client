@@ -24,8 +24,8 @@ public class InventoryUI : MonoBehaviour
     {
         public int Compare(Item x, Item y)
         {
-            int itemX = x.GetItemData().ItemId;
-            int itemY = y.GetItemData().ItemId;
+            int itemX = x.Data.ItemId;
+            int itemY = y.Data.ItemId;
 
             return itemX - itemY;
         }
@@ -80,8 +80,8 @@ public class InventoryUI : MonoBehaviour
             // Sorting process validation code
             for (int i = 0; i < filledSlots.Count - 1; i++)
             {
-                int currentId = filledSlots[i].GetItem().GetItemData().ItemId;
-                int nextId = filledSlots[i + 1].GetItem().GetItemData().ItemId;
+                int currentId = filledSlots[i].GetItem().Data.ItemId;
+                int nextId = filledSlots[i + 1].GetItem().Data.ItemId;
 
                 if (currentId > nextId)
                 {
