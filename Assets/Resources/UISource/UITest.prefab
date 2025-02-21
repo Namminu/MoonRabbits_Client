@@ -4167,10 +4167,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   btnAddExp: {fileID: 8585846232958900164}
   hpSlider: {fileID: 29618511595531013}
+  staminaSlider: {fileID: 0}
   expSlider: {fileID: 8592834275946472843}
   levelText: {fileID: 5830658296064356087}
   nicknameText: {fileID: 8012938152285948113}
   hpText: {fileID: 5501370527555199669}
+  curStaminaText: {fileID: 3607506719299905710}
   staminaText: {fileID: 3607506719299905710}
   pickSpeedText: {fileID: 1485861941834501462}
   moveSpeedText: {fileID: 8941153741584600174}
