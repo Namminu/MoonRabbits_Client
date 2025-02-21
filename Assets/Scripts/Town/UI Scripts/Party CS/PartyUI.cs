@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Google.Protobuf.Protocol;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -202,9 +203,22 @@ public class PartyUI : MonoBehaviour
   {
     partyListPanel.SetActive(true);
     noPartyPanel.SetActive(false);
+    inPartyPanel.SetActive(false);
+
+    Button backButton = partyListPanel.transform.Find("BackBtn").GetComponent<Button>();
+    backButton.onClick.RemoveAllListeners();
+    backButton.onClick.AddListener(OnBackClicked);
 
     SendCheckPartyListPacket();
   }
+
+  private void OnBackClicked()
+  {
+    noPartyPanel.SetActive(true);
+    partyListPanel.SetActive(false);
+    inPartyPanel.SetActive(false);
+  }
+
   #endregion
 
   #region 멤버 카드 생성
