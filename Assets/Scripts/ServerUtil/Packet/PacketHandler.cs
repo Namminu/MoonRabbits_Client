@@ -284,6 +284,7 @@ class PacketHandler
         if (packet is not S2CJoinParty pkt)
             return;
         Debug.Log($"S2CJoinParty 패킷 무사 도착 : {pkt}");
+        Party.instance.JoinPartyData(pkt);
     }
 
     public static void S2CLeavePartyHandler(PacketSession session, IMessage packet)
@@ -294,11 +295,18 @@ class PacketHandler
         Party.instance.LeavePartyData(pkt);
     }
 
-    public static void S2CSetPartyLeaderHandler(PacketSession session, IMessage packet)
+    public static void S2CCheckPartyListHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CSetPartyLeader pkt)
+        Debug.Log($"!!!! 패킷 !! : {packet}");
+        if (packet is not S2CCheckPartyList pkt)
+        {
+            Debug.Log("S2CCheckPartyList 패킷의 상태가 이상하다.");
+
             return;
-        Debug.Log($"S2CSetPartyLeader 패킷 무사 도착 : {pkt}");
+        }
+
+        Debug.Log($"S2CCheckPartyList 패킷 무사 도착 : {pkt}");
+        PartyUI.instance.createPartyCard(pkt);
     }
 
     public static void S2CKickOutMemberHandler(PacketSession session, IMessage packet)
@@ -316,6 +324,12 @@ class PacketHandler
         Debug.Log($"S2CDisbandParty 패킷 무사 도착 : {pkt}");
         PartyUI.instance.KickedOut(pkt.Msg);
     }
+    public static void S2CRejectInviteHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CRejectInvite pkt)
+            return;
+        Debug.Log($"S2CRejectInvite 패킷 무사 도착 : {pkt}");
+    }
     #endregion
 
     #region Sector
@@ -323,6 +337,12 @@ class PacketHandler
     {
         if (packet is not S2CMonsterLocation pkt)
             return;
+        var monsterId = pkt.MonsterId;
+        var monsterPosition = pkt.TransformInfo;
+
+        Vector3 position = new Vector3(monsterPosition.PosX, monsterPosition.PosY, monsterPosition.PosZ);
+        MonsterManager.Instance.SendPositionPacket(monsterId, position);
+
         Debug.Log($"S2CMonsterLocation 패킷 무사 도착 : {pkt}");
     }
 
@@ -417,6 +437,8 @@ class PacketHandler
         if (packet is not S2CAddExp pkt)
             return;
         Debug.Log($"S2CAddExp 패킷 무사 도착 : {pkt}");
+
+        TownManager.Instance.UiPlayer.SetExp(pkt.UpdatedExp);
     }
 
     public static void S2CLevelUpHandler(PacketSession session, IMessage packet)
@@ -424,13 +446,17 @@ class PacketHandler
         if (packet is not S2CLevelUp pkt)
             return;
         Debug.Log($"S2CLevelUp 패킷 무사 도착 : {pkt}");
+
+        TownManager.Instance.UiPlayer.LevelUp(pkt.UpdatedLevel, pkt.NewTargetExp, pkt.UpdatedExp, pkt.AbilityPoint);
     }
 
-    public static void S2CSelectApHandler(PacketSession session, IMessage packet)
+    public static void S2CInvestPointHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CSelectAp pkt)
+        if (packet is not S2CInvestPoint pkt)
             return;
-        Debug.Log($"S2CSelectAp 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CInvestPoint 패킷 무사 도착 : {pkt}");
+
+        TownManager.Instance.UiPlayer.InvestPoint(pkt.StatInfo);
     }
     #endregion
 }

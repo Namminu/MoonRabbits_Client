@@ -6,29 +6,22 @@ using UnityEngine.UI;
 
 public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
 {
-    [SerializeField]
-    private Transform targetUI;
+    [SerializeField] private Transform targetUI;
 
-    [SerializeField]
-    private GameObject DecomUI;
+    [SerializeField] private GameObject DecomUI;
 
     [Space]
-    [SerializeField]
-    private Button btn_Sort;
+    [SerializeField] private Button btn_Sort;
 
-    [SerializeField]
-    private Button btn_Decom;
+    [SerializeField] private Button btn_Decom;
 
-    [SerializeField]
-    private Button btn_Close;
+    [SerializeField] private Button btn_Close;
 
     // 인벤 UI의 위치 이동을 위한 변수
     private Vector2 beginPos;
     private Vector2 moveBegin;
 
-    [SerializeField]
-    [ReadOnly]
-    private GameObject InvenUI;
+    [SerializeField] [ReadOnly] private GameObject InvenUI;
 
     // 인벤 UI의 위치 원상복귀를 위한 변수
     private Vector2 initPos;
@@ -42,7 +35,7 @@ public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
         if (InvenUI == null)
             InvenUI = targetUI.parent.gameObject;
 
-        // btn_Sort.onClick.AddListener(SortButton);
+        btn_Sort.onClick.AddListener(SortButton);
         btn_Decom.onClick.AddListener(DecomButton);
         btn_Close.onClick.AddListener(CloseInvenUI);
 
@@ -66,11 +59,11 @@ public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
             InvenUI.SetActive(false);
     }
 
-    // 	private void SortButton()
-    // 	{
-    // 		Debug.Log("Item Sort Btn Click");
-    // 		InvenUI.GetComponent<InventoryUI>().SortItemList();
-    // 	}
+    private void SortButton()
+    {
+        Debug.Log("item sort btn click");
+		InvenUI.GetComponent<InventoryUI>().SortItemList();
+    }
 
     private void DecomButton()
     {
@@ -85,9 +78,8 @@ public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
         }
     }
 
-    // 	private void OnEnable()
-    // 	{
-    // 		targetUI.position = initPos;
-    // 	}
-    // }
+    private void OnEnable()
+    {
+        targetUI.position = initPos;
+    }
 }

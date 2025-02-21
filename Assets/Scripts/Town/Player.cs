@@ -31,21 +31,12 @@ public class Player : MonoBehaviour
     private bool isInitialized = false;
 
     private Vector3 lastPos;
-    private NavMeshAgent agent;
-    private Vector3 lastTargetPosition;
-    private Vector3 targetPosition; // 목표 위치 저장
-    private float moveSpeed = 10f; // 이동 속도
 
     [Header("Equipments")]
     public GameObject grenade;
     public GameObject trap;
     public GameObject axe;
     public GameObject pickAxe;
-
-    void Awake()
-    {
-        agent = GetComponent<NavMeshAgent>();
-    }
 
     private void Start()
     {
@@ -84,11 +75,6 @@ public class Player : MonoBehaviour
 
         uiChat = TownManager.Instance.UiChat;
         isInitialized = true;
-    }
-
-    public void MoveToTargetPosition(Vector3 position)
-    {
-        goalPos = position; // 목표 위치 업데이트
     }
 
     private void Update()

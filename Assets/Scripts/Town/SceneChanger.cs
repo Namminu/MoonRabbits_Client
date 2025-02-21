@@ -6,14 +6,15 @@
 
 // public interface IMouseHoverable
 // {
-//     void OnMouseHoverEnter();
-//     void OnMouseHoverExit();
-//     void OnMouseClicked();
+// 	void OnMouseHoverEnter();
+// 	void OnMouseHoverExit();
+// 	void OnMouseClicked();
 // }
 
 // public class SceneChanger : MonoBehaviour, IMouseHoverable
 // {
-// 	[SerializeField] private SceneAsset nextScene;
+// 	//[SerializeField] private SceneAsset nextScene;
+// 	[SerializeField] private string nextScene;
 // 	[SerializeField] private GameObject sceneChangeUIPrefab;
 
 // 	private GameObject currentUIInstance;
@@ -25,13 +26,13 @@
 // 		originScale = transform.localScale;
 // 	}
 
-// 	private void OnChangeScene()
-// 	{
-// 		if (nextScene == null) return;
+// private void OnChangeScene()
+// {
+// 	if (string.IsNullOrEmpty(nextScene)) return;
 
-// 		SceneManager.LoadScene(nextScene.name);
-// 		EventManager.Unsubscribe("OnChangeScene", OnChangeScene);
-// 	}
+// 	SceneManager.LoadScene(nextScene);
+// 	EventManager.Unsubscribe("OnChangeScene", OnChangeScene);
+// }
 
 // 	#region Mouse Hover Interface
 // 	public void OnMouseClicked()

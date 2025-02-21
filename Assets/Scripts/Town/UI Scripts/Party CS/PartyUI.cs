@@ -12,6 +12,7 @@ public class PartyUI : MonoBehaviour
   public GameObject partyWindow;
   public GameObject noPartyPanel;
   public GameObject inPartyPanel;
+  public GameObject partyListPanel;
 
   // 팝업창
   public GameObject invitePartyPopUp;
@@ -19,17 +20,17 @@ public class PartyUI : MonoBehaviour
 
   public Transform partyMemberContainer;
   public GameObject memberCardPrefab;
+  public Transform partyListContainer;
+  public GameObject partyCardPrefab;
   public ScrollRect scrollRect;
 
   public Button createPartyButton; // 파티 생성 버튼
   public Button invitePartyButton; // 파티 생성 버튼
-
+  public Button checkPartyListButton;
   public Button joinPartyButton;   // ID로 파티 참가 버튼
   public Button closeButton;       // 닫기 버튼
-  private Button setLeaderButton; // 파티장 변경 버튼
 
   public bool isInParty = false; // 파티 참가 여부
-  private int memberId = 100;
 
   private void Awake()
   {
@@ -43,6 +44,7 @@ public class PartyUI : MonoBehaviour
 
     // 버튼 클릭 이벤트 연결
     createPartyButton.onClick.AddListener(OnCreatePartyClicked);
+    checkPartyListButton.onClick.AddListener(OnCheckPartyListClicked);
     // joinPartyButton.onClick.AddListener(OnJoinPartyClicked);
     closeButton.onClick.AddListener(ClosePartyWindow);
   }
@@ -57,6 +59,7 @@ public class PartyUI : MonoBehaviour
     {
       // 파티 중일 때
       noPartyPanel.SetActive(false);
+      partyListPanel.SetActive(false);
       inPartyPanel.SetActive(true);
 
       // 파티 초대 버튼 클릭 이벤트리스너
@@ -82,6 +85,7 @@ public class PartyUI : MonoBehaviour
     {
       noPartyPanel.SetActive(true);
       inPartyPanel.SetActive(false);
+      partyListPanel.SetActive(false);
       ClearPartyMembers();
     }
 
@@ -146,21 +150,39 @@ public class PartyUI : MonoBehaviour
     allowText.text = $"{leaderNickname}님이 초대했습니다.";
 
     Button allowBtn = allowInvitePopUp.transform.Find("AllowBtn").GetComponent<Button>();
+    Button rejectBtn = allowInvitePopUp.transform.Find("RejectBtn").GetComponent<Button>();
 
     allowBtn.onClick.RemoveAllListeners();
     allowBtn.onClick.AddListener(() => SendAllowInvitePacket(partyId, memberId));
+
+    rejectBtn.onClick.RemoveAllListeners();
+    rejectBtn.onClick.AddListener(() => OnRejectClicked(memberId));
   }
 
   // 파티 창 닫기
   void ClosePartyWindow()
   {
+    if (isInParty == false)
+    {
+      noPartyPanel.SetActive(true);
+      partyListPanel.SetActive(false);
+      inPartyPanel.SetActive(false);
+    }
+    else
+    {
+      inPartyPanel.SetActive(true);
+      noPartyPanel.SetActive(false);
+      partyListPanel.SetActive(false);
+    }
     partyWindow.SetActive(false);
   }
 
   // 파티 탈퇴 버튼 클릭 시
-  public void OnLeavePartyClicked(string nickname)
+  public void OnLeavePartyClicked(string nickname, int playerId)
   {
     MemberCardInfo member = Party.instance.GetMemberByNickname(nickname);
+    if (member == null) return;
+
     SendLeavePartyPacket(member.Id);
   }
 
@@ -168,6 +190,20 @@ public class PartyUI : MonoBehaviour
   {
     Party.instance.RemoveAllMembers();
     TownManager.Instance.UiChat.PushMessage("System", msg, true);
+  }
+
+  private void OnRejectClicked(int memberId)
+  {
+    SendRejectInvitePacket(memberId);
+    allowInvitePopUp.SetActive(false);
+  }
+
+  private void OnCheckPartyListClicked()
+  {
+    partyListPanel.SetActive(true);
+    noPartyPanel.SetActive(false);
+
+    SendCheckPartyListPacket();
   }
   #endregion
 
@@ -198,15 +234,6 @@ public class PartyUI : MonoBehaviour
     if (leaderIcon != null)
     {
       leaderIcon.gameObject.SetActive(isLeader);
-
-      // 버튼 추가
-      setLeaderButton = leaderIcon.gameObject.GetComponent<Button>();
-      if (setLeaderButton == null)
-        setLeaderButton = leaderIcon.gameObject.AddComponent<Button>();
-
-      // 클릭 이벤트 리스너 추가
-      // setLeaderButton.onClick.AddListener(OnImageClick);
-
     }
 
     // 내 카드일 경우 탈퇴 버튼 활성화
@@ -216,7 +243,7 @@ public class PartyUI : MonoBehaviour
       {
         leaveButton.gameObject.SetActive(true);
         leaveButton.onClick.RemoveAllListeners();
-        leaveButton.onClick.AddListener(() => OnLeavePartyClicked(nameText.text));
+        leaveButton.onClick.AddListener(() => OnLeavePartyClicked(nameText.text, playerId));
       }
       if (kickOutButton != null) kickOutButton.gameObject.SetActive(false);
     }
@@ -244,6 +271,46 @@ public class PartyUI : MonoBehaviour
   }
   #endregion
 
+  #region 파티 카드 생성
+  public void createPartyCard(S2CCheckPartyList pkt)
+  {
+    if (partyCardPrefab == null || partyListContainer == null)
+    {
+      Debug.LogError("PartyCard 프리팹 또는 Parent가 설정되지 않았습니다!");
+      return;
+    }
+
+    // 기존 파티 리스트 초기화
+    foreach (Transform child in partyListContainer)
+    {
+      Destroy(child.gameObject);
+    }
+
+    // 새 파티 리스트 생성
+    foreach (var partyInfo in pkt.PartyInfos)
+    {
+      string partyId = partyInfo.PartyId;
+      int leaderId = partyInfo.LeaderId;
+      int memberCount = partyInfo.MemberCount;
+      string nickname = GetPlayerByPlayerId(leaderId).nickname;
+
+      // 새로운 파티 카드 생성
+      GameObject newPartyCard = Instantiate(partyCardPrefab, partyListContainer);
+
+      // PartyCard 내의 UI 요소 가져오기
+      TMP_Text partyName = newPartyCard.transform.Find("PartyName").GetComponent<TMP_Text>();
+      TMP_Text memberCountText = newPartyCard.transform.Find("PartyName/MemberCount").GetComponent<TMP_Text>();
+      Button joinButton = newPartyCard.transform.Find("JoinBtn").GetComponent<Button>();
+
+      if (partyName != null) partyName.text = $"{nickname}님의 파티";
+      if (memberCountText != null) memberCountText.text = $"{memberCount}/5";
+
+      joinButton.onClick.RemoveAllListeners();
+      joinButton.onClick.AddListener(() => SendJoinPartyPacket(partyId, pkt.MemberId));
+    }
+  }
+  #endregion
+
   // 기존 멤버 삭제
   private void ClearPartyMembers()
   {
@@ -263,13 +330,6 @@ public class PartyUI : MonoBehaviour
 
     // UI 업데이트
     UpdateUI();
-  }
-
-  void UpdateScrollView()
-  {
-    // 스크롤을 맨 아래로 이동 (새로운 멤버가 추가될 때 자동 스크롤)
-    Canvas.ForceUpdateCanvases();
-    scrollRect.verticalNormalizedPosition = 0f;
   }
 
   #region 패킷 전송 함수
@@ -295,7 +355,7 @@ public class PartyUI : MonoBehaviour
 
   private void SendKickOutPartyPacket(string nickname)
   {
-    int memberId = GetPlayerIdByNickname(nickname).PlayerId;
+    int memberId = GetPlayerByNickname(nickname).PlayerId;
     var kickOutPartyPacket = new C2SKickOutMember { PartyId = Party.instance.partyId, MemberId = memberId };
     GameManager.Network.Send(kickOutPartyPacket);
   }
@@ -311,16 +371,30 @@ public class PartyUI : MonoBehaviour
     var disbandPartyPacket = new C2SDisbandParty { PartyId = Party.instance.partyId };
     GameManager.Network.Send(disbandPartyPacket);
   }
-  private void SendSetLeaderPacket(string nickname)
+  private void SendRejectInvitePacket(int memberId)
   {
-    int memberId = GetPlayerIdByNickname(nickname).PlayerId;
-    var setLeaderPacket = new C2SSetPartyLeader { PartyId = Party.instance.partyId, MemberId = memberId };
-    GameManager.Network.Send(setLeaderPacket);
+    var rejectInvitePacket = new C2SRejectInvite { MemberId = memberId };
+    GameManager.Network.Send(rejectInvitePacket);
+  }
+  private void SendCheckPartyListPacket()
+  {
+    var checkPartyListPacket = new C2SCheckPartyList { };
+    GameManager.Network.Send(checkPartyListPacket);
+  }
+
+  private void SendJoinPartyPacket(string partyId, int memberId)
+  {
+    var joinPartyPacket = new C2SJoinParty { PartyId = partyId, MemberId = memberId };
+    GameManager.Network.Send(joinPartyPacket);
   }
   #endregion
 
-  private Player GetPlayerIdByNickname(string nickname)
+  private Player GetPlayerByNickname(string nickname)
   {
     return FindObjectsOfType<Player>().FirstOrDefault(p => p.nickname == nickname);
+  }
+  private Player GetPlayerByPlayerId(int id)
+  {
+    return FindObjectsOfType<Player>().FirstOrDefault(p => p.PlayerId == id);
   }
 }
