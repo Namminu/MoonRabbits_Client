@@ -15,33 +15,25 @@ public class ItemSlotUI
 {
     [Header("Slot Position")]
     [Tooltip("인벤토리UI 안의 슬롯일 경우 True 세팅/분해UI 안의 슬롯일 경우 False 세팅")]
-    [SerializeField]
-    private bool isInven;
+    [SerializeField] private bool isInven;
 
     [Header("Item Info")]
-    [SerializeField]
-    private TMP_Text text_ItemAmount; //아이템 수량
+    [SerializeField] private TMP_Text text_ItemAmount; //아이템 수량
 
-    [SerializeField]
-    private Image itemImage; //아이템 이미지
+    [SerializeField] private Image itemImage; //아이템 이미지
 
-    [SerializeField]
-    [ReadOnly]
-    private int itemCount;
+    [SerializeField] [ReadOnly] private int itemCount;
+    [SerializeField][ReadOnly] private int itemIndex;
     private Item item; //획득 아이템 객체
 
     [Header("Slot Highlighter")]
-    [SerializeField]
-    private Image itemHighLighter;
+    [SerializeField] private Image itemHighLighter;
 
     [Header("Popup UI")]
-    [SerializeField]
-    private GameObject PopupUI;
+    [SerializeField] private GameObject PopupUI;
     private PopupUI popupUICs;
 
-    [SerializeField]
-    [ReadOnly]
-    private TooltipUI tooltipUI;
+    [SerializeField] [ReadOnly] private TooltipUI tooltipUI;
     private RectTransform rectTransform;
     private GameObject DecomUI;
     private ItemSlotUI originSlot;
@@ -63,12 +55,14 @@ public class ItemSlotUI
         // AddItem(DB에서 받아온 정보)?
     }
 
-    // 아이템 등록 시 이미지 객체의 투명도 조절을 위한 메서드
-    private void SetItemImageAlpha(float alpha)
+    public void ReturnToOriginSlot()
     {
-        Color newColor = itemImage.color;
-        newColor.a = alpha;
-        itemImage.color = newColor;
+        if (originSlot != null)
+        {
+			originSlot.AddItem(item, itemCount);
+			originSlot = null;
+			ClearSlot();
+		}
     }
 
     /// <summary>
@@ -84,20 +78,6 @@ public class ItemSlotUI
         text_ItemAmount.text = insertItemCount.ToString();
 
         SetItemImageAlpha(1);
-    }
-
-    /// <summary>
-    /// Destroy Item Method When EndDrag Over Inven UI
-    /// </summary>
-    private void OnDestroyItem()
-    {
-        if (selectedSlotToDestroy == this)
-        {
-            Debug.Log("Destory Item! " + item);
-            // ClearSlot();
-        }
-        EventManager.Unsubscribe("OnDestroyItem", OnDestroyItem);
-        selectedSlotToDestroy = null;
     }
 
     /// <summary>
@@ -118,7 +98,7 @@ public class ItemSlotUI
     /// <summary>
     /// Clear Item Slot Method
     /// </summary>
-    private void ClearSlot()
+    public void ClearSlot()
     {
         item = null;
         itemCount = 0;
@@ -126,31 +106,6 @@ public class ItemSlotUI
         SetItemImageAlpha(0);
 
         text_ItemAmount.text = string.Empty;
-    }
-
-    private void ChangeSlot()
-    {
-        Item tempItem = item;
-        int tempItemCount = itemCount;
-
-        AddItem(DragSlot.instance.dragSlot.item, DragSlot.instance.dragSlot.itemCount);
-
-        if (tempItem != null)
-        {
-            DragSlot.instance.dragSlot.AddItem(tempItem, tempItemCount);
-        }
-        else
-        {
-            DragSlot.instance.dragSlot.ClearSlot();
-        }
-        Debug.Log("Item Slot Change : " + this.name + DragSlot.instance.dragSlot.name);
-    }
-
-    private void UpdateTooltipUI()
-    {
-        //tooltipUI.SetItemDesc(item.GetItemData());
-        tooltipUI.SetTooltipUIPos(rectTransform);
-        tooltipUI.Show();
     }
 
     #region Mouse Event
@@ -205,8 +160,7 @@ public class ItemSlotUI
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (item == null)
-            return;
+        if (item == null) return;
 
         if (eventData.button == PointerEventData.InputButton.Right)
         {
@@ -222,8 +176,7 @@ public class ItemSlotUI
                     emptySlot.originSlot = this;
                     ClearSlot();
                 }
-                else
-                    return;
+                else return;
             }
             else if (!isInven) /* 분해창에서 우클릭 시 */
             {
@@ -239,7 +192,7 @@ public class ItemSlotUI
     }
     #endregion
 
-    #region Getter
+    #region Getter n Setter
     public Item GetItem()
     {
         return item;
@@ -249,14 +202,83 @@ public class ItemSlotUI
     {
         return item != null;
     }
-    #endregion
+    public int GetItemIndex()
+    {
+        return itemIndex;
+	}
+    public ItemSlotUI GetOriginSlot()
+    {
+        return originSlot;
+    }
 
-    #region Local Method
+    public ItemSlotUI SetOriginSlot(ItemSlotUI slot)
+    {
+        originSlot = slot;
+        return originSlot;
+    }
+    public int SetItemIndex(int index)
+    {
+        itemIndex = index;
+        return itemIndex;
+    }
+	#endregion
 
-    /// <summary>
-    /// Return True When eventData Out of Inventory UI Range
-    /// </summary>
-    private bool IsPointerInsideInventory(PointerEventData eventData)
+	#region Local Method
+
+	// 아이템 등록 시 이미지 객체의 투명도 조절을 위한 메서드
+	private void SetItemImageAlpha(float alpha)
+	{
+		Color newColor = itemImage.color;
+		newColor.a = alpha;
+		itemImage.color = newColor;
+	}
+
+	/// <summary>
+	/// Destroy Item Method When EndDrag Over Inven UI
+	/// </summary>
+	private void OnDestroyItem()
+	{
+		if (selectedSlotToDestroy == this)
+		{
+			Debug.Log("Destory Item! " + item);
+			// ClearSlot();
+		}
+		EventManager.Unsubscribe("OnDestroyItem", OnDestroyItem);
+		selectedSlotToDestroy = null;
+	}
+
+	private void ChangeSlot()
+	{
+		Item tempItem = item;
+		int tempItemCount = itemCount;
+        int tempItenIndex = itemIndex;
+
+		AddItem(DragSlot.instance.dragSlot.item, DragSlot.instance.dragSlot.itemCount);
+        SetItemIndex(DragSlot.instance.dragSlot.GetItemIndex());
+
+		if (tempItem != null)
+		{
+			DragSlot.instance.dragSlot.AddItem(tempItem, tempItemCount);
+			SetItemIndex(DragSlot.instance.dragSlot.SetItemIndex(tempItenIndex));
+		}
+		else
+		{
+			DragSlot.instance.dragSlot.ClearSlot();
+		}
+		Debug.Log($"Item Slot Change: {this.name} ({itemIndex}) ↔ {DragSlot.instance.dragSlot.name} ({DragSlot.instance.dragSlot.GetItemIndex()})");
+	}
+
+	private void UpdateTooltipUI()
+	{
+		//tooltipUI.SetItemDesc(item.GetItemData());
+		tooltipUI.SetTooltipUIPos(rectTransform);
+		tooltipUI.Show();
+	}
+
+	/// <summary>
+	/// Return True When eventData Out of Inventory UI Range
+	/// </summary>
+	private bool IsPointerInsideInventory(PointerEventData eventData)
     {
         RectTransform tr_InvenUI = null;
         GameObject Inventory = GameObject.Find("Inventory");

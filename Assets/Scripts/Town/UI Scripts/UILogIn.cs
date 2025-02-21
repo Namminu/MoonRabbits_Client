@@ -6,33 +6,24 @@ using UnityEngine.UI;
 
 public class UILogIn : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject UIStart;
+    [SerializeField] private GameObject UIStart;
     private UIStart uiStartCS;
 
-    [SerializeField]
-    private InputField userEmail;
+    [SerializeField] private InputField userEmail;
 
-    [SerializeField]
-    private InputField userPW;
+    [SerializeField] private InputField userPW;
 
-    [SerializeField]
-    private InputField userPWC;
+    [SerializeField] private InputField userPWC;
 
-    [SerializeField]
-    private Button btn_Back;
+    [SerializeField] private Button btn_Back;
 
-    [SerializeField]
-    private Button btn_Reigster;
+    [SerializeField] private Button btn_Reigster;
 
-    [SerializeField]
-    private Button btn_Confirm;
+    [SerializeField] private Button btn_Confirm;
 
-    [SerializeField]
-    private TMP_Text txt_Title;
+    [SerializeField] private TMP_Text txt_Title;
 
-    [SerializeField]
-    private TMP_Text txt_Error;
+    [SerializeField] private TMP_Text txt_Error;
     private GameObject txtErrorObj;
 
     private bool isLogin;
