@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Google.Protobuf.Protocol;
 using SRF.Helpers;
 using Unity.AI.Navigation;
@@ -41,6 +42,18 @@ public class MyPlayer : MonoBehaviour
     private GameObject trap;
 
     /* 상호작용 관련 변수 */
+    public GameObject axe;
+    public GameObject pickAxe;
+    public int currentEquip = (int)EquipState.none;
+
+    public enum EquipState
+    {
+        none = 0,
+        axe = 1,
+        pickAxe = 2,
+    }
+
+    private bool equipChangeInput;
     private bool interactInput;
     public bool InteractInput
     {
@@ -57,6 +70,8 @@ public class MyPlayer : MonoBehaviour
         throwPoint = transform.Find("ThrowPoint").transform;
         grenade = GetComponentInParent<Player>().grenade;
         trap = GetComponentInParent<Player>().trap;
+        axe = GetComponentInParent<Player>().axe;
+        pickAxe = GetComponentInParent<Player>().pickAxe;
 
         // 장애물 회피 설정 낮추기(서버와 경로를 최대한 비슷하게 만들기 위함)
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
@@ -79,6 +94,7 @@ public class MyPlayer : MonoBehaviour
     {
         HandleInput();
         Throw();
+        EquipChange();
         Interact();
         CheckMoveByFrame();
         // CheckMove();
@@ -127,6 +143,7 @@ public class MyPlayer : MonoBehaviour
         grenadeInput = Input.GetButtonDown("Grenade");
         trapInput = Input.GetButtonDown("Trap");
         interactInput = Input.GetButtonDown("Interact");
+        equipChangeInput = Input.GetButtonDown("EquipChange");
     }
 
     IEnumerator ExecuteEvery10Frames()
@@ -252,6 +269,12 @@ public class MyPlayer : MonoBehaviour
     private void ThrowEnd()
     {
         isThrow = false;
+    }
+
+    private void EquipChange()
+    {
+        if (equipChangeInput)
+            interactManager.eventR.Invoke();
     }
 
     private void Interact()

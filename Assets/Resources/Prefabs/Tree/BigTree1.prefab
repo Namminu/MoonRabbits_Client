@@ -235,6 +235,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   availableIcon: {fileID: 6548403739448251787}
   unavailableIcon: {fileID: 7710997920635246107}
+  resourceId: 1
   durability: 5
 --- !u!114 &5502277424317014290
 MonoBehaviour:

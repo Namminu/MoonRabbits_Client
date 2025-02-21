@@ -14,7 +14,8 @@ public class ResourceController : MonoBehaviour
     private bool isAvailable = true;
 
     private int idx;
-    private int resourceId;
+
+    public int resourceId; // 1이면 나무, 2면 바위 (도끼와 곡괭이 enum 및 index와 맞춰져있음다)
     private int startTime;
 
     [SerializeField]
