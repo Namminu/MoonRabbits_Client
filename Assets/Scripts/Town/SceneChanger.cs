@@ -1,55 +1,60 @@
-// using System.Collections;
-// using System.Collections.Generic;
-// using UnityEditor;
-// using UnityEngine;
-// using UnityEngine.SceneManagement;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
-// public interface IMouseHoverable
-// {
-// 	void OnMouseHoverEnter();
-// 	void OnMouseHoverExit();
-// 	void OnMouseClicked();
-// }
+public interface IMouseHoverable
+{
+    void OnMouseHoverEnter();
+    void OnMouseHoverExit();
+    void OnMouseClicked();
+}
 
-// public class SceneChanger : MonoBehaviour, IMouseHoverable
-// {
-// 	//[SerializeField] private SceneAsset nextScene;
-// 	[SerializeField] private string nextScene;
-// 	[SerializeField] private GameObject sceneChangeUIPrefab;
+public class SceneChanger : MonoBehaviour, IMouseHoverable
+{
+    //[SerializeField] private SceneAsset nextScene;
+    [SerializeField]
+    private string nextScene;
 
-// 	private GameObject currentUIInstance;
-// 	private Vector3 originScale;
+    [SerializeField]
+    private GameObject sceneChangeUIPrefab;
 
-// 	// Start is called before the first frame update
-// 	void Awake()
-// 	{
-// 		originScale = transform.localScale;
-// 	}
+    private GameObject currentUIInstance;
+    private Vector3 originScale;
 
-// private void OnChangeScene()
-// {
-// 	if (string.IsNullOrEmpty(nextScene)) return;
+    // Start is called before the first frame update
+    void Awake()
+    {
+        originScale = transform.localScale;
+    }
 
-// 	SceneManager.LoadScene(nextScene);
-// 	EventManager.Unsubscribe("OnChangeScene", OnChangeScene);
-// }
+    private void OnChangeScene()
+    {
+        if (string.IsNullOrEmpty(nextScene))
+            return;
 
-// 	#region Mouse Hover Interface
-// 	public void OnMouseClicked()
-// 	{
-// 		if (currentUIInstance != null) return;
-// 		EventManager.Subscribe("OnChangeScene", OnChangeScene);
-// 		currentUIInstance = Instantiate(sceneChangeUIPrefab);
-// 	}
+        SceneManager.LoadScene(nextScene);
+        EventManager.Unsubscribe("OnChangeScene", OnChangeScene);
+    }
 
-// 	public void OnMouseHoverEnter()
-// 	{
-// 		transform.localScale = originScale * 1.1f;
-// 	}
+    #region Mouse Hover Interface
+    public void OnMouseClicked()
+    {
+        if (currentUIInstance != null)
+            return;
+        EventManager.Subscribe("OnChangeScene", OnChangeScene);
+        currentUIInstance = Instantiate(sceneChangeUIPrefab);
+    }
 
-// 	public void OnMouseHoverExit()
-// 	{
-// 		transform.localScale = originScale;
-// 	}
-// 	#endregion
-// }
+    public void OnMouseHoverEnter()
+    {
+        transform.localScale = originScale * 1.1f;
+    }
+
+    public void OnMouseHoverExit()
+    {
+        transform.localScale = originScale;
+    }
+    #endregion
+}
