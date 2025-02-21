@@ -337,6 +337,12 @@ class PacketHandler
     {
         if (packet is not S2CMonsterLocation pkt)
             return;
+        var monsterId = pkt.MonsterId;
+        var monsterPosition = pkt.TransformInfo;
+
+        Vector3 position = new Vector3(monsterPosition.PosX, monsterPosition.PosY, monsterPosition.PosZ);
+        MonsterManager.Instance.SendPositionPacket(monsterId, position);
+
         Debug.Log($"S2CMonsterLocation 패킷 무사 도착 : {pkt}");
     }
 
