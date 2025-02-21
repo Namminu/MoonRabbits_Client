@@ -7,17 +7,6 @@ using UnityEngine.UI;
 
 public class UIPlayer : MonoBehaviour
 {
-    private int player_level;
-    private int player_exp;
-    private int player_targetExp;
-    private int player_stamina;
-    private int player_cur_stamina;
-    private int player_pickSpeed;
-    private int player_moveSpeed;
-    private int player_abilityPoint;
-    private int player_cur_hp;
-    private int player_hp;
-    private string player_nickname;
     private int APButtonsOffsetY = 60;
     private int APTextOffsetY = 130;
 
@@ -42,31 +31,26 @@ public class UIPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player_level = 1;
-        player_hp = 100;
-        player_cur_hp = player_hp;
-        player_exp = 0;
-        player_targetExp = 10;
-        player_stamina = 100;
-        player_cur_stamina = 100;
-        player_pickSpeed = 5;
-        player_moveSpeed = 10;
-        player_abilityPoint = 0;
-
         btnAddExp.onClick.AddListener(OnClickAddExp);
         btnStaminaUp.onClick.AddListener(OnClickStaminaUp);
         btnPickSpeedUp.onClick.AddListener(OnClickPickSpeedUp);
         btnMoveSpeedUp.onClick.AddListener(OnClickMoveSpeedUp);
+    }
+
+    public void SetStatInfo(StatInfo statInfo)
+    {
+        int player_hp = 5;
+        int player_cur_hp = 5;
         hpSlider.value = player_cur_hp / player_hp;
-        staminaSlider.value = player_cur_stamina / player_stamina;
-        expSlider.value = player_exp / player_targetExp;
+        staminaSlider.value = statInfo.Stamina / statInfo.Stamina;
+        expSlider.value = statInfo.Exp / statInfo.TargetExp;
         hpText.text = $"{player_cur_hp} / {player_hp}";
-        curStaminaText.text = $"{player_cur_stamina} / {player_stamina}";
-        levelText.text = $"Lv{player_level}";
-        staminaText.text = player_stamina.ToString();
-        pickSpeedText.text = player_pickSpeed.ToString();
-        moveSpeedText.text = player_moveSpeed.ToString();
-        APText.text = player_abilityPoint.ToString();
+        curStaminaText.text = $"{statInfo.CurStamina} / {statInfo.Stamina}";
+        levelText.text = $"Lv{statInfo.Level}";
+        staminaText.text = statInfo.Stamina.ToString();
+        pickSpeedText.text = statInfo.PickSpeed.ToString();
+        moveSpeedText.text = statInfo.MoveSpeed.ToString();
+        APText.text = statInfo.AbilityPoint.ToString();
     }
 
     // Update is called once per frame
@@ -83,36 +67,51 @@ public class UIPlayer : MonoBehaviour
         GameManager.Network.Send(addExpPacket);
     }
 
-    public void SetExp(int updatedExp)
+    public void SetExp(int updatedExp, int targetExp)
     {
-        int origin_exp = player_exp;
-        player_exp = updatedExp;
-        if (player_exp > player_targetExp)
-        {
-            Debug.Log("WTF! exp exceeded requirement for lv up");
-            return;
-        }
-        Debug.Log($"updatedExp : {updatedExp}");
-
-        float targetValue = (float)player_exp / player_targetExp;
+        float targetValue = (float)updatedExp / targetExp;
         StartCoroutine(SmoothChangeSliderValue(expSlider, expSlider.value, targetValue, 1f));
     }
 
-    public void InvestPoint(StatInfo statInfo)
-    {
-        player_abilityPoint = statInfo.AbilityPoint;
-        APText.text = player_abilityPoint.ToString();
-
-        if(statInfo.Stamina > player_stamina){
-            StaminaUp();
-        }
-        if(statInfo.PickSpeed > player_pickSpeed){
-            PickSpeedUp();
-        }
-        if(statInfo.MoveSpeed > player_moveSpeed){
-            MoveSpeedUp();
-        }
+    public void SetAbilityPoint(int ap){
+        APText.text = ap.ToString();
     }
+
+    public void SetStamina(int cur_stamina, int stamina)
+    {
+        //player_cur_stamina++;
+        staminaText.text = stamina.ToString();
+        curStaminaText.text = $"{cur_stamina} / {stamina}";
+        staminaSlider.value = (float)cur_stamina / stamina;
+    }
+
+    public void SetPickSpeed(int pickSpeed)
+    {
+        pickSpeedText.text = pickSpeed.ToString();
+    }
+
+    public void SetMoveSpeed(int moveSpeed)
+    {
+        moveSpeedText.text = moveSpeed.ToString();
+    }
+
+    public void SetNickname(string nickname)
+    {
+        nicknameText.text = $"{nickname}";
+    }
+
+    public void LevelUp(int newLevel, int newTargetExp, int updatedExp, int abilityPoint)
+    {
+        StartCoroutine(LevelUpSequence(newLevel, newTargetExp, updatedExp, abilityPoint));
+    }
+    public void DeActiveAP()
+    {
+        Vector3 goalPos_APButtons = APButtons.transform.position + new Vector3(0, APButtonsOffsetY, 0);
+        Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(-APTextOffsetY, 0, 0);
+        StartCoroutine(SmoothChangeObjectPosition(APButtons, APButtons.transform.position, goalPos_APButtons, 1));
+        StartCoroutine(SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1));
+    }
+
     void OnClickStaminaUp()
     {
         var pkt = new C2SInvestPoint
@@ -122,16 +121,7 @@ public class UIPlayer : MonoBehaviour
         GameManager.Network.Send(pkt);
     }
 
-    void StaminaUp()
-    {
-        player_stamina++;
-        //player_cur_stamina++;
-        staminaText.text = player_stamina.ToString();
-        curStaminaText.text = $"{player_cur_stamina} / {player_stamina}";
-        staminaSlider.value = (float)player_cur_stamina / player_stamina;
-        if (player_abilityPoint <= 0) DeActiveAP();
-    }
-    void OnClickPickSpeedUp()
+    public void OnClickPickSpeedUp()
     {
         var pkt = new C2SInvestPoint
         {
@@ -140,12 +130,6 @@ public class UIPlayer : MonoBehaviour
         GameManager.Network.Send(pkt);
     }
 
-    void PickSpeedUp()
-    {
-        player_pickSpeed++;
-        pickSpeedText.text = player_pickSpeed.ToString();
-        if (player_abilityPoint <= 0) DeActiveAP();
-    }
     void OnClickMoveSpeedUp()
     {
         var pkt = new C2SInvestPoint
@@ -155,57 +139,31 @@ public class UIPlayer : MonoBehaviour
         GameManager.Network.Send(pkt);
     }
 
-    void MoveSpeedUp()
-    {
-        player_moveSpeed++;
-        moveSpeedText.text = player_moveSpeed.ToString();
-        if (player_abilityPoint <= 0) DeActiveAP();
-    }
 
-    void DeActiveAP()
-    {
-        Vector3 goalPos_APButtons = APButtons.transform.position + new Vector3(0, APButtonsOffsetY, 0);
-        Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(-APTextOffsetY, 0, 0);
-        StartCoroutine(SmoothChangeObjectPosition(APButtons, APButtons.transform.position, goalPos_APButtons, 1));
-        StartCoroutine(SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1));
-    }
-
-    public void LevelUp(int newLevel, int newTargetExp, int updatedExp, int abilityPoint)
-    {
-        StartCoroutine(LevelUpSequence(newLevel, newTargetExp, updatedExp, abilityPoint));
-    }
 
     private IEnumerator LevelUpSequence(int newLevel, int newTargetExp, int updatedExp, int abilityPoint)
     {
+        Debug.Log("레벨업 코루틴");
         // 경험치바 끝까지 증가
         yield return StartCoroutine(SmoothChangeSliderValue(expSlider, expSlider.value, 1f, 1f));
 
         // 레벨 증가, 요구 경험치 증가
-        player_level = newLevel;
-        levelText.text = $"Lv{player_level}";
-        player_targetExp = newTargetExp;
+        levelText.text = $"Lv{newLevel}";
 
         // 기존에 올릴 수 있는 포인트가 0이면 ui 추가, 포인트가 남아있으면 ui 유지
-        if (player_abilityPoint == 0)
+        if (abilityPoint == 0)
         {
+            Debug.Log("+버튼 코루틴");
             Vector3 goalPos_APButtons = APButtons.transform.position + new Vector3(0, -APButtonsOffsetY, 0);
             Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(APTextOffsetY, 0, 0);
             StartCoroutine(SmoothChangeObjectPosition(APButtons, APButtons.transform.position, goalPos_APButtons, 1f));
             StartCoroutine(SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1f));
         }
-        player_abilityPoint += abilityPoint;
-        APText.text = player_abilityPoint.ToString();
+        APText.text = abilityPoint.ToString();
 
         // 경험치바 변경된 경험치까지 증가
-        player_exp = updatedExp;
-        float targetValue = (float)player_exp / player_targetExp;
+        float targetValue = (float)updatedExp / newTargetExp;
         StartCoroutine(SmoothChangeSliderValue(expSlider, 0f, targetValue, 1f));
-    }
-
-    public void SetNickname(string nickname)
-    {
-        player_nickname = nickname;
-        nicknameText.text = $"{player_nickname}";
     }
 
     private IEnumerator SmoothChangeObjectPosition(GameObject gameObject, Vector3 startPos, Vector3 targetPos, float duration)

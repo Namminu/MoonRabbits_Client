@@ -122,7 +122,8 @@ public class TownManager : MonoBehaviour
 
         MyPlayer = CreatePlayer(playerInfo, spawnPos);
         MyPlayer.SetIsMine(true);
-        uiPlayer.SetNickname(playerInfo.Nickname);
+        MyPlayer.SetNickname(playerInfo.Nickname);
+        MyPlayer.SetStatInfo(playerInfo.StatInfo);
 
         ActivateGameUI();
     }
@@ -194,7 +195,7 @@ public class TownManager : MonoBehaviour
     {
         uiStart.gameObject.SetActive(false);
         uiChat.gameObject.SetActive(true);
-        uiAnimation.gameObject.SetActive(true);
+        //uiAnimation.gameObject.SetActive(true);
         uiPlayer.gameObject.SetActive(true);
     }
 

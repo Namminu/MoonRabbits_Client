@@ -438,7 +438,7 @@ class PacketHandler
             return;
         Debug.Log($"S2CAddExp 패킷 무사 도착 : {pkt}");
 
-        TownManager.Instance.UiPlayer.SetExp(pkt.UpdatedExp);
+        TownManager.Instance.MyPlayer.SetExp(pkt.UpdatedExp);
     }
 
     public static void S2CLevelUpHandler(PacketSession session, IMessage packet)
@@ -447,7 +447,7 @@ class PacketHandler
             return;
         Debug.Log($"S2CLevelUp 패킷 무사 도착 : {pkt}");
 
-        TownManager.Instance.UiPlayer.LevelUp(pkt.UpdatedLevel, pkt.NewTargetExp, pkt.UpdatedExp, pkt.AbilityPoint);
+        TownManager.Instance.MyPlayer.LevelUp(pkt.UpdatedLevel, pkt.NewTargetExp, pkt.UpdatedExp, pkt.AbilityPoint);
     }
 
     public static void S2CInvestPointHandler(PacketSession session, IMessage packet)
@@ -456,7 +456,7 @@ class PacketHandler
             return;
         Debug.Log($"S2CInvestPoint 패킷 무사 도착 : {pkt}");
 
-        TownManager.Instance.UiPlayer.InvestPoint(pkt.StatInfo);
+        TownManager.Instance.MyPlayer.InvestPoint(pkt.StatInfo);
     }
     #endregion
 }

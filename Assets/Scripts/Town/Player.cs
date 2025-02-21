@@ -36,6 +36,17 @@ public class Player : MonoBehaviour
     public GameObject grenade;
     public GameObject trap;
 
+    // PlayerInfo
+    private int exp;
+    private int targetExp;
+    private int stamina;
+    private int cur_stamina;
+    private int pickSpeed;
+    private int moveSpeed;
+    private int abilityPoint;
+    private int cur_hp;
+    private int hp;
+
     private void Start()
     {
         Avatar = GetComponent<Avatar>();
@@ -51,6 +62,7 @@ public class Player : MonoBehaviour
     {
         this.nickname = nickname;
         uiNameChat.SetName(nickname);
+        TownManager.Instance.UiPlayer.SetNickname(nickname);
     }
 
     public void SetLevel(int level)
@@ -158,5 +170,81 @@ public class Player : MonoBehaviour
         float dist = Vector3.Distance(lastPos, transform.position);
         animator.SetFloat(Constants.TownPlayerMove, dist * 100);
         lastPos = transform.position;
+    }
+
+    public void SetStatInfo(StatInfo statInfo)
+    {
+        level = statInfo.Level;
+        exp = statInfo.Exp;
+        targetExp = statInfo.TargetExp;
+        cur_stamina = statInfo.CurStamina;
+        stamina = statInfo.Stamina;
+        pickSpeed = statInfo.PickSpeed;
+        moveSpeed = statInfo.MoveSpeed;
+        abilityPoint = statInfo.AbilityPoint;
+
+        TownManager.Instance.UiPlayer.SetStatInfo(statInfo);
+    }
+
+    public void SetExp(int updatedExp)
+    {
+        Debug.Log("경험치 응답 실행");
+        exp = updatedExp;
+        if (exp > targetExp)
+        {
+            Debug.Log($"WTF! exp too much {exp}, {targetExp}");
+            return;
+        }
+        Debug.Log($"updatedExp : {updatedExp}");
+
+        TownManager.Instance.UiPlayer.SetExp(updatedExp, targetExp);
+    }
+
+    public void InvestPoint(StatInfo statInfo)
+    {
+        Debug.Log("능력치 투자자 응답 실행");
+        abilityPoint = statInfo.AbilityPoint;
+        TownManager.Instance.UiPlayer.SetAbilityPoint(abilityPoint);
+        
+        if(statInfo.Stamina > stamina){
+            StaminaUp();
+        }
+        if(statInfo.PickSpeed > pickSpeed){
+            PickSpeedUp();
+        }
+        if(statInfo.MoveSpeed > moveSpeed){
+            MoveSpeedUp();
+        }
+
+        if(abilityPoint <= 0) TownManager.Instance.UiPlayer.DeActiveAP();
+    }
+
+    private void StaminaUp()
+    {
+        stamina++;
+        TownManager.Instance.UiPlayer.SetStamina(cur_stamina, stamina);
+    }
+
+    private void PickSpeedUp()
+    {
+        pickSpeed++;
+        TownManager.Instance.UiPlayer.SetPickSpeed(pickSpeed);
+    }
+
+    private void MoveSpeedUp()
+    {
+        moveSpeed++;
+        TownManager.Instance.UiPlayer.SetMoveSpeed(moveSpeed);
+    }
+
+    public void LevelUp(int updatedLevel, int newTargetExp, int updatedExp, int updatedAbilityPoint)
+    {
+        Debug.Log("레벨업 응답 실행");
+        level = updatedLevel;
+        abilityPoint = updatedAbilityPoint;
+        targetExp = newTargetExp;
+        exp = updatedExp;
+
+        TownManager.Instance.UiPlayer.LevelUp(updatedLevel, newTargetExp, updatedExp, abilityPoint);
     }
 }
