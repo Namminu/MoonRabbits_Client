@@ -284,6 +284,7 @@ class PacketHandler
         if (packet is not S2CJoinParty pkt)
             return;
         Debug.Log($"S2CJoinParty 패킷 무사 도착 : {pkt}");
+        Party.instance.JoinPartyData(pkt);
     }
 
     public static void S2CLeavePartyHandler(PacketSession session, IMessage packet)
