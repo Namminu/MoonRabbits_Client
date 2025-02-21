@@ -34,6 +34,9 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        SoundManager.Instance.Play(19, Define.Sound.Bgm);
+
     }
 
     private void Update()
