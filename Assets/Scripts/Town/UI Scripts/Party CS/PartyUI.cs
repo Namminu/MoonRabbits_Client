@@ -133,7 +133,7 @@ public class PartyUI : MonoBehaviour
     }
     else
     {
-      TownManager.Instance.UiChat.PushMessage("System", "초대를 보낼 수 없는 대상입니다.", true);
+      TownManager.Instance.UiChat.PushMessage("System", "초대를 보낼 수 없는 대상입니다.", "System", true);
     }
   }
 
@@ -190,7 +190,7 @@ public class PartyUI : MonoBehaviour
   public void KickedOut(string msg)
   {
     Party.instance.RemoveAllMembers();
-    TownManager.Instance.UiChat.PushMessage("System", msg, true);
+    TownManager.Instance.UiChat.PushMessage("System", msg, "System", true);
   }
 
   private void OnRejectClicked(int memberId)
