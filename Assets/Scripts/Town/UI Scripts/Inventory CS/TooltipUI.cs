@@ -53,53 +53,57 @@ public class TooltipUI : MonoBehaviour
 		txt_ItemDesc.text = item.Description;
 	}
 
-	//public RectTransform SetTooltipUIPos(RectTransform slotRect)
-	//{
-	//	/* 캔버스 스케일러에 따른 해상도 대응 */
-	//	float wRatio = Screen.width / canvasScaler.referenceResolution.x;
-	//	float hRatio = Screen.height / canvasScaler.referenceResolution.y;
-	//	float ratio =
-	//		wRatio * (1f - canvasScaler.matchWidthOrHeight) +
-	//		hRatio * (canvasScaler.matchWidthOrHeight);
-
-	//	float slotWidth = slotRect.rect.width / ratio;
-	//	float slotHeight = slotRect.rect.height / ratio;
-
-	//	/* 툴팁 초기 위치 설정 : 슬롯 우하단 */
-	//	rt.position = slotRect.position + new Vector3(slotWidth, -slotHeight);
-	//	Vector2 pos = rt.position;
-
-	//	/* 툴팁 크기 */
-	//	float width = rt.rect.width * ratio;
-	//	float height = rt.rect.height * ratio;
-
-	//	/* 툴팁(우측, 하단)이 화면 밖으로 나가는지 여부 */
-	//	bool rightSideOutRange = pos.x + width > Screen.width;
-	//	bool bottomSideOutRange = pos.y - height < 0;
-	//	ref bool R = ref rightSideOutRange;
-	//	ref bool B = ref bottomSideOutRange;
-
-	//	if (R && !B) // 오른쪽 나가는 경우 -> 슬롯의 Left Bottom
-	//	{
-	//		rt.position = new Vector2(pos.x - width - slotWidth, pos.y);
-	//	}
-	//	else if (!R && B) // 아래쪽 나가는 경우 -> 슬롯의 Right Top
-	//	{
-	//		rt.position = new Vector2(pos.x, pos.y + height + slotHeight);
-	//	}
-	//	else if (R && B) //오른쪽, 아래쪽 나가는 경우 -> 슬롯의 Left Top
-	//	{
-	//		rt.position = new Vector2(pos.x - width - slotWidth, pos.y + height + slotHeight);
-	//	}
-
-	//	return rt;
-	//}
-
 	public RectTransform SetTooltipUIPos(RectTransform slotRect)
 	{
+		Vector3 newPos = GetSelectedConer(slotRect, 3);
+		rt.position = newPos;
+		Vector2 pos = rt.position;
+
+		float wRatio = Screen.width / canvasScaler.referenceResolution.x;
+		float hRatio = Screen.height / canvasScaler.referenceResolution.y;
+		float ratio =
+			wRatio * (1f - canvasScaler.matchWidthOrHeight) +
+			hRatio * (canvasScaler.matchWidthOrHeight);
+
+		/* 툴팁 창의 width, height */
+		float width = rt.rect.width;
+		float height = rt.rect.height;
+		/* 툴팁(우측, 하단)이 화면 밖으로 나가는지 여부 */
+		bool rightSideOutRange = pos.x + width > Screen.width;
+		bool bottomSideOutRange = pos.y - height < 0;
+		ref bool R = ref rightSideOutRange;
+		ref bool B = ref bottomSideOutRange;
+
+		if (R && !B) // 오른쪽 나가는 경우 -> 슬롯의 Left Bottom
+		{
+			Vector3 slotsLeftBottom = GetSelectedConer(slotRect, 0);
+			rt.position = new Vector2(slotsLeftBottom.x - width + slotRect.rect.width, slotsLeftBottom.y);
+		}
+		else if (!R && B) // 아래쪽 나가는 경우 -> 슬롯의 Right Top
+		{
+			Vector3 slotsRightTop = GetSelectedConer(slotRect, 2);
+			rt.position = new Vector2(slotsRightTop.x, slotsRightTop.y + height - slotRect.rect.height);
+		}
+		else if (R && B) //오른쪽, 아래쪽 나가는 경우 -> 슬롯의 Left Top
+		{
+			Vector3 slotsLeftTop = GetSelectedConer(slotRect, 1);
+			rt.position = new Vector2(slotsLeftTop.x - width + slotRect.rect.width, slotsLeftTop.y + height - slotRect.rect.height);
+		}
+
 		return rt;
 	}
 
-	public void Show() {  gameObject.SetActive(true); Debug.Log("툴팁 띄웁니다"); }
-	public void Hide() { gameObject.SetActive(false); Debug.Log("툴팁 지워요"); }
+	/// <summary>
+	/// RectTransform For Object's Corner Position
+	/// param corner : [0] = left bottom, [1] = left top, [2] = right top, [3] = right bottom
+	/// </summary>
+	private Vector3 GetSelectedConer(RectTransform rectTr, int corner)
+	{
+		Vector3[] worldCorners = new Vector3[4];
+		rectTr.GetWorldCorners(worldCorners);
+		return worldCorners[corner];
+	}
+
+	public void Show() { gameObject.SetActive(true); }
+	public void Hide() { gameObject.SetActive(false); }
 }
