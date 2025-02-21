@@ -73,12 +73,14 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CJoinParty, PacketHandler.S2CJoinPartyHandler);
         _onRecv.Add((ushort)MsgId.S2CLeaveParty, MakePacket<S2CLeaveParty>);
         _handler.Add((ushort)MsgId.S2CLeaveParty, PacketHandler.S2CLeavePartyHandler);
-        _onRecv.Add((ushort)MsgId.S2CSetPartyLeader, MakePacket<S2CSetPartyLeader>);
-        _handler.Add((ushort)MsgId.S2CSetPartyLeader, PacketHandler.S2CSetPartyLeaderHandler);
+        _onRecv.Add((ushort)MsgId.S2CCheckPartyList, MakePacket<S2CCheckPartyList>);
+        _handler.Add((ushort)MsgId.S2CCheckPartyList, PacketHandler.S2CCheckPartyListHandler);
         _onRecv.Add((ushort)MsgId.S2CKickOutMember, MakePacket<S2CKickOutMember>);
         _handler.Add((ushort)MsgId.S2CKickOutMember, PacketHandler.S2CKickOutMemberHandler);
         _onRecv.Add((ushort)MsgId.S2CDisbandParty, MakePacket<S2CDisbandParty>);
         _handler.Add((ushort)MsgId.S2CDisbandParty, PacketHandler.S2CDisbandPartyHandler);
+        _onRecv.Add((ushort)MsgId.C2SRejectInvite, MakePacket<C2SRejectInvite>);
+        _handler.Add((ushort)MsgId.S2CRejectInvite, PacketHandler.S2CRejectInviteHandler);
         _onRecv.Add((ushort)MsgId.S2CMonsterLocation, MakePacket<S2CMonsterLocation>);
         _handler.Add((ushort)MsgId.S2CMonsterLocation, PacketHandler.S2CMonsterLocationHandler);
         _onRecv.Add((ushort)MsgId.S2CDetectedPlayer, MakePacket<S2CDetectedPlayer>);

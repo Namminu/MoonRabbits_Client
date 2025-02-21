@@ -294,11 +294,18 @@ class PacketHandler
         Party.instance.LeavePartyData(pkt);
     }
 
-    public static void S2CSetPartyLeaderHandler(PacketSession session, IMessage packet)
+    public static void S2CCheckPartyListHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CSetPartyLeader pkt)
+        Debug.Log($"!!!! 패킷 !! : {packet}");
+        if (packet is not S2CCheckPartyList pkt)
+        {
+            Debug.Log("S2CCheckPartyList 패킷의 상태가 이상하다.");
+
             return;
-        Debug.Log($"S2CSetPartyLeader 패킷 무사 도착 : {pkt}");
+        }
+
+        Debug.Log($"S2CCheckPartyList 패킷 무사 도착 : {pkt}");
+        PartyUI.instance.createPartyCard(pkt);
     }
 
     public static void S2CKickOutMemberHandler(PacketSession session, IMessage packet)
@@ -315,6 +322,12 @@ class PacketHandler
             return;
         Debug.Log($"S2CDisbandParty 패킷 무사 도착 : {pkt}");
         PartyUI.instance.KickedOut(pkt.Msg);
+    }
+    public static void S2CRejectInviteHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CRejectInvite pkt)
+            return;
+        Debug.Log($"S2CRejectInvite 패킷 무사 도착 : {pkt}");
     }
     #endregion
 
