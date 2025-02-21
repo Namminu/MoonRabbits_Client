@@ -3307,7 +3307,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5346722646566213105}
   - component: {fileID: 1480037139995993836}
-  - component: {fileID: 8849204125208406879}
+  - component: {fileID: 375925945858952889}
   m_Layer: 12
   m_Name: InteractArea
   m_TagString: Untagged
@@ -3353,7 +3353,7 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0.5, z: 0}
---- !u!114 &8849204125208406879
+--- !u!114 &375925945858952889
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3362,7 +3362,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3815579902496536762}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 869f7d7420d9f4c459aed2443c1846ef, type: 3}
+  m_Script: {fileID: 11500000, guid: 9dd06de61a65b6146b4667d8231f08c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
