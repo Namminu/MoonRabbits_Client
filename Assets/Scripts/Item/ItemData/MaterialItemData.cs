@@ -5,7 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Item", menuName = "Item/Material Item")]
 public class MaterialItemData : ItemData
 {
-	[SerializeField] private Sprite itemIcon;
+	[Header("Material Item Attributes")]
+	[SerializeField] private int itemMaxStack;
 
-	public Sprite ItemIcon => itemIcon;
+	#region Public Members
+	public int ItemMaxStack => itemMaxStack;
+	#endregion
 }

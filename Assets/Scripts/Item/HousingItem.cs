@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class HousingItem : Item
 {
-	public HousingItemData HsItemData { get; private set; }
+	public HousingItemData HsItemData;
 
-	public HousingItem(HousingItemData data, int amount = 1) : base(data)
+	public HousingItem(HousingItemData data) : base(data)
 	{
 		HsItemData = data;
 	}
