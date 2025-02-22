@@ -123,7 +123,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void SendChatMessage(string msg)
+    public void SendChatMessage(string msg, string chatType)
     {
         if (!IsMine)
             return;
@@ -133,15 +133,16 @@ public class Player : MonoBehaviour
             PlayerId = PlayerId,
             SenderName = nickname,
             ChatMsg = msg,
+            ChatType = chatType
         };
 
         GameManager.Network.Send(chatPacket);
     }
 
-    public void RecvMessage(string msg)
+    public void RecvMessage(string msg, string chatType)
     {
         uiNameChat.PushText(msg);
-        uiChat.PushMessage(nickname, msg, IsMine);
+        uiChat.PushMessage(nickname, msg, chatType, IsMine);
     }
 
     public void Move(Vector3 move, Quaternion rot)

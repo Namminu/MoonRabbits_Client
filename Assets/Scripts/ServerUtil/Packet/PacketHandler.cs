@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Google.Protobuf;
@@ -88,11 +88,11 @@ class PacketHandler
         if (pkt.PlayerId > 0)
         {
             var player = TownManager.Instance.GetPlayerAvatarById(pkt.PlayerId);
-            player?.RecvMessage(pkt.ChatMsg);
+            player?.RecvMessage(pkt.ChatMsg, pkt.ChatType);
         }
         else
         {
-            TownManager.Instance.UiChat.PushMessage("System", pkt.ChatMsg, true);
+            TownManager.Instance.UiChat.PushMessage("System", pkt.ChatMsg, pkt.ChatType, true);
         }
     }
 
