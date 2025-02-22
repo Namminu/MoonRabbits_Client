@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Google.Protobuf.Protocol;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -132,7 +133,7 @@ public class PartyUI : MonoBehaviour
     }
     else
     {
-      TownManager.Instance.UiChat.PushMessage("System", "초대를 보낼 수 없는 대상입니다.", true);
+      TownManager.Instance.UiChat.PushMessage("System", "초대를 보낼 수 없는 대상입니다.", "System", true);
     }
   }
 
@@ -189,7 +190,7 @@ public class PartyUI : MonoBehaviour
   public void KickedOut(string msg)
   {
     Party.instance.RemoveAllMembers();
-    TownManager.Instance.UiChat.PushMessage("System", msg, true);
+    TownManager.Instance.UiChat.PushMessage("System", msg, "System", true);
   }
 
   private void OnRejectClicked(int memberId)
@@ -202,9 +203,22 @@ public class PartyUI : MonoBehaviour
   {
     partyListPanel.SetActive(true);
     noPartyPanel.SetActive(false);
+    inPartyPanel.SetActive(false);
+
+    Button backButton = partyListPanel.transform.Find("BackBtn").GetComponent<Button>();
+    backButton.onClick.RemoveAllListeners();
+    backButton.onClick.AddListener(OnBackClicked);
 
     SendCheckPartyListPacket();
   }
+
+  private void OnBackClicked()
+  {
+    noPartyPanel.SetActive(true);
+    partyListPanel.SetActive(false);
+    inPartyPanel.SetActive(false);
+  }
+
   #endregion
 
   #region 멤버 카드 생성
