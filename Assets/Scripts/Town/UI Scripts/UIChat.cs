@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -36,9 +37,18 @@ public class UIChat : MonoBehaviour
     private float baseChatItemWidth;
     private Player player;
     private bool isOpen = true;
+    public TMP_Dropdown chatType;
 
     void Start()
     {
+        if (chatType == null)
+        {
+            Debug.LogError("Dropdown(chatType)이 null입니다. 인스펙터에서 할당되었는지 확인하세요.");
+            return;
+        }
+
+        inputChat.text = "";
+
         baseChatItemWidth = txtChatItemBase.rectTransform.sizeDelta.x;
         player = TownManager.Instance.MyPlayer;
 
@@ -54,7 +64,30 @@ public class UIChat : MonoBehaviour
                 }
             }
         );
+
+        chatType.value = 0;
+        chatType.RefreshShownValue();
+
+        // 이벤트 리스너 추가
+        chatType.onValueChanged.AddListener(OnDropdownValueChanged);
     }
+
+    void OnDropdownValueChanged(int selectedIndex)
+    {
+        string selectedText = chatType.options[selectedIndex].text;
+        Debug.Log("선택된 옵션: " + selectedText);
+
+        // 선택된 채팅 타입에 따라 UI 변경
+        if (selectedText == "전체")
+        {
+            inputChat.placeholder.GetComponent<TMP_Text>().text = "전체 채팅 입력";
+        }
+        else if (selectedText == "파티")
+        {
+            inputChat.placeholder.GetComponent<TMP_Text>().text = "파티 채팅 입력";
+        }
+    }
+
 
     void Update()
     {
@@ -93,7 +126,16 @@ public class UIChat : MonoBehaviour
         if (string.IsNullOrWhiteSpace(inputChat.text))
             return;
 
-        player.SendChatMessage(inputChat.text);
+        if (chatType == null || chatType.options.Count == 0)
+        {
+            Debug.LogError("Dropdown(chatType)이 null이거나 옵션이 없습니다.");
+            return;
+        }
+
+        int selectedIndex = chatType.value;
+        string selectedText = chatType.options[selectedIndex].text;
+
+        player.SendChatMessage(inputChat.text, selectedText);
 
         inputChat.text = string.Empty;
         ActivateInputFieldProperly();
@@ -106,7 +148,7 @@ public class UIChat : MonoBehaviour
         ResetIME();
     }
 
-    public void PushMessage(string nickName, string msg, bool myChat)
+    public void PushMessage(string nickName, string msg, string chatType, bool myChat)
     {
         if (!isOpen)
         {
@@ -117,8 +159,23 @@ public class UIChat : MonoBehaviour
         StopAllCoroutines();
 
         var msgItem = Instantiate(txtChatItemBase, chatItemRoot);
-        msgItem.color = myChat ? Color.green : Color.white;
-        msgItem.text = $"[{nickName}] {msg}";
+        // msgItem.color = myChat ? Color.green : Color.white;
+        // msgItem.text = $"[{nickName}] {msg}";
+        if (chatType == "System")
+        {
+            msgItem.color = Color.white;
+            msgItem.text = $"[System] {msg}";
+        }
+        else if (chatType == "전체")
+        {
+            msgItem.color = Color.green;
+            msgItem.text = $"[전체] {nickName} : {msg}";
+        }
+        else if (chatType == "파티")
+        {
+            msgItem.color = Color.cyan;
+            msgItem.text = $"[파티] {nickName} : {msg}";
+        }
         msgItem.gameObject.SetActive(true);
 
         StartCoroutine(AdjustTextSize(msgItem));
