@@ -6,22 +6,19 @@ using UnityEngine;
 
 public class InventoryUI : MonoBehaviour
 {
-    [SerializeField]
-    private Transform contentArea;
+    [SerializeField] private Transform contentArea;
 
-    [SerializeField]
-    private TMP_Text goldText;
+    [SerializeField] private TMP_Text goldText;
     private int goldAmount;
 
-    [SerializeField]
-    [ReadOnly]
-    private List<ItemSlotUI> itemSlots;
+    [SerializeField] [ReadOnly] private List<ItemSlotUI> itemSlots;
 
     private void Awake()
     {
         if (contentArea != null)
             itemSlots = new List<ItemSlotUI>(contentArea.GetComponentsInChildren<ItemSlotUI>());
-    }
+        AssignSlotIndex();
+	}
 
     private class ItemSortComparer : IComparer<Item>
     {
@@ -35,6 +32,14 @@ public class InventoryUI : MonoBehaviour
     }
 
     private static readonly ItemSortComparer _sortComparer = new();
+
+    private void AssignSlotIndex()
+    {
+        for(int i = 0; i<itemSlots.Count; i++)
+        {
+            itemSlots[i].SetItemIndex(i);
+        }
+    }
 
     private int UpdateGold(int newGoldAmount)
     {
@@ -92,7 +97,8 @@ public class InventoryUI : MonoBehaviour
             foreach (var slot in emptySlots)
                 slot.transform.SetSiblingIndex(index++);
 
-            return 0;
+            AssignSlotIndex();
+			return 0;
         }
         catch (Exception ex)
         {
@@ -100,4 +106,16 @@ public class InventoryUI : MonoBehaviour
             return -1;
         }
     }
+
+	#region
+    public ItemSlotUI GetItemSlotByIndex(int index)
+    {
+        if(index < 0 || index > itemSlots.Count)
+        {
+            Debug.Log("Index Out of Range : ItemSlots" + index);
+            return null;
+        }
+        return itemSlots[index];
+    }
+	#endregion
 }
