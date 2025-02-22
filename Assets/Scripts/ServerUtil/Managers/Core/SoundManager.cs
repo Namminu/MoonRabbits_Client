@@ -141,6 +141,7 @@ public class SoundManager
             "Sounds/Effect/32",  // 장비변경 소리
             "Sounds/Effect/33",  // 곡갱이 광석 소리
             "Sounds/Effect/34",  // 곡갱이 돌 소리
+            "Sounds/Effect/35",  // 말벌 Loop 소리
         };
     }
 
