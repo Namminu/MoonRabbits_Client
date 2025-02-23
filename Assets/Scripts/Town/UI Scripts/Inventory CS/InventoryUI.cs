@@ -15,9 +15,16 @@ public class InventoryUI : MonoBehaviour
 
     private void Awake()
     {
+        /* contentArea 내의 인벤토리 슬롯들을 List : itemSlots 에 할당 */
         if (contentArea != null)
             itemSlots = new List<ItemSlotUI>(contentArea.GetComponentsInChildren<ItemSlotUI>());
-        AssignSlotIndex();
+		
+        /* 슬롯들에 인덱스 넘버 부여 과정 */
+		AssignSlotIndex();
+
+        // DB에서 인벤토리 정보 받아오는 과정..?
+		// AddItem(DB에서 받아온 정보)?
+
 	}
 
     private class ItemSortComparer : IComparer<Item>

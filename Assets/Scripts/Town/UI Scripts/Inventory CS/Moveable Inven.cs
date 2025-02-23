@@ -55,8 +55,8 @@ public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
 
     void CloseInvenUI()
     {
-        if (InvenUI != null)
-            InvenUI.SetActive(false);
+        if (InvenUI != null) InvenUI.SetActive(false);
+        if (DecomUI!= null) DecomUI.SetActive(false);
     }
 
     private void SortButton()

@@ -35,6 +35,10 @@ public class DecomUI : MonoBehaviour
 	private void OnDecomItem()
 	{
 		Debug.Log("Decom UI : Item Decom Start");
+		foreach(var slot in itemSlots)
+		{
+			slot.ClearSlot();
+		}
 		/* 아이템 분해 로직 */
 	}
 
