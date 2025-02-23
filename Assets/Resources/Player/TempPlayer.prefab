@@ -1696,6 +1696,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5007943007322661199}
+  - component: {fileID: 7790859212413640570}
   m_Layer: 10
   m_Name: ThrowPoint
   m_TagString: Untagged
@@ -1718,6 +1719,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8467434873633744513}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7790859212413640570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1889417313116760982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2965092b4b8d14741bf0984cef2de091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
 --- !u!1 &1997035997884857844
 GameObject:
   m_ObjectHideFlags: 0
@@ -5864,7 +5878,7 @@ MonoBehaviour:
   nickname: 
   level: 0
   grenade: {fileID: 6771051918583066942, guid: d02db8a54b28ec54e95d9f2ad31b4844, type: 3}
-  trap: {fileID: 0}
+  trap: {fileID: 3247187282469108057, guid: 692c5615becf9374399780ae2d5f16e5, type: 3}
   axe: {fileID: 6225718226373126434}
   pickAxe: {fileID: 5491641690042556141}
 --- !u!54 &1935561345901497539
@@ -5931,6 +5945,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
   IsAlive: 0
+  grenade: {fileID: 0}
+  trap: {fileID: 0}
   axe: {fileID: 0}
   pickAxe: {fileID: 0}
   currentEquip: 0

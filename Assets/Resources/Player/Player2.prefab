@@ -4563,6 +4563,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7134025866517078781}
+  - component: {fileID: 4955296357044771523}
   m_Layer: 10
   m_Name: ThrowPoint
   m_TagString: Untagged
@@ -4585,6 +4586,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8467434873633744513}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4955296357044771523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5817169054767171563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be4562fdfd7c2fa4ab6222cf45c919e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5835779250471821512
 GameObject:
   m_ObjectHideFlags: 0

@@ -27,14 +27,12 @@ public class MyPlayer : MonoBehaviour
     private int frameCount = 0;
     private const int targetFrames = 10; // 10 프레임마다 실행
 
-    /* 섬광탄 관련 변수 */
-    private Transform throwPoint;
-    private int throwPower = 15;
+    /* 스킬 관련 변수 */
+    public GameObject grenade;
+    public GameObject trap;
     private bool grenadeInput;
     private bool trapInput;
-    private bool isThrow = false;
-    private GameObject grenade;
-    private GameObject trap;
+    private SkillManager skillManager;
 
     /* 상호작용 관련 변수 */
     public GameObject axe;
@@ -50,10 +48,6 @@ public class MyPlayer : MonoBehaviour
 
     private bool equipChangeInput;
     private bool interactInput;
-    public bool InteractInput
-    {
-        get => interactInput;
-    }
     private InteractManager interactManager;
 
     void Awake()
@@ -62,7 +56,6 @@ public class MyPlayer : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
 
-        throwPoint = transform.Find("ThrowPoint").transform;
         grenade = GetComponentInParent<Player>().grenade;
         trap = GetComponentInParent<Player>().trap;
         axe = GetComponentInParent<Player>().axe;
@@ -73,6 +66,7 @@ public class MyPlayer : MonoBehaviour
 
         LoadAnimationHashes();
 
+        skillManager = GetComponentInChildren<SkillManager>();
         interactManager = GetComponentInChildren<InteractManager>();
     }
 
@@ -84,7 +78,8 @@ public class MyPlayer : MonoBehaviour
     void Update()
     {
         HandleInput();
-        Throw();
+        ThrowGrenade();
+        SetTrap();
         EquipChange();
         Interact();
         CheckMoveByFrame();
@@ -227,39 +222,16 @@ public class MyPlayer : MonoBehaviour
         }
     }
 
-    private void Throw()
+    private void ThrowGrenade()
     {
-        if (!isThrow && (grenadeInput || trapInput))
-        {
-            isThrow = true;
-
-            if (grenadeInput)
-            {
-                GameObject currentObj = Instantiate(
-                    grenade,
-                    throwPoint.position,
-                    throwPoint.rotation
-                );
-
-                Rigidbody rigid = currentObj.GetComponent<Rigidbody>();
-
-                Vector3 forceVec = throwPoint.forward * throwPower + throwPoint.up * throwPower / 2;
-
-                rigid.AddForce(forceVec, ForceMode.VelocityChange);
-                rigid.AddTorque(Vector3.right, ForceMode.Impulse);
-            }
-            else if (trapInput)
-            {
-                // currentObj = Instantiate(trap, throwPoint.position, throwPoint.rotation);
-            }
-
-            Invoke(nameof(ThrowEnd), 3f);
-        }
+        if (grenadeInput)
+            skillManager.eventQ.Invoke();
     }
 
-    private void ThrowEnd()
+    private void SetTrap()
     {
-        isThrow = false;
+        if (trapInput)
+            skillManager.eventE.Invoke();
     }
 
     private void EquipChange()
