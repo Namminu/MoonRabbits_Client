@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Google.Protobuf.Protocol;
-using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
@@ -11,9 +9,17 @@ public class MyPlayer : MonoBehaviour
 {
     [SerializeField]
     private NavMeshAgent agent;
+    public NavMeshAgent NavAgent
+    {
+        get => agent;
+    }
     private RaycastHit rayHit;
     private EventSystem eSystem;
-    private Animator animator;
+    private Animator anim;
+    public Animator Anim
+    {
+        get => anim;
+    }
     private Vector3 lastPos;
     private Vector3 targetPosition;
     private Vector3 lastTargetPosition;
@@ -30,43 +36,58 @@ public class MyPlayer : MonoBehaviour
     private GameObject grenade;
     private GameObject trap;
 
-    // PlayerInfo
-    // private UIPlayer uiPlayer;
-    // private int exp;
-    // private int targetExp;
-    // private int stamina;
-    // private int cur_stamina;
-    // private int pickSpeed;
-    // private int moveSpeed;
-    // private int abilityPoint;
-    // private int cur_hp;
-    // private int hp;
+    /* 상호작용 관련 변수 */
+    public GameObject axe;
+    public GameObject pickAxe;
+    public int currentEquip = (int)EquipState.none;
+
+    public enum EquipState
+    {
+        none = 0,
+        axe = 1,
+        pickAxe = 2,
+    }
+
+    private bool equipChangeInput;
+    private bool interactInput;
+    public bool InteractInput
+    {
+        get => interactInput;
+    }
+    private InteractManager interactManager;
 
     void Awake()
     {
         eSystem = TownManager.Instance.E_System;
         agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
+        anim = GetComponent<Animator>();
 
         throwPoint = transform.Find("ThrowPoint").transform;
         grenade = GetComponentInParent<Player>().grenade;
         trap = GetComponentInParent<Player>().trap;
+        axe = GetComponentInParent<Player>().axe;
+        pickAxe = GetComponentInParent<Player>().pickAxe;
 
         InitializeCamera();
         lastPos = transform.position;
 
         LoadAnimationHashes();
+
+        interactManager = GetComponentInChildren<InteractManager>();
     }
 
     void Start()
     {
-        StartCoroutine(ExecuteEvery10Frames());
+        // StartCoroutine(ExecuteEvery10Frames());
     }
 
     void Update()
     {
         HandleInput();
         Throw();
+        EquipChange();
+        Interact();
+        CheckMoveByFrame();
         // CheckMove();
     }
 
@@ -112,6 +133,8 @@ public class MyPlayer : MonoBehaviour
 
         grenadeInput = Input.GetButtonDown("Grenade");
         trapInput = Input.GetButtonDown("Trap");
+        interactInput = Input.GetButtonDown("Interact");
+        equipChangeInput = Input.GetButtonDown("EquipChange");
     }
 
     IEnumerator ExecuteEvery10Frames()
@@ -129,6 +152,19 @@ public class MyPlayer : MonoBehaviour
                 frameCount = 0;
                 MoveAndSendMovePacket();
             }
+        }
+    }
+
+    private void CheckMoveByFrame()
+    {
+        frameCount += 1;
+
+        CheckMove();
+
+        if (frameCount >= targetFrames && targetPosition != lastTargetPosition)
+        {
+            frameCount = 0;
+            MoveAndSendMovePacket();
         }
     }
 
@@ -187,9 +223,8 @@ public class MyPlayer : MonoBehaviour
         if (distanceMoved > 0.01f)
         {
             SendLocationPacket();
+            lastPos = transform.position;
         }
-
-        lastPos = transform.position;
     }
 
     private void Throw()
@@ -226,81 +261,16 @@ public class MyPlayer : MonoBehaviour
     {
         isThrow = false;
     }
-    
-    // public void SetStatInfo(StatInfo statInfo)
-    // {
-    //     level = statInfo.Level;
-    //     exp = statInfo.Exp;
-    //     targetExp = statInfo.TargetExp;
-    //     cur_stamina = statInfo.CurStamina;
-    //     stamina = statInfo.Stamina;
-    //     pickSpeed = statInfo.PickSpeed;
-    //     moveSpeed = statInfo.MoveSpeed;
-    //     abilityPoint = statInfo.AbilityPoint;
 
-    //     uiPlayer.SetStatInfo(statInfo);
-    // }
+    private void EquipChange()
+    {
+        if (equipChangeInput)
+            interactManager.eventR.Invoke();
+    }
 
-    // public void SetExp(int updatedExp)
-    // {
-    //     Debug.Log("경험치 응답 실행");
-    //     exp = updatedExp;
-    //     if (exp > targetExp)
-    //     {
-    //         Debug.Log($"WTF! exp too much {exp}, {targetExp}");
-    //         return;
-    //     }
-    //     Debug.Log($"updatedExp : {updatedExp}");
-
-    //     uiPlayer.SetExp(updatedExp, targetExp);
-    // }
-
-    // public void InvestPoint(StatInfo statInfo)
-    // {
-    //     Debug.Log("능력치 투자자 응답 실행");
-    //     abilityPoint = statInfo.AbilityPoint;
-    //     uiPlayer.SetAbilityPoint(abilityPoint);
-        
-    //     if(statInfo.Stamina > stamina){
-    //         StaminaUp();
-    //     }
-    //     if(statInfo.PickSpeed > pickSpeed){
-    //         PickSpeedUp();
-    //     }
-    //     if(statInfo.MoveSpeed > moveSpeed){
-    //         MoveSpeedUp();
-    //     }
-
-    //     if(abilityPoint <= 0) uiPlayer.DeActiveAP();
-    // }
-
-    // private void StaminaUp()
-    // {
-    //     stamina++;
-    //     TownManager.Instance.UiPlayer.SetStamina(cur_stamina, stamina);
-    // }
-
-    // private void PickSpeedUp()
-    // {
-    //     pickSpeed++;
-    //     TownManager.Instance.UiPlayer.SetPickSpeed(pickSpeed);
-    // }
-
-    // private void MoveSpeedUp()
-    // {
-    //     moveSpeed++;
-    //     TownManager.Instance.UiPlayer.SetMoveSpeed(moveSpeed);
-    // }
-
-    // public void LevelUp(int updatedLevel, int newTargetExp, int updatedExp, int updatedAbilityPoint)
-    // {
-    //     level = updatedLevel;
-    //     targetExp = newTargetExp;
-    //     exp = updatedExp;
-
-    //     Debug.Log($"레벨업 응답 실행 {level}/ap{abilityPoint}/{exp}/{targetExp}");
-    //     TownManager.Instance.UiPlayer.LevelUp(updatedLevel, newTargetExp, updatedExp, abilityPoint, updatedAbilityPoint);
-        
-    //     abilityPoint = updatedAbilityPoint;
-    // }
+    private void Interact()
+    {
+        if (interactInput)
+            interactManager.eventF.Invoke();
+    }
 }
