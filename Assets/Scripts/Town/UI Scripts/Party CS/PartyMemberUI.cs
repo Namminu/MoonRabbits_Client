@@ -39,6 +39,7 @@ public class PartyMemberUI : MonoBehaviour
 
       GameObject newMember = Instantiate(memberPrefab, memberContainer);
       newMember.transform.Find("Nickname").GetComponent<TMP_Text>().text = member.Nickname;
+      newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{UIPlayer.instance.player_level}";
 
       // 생성된 멤버 UI 저장
       memberUIs.Add(newMember);
