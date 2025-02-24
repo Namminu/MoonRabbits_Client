@@ -51,7 +51,7 @@ public class SkillObj : MonoBehaviour
         }
         if (other.gameObject.CompareTag("Monster"))
         {
-            Debug.Log("몬스터 감지"); // 웨 12마리가 발동되는 가, 웨 콜라이더 안 켜졌는데 발동하는가
+            Debug.Log("몬스터 감지"); // 웨 12마리가 발동되는가, 웨 콜라이더 안 켜졌는데 발동하는가
         }
     }
 

@@ -15,7 +15,10 @@ public class MonsterController : MonoBehaviour
     [SerializeField]
     private int id;
 
-    public int ID { get { return id; } }
+    public int ID
+    {
+        get { return id; }
+    }
 
     [SerializeField]
     private Transform monsterArea;
@@ -57,11 +60,19 @@ public class MonsterController : MonoBehaviour
     private void Update()
     {
         //Chase();
-        transform.position = Vector3.Lerp(transform.position, _targetPosition, Time.deltaTime * 10f);
+        transform.position = Vector3.Lerp(
+            transform.position,
+            _targetPosition,
+            Time.deltaTime * 10f
+        );
         Vector3 direction = _targetPosition - transform.position;
         direction.y = 0;
         Quaternion targetRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 150);
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRotation,
+            Time.deltaTime * 150
+        );
         //agent.destination = _targetPosition;
     }
 
