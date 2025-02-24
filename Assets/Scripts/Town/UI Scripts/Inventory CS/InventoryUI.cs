@@ -52,7 +52,7 @@ public class InventoryUI : MonoBehaviour
     {
         if (newGoldAmount < 0)
         {
-            Debug.Log("Gold Cant Under Zero");
+            Debug.Log("Gold Can't Under Zero");
             goldAmount = 0;
             return -1;
         }
@@ -63,59 +63,43 @@ public class InventoryUI : MonoBehaviour
         return goldAmount;
     }
 
-    public int SortItemList()
-    {
-        Debug.Log("Item Sort Start");
-        try
-        {
-            if (itemSlots == null || itemSlots.Count == 0)
-            {
-                Debug.Log("Item Slots List NULL");
-                return -1;
-            }
-            List<ItemSlotUI> filledSlots = itemSlots.Where(slot => slot.HasItem()).ToList();
-            List<ItemSlotUI> emptySlots = itemSlots.Where(slot => !slot.HasItem()).ToList();
+	public int SortItemList()
+	{
+		Debug.Log("Item Sort Start");
+		try
+		{
+			if (itemSlots == null || itemSlots.Count == 0)
+			{
+				Debug.Log("Item Slots List NULL");
+				return -1;
+			}
 
-            if (filledSlots.Count == 0)
-            {
-                Debug.Log("No Item in Slots");
-                return -1;
-            }
-
-            filledSlots.Sort((a, b) => _sortComparer.Compare(a.GetItem(), b.GetItem()));
-
-            // Sorting process validation code
-            for (int i = 0; i < filledSlots.Count - 1; i++)
-            {
-                int currentId = filledSlots[i].GetItem().Data.ItemId;
-                int nextId = filledSlots[i + 1].GetItem().Data.ItemId;
-
-                if (currentId > nextId)
-                {
-                    Debug.LogWarning("Item Sort done to Not Correct Order");
-                    SortItemList();
-                    return -1;
-                }
-            }
+            List<MaterialItem> itemList = itemSlots.Where(slot => slot.HasItem()).Select(slot => slot.GetItem()).ToList();
+            itemList.Sort(_sortComparer.Compare);
 
             int index = 0;
-            foreach (var slot in filledSlots)
-                slot.transform.SetSiblingIndex(index++);
-            foreach (var slot in emptySlots)
-                slot.transform.SetSiblingIndex(index++);
+            foreach(var item in itemList)
+            {
+                itemSlots[index].AddItem(item);
+                index++;
+            }
 
-            AssignSlotIndex();
+            for(int i = index; i<itemSlots.Count; i++)
+            {
+                itemSlots[i].ClearSlot();
+            }
+
 			return 0;
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError("Sort Item Method Error" + ex);
-            return -1;
-        }
-    }
+		}
+		catch (Exception ex)
+		{
+			Debug.LogError("Sort Item Method Error: " + ex);
+			return -1;
+		}
+	}
 
 	#region
-    public ItemSlotUI GetItemSlotByIndex(int index)
+	public ItemSlotUI GetItemSlotByIndex(int index)
     {
         if(index < 0 || index > itemSlots.Count)
         {

@@ -184,7 +184,7 @@ public class ItemSlotUI
     #endregion
 
     #region Getter n Setter
-    public Item GetItem()
+    public MaterialItem GetItem()
     {
         return item;
     }
