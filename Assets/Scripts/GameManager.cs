@@ -62,11 +62,6 @@ public class GameManager : MonoBehaviour
         Debug.Log($"소모품 아이템 로드 완료: {itemContainer.data[0].item_name}");
         Debug.Log($"소모품 아이템 로드 완료: {itemContainer.data[1].item_name}");
         Debug.Log($"소모품 아이템 로드 완료: {itemContainer.data[2].item_name}");
-
-        // 디렉토리 내 모든 JSON 파일 로드
-        string dirPath = Application.streamingAssetsPath;
-        var allItems = loader.ReadAllJsonFiles<ConsumableItem>(dirPath);
-        Debug.Log($"총 {allItems.Count}개의 JSON 파일을 로드함!");
     }
 
     private void Update()

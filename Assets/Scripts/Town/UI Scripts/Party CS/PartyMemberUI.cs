@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Google.Protobuf.Protocol;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,8 +12,6 @@ public class PartyMemberUI : MonoBehaviour
   public GameObject memberPrefab;  // MemberInfo 프리팹
   private List<GameObject> memberUIs = new List<GameObject>();
 
-  public bool isInParty = false;
-
   private void Awake()
   {
     instance = this;
@@ -20,8 +19,6 @@ public class PartyMemberUI : MonoBehaviour
 
   public void UpdateUI()
   {
-    if (!isInParty || Party.instance == null) return;
-
     // 기존 UI 삭제
     foreach (GameObject memberUI in memberUIs)
     {
@@ -36,11 +33,12 @@ public class PartyMemberUI : MonoBehaviour
     foreach (var member in members)
     {
       // 자기 자신이면 return
-      if (member.IsMine)
-        return;
+      // if (member.IsMine)
+      //   return;
+      Debug.Log("멤버 UI 생성");
 
       GameObject newMember = Instantiate(memberPrefab, memberContainer);
-      newMember.transform.Find("NicknameText").GetComponent<Text>().text = member.Nickname;
+      newMember.transform.Find("Nickname").GetComponent<TMP_Text>().text = member.Nickname;
 
       // 생성된 멤버 UI 저장
       memberUIs.Add(newMember);
