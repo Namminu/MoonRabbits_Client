@@ -350,7 +350,7 @@ public class ItemSlotUI
     }
 
 
-	#region For Test Method
+    #if UNITY_EDITOR
 	public void AddTestItem()
     {
         if (TestItemData != null)
@@ -359,5 +359,5 @@ public class ItemSlotUI
             AddItem(newTestItem);
         }
     }
-	#endregion
+    #endif
 }

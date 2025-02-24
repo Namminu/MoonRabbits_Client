@@ -1,10 +1,11 @@
+#if UNITY_EDITOR
 using System.IO;
-using UnityEditor;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Threading.Tasks;
 using UnityEngine.Networking;
+using UnityEditor;
 
 public static class ItemDataLoader
 {
@@ -42,7 +43,6 @@ public static class ItemDataLoader
 		AssetDatabase.SaveAssets();
 		AssetDatabase.Refresh();
 	}
-
 
 	private static void GenerateMaterialItems(List<ItemJsonData> items)
 	{
@@ -141,3 +141,4 @@ public static class ItemDataLoader
 		}
 	}
 }
+#endif
