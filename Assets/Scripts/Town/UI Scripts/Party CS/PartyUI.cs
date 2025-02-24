@@ -42,6 +42,7 @@ public class PartyUI : MonoBehaviour
   {
     // 초기 UI 상태 설정
     UpdateUI();
+    PartyMemberUI.instance.UpdateUI();
 
     // 버튼 클릭 이벤트 연결
     createPartyButton.onClick.AddListener(OnCreatePartyClicked);
@@ -81,6 +82,23 @@ public class PartyUI : MonoBehaviour
       {
         CreateMemberCard(member.Id, member.Nickname, member.Id == party.leaderId, member.IsMine);
       }
+
+      if (PartyMemberUI.instance != null)
+      {
+        PartyMemberUI.instance.UpdateUI();
+      }
+      else
+      {
+        Debug.LogWarning("PartyMemberUI 인스턴스가 존재하지 않습니다.");
+      }
+
+      if (Party.instance == null)
+      {
+        Debug.LogError("Party 인스턴스가 존재하지 않음");
+      }
+
+
+      PartyMemberUI.instance.UpdateUI();
     }
     else
     {
@@ -89,8 +107,6 @@ public class PartyUI : MonoBehaviour
       partyListPanel.SetActive(false);
       ClearPartyMembers();
     }
-
-    // UpdateScrollView();
   }
 
   #region 상호작용 이벤트 함수
