@@ -2947,6 +2947,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3593600299313454251, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
+      propertyPath: id
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3593600299313454251, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
       propertyPath: monsterArea
       value: 
       objectReference: {fileID: 240321842}
