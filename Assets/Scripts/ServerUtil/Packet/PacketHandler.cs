@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Google.Protobuf;
@@ -89,11 +89,11 @@ class PacketHandler
         {
             Debug.Log("pkt.PlayerId : " + pkt.PlayerId);
             var player = TownManager.Instance.GetPlayerAvatarById(pkt.PlayerId);
-            player?.RecvMessage(pkt.ChatMsg);
+            player?.RecvMessage(pkt.ChatMsg, pkt.ChatType);
         }
         else
         {
-            TownManager.Instance.UiChat.PushMessage("System", pkt.ChatMsg, true);
+            TownManager.Instance.UiChat.PushMessage("System", pkt.ChatMsg, pkt.ChatType, true);
         }
     }
 
@@ -182,7 +182,7 @@ class PacketHandler
     {
         if (packet is not S2CPlayerLocation pkt)
             return;
-        Debug.Log($"S2CPlayerLocation 패킷 무사 도착 : {pkt}");
+        // Debug.Log($"S2CPlayerLocation 패킷 무사 도착 : {pkt}");
 
         TransformInfo transform = pkt.Transform;
         Vector3 position = new Vector3(transform.PosX, transform.PosY, transform.PosZ);
