@@ -135,7 +135,13 @@ public class SoundManager
             "Sounds/Effect/26", // 애매한 알림소리
             "Sounds/Effect/27", // 의미 불분명한 소리
             "Sounds/Effect/28", // 또롱!
-            "Sounds/Effect/29"  // 퐙뽭푸왑!
+            "Sounds/Effect/29",  // 퐙뽭푸왑!
+            "Sounds/Effect/30",  // 도끼소리
+            "Sounds/Effect/31",  // 던지는소리
+            "Sounds/Effect/32",  // 장비변경 소리
+            "Sounds/Effect/33",  // 곡갱이 광석 소리
+            "Sounds/Effect/34",  // 곡갱이 돌 소리
+            "Sounds/Effect/35",  // 말벌 Loop 소리
         };
     }
 

@@ -32,9 +32,11 @@ public class Player : MonoBehaviour
 
     private Vector3 lastPos;
 
-    [Header("Throw Item")]
+    [Header("Equipments")]
     public GameObject grenade;
     public GameObject trap;
+    public GameObject axe;
+    public GameObject pickAxe;
 
     private void Start()
     {

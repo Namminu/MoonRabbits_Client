@@ -21,7 +21,6 @@ public class PopupUI : MonoBehaviour
 
 	public int SetPopupUI(string _text, string eventName)
 	{
-		Debug.Log("팝업UI 호출됨");
 		gameObject.SetActive(true);
 
 		p_Text.text = _text.ToString();
@@ -32,7 +31,6 @@ public class PopupUI : MonoBehaviour
 
 	private void YesButton()
 	{
-		Debug.Log("yes btn");
 		if (!string.IsNullOrEmpty(eventTrigger)) // 이벤트가 저장되어 있으면 실행
 		{
 			Debug.Log($"[PopupUI] '{eventTrigger}' 이벤트 실행");
@@ -43,7 +41,6 @@ public class PopupUI : MonoBehaviour
 
 	private void NoButton()
 	{
-		Debug.Log("얘는 됨?");
 		gameObject.SetActive(false);
 	}
 }

@@ -50,7 +50,7 @@ public class TooltipUI : MonoBehaviour
 	public void SetItemDesc(ItemData item)
 	{
 		txt_ItemName.text = item.ItemName;
-		txt_ItemDesc.text = item.Description;
+		txt_ItemDesc.text = item.ItemDescription;
 	}
 
 	public RectTransform SetTooltipUIPos(RectTransform slotRect)

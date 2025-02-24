@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Google.Protobuf;
@@ -181,7 +181,7 @@ class PacketHandler
     {
         if (packet is not S2CPlayerLocation pkt)
             return;
-        Debug.Log($"S2CPlayerLocation 패킷 무사 도착 : {pkt}");
+        // Debug.Log($"S2CPlayerLocation 패킷 무사 도착 : {pkt}");
 
         TransformInfo transform = pkt.Transform;
         Vector3 position = new Vector3(transform.PosX, transform.PosY, transform.PosZ);
