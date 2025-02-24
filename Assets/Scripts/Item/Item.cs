@@ -18,21 +18,4 @@ public class Item : MonoBehaviour
 
     public ItemData GetItemData() { return itemData; }
 
-    public IEnumerator SendItemData()
-    {
-        // JSON 파일 읽기
-        string jsonData;
-        try {
-            jsonData = File.ReadAllText(jsonFilePath);
-        } catch(Exception e) {
-            Debug.LogError("JSON 파일 읽기 에러: " + e.Message);
-            yield break;
-        }
-
-        // protobuf 메시지 생성
-        // ItemPacket itemPacket = new ItemPacket
-        // {
-        //     JsonData = jsonData
-        // };
-    }
 }
