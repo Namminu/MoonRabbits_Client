@@ -19,12 +19,9 @@ public class ItemSlotUI
 
     [Header("Item Info")]
     [SerializeField] private TMP_Text text_ItemAmount; //아이템 수량
-
     [SerializeField] private Image itemImage; //아이템 이미지
-
-    [SerializeField] [ReadOnly] private int itemCount;
-    [SerializeField][ReadOnly] private int itemIndex;
-    private Item item; //획득 아이템 객체
+    [SerializeField] [ReadOnly] private int itemIndex;  // 현재 슬롯의 인벤토리 내 인덱스
+    private MaterialItem item; //획득 아이템 객체
 
     [Header("Slot Highlighter")]
     [SerializeField] private Image itemHighLighter;
@@ -42,40 +39,37 @@ public class ItemSlotUI
     private static ItemSlotUI selectedSlotToDestroy; //특정 슬롯만 파괴 수행하도록 자신 참조
     private bool isSubscribe = false; // 현재 슬롯이 이벤트 구독 중인지 여부
 
-    //[Header("Test Method : AddItem")]
-    //[SerializeField] private GameObject itemLowLighter;
+    [Header("Test Method : AddItem")] 
+    [SerializeField] private MaterialItemData TestItemData;
+    [SerializeField] private int testItemCount;
 
     // Start is called before the first frame update
     void Start()
     {
         tooltipUI = FindObjectOfType<TooltipUI>(true);
         rectTransform = GetComponent<RectTransform>();
-
-        // DB에서 인벤토리 정보 받아오는 과정..?
-        // AddItem(DB에서 받아온 정보)?
     }
 
     public void ReturnToOriginSlot()
     {
         if (originSlot != null)
         {
-			originSlot.AddItem(item, itemCount);
+			originSlot.AddItem(item);
 			originSlot = null;
 			ClearSlot();
 		}
-    }
+	}
 
     /// <summary>
     /// Add Item to Slot Method
     /// </summary>
-    public void AddItem(Item insertItem, int insertItemCount = 1)
+    public void AddItem(MaterialItem insertItem)
     {
+        if (insertItem == null) return;
+        /* 아이템 정보 업데이트 */
         item = insertItem;
-        itemCount = insertItemCount;
-        /* //슬롯 UI에 아이템 이미지를 추가하는 과정 - Item 코드 완성 및 DB 연동과정 필요
-        itemImage.sprite = insertItem.GetItemImage().sprite; */
-
-        text_ItemAmount.text = insertItemCount.ToString();
+        itemImage.sprite = insertItem.ItemData.ItemIcon;
+        text_ItemAmount.text = insertItem.CurItemStack.ToString();
 
         SetItemImageAlpha(1);
     }
@@ -83,16 +77,18 @@ public class ItemSlotUI
     /// <summary>
     /// Update Item Count Method, When Count Under/Equal 0, auto call ClearSlot()
     /// </summary>
-    public int UpdateItemCount(int newItemCount)
+    public int UpdateItemCount(int itemAmount)
     {
-        itemCount += newItemCount;
-        if (itemCount <= 0)
+        if (item == null) return -1;
+
+        item.CurItemStack += itemAmount;
+        if (item.CurItemStack <= 0)
         {
             ClearSlot();
             return -1;
         }
-        text_ItemAmount.text = itemCount.ToString();
-        return itemCount;
+        text_ItemAmount.text = item.CurItemStack.ToString();
+        return item.CurItemStack;
     }
 
     /// <summary>
@@ -101,17 +97,16 @@ public class ItemSlotUI
     public void ClearSlot()
     {
         item = null;
-        itemCount = 0;
         itemImage.sprite = null;
-        SetItemImageAlpha(0);
-
         text_ItemAmount.text = string.Empty;
+
+        SetItemImageAlpha(0);
     }
 
     #region Mouse Event
     public void OnPointerEnter(PointerEventData eventData)
     {
-        // if (item == null) return;
+        if (item == null) return;
 
         itemHighLighter.gameObject.SetActive(true);
         UpdateTooltipUI();
@@ -165,6 +160,7 @@ public class ItemSlotUI
         if (eventData.button == PointerEventData.InputButton.Right)
         {
             DecomUI = GameObject.Find("UIDecomItem");
+            if (DecomUI == null) return;
 
             if (isInven && DecomUI.activeSelf) /* 인벤토리에서 우클릭 시  */
             {
@@ -172,7 +168,7 @@ public class ItemSlotUI
                 ItemSlotUI emptySlot = FindEmptySlot(false);
                 if (emptySlot != null)
                 {
-                    emptySlot.AddItem(item, itemCount);
+                    emptySlot.AddItem(item);
                     emptySlot.originSlot = this;
                     ClearSlot();
                 }
@@ -180,20 +176,15 @@ public class ItemSlotUI
             }
             else if (!isInven) /* 분해창에서 우클릭 시 */
             {
-                Debug.Log("Right CLick On Decom Slot");
-                if (originSlot != null)
-                {
-                    originSlot.AddItem(item, itemCount);
-                    originSlot = null;
-                    ClearSlot();
-                }
-            }
+                Debug.Log("Right Click On Decom Slot");
+                ReturnToOriginSlot();
+			}
         }
     }
     #endregion
 
     #region Getter n Setter
-    public Item GetItem()
+    public MaterialItem GetItem()
     {
         return item;
     }
@@ -241,7 +232,7 @@ public class ItemSlotUI
 		if (selectedSlotToDestroy == this)
 		{
 			Debug.Log("Destory Item! " + item);
-			// ClearSlot();
+			ClearSlot();
 		}
 		EventManager.Unsubscribe("OnDestroyItem", OnDestroyItem);
 		selectedSlotToDestroy = null;
@@ -249,16 +240,15 @@ public class ItemSlotUI
 
 	private void ChangeSlot()
 	{
-		Item tempItem = item;
-		int tempItemCount = itemCount;
+		MaterialItem tempItem = item;
         int tempItenIndex = itemIndex;
 
-		AddItem(DragSlot.instance.dragSlot.item, DragSlot.instance.dragSlot.itemCount);
+		AddItem(DragSlot.instance.dragSlot.item);
         SetItemIndex(DragSlot.instance.dragSlot.GetItemIndex());
 
 		if (tempItem != null)
 		{
-			DragSlot.instance.dragSlot.AddItem(tempItem, tempItemCount);
+			DragSlot.instance.dragSlot.AddItem(tempItem);
 			SetItemIndex(DragSlot.instance.dragSlot.SetItemIndex(tempItenIndex));
 		}
 		else
@@ -270,7 +260,7 @@ public class ItemSlotUI
 
 	private void UpdateTooltipUI()
 	{
-		//tooltipUI.SetItemDesc(item.GetItemData());
+		tooltipUI.SetItemDesc(item.ItemData);
 		tooltipUI.SetTooltipUIPos(rectTransform);
 		tooltipUI.Show();
 	}
@@ -358,4 +348,16 @@ public class ItemSlotUI
             isSubscribe = false;
         }
     }
+
+
+    #if UNITY_EDITOR
+	public void AddTestItem()
+    {
+        if (TestItemData != null)
+        {
+            MaterialItem newTestItem = new MaterialItem(TestItemData, testItemCount);
+            AddItem(newTestItem);
+        }
+    }
+    #endif
 }

@@ -5,7 +5,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Item : MonoBehaviour
+public abstract class Item
 {
     // 로컬 JSON 파일 경로 예시 (StreamingAssets 폴더)
     private string jsonFilePath => Path.Combine(Application.streamingAssetsPath, "./ItemAssets/itemData.json");
