@@ -35,6 +35,16 @@ public class DecomUI : MonoBehaviour
 	private void OnDecomItem()
 	{
 		Debug.Log("Decom UI : Item Decom Start");
+		/* 아이템 분해 로직 */
+	}
+
+	private void ReturnItemsToInven()
+	{
+		Debug.Log("Decom UI : Item Return To Inven");
+		foreach (var slot in itemSlots)
+		{
+			if (slot.HasItem()) slot.ReturnToOriginSlot();
+		}
 	}
 
 	private void OnEnable()
@@ -45,6 +55,7 @@ public class DecomUI : MonoBehaviour
 
 	private void OnDisable()
 	{
+		ReturnItemsToInven();
 		EventManager.Unsubscribe("OnDecomItem", OnDecomItem);
 	}
 }
