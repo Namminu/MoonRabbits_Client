@@ -37,6 +37,8 @@ public class Player : MonoBehaviour
     public GameObject trap;
 
     // PlayerInfo
+    private int maxHp;
+    private int curHp;
     private int exp;
     private int targetExp;
     private int stamina;
@@ -62,7 +64,10 @@ public class Player : MonoBehaviour
     {
         this.nickname = nickname;
         uiNameChat.SetName(nickname);
-        TownManager.Instance.UiPlayer.SetNickname(nickname);
+        if(IsMine) {
+            TownManager.Instance.UiPlayer.SetNickname(nickname);
+            TownManager.Instance.UiPlayer.InitHp(3);
+        }
     }
 
     public void SetLevel(int level)
@@ -174,6 +179,8 @@ public class Player : MonoBehaviour
 
     public void SetStatInfo(StatInfo statInfo)
     {
+        maxHp = 3;
+        curHp = 3;
         level = statInfo.Level;
         exp = statInfo.Exp;
         targetExp = statInfo.TargetExp;
@@ -183,7 +190,7 @@ public class Player : MonoBehaviour
         moveSpeed = statInfo.MoveSpeed;
         abilityPoint = statInfo.AbilityPoint;
 
-        TownManager.Instance.UiPlayer.SetStatInfo(statInfo);
+        if(IsMine) TownManager.Instance.UiPlayer.SetStatInfo(statInfo);
     }
 
     public void SetExp(int updatedExp)
@@ -197,14 +204,14 @@ public class Player : MonoBehaviour
         }
         Debug.Log($"updatedExp : {updatedExp}");
 
-        TownManager.Instance.UiPlayer.SetExp(updatedExp, targetExp);
+        if(IsMine) TownManager.Instance.UiPlayer.SetExp(updatedExp, targetExp);
     }
 
     public void InvestPoint(StatInfo statInfo)
     {
         Debug.Log("능력치 투자자 응답 실행");
         abilityPoint = statInfo.AbilityPoint;
-        TownManager.Instance.UiPlayer.SetAbilityPoint(abilityPoint);
+        if(IsMine) TownManager.Instance.UiPlayer.SetAbilityPoint(abilityPoint);
         
         if(statInfo.Stamina > stamina){
             StaminaUp();
@@ -216,35 +223,43 @@ public class Player : MonoBehaviour
             MoveSpeedUp();
         }
 
-        if(abilityPoint <= 0) TownManager.Instance.UiPlayer.DeActiveAP();
+        if(IsMine && abilityPoint <= 0) TownManager.Instance.UiPlayer.DeActiveAP();
     }
 
     private void StaminaUp()
     {
         stamina++;
-        TownManager.Instance.UiPlayer.SetStamina(cur_stamina, stamina);
+        if(IsMine) TownManager.Instance.UiPlayer.SetStamina(cur_stamina, stamina);
     }
 
     private void PickSpeedUp()
     {
         pickSpeed++;
-        TownManager.Instance.UiPlayer.SetPickSpeed(pickSpeed);
+        if(IsMine) TownManager.Instance.UiPlayer.SetPickSpeed(pickSpeed);
     }
 
     private void MoveSpeedUp()
     {
         moveSpeed++;
-        TownManager.Instance.UiPlayer.SetMoveSpeed(moveSpeed);
+        if(IsMine) TownManager.Instance.UiPlayer.SetMoveSpeed(moveSpeed);
     }
 
     public void LevelUp(int updatedLevel, int newTargetExp, int updatedExp, int updatedAbilityPoint)
     {
-        Debug.Log("레벨업 응답 실행");
         level = updatedLevel;
-        abilityPoint = updatedAbilityPoint;
         targetExp = newTargetExp;
         exp = updatedExp;
 
-        TownManager.Instance.UiPlayer.LevelUp(updatedLevel, newTargetExp, updatedExp, abilityPoint);
+        Debug.Log($"레벨업 응답 실행 {level}/ap{abilityPoint}/{exp}/{targetExp} isMine?{IsMine}");
+        if(IsMine) TownManager.Instance.UiPlayer.LevelUp(updatedLevel, newTargetExp, updatedExp, abilityPoint, updatedAbilityPoint);
+        
+        abilityPoint = updatedAbilityPoint;
+    }
+
+    public void LevelUpOther()
+    {
+        // 레벨 표시 변경
+
+        // 레벨업 이펙트
     }
 }

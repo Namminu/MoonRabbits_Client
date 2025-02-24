@@ -7,17 +7,14 @@ using UnityEngine.UI;
 
 public class UIPlayer : MonoBehaviour
 {
-    private int APButtonsOffsetY = 60;
-    private int APTextOffsetY = 130;
+    private int APButtonsOffsetY = 39;
+    private int APTextOffsetX = 152;
 
     public Button btnAddExp;
-    public Slider hpSlider;
     public Slider staminaSlider;
     public Slider expSlider;
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI nicknameText;
-    public TextMeshProUGUI hpText;
-    public TextMeshProUGUI curStaminaText;
     public TextMeshProUGUI staminaText;
     public TextMeshProUGUI pickSpeedText;
     public TextMeshProUGUI moveSpeedText;
@@ -27,6 +24,12 @@ public class UIPlayer : MonoBehaviour
     public Button btnStaminaUp;
     public Button btnPickSpeedUp;
     public Button btnMoveSpeedUp;
+    public GameObject heartPrefab;
+    public GameObject heartBgPrefab;
+    public Transform heartsPos;
+    public Transform heartBgsPos;
+    private List<GameObject> hearts = new List<GameObject>();
+    private List<GameObject> heartBgs = new List<GameObject>();
 
     // Start is called before the first frame update
     void Start()
@@ -39,18 +42,29 @@ public class UIPlayer : MonoBehaviour
 
     public void SetStatInfo(StatInfo statInfo)
     {
-        int player_hp = 5;
-        int player_cur_hp = 5;
-        hpSlider.value = player_cur_hp / player_hp;
-        staminaSlider.value = statInfo.Stamina / statInfo.Stamina;
-        expSlider.value = statInfo.Exp / statInfo.TargetExp;
-        hpText.text = $"{player_cur_hp} / {player_hp}";
-        curStaminaText.text = $"{statInfo.CurStamina} / {statInfo.Stamina}";
+        Debug.Log($"UI 스탯 세팅 {statInfo.Exp}/{statInfo.TargetExp}");
+        staminaSlider.value = (float)statInfo.Stamina / statInfo.Stamina;
+        expSlider.value = (float)statInfo.Exp / statInfo.TargetExp;
         levelText.text = $"Lv{statInfo.Level}";
         staminaText.text = statInfo.Stamina.ToString();
         pickSpeedText.text = statInfo.PickSpeed.ToString();
         moveSpeedText.text = statInfo.MoveSpeed.ToString();
         APText.text = statInfo.AbilityPoint.ToString();
+        Debug.Log($"ap: {statInfo.AbilityPoint}");
+        if (statInfo.AbilityPoint > 0)
+        {
+            Debug.Log("SetStatInfo 했는데 AP 확인됨");
+            Debug.Log(APButtons.transform.position);
+            Debug.Log(APFrame.transform.position);
+            Vector3 goalPos_APButtons = APButtons.transform.position + new Vector3(0, -APButtonsOffsetY, 0);
+            Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(APTextOffsetX, 0, 0);
+            Debug.Log(goalPos_APButtons);
+            Debug.Log(goalPos_APFrame);
+            // APButtons.transform.position = goalPos_APButtons;
+            // APFrame.transform.position = goalPos_APFrame;
+            StartCoroutine(SmoothChangeObjectPosition(APButtons, APButtons.transform.position, goalPos_APButtons, 1));
+            StartCoroutine(SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1));
+        }
     }
 
     // Update is called once per frame
@@ -67,13 +81,44 @@ public class UIPlayer : MonoBehaviour
         GameManager.Network.Send(addExpPacket);
     }
 
+    void OnClickStaminaUp()
+    {
+        Debug.Log("쓰테미나");
+        var pkt = new C2SInvestPoint
+        {
+            StatCode = 1,
+        };
+        GameManager.Network.Send(pkt);
+    }
+
+    public void OnClickPickSpeedUp()
+    {
+        Debug.Log("픽쓰피드");
+        var pkt = new C2SInvestPoint
+        {
+            StatCode = 2,
+        };
+        GameManager.Network.Send(pkt);
+    }
+
+    void OnClickMoveSpeedUp()
+    {
+        Debug.Log("쓰피드");
+        var pkt = new C2SInvestPoint
+        {
+            StatCode = 3,
+        };
+        GameManager.Network.Send(pkt);
+    }
+
     public void SetExp(int updatedExp, int targetExp)
     {
         float targetValue = (float)updatedExp / targetExp;
         StartCoroutine(SmoothChangeSliderValue(expSlider, expSlider.value, targetValue, 1f));
     }
 
-    public void SetAbilityPoint(int ap){
+    public void SetAbilityPoint(int ap)
+    {
         APText.text = ap.ToString();
     }
 
@@ -81,7 +126,6 @@ public class UIPlayer : MonoBehaviour
     {
         //player_cur_stamina++;
         staminaText.text = stamina.ToString();
-        curStaminaText.text = $"{cur_stamina} / {stamina}";
         staminaSlider.value = (float)cur_stamina / stamina;
     }
 
@@ -100,66 +144,40 @@ public class UIPlayer : MonoBehaviour
         nicknameText.text = $"{nickname}";
     }
 
-    public void LevelUp(int newLevel, int newTargetExp, int updatedExp, int abilityPoint)
+    public void LevelUp(int newLevel, int newTargetExp, int updatedExp, int abilityPoint, int updatedAbilityPoint)
     {
-        StartCoroutine(LevelUpSequence(newLevel, newTargetExp, updatedExp, abilityPoint));
+        StartCoroutine(LevelUpSequence(newLevel, newTargetExp, updatedExp, abilityPoint, updatedAbilityPoint));
     }
     public void DeActiveAP()
     {
         Vector3 goalPos_APButtons = APButtons.transform.position + new Vector3(0, APButtonsOffsetY, 0);
-        Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(-APTextOffsetY, 0, 0);
+        Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(-APTextOffsetX, 0, 0);
         StartCoroutine(SmoothChangeObjectPosition(APButtons, APButtons.transform.position, goalPos_APButtons, 1));
         StartCoroutine(SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1));
     }
 
-    void OnClickStaminaUp()
+
+
+
+    private IEnumerator LevelUpSequence(int newLevel, int newTargetExp, int updatedExp, int abilityPoint, int updatedAbilityPoint)
     {
-        var pkt = new C2SInvestPoint
-        {
-            StatCode = 1,
-        };
-        GameManager.Network.Send(pkt);
-    }
-
-    public void OnClickPickSpeedUp()
-    {
-        var pkt = new C2SInvestPoint
-        {
-            StatCode = 2,
-        };
-        GameManager.Network.Send(pkt);
-    }
-
-    void OnClickMoveSpeedUp()
-    {
-        var pkt = new C2SInvestPoint
-        {
-            StatCode = 3,
-        };
-        GameManager.Network.Send(pkt);
-    }
-
-
-
-    private IEnumerator LevelUpSequence(int newLevel, int newTargetExp, int updatedExp, int abilityPoint)
-    {
-        Debug.Log("레벨업 코루틴");
         // 경험치바 끝까지 증가
         yield return StartCoroutine(SmoothChangeSliderValue(expSlider, expSlider.value, 1f, 1f));
+
 
         // 레벨 증가, 요구 경험치 증가
         levelText.text = $"Lv{newLevel}";
 
-        // 기존에 올릴 수 있는 포인트가 0이면 ui 추가, 포인트가 남아있으면 ui 유지
+        // 기존에 올릴 수 있는 포인트가 0이었으면 ui 추가, 포인트가 남아있으면 ui 유지
         if (abilityPoint == 0)
         {
             Debug.Log("+버튼 코루틴");
             Vector3 goalPos_APButtons = APButtons.transform.position + new Vector3(0, -APButtonsOffsetY, 0);
-            Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(APTextOffsetY, 0, 0);
+            Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(APTextOffsetX, 0, 0);
             StartCoroutine(SmoothChangeObjectPosition(APButtons, APButtons.transform.position, goalPos_APButtons, 1f));
             StartCoroutine(SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1f));
         }
-        APText.text = abilityPoint.ToString();
+        APText.text = updatedAbilityPoint.ToString();
 
         // 경험치바 변경된 경험치까지 증가
         float targetValue = (float)updatedExp / newTargetExp;
@@ -214,6 +232,75 @@ public class UIPlayer : MonoBehaviour
                 yield return null;
             }
             slider.value = targetValue;
+        }
+    }
+
+    // HP
+    public void InitHp(int hp)
+    {
+        foreach (GameObject heart in hearts)
+        {
+            Destroy(heart);
+        }
+        hearts.Clear();
+
+        for (int i = 0; i < hp; i++)
+        {
+            GameObject heart = Instantiate(heartPrefab, heartsPos);
+            GameObject heartBg = Instantiate(heartBgPrefab, heartBgsPos);
+            hearts.Add(heart);
+            heartBgs.Add(heartBg);
+        }
+    }
+
+    private void AddHp()
+    {
+        if(hearts.Count <= heartBgs.Count)
+        {
+            GameObject heart = Instantiate(heartPrefab, heartsPos);
+            hearts.Add(heart);
+        }
+    }
+
+    private void SubHp()
+    {
+        if (hearts.Count > 0 && heartBgs.Count > 0)
+        {
+            GameObject heart = hearts[hearts.Count - 1];
+            Destroy(heart);
+            hearts.RemoveAt(hearts.Count - 1);
+        }
+    }
+
+    private void AddMaxHp()
+    {
+        GameObject heartBg = Instantiate(heartBgPrefab, heartsPos);
+        heartBgs.Add(heartBg);
+    }
+
+    private void SubMaxHp()
+    {
+        if (heartBgs.Count > 0)
+        {
+            GameObject heartBg = heartBgs[heartBgs.Count - 1];
+            Destroy(heartBg);
+            heartBgs.RemoveAt(heartBgs.Count - 1);
+        }
+    }
+
+    private void UpdateHp(int curHp)
+    {
+        foreach (GameObject heart in hearts)
+        {
+            Destroy(heart);
+        }
+        hearts.Clear();
+
+        for (int i = 0; i < curHp; i++)
+        {
+            GameObject heart = Instantiate(heartPrefab, heartsPos);
+            hearts.Add(heart);
+            hearts[i] = heart;
         }
     }
 }
