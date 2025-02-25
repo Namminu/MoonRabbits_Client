@@ -131,10 +131,10 @@ public class MyPlayer : MonoBehaviour
             }
         }
 
-        grenadeInput = Input.GetButtonDown("Grenade");
-        trapInput = Input.GetButtonDown("Trap");
-        interactInput = Input.GetButtonDown("Interact");
-        equipChangeInput = Input.GetButtonDown("EquipChange");
+        // grenadeInput = Input.GetButtonDown("Grenade");
+        // trapInput = Input.GetButtonDown("Trap");
+        // interactInput = Input.GetButtonDown("Interact");
+        // equipChangeInput = Input.GetButtonDown("EquipChange");
     }
 
     IEnumerator ExecuteEvery10Frames()
