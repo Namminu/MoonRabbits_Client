@@ -90,7 +90,7 @@ public class UIPlayer : MonoBehaviour
     public void SetStatInfo(StatInfo statInfo)
     {
         staminaSlider.value = (float)statInfo.Stamina / statInfo.Stamina;
-        //expSlider.value = (float)statInfo.Exp / statInfo.TargetExp;
+        expSlider.value = (float)statInfo.Exp / statInfo.TargetExp;
         levelText.text = $"Lv{statInfo.Level}";
         staminaText.text = statInfo.Stamina.ToString();
         pickSpeedText.text = statInfo.PickSpeed.ToString();
@@ -104,6 +104,7 @@ public class UIPlayer : MonoBehaviour
             Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(APTextOffsetX, 0, 0);
             Debug.Log(goalPos_APButtons);
             Debug.Log(goalPos_APFrame);
+            // 처음부터 위치 이동시키면 이상한 위치로 이동돼서 코루틴으로 이동시킴
             // APButtons.transform.position = goalPos_APButtons;
             // APFrame.transform.position = goalPos_APFrame;
             StartCoroutine(SmoothChangeObjectPosition(APButtons, APButtons.transform.position, goalPos_APButtons, 1));

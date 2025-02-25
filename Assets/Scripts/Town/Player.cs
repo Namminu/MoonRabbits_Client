@@ -186,9 +186,9 @@ public class Player : MonoBehaviour
         maxHp = 3;
         curHp = 3;
         level = statInfo.Level;
-        // exp = statInfo.Exp;
-        // targetExp = statInfo.TargetExp;
-        // cur_stamina = statInfo.CurStamina;
+        exp = statInfo.Exp;
+        targetExp = statInfo.TargetExp;
+        cur_stamina = statInfo.CurStamina;
         stamina = statInfo.Stamina;
         pickSpeed = statInfo.PickSpeed;
         moveSpeed = statInfo.MoveSpeed;
@@ -203,7 +203,7 @@ public class Player : MonoBehaviour
         exp = updatedExp;
         if (exp > targetExp)
         {
-            Debug.Log($"WTF! exp too much {exp}, {targetExp}");
+            Debug.LogError($"exp({exp}) > targetExp({targetExp})");
             return;
         }
         Debug.Log($"updatedExp : {updatedExp}");
@@ -231,7 +231,7 @@ public class Player : MonoBehaviour
 
     private void SetStamina(int stamina)
     {
-        this.cur_stamina += (stamina - this.stamina);
+        if(stamina > this.stamina) this.cur_stamina += (stamina - this.stamina);
         this.stamina = stamina;
         if(IsMine) TownManager.Instance.UiPlayer.SetStamina(cur_stamina, stamina, abilityPoint>0);
     }
