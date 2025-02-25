@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.17276844, g: 0.21589246, b: 0.2978263, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1808,6 +1808,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BattleBee (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3534282339610692907, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3593600299313454251, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
@@ -4321,6 +4326,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BattleBee (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 3534282339610692907, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3593600299313454251, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
       propertyPath: id
@@ -4427,6 +4437,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 442787115}
+  - component: {fileID: 442787116}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -4458,6 +4469,21 @@ Transform:
   - {fileID: 1842309036}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &442787116
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 442787114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f52060201e136c4ca621614bc6c68ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnArea: {fileID: 0}
+  despawnArea: {fileID: 0}
+  eSystem: {fileID: 0}
 --- !u!1001 &448400841
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5415,6 +5441,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BattleBee (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3534282339610692907, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3593600299313454251, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
@@ -9566,6 +9597,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BattleBee (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3534282339610692907, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3593600299313454251, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
       propertyPath: id
@@ -11438,6 +11474,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: BattleBee (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 3534282339610692907, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3593600299313454251, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
       propertyPath: id
@@ -11611,6 +11652,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BattleBee (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3534282339610692907, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3593600299313454251, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
@@ -13629,6 +13675,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BattleBee
+      objectReference: {fileID: 0}
+    - target: {fileID: 3534282339610692907, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3593600299313454251, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
@@ -19370,6 +19421,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BattleBee (10)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3534282339610692907, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3593600299313454251, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
