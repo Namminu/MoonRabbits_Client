@@ -19,10 +19,10 @@ public abstract class ItemData : ScriptableObject
 
 
 	#region Public Members
-	public int ItemId => itemId;
-	public string ItemName => itemName;
-	public string ItemDescription => itemDescription;
-	public ItemTypes ItemType => itemType;
-	public Sprite ItemIcon => itemIcon;
+	public int ItemId { get => itemId; set => itemId = value; }
+	public string ItemName { get => itemName; set => itemName = value; }
+	public string ItemDescription { get => itemDescription; set => itemDescription = value; }
+	public ItemTypes ItemType { get => itemType; set => itemType = value; }
+	public Sprite ItemIcon { get => itemIcon; set => itemIcon = value; }
 	#endregion
 }

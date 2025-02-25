@@ -13,7 +13,7 @@ public class SpriteDataBase : ScriptableObject
 	}
 
 	public List<SpriteEntry> spriteList;
-
+	 
 	private Dictionary<int, Sprite> spriteDictionary;
 
 	public void Initialize()
