@@ -7,7 +7,8 @@ using UnityEngine.UI;
 
 public class UIPlayer : MonoBehaviour
 {
-    private int player_level;
+    public static UIPlayer instance { get; private set; }
+    public int player_level;
     private int player_exp;
     private int player_targetExp;
     private int player_stamina;
@@ -38,6 +39,11 @@ public class UIPlayer : MonoBehaviour
     public Button btnStaminaUp;
     public Button btnPickSpeedUp;
     public Button btnMoveSpeedUp;
+
+    private void Awake()
+    {
+        instance = this;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -96,6 +102,8 @@ public class UIPlayer : MonoBehaviour
 
         float targetValue = (float)player_exp / player_targetExp;
         StartCoroutine(SmoothChangeSliderValue(expSlider, expSlider.value, targetValue, 1f));
+
+
     }
 
     public void InvestPoint(StatInfo statInfo)
@@ -103,13 +111,16 @@ public class UIPlayer : MonoBehaviour
         player_abilityPoint = statInfo.AbilityPoint;
         APText.text = player_abilityPoint.ToString();
 
-        if(statInfo.Stamina > player_stamina){
+        if (statInfo.Stamina > player_stamina)
+        {
             StaminaUp();
         }
-        if(statInfo.PickSpeed > player_pickSpeed){
+        if (statInfo.PickSpeed > player_pickSpeed)
+        {
             PickSpeedUp();
         }
-        if(statInfo.MoveSpeed > player_moveSpeed){
+        if (statInfo.MoveSpeed > player_moveSpeed)
+        {
             MoveSpeedUp();
         }
     }
@@ -184,6 +195,9 @@ public class UIPlayer : MonoBehaviour
         player_level = newLevel;
         levelText.text = $"Lv{player_level}";
         player_targetExp = newTargetExp;
+
+        // 파티원 정보 UI도 업데이트
+        PartyMemberUI.instance.UpdateUI();
 
         // 기존에 올릴 수 있는 포인트가 0이면 ui 추가, 포인트가 남아있으면 ui 유지
         if (player_abilityPoint == 0)
