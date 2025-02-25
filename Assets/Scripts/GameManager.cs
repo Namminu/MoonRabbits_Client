@@ -59,9 +59,9 @@ public class GameManager : MonoBehaviour
             Debug.LogError("JSON 파싱 실패: 데이터가 없습니다.");
             return;
         }
-        Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[0].quest_name}");
-        Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[1].quest_name}");
-        Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[2].quest_name}");
+        Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[0].quest_id}");
+        Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[1].quest_id}");
+        Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[2].quest_id}");
     }
 
     private void Update()
