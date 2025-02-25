@@ -57,6 +57,16 @@ class PacketHandler
             case 2:
                 ASectorManager.Instance.Spawn(pkt.Player);
                 break;
+            case 101:
+                SceneManager.LoadScene("Sector1");
+                GameManager.Instance.WaitForSceneAwake("Sector1", pkt.Player);
+                // S1Manager.Instance.Enter(pkt.Player);
+                break;
+            case 102:
+                SceneManager.LoadScene("Sector2");
+                GameManager.Instance.WaitForSceneAwake("Sector2", pkt.Player);
+                // S2Manager.Instance.Enter(pkt.Player);
+                break;
         }
     }
 
@@ -139,6 +149,24 @@ class PacketHandler
                     );
                     sectorPlayer.SetIsMine(false);
                     break;
+                case 101:
+                    if (
+                        S1Manager.Instance.myPlayer != null
+                        && playerInfo.PlayerId == S1Manager.Instance.myPlayer.PlayerId
+                    )
+                        continue;
+                    var s1Player = S1Manager.Instance.SpawnPlayer(playerInfo);
+                    s1Player.SetIsMine(false);
+                    break;
+                case 102:
+                    if (
+                        S2Manager.Instance.myPlayer != null
+                        && playerInfo.PlayerId == S2Manager.Instance.myPlayer.PlayerId
+                    )
+                        continue;
+                    var s2Player = S2Manager.Instance.SpawnPlayer(playerInfo);
+                    s2Player.SetIsMine(false);
+                    break;
             }
 
             // 여기에서 localPlayer 설정이 작동하지 않는 버그가 발생 하여 해당 예외처리를 추가함.
@@ -163,6 +191,18 @@ class PacketHandler
                 foreach (int playerId in pkt.PlayerIds)
                 {
                     ASectorManager.Instance.ReleasePlayer(playerId);
+                }
+                break;
+            case 101:
+                foreach (int playerId in pkt.PlayerIds)
+                {
+                    S1Manager.Instance.DespawnPlayer(playerId);
+                }
+                break;
+            case 102:
+                foreach (int playerId in pkt.PlayerIds)
+                {
+                    S2Manager.Instance.DespawnPlayer(playerId);
                 }
                 break;
         }
@@ -197,6 +237,14 @@ class PacketHandler
             case 2:
                 var sectorPlayer = ASectorManager.Instance.GetPlayerAvatarById(pkt.PlayerId);
                 sectorPlayer?.Move(position, rotation);
+                break;
+            case 101:
+                var s1Player = S1Manager.Instance.GetPlayer(pkt.PlayerId);
+                s1Player.Move(position, rotation);
+                break;
+            case 102:
+                var s2Player = S2Manager.Instance.GetPlayer(pkt.PlayerId);
+                s2Player.Move(position, rotation);
                 break;
         }
     }
@@ -301,6 +349,7 @@ class PacketHandler
         Debug.Log($"S2CDisbandParty 패킷 무사 도착 : {pkt}");
         PartyUI.instance.KickedOut(pkt.Msg);
     }
+
     public static void S2CRejectInviteHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CRejectInvite pkt)
@@ -317,7 +366,11 @@ class PacketHandler
         var monsterId = pkt.MonsterId;
         var monsterPosition = pkt.TransformInfo;
 
-        Vector3 position = new Vector3(monsterPosition.PosX, monsterPosition.PosY, monsterPosition.PosZ);
+        Vector3 position = new Vector3(
+            monsterPosition.PosX,
+            monsterPosition.PosY,
+            monsterPosition.PosZ
+        );
         MonsterManager.Instance.SendPositionPacket(monsterId, position);
 
         Debug.Log($"S2CMonsterLocation 패킷 무사 도착 : {pkt}");
@@ -424,7 +477,12 @@ class PacketHandler
             return;
         Debug.Log($"S2CLevelUp 패킷 무사 도착 : {pkt}");
 
-        TownManager.Instance.UiPlayer.LevelUp(pkt.UpdatedLevel, pkt.NewTargetExp, pkt.UpdatedExp, pkt.AbilityPoint);
+        TownManager.Instance.UiPlayer.LevelUp(
+            pkt.UpdatedLevel,
+            pkt.NewTargetExp,
+            pkt.UpdatedExp,
+            pkt.AbilityPoint
+        );
     }
 
     public static void S2CInvestPointHandler(PacketSession session, IMessage packet)

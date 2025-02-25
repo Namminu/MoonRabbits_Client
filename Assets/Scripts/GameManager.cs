@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using Google.Protobuf.Protocol;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -37,7 +38,6 @@ public class GameManager : MonoBehaviour
         }
 
         SoundManager.Instance.Play(19, Define.Sound.Bgm);
-
     }
 
     void Start()
@@ -68,5 +68,29 @@ public class GameManager : MonoBehaviour
     {
         if (network != null)
             network.Update();
+    }
+
+    public void WaitForSceneAwake(string sceneName, PlayerInfo playerInfo)
+    {
+        StartCoroutine(EnterScene(sceneName, playerInfo));
+    }
+
+    IEnumerator EnterScene(string sceneName, PlayerInfo playerInfo)
+    {
+        switch (sceneName)
+        {
+            case "Town":
+                yield return new WaitUntil(() => TownManager.Instance != null);
+                TownManager.Instance.Spawn(playerInfo);
+                break;
+            case "Sector1":
+                yield return new WaitUntil(() => S1Manager.Instance != null);
+                S1Manager.Instance.Enter(playerInfo);
+                break;
+            case "Sector2":
+                yield return new WaitUntil(() => S2Manager.Instance != null);
+                S2Manager.Instance.Enter(playerInfo);
+                break;
+        }
     }
 }
