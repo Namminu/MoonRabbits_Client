@@ -5878,7 +5878,7 @@ MonoBehaviour:
   nickname: 
   level: 0
   grenade: {fileID: 3125930997733802295, guid: d7713fb2e1661914b9273d87082c1e83, type: 3}
-  trap: {fileID: 0}
+  trap: {fileID: 3247187282469108057, guid: 692c5615becf9374399780ae2d5f16e5, type: 3}
   axe: {fileID: 8259336270696074783}
   pickAxe: {fileID: 3119456311575976879}
 --- !u!54 &-3790289419171033283

@@ -91,7 +91,7 @@ public class MyPlayer : MonoBehaviour
 
     private void InitializeCamera()
     {
-        Camera.main.gameObject.GetComponent<TempCamera>().target = transform;
+        Camera.main.gameObject.GetComponent<QuarterView>().target = transform;
 
         // var freeLook = TownManager.Instance.FreeLook;
         // freeLook.Follow = transform;
@@ -129,11 +129,11 @@ public class MyPlayer : MonoBehaviour
             }
         }
 
-        grenadeInput = Input.GetButtonDown("Grenade");
-        trapInput = Input.GetButtonDown("Trap");
-        recallInput = Input.GetButtonDown("Recall");
-        interactInput = Input.GetButtonDown("Interact");
-        equipChangeInput = Input.GetButtonDown("EquipChange");
+        grenadeInput = Input.GetKeyDown(KeyCode.Q);
+        trapInput = Input.GetKeyDown(KeyCode.E);
+        recallInput = Input.GetKeyDown(KeyCode.T);
+        interactInput = Input.GetKeyDown(KeyCode.F);
+        equipChangeInput = Input.GetKeyDown(KeyCode.R);
     }
 
     IEnumerator ExecuteEvery10Frames()

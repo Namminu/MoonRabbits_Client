@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3102,7 +3102,6 @@ MonoBehaviour:
   btnToggle: {fileID: 385603466}
   icon: {fileID: 1039711422}
   alarm: {fileID: 873038496}
-  chatType: {fileID: 0}
   chatType: {fileID: 0}
 --- !u!114 &543258935
 MonoBehaviour:
@@ -7173,7 +7172,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1287450273}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33ce768b9825745468347ae027564d34, type: 3}
+  m_Script: {fileID: 11500000, guid: fae17d7044d157a479b0417095e75f3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
