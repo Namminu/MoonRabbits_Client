@@ -108,7 +108,7 @@ NavMeshSettings:
     agentTypeID: 0
     agentRadius: 0.5
     agentHeight: 2
-    agentSlope: 45
+    agentSlope: 0
     agentClimb: 0.4
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
@@ -3133,6 +3133,7 @@ MonoBehaviour:
   btnToggle: {fileID: 385603466}
   icon: {fileID: 1039711422}
   alarm: {fileID: 873038496}
+  chatType: {fileID: 0}
   chatType: {fileID: 0}
 --- !u!114 &543258935
 MonoBehaviour:
@@ -11617,5 +11618,6 @@ SceneRoots:
   - {fileID: 87865780}
   - {fileID: 338278691}
   - {fileID: 502121929}
+  - {fileID: 731596365}
   - {fileID: 1929933003}
   - {fileID: 1357897720}

@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scripts/Item/InventoryManager.cs.meta
 guid: dae7f2db3f4924349b4a90e275f1ea6b
+========
+guid: 8dd8eecb89e43494b8cdcac953b53327
+>>>>>>>> _dev:Assets/Scripts/DataModels/Monster.cs.meta
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

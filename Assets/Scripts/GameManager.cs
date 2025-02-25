@@ -53,20 +53,15 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        var itemContainer = loader.ReadJsonFile<JsonContainer<ConsumableItem>>(filePath);
-        if (itemContainer == null || itemContainer.data == null || itemContainer.data.Count == 0)
+        var questContainer = loader.ReadJsonFile<JsonContainer<Quest>>(filePath);
+        if (questContainer == null || questContainer.data == null || questContainer.data.Count == 0)
         {
             Debug.LogError("JSON 파싱 실패: 데이터가 없습니다.");
             return;
         }
-        Debug.Log($"소모품 아이템 로드 완료: {itemContainer.data[0].item_name}");
-        Debug.Log($"소모품 아이템 로드 완료: {itemContainer.data[1].item_name}");
-        Debug.Log($"소모품 아이템 로드 완료: {itemContainer.data[2].item_name}");
-
-        // 디렉토리 내 모든 JSON 파일 로드
-        string dirPath = Application.streamingAssetsPath;
-        var allItems = loader.ReadAllJsonFiles<ConsumableItem>(dirPath);
-        Debug.Log($"총 {allItems.Count}개의 JSON 파일을 로드함!");
+        Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[0].quest_id}");
+        Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[1].quest_id}");
+        Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[2].quest_id}");
     }
 
     private void Update()
