@@ -7,15 +7,7 @@ using UnityEngine.UI;
 
 public abstract class Item
 {
-    // 로컬 JSON 파일 경로 예시 (StreamingAssets 폴더)
-    private string jsonFilePath => Path.Combine(Application.streamingAssetsPath, "./ItemAssets/itemData.json");
-    private int itemCode;
-    private Image itemImage;
-    private ItemData itemData;
+    public ItemData Data { get; private set; }
 
-
-    public Image GetItemImage() { return itemImage; } 
-
-    public ItemData GetItemData() { return itemData; }
-
+    public Item(ItemData data) => Data = data;
 }
