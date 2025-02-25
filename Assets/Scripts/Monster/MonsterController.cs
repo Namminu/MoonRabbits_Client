@@ -11,6 +11,8 @@ public class MonsterController : MonoBehaviour
     [SerializeField]
     private int id;
 
+    [SerializeField] private int sectorCode = 2;
+
     public int ID { get { return id; } }
 
     private Vector3 _targetPosition;
@@ -45,18 +47,23 @@ public class MonsterController : MonoBehaviour
         if (other.CompareTag("Player") == false) return;
         Debug.Log("플레이어가 몬스터와 충돌하였다.");
         CapsuleCollider playerCollider = other.GetComponent<CapsuleCollider>();
-        C2SMonsterCollision collisionPacket = new C2SMonsterCollision();
-        collisionPacket.CollisionInfo = new CollisionInfo();
+        C2SCollision collisionPacket = new C2SCollision();
+        var collisionInfo = new CollisionInfo();
         var myPos = transform.position;
         var targetPos = playerCollider.transform.position;
-        collisionPacket.MonsterId = id;
-
-        collisionPacket.CollisionInfo.Height1 = _collider.height;
-        collisionPacket.CollisionInfo.Position1 = new Vec3() { X = myPos.x, Y = myPos.y, Z = myPos.z };
-        collisionPacket.CollisionInfo.Radius1 = _collider.radius;
-        collisionPacket.CollisionInfo.Height2 = playerCollider.height;
-        collisionPacket.CollisionInfo.Position2 = new Vec3() { X = targetPos.x, Y = targetPos.y, Z = targetPos.z };
-        collisionPacket.CollisionInfo.Radius2 = playerCollider.radius;
+        var targetId = playerCollider.GetComponent<Player>().PlayerId;
+        collisionInfo.SectorCode = sectorCode;
+        collisionInfo.MyType = 2;
+        collisionInfo.MyId = id;
+        collisionInfo.MyPosition = new Vec3() { X = myPos.x, Y = myPos.y, Z = myPos.z };
+        collisionInfo.MyHeight = _collider.height;
+        collisionInfo.MyRadius = _collider.radius;
+        collisionInfo.TargetType = 1;
+        collisionInfo.TargetId = targetId;
+        collisionInfo.TargetPosition = new Vec3() { X = targetPos.x, Y = targetPos.y, Z = targetPos.z };
+        collisionInfo.TargetHeight = playerCollider.height;
+        collisionInfo.TargetRadius = playerCollider.radius;
+        collisionPacket.CollisionInfo = collisionInfo;
 
         GameManager.Network.Send(collisionPacket);
 

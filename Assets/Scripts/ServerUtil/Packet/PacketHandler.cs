@@ -145,11 +145,11 @@ class PacketHandler
         }
     }
 
-    public static void S2CPlayerDespawnHandler(PacketSession session, IMessage packet)
+    public static void S2CDespawnHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CDespawn pkt)
             return;
-        Debug.Log($"S2CPlayerDespawn 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CDespawn 패킷 무사 도착 : {pkt}");
 
         switch (pkt.CurrentScene)
         {
