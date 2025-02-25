@@ -96,9 +96,6 @@ public class PartyUI : MonoBehaviour
       {
         Debug.LogError("Party 인스턴스가 존재하지 않음");
       }
-
-
-      PartyMemberUI.instance.UpdateUI();
     }
     else
     {
@@ -106,7 +103,9 @@ public class PartyUI : MonoBehaviour
       inPartyPanel.SetActive(false);
       partyListPanel.SetActive(false);
       ClearPartyMembers();
+
     }
+    PartyMemberUI.instance.UpdateUI();
   }
 
   #region 상호작용 이벤트 함수

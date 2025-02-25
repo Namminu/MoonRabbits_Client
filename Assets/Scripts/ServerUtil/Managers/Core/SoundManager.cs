@@ -49,6 +49,19 @@ public class SoundManager
         }
 
         LoadSoundPaths();
+
+        // 저장된 볼륨 값 불러오기
+        if (PlayerPrefs.HasKey("Volume_Bgm"))
+        {
+            float savedBgmVolume = PlayerPrefs.GetFloat("Volume_Bgm");
+            SetVolume(savedBgmVolume, Define.Sound.Bgm);
+        }
+
+        if (PlayerPrefs.HasKey("Volume_Effect"))
+        {
+            float savedEffectVolume = PlayerPrefs.GetFloat("Volume_Effect");
+            SetVolume(savedEffectVolume, Define.Sound.Effect);
+        }
     }
 
     private void LoadSoundPaths()
@@ -181,6 +194,22 @@ public class SoundManager
             audioSource.PlayOneShot(audioClip);
         }
     }
+
+    public void SetVolume(float volume, Define.Sound type = Define.Sound.Bgm)
+    {
+        if (type == Define.Sound.Bgm)
+        {
+            _audioSources[(int)Define.Sound.Bgm].volume = volume;
+        }
+        else if (type == Define.Sound.Effect)
+        {
+            _audioSources[(int)Define.Sound.Effect].volume = volume;
+        }
+
+        // 설정값 저장
+        PlayerPrefs.SetFloat($"Volume_{type}", volume);
+    }
+
 
     private AudioClip GetOrAddAudioClip(string path, Define.Sound type = Define.Sound.Effect)
     {

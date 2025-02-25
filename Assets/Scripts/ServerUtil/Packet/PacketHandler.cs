@@ -98,7 +98,7 @@ class PacketHandler
 
     public static void S2CPlayerSpawnHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CPlayerSpawn pkt)
+        if (packet is not S2CSpawn pkt)
             return;
         Debug.Log($"S2CPlayerSpawn 패킷 무사 도착 : {pkt}");
 
@@ -147,7 +147,7 @@ class PacketHandler
 
     public static void S2CPlayerDespawnHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CPlayerDespawn pkt)
+        if (packet is not S2CDespawn pkt)
             return;
         Debug.Log($"S2CPlayerDespawn 패킷 무사 도착 : {pkt}");
 
@@ -219,32 +219,9 @@ class PacketHandler
     #region Collision
     public static void S2CPlayerCollisionHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CPlayerCollision pkt)
+        if (packet is not S2CCollision pkt)
             return;
         Debug.Log($"S2CPlayerCollision 패킷 무사 도착 : {pkt}");
-    }
-
-    public static void S2CMonsterCollisionHandler(PacketSession session, IMessage packet)
-    {
-        if (packet is not S2CMonsterCollision pkt)
-            return;
-        Debug.Log($"S2CMonsterCollision 패킷 무사 도착 : {pkt}");
-    }
-    #endregion
-
-    #region Store
-    public static void S2CSelectStoreHandler(PacketSession session, IMessage packet)
-    {
-        if (packet is not S2CSelectStore pkt)
-            return;
-        Debug.Log($"S2CSelectStore 패킷 무사 도착 : {pkt}");
-    }
-
-    public static void S2CBuyItemHandler(PacketSession session, IMessage packet)
-    {
-        if (packet is not S2CBuyItem pkt)
-            return;
-        Debug.Log($"S2CBuyItem 패킷 무사 도착 : {pkt}");
     }
     #endregion
 
@@ -362,7 +339,7 @@ class PacketHandler
 
     public static void S2CResourceListHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CResourceList pkt)
+        if (packet is not S2CResourcesList pkt)
             return;
         Debug.Log($"S2CResourceList 패킷 무사 도착 : {pkt}");
     }
