@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -17,6 +18,7 @@ public class SkillObj : MonoBehaviour
     private MeshRenderer mesh;
     private Rigidbody rigid;
     private TrailRenderer trail;
+    private GameObject effect;
     private SphereCollider effectRange;
 
     private bool isActive = false;
@@ -26,6 +28,7 @@ public class SkillObj : MonoBehaviour
         mesh = GetComponent<MeshRenderer>();
         rigid = GetComponent<Rigidbody>();
         trail = GetComponentInChildren<TrailRenderer>();
+        effect = transform.Find("Effect").gameObject;
         effectRange = GetComponent<SphereCollider>();
     }
 
@@ -34,8 +37,7 @@ public class SkillObj : MonoBehaviour
         if (!isActive && collision.gameObject.CompareTag("Ground"))
             if (type == ObjType.grenade)
             {
-                GameObject effect = gameObject.transform.Find("ExplodeEffect").gameObject;
-                StartCoroutine(nameof(Explode), effect);
+                StartCoroutine(nameof(Explode));
             }
             else if (type == ObjType.trap)
             {
@@ -55,13 +57,14 @@ public class SkillObj : MonoBehaviour
         }
     }
 
-    IEnumerator Explode(GameObject effect)
+    IEnumerator Explode()
     {
         isActive = true;
 
         yield return new WaitForSeconds(0.5f);
         rigid.velocity = Vector3.zero;
         rigid.angularVelocity = Vector3.zero;
+        transform.rotation = Quaternion.Euler(0, 0, 0);
 
         yield return new WaitForSeconds(0.5f);
         mesh.enabled = false;
@@ -71,7 +74,7 @@ public class SkillObj : MonoBehaviour
         effectRange.enabled = true;
         effect.SetActive(true);
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         Destroy(gameObject);
     }
 

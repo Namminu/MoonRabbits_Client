@@ -28,6 +28,7 @@ public class TempPlayer : MonoBehaviour
     public GameObject trap;
     private bool grenadeInput;
     private bool trapInput;
+    private bool recallInput;
     private TempSkillManager skillManager;
 
     /* 상호작용 관련 변수 */
@@ -71,6 +72,7 @@ public class TempPlayer : MonoBehaviour
         HandleInput();
         ThrowGrenade();
         SetTrap();
+        Recall();
         EquipChange();
         Interact();
     }
@@ -102,6 +104,7 @@ public class TempPlayer : MonoBehaviour
 
         grenadeInput = Input.GetButtonDown("Grenade");
         trapInput = Input.GetButtonDown("Trap");
+        recallInput = Input.GetButtonDown("Recall");
         interactInput = Input.GetButtonDown("Interact");
         equipChangeInput = Input.GetButtonDown("EquipChange");
     }
@@ -118,16 +121,22 @@ public class TempPlayer : MonoBehaviour
             skillManager.eventE.Invoke();
     }
 
-    private void EquipChange()
+    private void Recall()
     {
-        if (equipChangeInput)
-            interactManager.eventR.Invoke();
+        if (recallInput)
+            skillManager.eventT.Invoke();
     }
 
     private void Interact()
     {
         if (interactInput)
             interactManager.eventF.Invoke();
+    }
+
+    private void EquipChange()
+    {
+        if (equipChangeInput)
+            interactManager.eventR.Invoke();
     }
 
     void OnCollisionEnter(Collision collision)

@@ -32,6 +32,8 @@ public class MyPlayer : MonoBehaviour
     public GameObject trap;
     private bool grenadeInput;
     private bool trapInput;
+    private bool recallInput;
+
     private SkillManager skillManager;
 
     /* 상호작용 관련 변수 */
@@ -80,6 +82,7 @@ public class MyPlayer : MonoBehaviour
         HandleInput();
         ThrowGrenade();
         SetTrap();
+        Recall();
         EquipChange();
         Interact();
         CheckMoveByFrame();
@@ -128,6 +131,7 @@ public class MyPlayer : MonoBehaviour
 
         grenadeInput = Input.GetButtonDown("Grenade");
         trapInput = Input.GetButtonDown("Trap");
+        recallInput = Input.GetButtonDown("Recall");
         interactInput = Input.GetButtonDown("Interact");
         equipChangeInput = Input.GetButtonDown("EquipChange");
     }
@@ -232,6 +236,12 @@ public class MyPlayer : MonoBehaviour
     {
         if (trapInput)
             skillManager.eventE.Invoke();
+    }
+
+    private void Recall()
+    {
+        if (recallInput)
+            skillManager.eventT.Invoke();
     }
 
     private void EquipChange()

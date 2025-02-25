@@ -20,14 +20,18 @@ public class SkillManager : MonoBehaviour
     private Queue<GameObject> traps = new();
     private const int maxTraps = 3;
 
+    private const int recallTimer = 5;
+
     public Action eventQ; // Q키 누르면 발동
     public Action eventE; // E키 누르면 발동
+    public Action eventT; // T키 누르면 발동
 
     private void Start()
     {
         player = GetComponentInParent<MyPlayer>();
         eventQ += () => StartCoroutine(nameof(ThrowGrenade));
         eventE += () => StartCoroutine(nameof(SetTrap));
+        eventT += () => StartCoroutine(nameof(Recall));
     }
 
     IEnumerator ThrowGrenade()
@@ -105,5 +109,43 @@ public class SkillManager : MonoBehaviour
 
         yield return new WaitForSeconds(coolTimeE);
         isTrapReady = true;
+    }
+
+    IEnumerator Recall()
+    {
+        if (isCasting)
+            yield break;
+
+        isCasting = true;
+
+        NavMeshAgent agent = player.NavAgent;
+
+        agent.isStopped = true;
+        agent.destination = player.transform.position;
+
+        GameObject effect = player.transform.Find("RecallEffect").gameObject;
+        effect.SetActive(true);
+
+        int castingTime = 0;
+
+        while (castingTime < recallTimer)
+        {
+            if (agent.destination != player.transform.position)
+            {
+                isCasting = false;
+                agent.isStopped = false;
+                effect.SetActive(false);
+                yield break;
+            }
+
+            yield return new WaitForSeconds(1);
+            castingTime += 1;
+            Debug.Log($"귀환까지 남은 시간 : {recallTimer - castingTime}초");
+        }
+
+        isCasting = false;
+        agent.isStopped = false;
+        effect.SetActive(false);
+        // 서버로 마을 가는 패킷?!
     }
 }
