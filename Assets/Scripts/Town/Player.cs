@@ -245,9 +245,9 @@ public class Player : MonoBehaviour
     private void SetMoveSpeed(int moveSpeed)
     {
         // 플레이어 오브젝트 속도 변경
-        GetComponent<NavMeshAgent>().speed = moveSpeed * 1;
+        GetComponent<NavMeshAgent>().speed = moveSpeed * 1 + 5;
         GetComponent<NavMeshAgent>().angularSpeed = 300 + moveSpeed * 100;
-        GetComponent<NavMeshAgent>().acceleration = moveSpeed * 2;
+        GetComponent<NavMeshAgent>().acceleration = moveSpeed * 2 + 3;
 
         this.moveSpeed = moveSpeed;
         if(IsMine) TownManager.Instance.UiPlayer.SetMoveSpeed(moveSpeed, abilityPoint>0);
