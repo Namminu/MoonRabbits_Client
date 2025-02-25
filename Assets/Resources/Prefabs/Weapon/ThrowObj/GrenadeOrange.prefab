@@ -182,7 +182,6 @@ GameObject:
   - component: {fileID: 4361316625821051345}
   - component: {fileID: 7424194956965809130}
   - component: {fileID: 3627447865942108334}
-  - component: {fileID: 4855739064270119946}
   m_Layer: 20
   m_Name: GrenadeOrange
   m_TagString: Grenade
@@ -321,27 +320,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
---- !u!135 &4855739064270119946
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7901775521161273286}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Radius: 1.5
-  m_Center: {x: 0, y: 0.1, z: 0}
 --- !u!1 &9095447927393849758
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Google.Protobuf.Protocol;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
 
 public class S2Manager : SManagerBase
 {

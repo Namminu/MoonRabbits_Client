@@ -3395,6 +3395,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TempPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 7425247205764167969, guid: ba32852701fc4e94c8038110937921ac,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8467434873633744513, guid: ba32852701fc4e94c8038110937921ac,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5095,7 +5100,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  target: {fileID: 0}
+  targetResource: {fileID: 0}
+  targetPortal: {fileID: 0}
 --- !u!1001 &573844641
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6300,7 +6306,7 @@ MonoBehaviour:
   m_IsGlobal: 1
   priority: 0
   blendDistance: 0
-  weight: 1
+  weight: 0.5
   sharedProfile: {fileID: 11400000, guid: 9be9af7b83b13344da456a6f70fd408b, type: 2}
 --- !u!4 &688654399
 Transform:

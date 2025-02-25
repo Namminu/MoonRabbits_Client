@@ -139,10 +139,11 @@ public class SkillManager : MonoBehaviour
             }
 
             yield return new WaitForSeconds(1);
-            castingTime += 1;
             Debug.Log($"귀환까지 남은 시간 : {recallTimer - castingTime}초");
+            castingTime += 1;
         }
 
+        yield return new WaitForSeconds(0.5f);
         isCasting = false;
         agent.isStopped = false;
         effect.SetActive(false);

@@ -2,10 +2,10 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class TempInteractionManager : MonoBehaviour
+public class InteractManager : MonoBehaviour
 {
     [SerializeField]
-    private TempPlayer player;
+    private MyPlayer player;
 
     [SerializeField]
     private ResourceController targetResource = null;
@@ -24,7 +24,7 @@ public class TempInteractionManager : MonoBehaviour
 
     private void Start()
     {
-        player = GetComponentInParent<TempPlayer>();
+        player = GetComponentInParent<MyPlayer>();
         eventF += Interact;
         eventR += EquipChange;
     }

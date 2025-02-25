@@ -39,6 +39,7 @@ public class MonsterController : MonoBehaviour
     private Animator anim;
 
     private NavMeshAgent agent;
+    public NavMeshAgent NavAgent => agent;
 
     private Coroutine coDefaultMove;
 

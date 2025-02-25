@@ -7,6 +7,9 @@ using UnityEngine.EventSystems;
 
 public class TempPlayer : MonoBehaviour
 {
+    private int id = 555;
+    public int ID => id;
+
     [SerializeField]
     private NavMeshAgent agent;
     public NavMeshAgent NavAgent
