@@ -28,7 +28,7 @@ public class ResourcesManager : MonoBehaviour
         
     }
 
-    public void ResourcesInit(S2CResourceList pkt)
+    public void ResourcesInit(S2CResourcesList pkt)
     {
         var resourcesPacket = pkt.Resources;
 
