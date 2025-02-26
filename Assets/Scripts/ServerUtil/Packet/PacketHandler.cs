@@ -49,9 +49,9 @@ class PacketHandler
             return;
         Debug.Log($"S2CEnter 패킷 무사 도착 : {pkt}");
 
-        switch (pkt.Player.CurrentScene)
+        switch (pkt.Player.CurrentSector)
         {
-            case 1:
+            case 100:
                 TownManager.Instance.Spawn(pkt.Player);
                 break;
             case 2:
@@ -70,11 +70,11 @@ class PacketHandler
         }
     }
 
-    public static void S2CLeaveHandler(PacketSession session, IMessage packet)
+    public static void S2CMoveSectorHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CLeave pkt)
+        if (packet is not S2CMoveSector pkt)
             return;
-        Debug.Log($"S2CLeave 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CMoveSector 패킷 무사 도착 : {pkt}");
     }
 
     public static void S2CAnimationHandler(PacketSession session, IMessage packet)
@@ -114,9 +114,9 @@ class PacketHandler
 
         foreach (var playerInfo in pkt.Players)
         {
-            switch (playerInfo.CurrentScene)
+            switch (playerInfo.CurrentSector)
             {
-                case 1:
+                case 100:
                     if (
                         TownManager.Instance.MyPlayer != null
                         && playerInfo.PlayerId == TownManager.Instance.MyPlayer.PlayerId
@@ -179,9 +179,9 @@ class PacketHandler
             return;
         Debug.Log($"S2CPlayerDespawn 패킷 무사 도착 : {pkt}");
 
-        switch (pkt.CurrentScene)
+        switch (pkt.CurrentSector)
         {
-            case 1:
+            case 100:
                 foreach (int playerId in pkt.PlayerIds)
                 {
                     TownManager.Instance.ReleasePlayer(playerId);
@@ -228,9 +228,9 @@ class PacketHandler
         Quaternion rotation = Quaternion.Euler(0, transform.Rot, 0);
         bool isValidTransform = pkt.IsValidTransform;
 
-        switch (pkt.CurrentScene)
+        switch (pkt.CurrentSector)
         {
-            case 1:
+            case 100:
                 var townPlayer = TownManager.Instance.GetPlayerAvatarById(pkt.PlayerId);
                 townPlayer?.Move(position, rotation);
                 break;

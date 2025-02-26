@@ -47,7 +47,7 @@ public class TownManager : MonoBehaviour
 
     public Player MyPlayer { get; private set; }
 
-    private int sceneCode = 1;
+    private int sectorCode = 100;
 
     private void Awake()
     {
@@ -110,7 +110,7 @@ public class TownManager : MonoBehaviour
         {
             Nickname = GameManager.Instance.UserName,
             ClassCode = GameManager.Instance.ClassCode,
-            TargetScene = sceneCode,
+            TargetSector = sectorCode,
         };
 
         GameManager.Network.Send(enterPacket);

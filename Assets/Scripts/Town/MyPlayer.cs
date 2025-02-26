@@ -211,6 +211,7 @@ public class MyPlayer : MonoBehaviour
         agent.SetDestination(transform.position);
 
         var animationPacket = new C2SAnimation { AnimCode = animKey };
+        Debug.Log($"감정표현?? : {animationPacket}");
         GameManager.Network.Send(animationPacket);
     }
 
