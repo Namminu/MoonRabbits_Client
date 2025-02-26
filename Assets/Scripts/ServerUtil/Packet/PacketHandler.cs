@@ -468,7 +468,7 @@ class PacketHandler
             return;
         Debug.Log($"S2CAddExp 패킷 무사 도착 : {pkt}");
 
-        TownManager.Instance.UiPlayer.SetExp(pkt.UpdatedExp);
+        TownManager.Instance.MyPlayer.SetExp(pkt.UpdatedExp);
     }
 
     public static void S2CLevelUpHandler(PacketSession session, IMessage packet)
@@ -477,12 +477,28 @@ class PacketHandler
             return;
         Debug.Log($"S2CLevelUp 패킷 무사 도착 : {pkt}");
 
-        TownManager.Instance.UiPlayer.LevelUp(
-            pkt.UpdatedLevel,
-            pkt.NewTargetExp,
-            pkt.UpdatedExp,
-            pkt.AbilityPoint
-        );
+        if (
+            TownManager.Instance.MyPlayer != null
+            && pkt.PlayerId == TownManager.Instance.MyPlayer.PlayerId
+        )
+        {
+            Debug.Log(
+                $"1. 패킷플레이어ID:{pkt.PlayerId}, 내플레이어ID:{TownManager.Instance.MyPlayer.PlayerId}"
+            );
+            TownManager.Instance.MyPlayer.LevelUp(
+                pkt.UpdatedLevel,
+                pkt.NewTargetExp,
+                pkt.UpdatedExp,
+                pkt.AbilityPoint
+            );
+        }
+        else
+        {
+            Debug.Log(
+                $"2. 패킷플레이어ID:{pkt.PlayerId}, 내플레이어ID:{TownManager.Instance.MyPlayer.PlayerId}"
+            );
+            TownManager.Instance.GetPlayerAvatarById(pkt.PlayerId).LevelUpOther();
+        }
     }
 
     public static void S2CInvestPointHandler(PacketSession session, IMessage packet)
@@ -491,7 +507,7 @@ class PacketHandler
             return;
         Debug.Log($"S2CInvestPoint 패킷 무사 도착 : {pkt}");
 
-        TownManager.Instance.UiPlayer.InvestPoint(pkt.StatInfo);
+        TownManager.Instance.MyPlayer.InvestPoint(pkt.StatInfo);
     }
     #endregion
 }

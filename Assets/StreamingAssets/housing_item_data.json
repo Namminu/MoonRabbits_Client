@@ -1,0 +1,22 @@
+{
+  "name": "housing_item_data",
+  "version": "1.0.0",
+  "data": [
+    {
+      "item_id": 30000,
+      "item_name": "재료 이름",
+      "item_type": "int 타입으로, 0은 Housing, 1은 Material",
+      "item_description": "하우징 아이템은 30000부터 시작",
+      "item_prefab": "오브젝트 이름",
+      "item_gridSize": [1, 1]
+    },
+    {
+      "item_id": 30001,
+      "item_name": "testHSItem",
+      "item_type": 0,
+      "item_description": "테스트용 하우징 아이템",
+      "item_prefab": "TestCube",
+      "item_gridSize": [1, 1]
+    }
+  ]
+}

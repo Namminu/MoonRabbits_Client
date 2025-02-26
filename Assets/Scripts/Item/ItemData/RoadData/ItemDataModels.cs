@@ -1,13 +1,14 @@
 using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 [Serializable]
 public class ItemJsonData
 {
 	public int item_id;
 	public string item_name;
-	public string item_type;
+	public int item_type;
 	public string item_description;
 }
 
@@ -20,13 +21,22 @@ public class MaterialItemJsonData : ItemJsonData
 [Serializable]
 public class HousingItemJsonData : ItemJsonData
 {
-	public int item_max_stack;
+	public string item_prefab;
+	public Vector2Int item_gridsize;
 }
 
 [Serializable]
-public class ItemJsonWrapper
+public class MaterialItemJsonWrapper
 {
 	public string name;
 	public string version;
-	public List<ItemJsonData> data;
+	public List<MaterialItemJsonData> data;
+}
+
+[Serializable]
+public class HousingItemJsonWrapper
+{
+	public string name;
+	public string version;
+	public List<HousingItemJsonData> data;
 }

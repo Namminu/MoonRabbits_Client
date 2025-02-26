@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     public string UserName;
     public int ClassCode;
 
-    private void Awake()
+    private async void Awake()
     {
         if (_instance == null)
         {
@@ -37,7 +37,8 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        SoundManager.Instance.Play(19, Define.Sound.Bgm);
+        //SoundManager.Instance.Play(19, Define.Sound.Bgm);
+        await ItemDataLoader.GenerateAllItems();
     }
 
     void Start()
