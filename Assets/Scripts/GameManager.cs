@@ -142,10 +142,9 @@ public class GameManager : MonoBehaviour
                     break;
                 case 101:
                     yield return new WaitUntil(() => S1Manager.Instance != null);
-                    Debug.Log($"S1Manager 인스턴스 확인 {S1Manager.Instance == null}");
                     if (
-                        S1Manager.Instance.myPlayer != null
-                        && playerInfo.PlayerId == S1Manager.Instance.myPlayer.PlayerId
+                        S1Manager.Instance.MyPlayer != null
+                        && playerInfo.PlayerId == S1Manager.Instance.MyPlayer.PlayerId
                     )
                         continue;
                     var s1Player = S1Manager.Instance.SpawnPlayer(playerInfo);
@@ -153,10 +152,9 @@ public class GameManager : MonoBehaviour
                     break;
                 case 102:
                     yield return new WaitUntil(() => S2Manager.Instance != null);
-                    Debug.Log($"S2Manager 인스턴스 확인 {S2Manager.Instance == null}");
                     if (
-                        S2Manager.Instance.myPlayer != null
-                        && playerInfo.PlayerId == S2Manager.Instance.myPlayer.PlayerId
+                        S2Manager.Instance.MyPlayer != null
+                        && playerInfo.PlayerId == S2Manager.Instance.MyPlayer.PlayerId
                     )
                         continue;
                     var s2Player = S2Manager.Instance.SpawnPlayer(playerInfo);

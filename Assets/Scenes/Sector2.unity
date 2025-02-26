@@ -4685,6 +4685,8 @@ MonoBehaviour:
   spawnArea: {fileID: 0}
   despawnArea: {fileID: 0}
   eSystem: {fileID: 0}
+  uiChat: {fileID: 0}
+  uiPlayer: {fileID: 0}
 --- !u!1001 &447813992
 PrefabInstance:
   m_ObjectHideFlags: 0

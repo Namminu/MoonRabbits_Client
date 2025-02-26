@@ -16,14 +16,17 @@ public abstract class SManagerBase : MonoBehaviour
     private EventSystem eSystem;
     public EventSystem ESystem => eSystem;
 
+    [SerializeField]
     private UIChat uiChat;
     public UIChat UiChat => uiChat;
+
+    [SerializeField]
     private UIPlayer uiPlayer;
     public UIPlayer UiPlayer => uiPlayer;
 
     private Dictionary<int, Player> playerList = new();
     private Dictionary<int, string> prefabPaths = new();
-    public Player myPlayer { get; private set; }
+    public Player MyPlayer { get; private set; }
 
     private int planeCnt;
     private Dictionary<int, ResourceController> resources = new(); // key는 리소스인덱스
@@ -42,18 +45,22 @@ public abstract class SManagerBase : MonoBehaviour
         prefabPaths[1003] = "Player/Player3";
         prefabPaths[1004] = "Player/Player4";
         prefabPaths[1005] = "Player/Player5";
-        Debug.Log(
-            $"이거 작동해요?? {prefabPaths[1001]}, {prefabPaths[1002]}, {prefabPaths[1003]}, {prefabPaths[1004]}, {prefabPaths[1005]}"
-        );
+    }
+
+    private void ActivateUI()
+    {
+        uiChat.gameObject.SetActive(true);
+        uiPlayer.gameObject.SetActive(true);
     }
 
     public void Enter(PlayerInfo playerInfo)
     {
         // [1] 프리펩 생성 및 정보 연동
-        myPlayer = SpawnPlayer(playerInfo);
+        MyPlayer = SpawnPlayer(playerInfo);
         // [2] "내" 프리펩인 걸 선언
-        myPlayer.SetIsMine(true);
+        MyPlayer.SetIsMine(true);
         // [3] 머리 위 닉네임 UI에 이름 박음
+        // ActivateUI();
         // UiPlayer.SetNickname(playerInfo.Nickname);
     }
 

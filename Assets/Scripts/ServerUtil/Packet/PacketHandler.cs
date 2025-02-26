@@ -108,14 +108,56 @@ class PacketHandler
             return;
         Debug.Log($"S2CChat 패킷 무사 도착 : {pkt}");
 
-        if (pkt.PlayerId > 0)
+        switch (pkt.CurrentSector)
         {
-            var player = TownManager.Instance.GetPlayerAvatarById(pkt.PlayerId);
-            player?.RecvMessage(pkt.ChatMsg, pkt.ChatType);
-        }
-        else
-        {
-            TownManager.Instance.UiChat.PushMessage("System", pkt.ChatMsg, pkt.ChatType, true);
+            case 100:
+                if (pkt.PlayerId > 0)
+                {
+                    var player = TownManager.Instance.GetPlayerAvatarById(pkt.PlayerId);
+                    player?.RecvMessage(pkt.ChatMsg, pkt.ChatType);
+                }
+                else
+                {
+                    TownManager.Instance.UiChat.PushMessage(
+                        "System",
+                        pkt.ChatMsg,
+                        pkt.ChatType,
+                        true
+                    );
+                }
+                break;
+            case 101:
+                if (pkt.PlayerId > 0)
+                {
+                    var player = S1Manager.Instance.GetPlayer(pkt.PlayerId);
+                    player?.RecvMessage(pkt.ChatMsg, pkt.ChatType);
+                }
+                else
+                {
+                    S1Manager.Instance.UiChat.PushMessage(
+                        "System",
+                        pkt.ChatMsg,
+                        pkt.ChatType,
+                        true
+                    );
+                }
+                break;
+            case 102:
+                if (pkt.PlayerId > 0)
+                {
+                    var player = S2Manager.Instance.GetPlayer(pkt.PlayerId);
+                    player?.RecvMessage(pkt.ChatMsg, pkt.ChatType);
+                }
+                else
+                {
+                    S2Manager.Instance.UiChat.PushMessage(
+                        "System",
+                        pkt.ChatMsg,
+                        pkt.ChatType,
+                        true
+                    );
+                }
+                break;
         }
     }
 
