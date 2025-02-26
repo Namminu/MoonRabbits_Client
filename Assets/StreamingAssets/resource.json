@@ -3,19 +3,6 @@
   "version": "1.0.0",
   "data": [
     {
-      "resource_id": "1~50 나무 50~100 광석류",
-      "resource_name": "자원의 이름",
-      "resource_type": "나무: Tree 광석/돌: Ore",
-      "resource_description": "difficulty: 난이도(스킬체크속도) durbility: 내구도(반복작업 횟수) drop_item: 드랍 아이템 목록({chance: 확율, item: 아이템} 현제 드랍이 없는 경우는 없음)",
-      "resource_difficulty": 1,
-      "resource_durability": 1,
-      "resource_respawn": 10,
-      "drop_item": [
-        { "chance": 10, "item_id": 20001 },
-        { "chance": 10, "item_id": 21001 }
-      ]
-    },
-    {
       "resource_id": 1,
       "resource_name": "평범한 나무",
       "resource_type": "Tree",

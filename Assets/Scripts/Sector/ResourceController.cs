@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,6 +13,11 @@ public class ResourceController : MonoBehaviour
     [SerializeField]
     private GameObject unavailableIcon;
     private bool isAvailable = true;
+    public bool IsAvailable
+    {
+        get => isAvailable;
+        set => isAvailable = value;
+    }
 
     public int idx;
 
@@ -56,6 +62,14 @@ public class ResourceController : MonoBehaviour
     {
         get => starttime;
         set => starttime = value; 
+    }
+
+    private void Update()
+    {
+        if (isAvailable && Input.GetKeyDown(KeyCode.E))
+        {
+            Debug.Log(this.durability.ToString() + this.difficulty.ToString());
+        }
     }
 
     public void DecreaseDurability(int cnt)
@@ -120,6 +134,32 @@ public class ResourceController : MonoBehaviour
                 availableIcon.SetActive(false);
             else if (unavailableIcon.activeSelf)
                 unavailableIcon.SetActive(false);
+        }
+    }
+
+    public void ResourcesUpdateDurability(int duability)
+    {
+        Debug.Log("내구도 업데이트");
+        this.durability = duability;
+    }
+    public void ResourcesGatheringStart(int angle, int difficulty)
+    {
+        Debug.Log("스킬체크 시작");
+        this.angle = angle;
+        this.Difficulty = difficulty;
+        this.Starttime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+    }
+    public void ResourcesGatheringSkillCheck(int durability)
+    {
+        if (this.durability > durability)
+        {
+            Debug.Log("스킬체크 성공");
+            //성공
+        }
+        else
+        {
+            Debug.Log("스킬체크 실패");
+            //실패
         }
     }
 }

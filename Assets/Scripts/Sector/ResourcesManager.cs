@@ -54,26 +54,17 @@ public class ResourcesManager : MonoBehaviour
     public void ResourcesUpdateDurability(S2CUpdateDurability pkt)
     {
         var resourceController = resources[pkt.PlacedId - 1].GetComponent<ResourceController>();
-        resourceController.Durability = pkt.Durability;
+        resourceController.ResourcesUpdateDurability(pkt.Durability);
     }
     public void ResourcesGatheringStart(S2CGatheringStart pkt)
     {
         var resourceController = resources[pkt.PlacedId - 1].GetComponent<ResourceController>();
-        resourceController.Angle = pkt.Angle;
-        resourceController. Difficulty = pkt.Difficulty;
-        resourceController.Starttime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+        resourceController.ResourcesGatheringStart(pkt.Angle, pkt.Difficulty);
     }
     public void ResourcesGatheringSkillCheck(S2CGatheringSkillCheck pkt)
     {
         var resourceController = resources[pkt.PlacedId - 1].GetComponent<ResourceController>();
-        if( resourceController.Durability > pkt.Durability)
-        {
-            //성공
-        }
-        else
-        {
-            //실패
-        }
+        resourceController.ResourcesGatheringSkillCheck(pkt.Durability);
     }
 
 
