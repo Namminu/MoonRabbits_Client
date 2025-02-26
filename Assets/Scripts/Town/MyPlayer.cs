@@ -78,7 +78,7 @@ public class MyPlayer : MonoBehaviour
 
     void Start()
     {
-        // StartCoroutine(ExecuteEvery10Frames());
+        StartCoroutine(ExecuteEvery10Frames());
     }
 
     void Update()
@@ -87,8 +87,6 @@ public class MyPlayer : MonoBehaviour
         Throw();
         EquipChange();
         Interact();
-        CheckMoveByFrame();
-        // CheckMove();
     }
 
     private void InitializeCamera()
@@ -141,7 +139,7 @@ public class MyPlayer : MonoBehaviour
     {
         while (true)
         {
-            yield return null; // 1 프레임 대기
+            yield return null;
             frameCount++;
 
             CheckMove();
@@ -152,19 +150,6 @@ public class MyPlayer : MonoBehaviour
                 frameCount = 0;
                 MoveAndSendMovePacket();
             }
-        }
-    }
-
-    private void CheckMoveByFrame()
-    {
-        frameCount += 1;
-
-        CheckMove();
-
-        if (frameCount >= targetFrames && targetPosition != lastTargetPosition)
-        {
-            frameCount = 0;
-            MoveAndSendMovePacket();
         }
     }
 
