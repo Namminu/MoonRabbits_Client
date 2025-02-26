@@ -9,6 +9,6 @@ public class MaterialItemData : ItemData
 	[SerializeField] private int itemMaxStack;
 
 	#region Public Members
-	public int ItemMaxStack => itemMaxStack;
+	public int ItemMaxStack { get => itemMaxStack; set => itemMaxStack = value; }
 	#endregion
 }

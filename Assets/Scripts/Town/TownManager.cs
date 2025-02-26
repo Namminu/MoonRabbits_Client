@@ -120,11 +120,11 @@ public class TownManager : MonoBehaviour
     {
         Vector3 spawnPos = CalculateSpawnPosition(playerInfo.Transform);
 
+        ActivateGameUI();
         MyPlayer = CreatePlayer(playerInfo, spawnPos);
         MyPlayer.SetIsMine(true);
-        uiPlayer.SetNickname(playerInfo.Nickname);
-
-        ActivateGameUI();
+        MyPlayer.SetNickname(playerInfo.Nickname);
+        MyPlayer.SetStatInfo(playerInfo.StatInfo);
     }
 
     private Vector3 CalculateSpawnPosition(TransformInfo transformInfo)

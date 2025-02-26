@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,87 +11,78 @@ public static class ItemDataLoader
 	/* Sprite : ID 매칭 클래스 */
 	private static SpriteDataBase spriteDataBase;
 
-	/* Json 파일 경로 */
-	private static readonly string jsonFilePath = Path.Combine(Application.streamingAssetsPath, "item_data.json");
-	private static readonly string materialOutputPath = "Assets/Resources/ItemDataFile/MaterialItemData";
-	private static readonly string housingOutputPath = "Assets/Resources/ItemDataFile/HousingItemData";
+	/* 데이터 저장 리스트 */
+	public static List<MaterialItemData> MaterialItemsList { get; private set; }  = new List<MaterialItemData>();
+	public static List<HousingItemData> HousingItemsList { get; private set; } = new List<HousingItemData>();
 
-	[MenuItem("Tools/Generate All Items")]
-	public static async void GenerateAllItems()
+	/* Json 파일 읽기 경로 */
+	private static readonly string MTItemjsonFilePath = "material_item_data.json";
+	private static readonly string HSItemjsonFilePath = "housing_item_data.json";
+	 
+	public static async Task GenerateAllItems()
 	{
-		string jsonText = await LoadJsonFromStreamingAssets();
+		string mtJsonText = await LoadJsonFromStreamingAssets(MTItemjsonFilePath);
+		string hsJsonText = await LoadJsonFromStreamingAssets(HSItemjsonFilePath);
 
-		if (string.IsNullOrEmpty(jsonText))
+		if (string.IsNullOrEmpty(mtJsonText)|| string.IsNullOrEmpty(hsJsonText))
 		{
 			Debug.LogError("JSON 파일을 불러오는 데 실패했습니다.");
 			return;
 		}
 
-		ItemJsonWrapper itemWrapper = JsonUtility.FromJson<ItemJsonWrapper>(jsonText);
+		MaterialItemJsonWrapper mtItemWrapper = JsonUtility.FromJson<MaterialItemJsonWrapper>(mtJsonText);
+		HousingItemJsonWrapper hsItemWrapper = JsonUtility.FromJson<HousingItemJsonWrapper>(hsJsonText);
 
-		if (itemWrapper == null || itemWrapper.data == null)
+		if (mtItemWrapper == null || hsItemWrapper == null || mtItemWrapper.data == null || hsItemWrapper.data == null)
 		{
 			Debug.LogError("JSON 데이터를 읽는 데 실패했습니다.");
 			return;
 		}
 
 		LoadSpriteDataBase();
-		GenerateMaterialItems(itemWrapper.data);
-		//GenerateHousingItems(itemWrapper.data);
-
-		AssetDatabase.SaveAssets();
-		AssetDatabase.Refresh();
+		GenerateMaterialItems(mtItemWrapper.data);
+		GenerateHousingItems(hsItemWrapper.data);
 	}
 
-	private static void GenerateMaterialItems(List<ItemJsonData> items)
+	private static void GenerateMaterialItems(List<MaterialItemJsonData> items)
 	{
-		if (!Directory.Exists(materialOutputPath)) Directory.CreateDirectory(materialOutputPath);
-
-		foreach (var item in items)
+		foreach(var item in items)
 		{
-			if (item.item_type != "Material") continue;
+			if (item.item_type != 1) continue;
 
 			MaterialItemData newItem = ScriptableObject.CreateInstance<MaterialItemData>();
-			SerializedObject serializedObject = new SerializedObject(newItem);
 
-			serializedObject.FindProperty("itemId").intValue = item.item_id;
-			serializedObject.FindProperty("itemName").stringValue = item.item_name;
-			serializedObject.FindProperty("itemDescription").stringValue = item.item_description;
-			serializedObject.FindProperty("itemType").enumValueIndex = (int)ItemTypes.MaterialItem;
-			serializedObject.FindProperty("itemIcon").objectReferenceValue = GetSpriteByItemId(item.item_id);
-			serializedObject.FindProperty("itemName").intValue = newItem.ItemMaxStack;
+			newItem.ItemId = item.item_id;
+			newItem.ItemName = item.item_name;
+			newItem.ItemDescription = item.item_description;
+			newItem.ItemType = (ItemTypes)item.item_type;
+			newItem.ItemIcon = GetSpriteByItemId(item.item_id);
+			newItem.ItemMaxStack = 99;
 
-			serializedObject.ApplyModifiedProperties();
-
-			string assetPath = materialOutputPath + $"MaterialItem_{item.item_id}.asset";
-			AssetDatabase.CreateAsset(newItem, assetPath);
-			Debug.Log($"Material 아이템 생성됨: {assetPath}");
+			MaterialItemsList.Add(newItem);
 		}
+		Debug.Log("재료 아이템 생성 갯수 : " + MaterialItemsList.Count);
 	}
 
-	private static void GenerateHousingItems(List<ItemJsonData> items)
+	private static void GenerateHousingItems(List<HousingItemJsonData> items)
 	{
-		if (!Directory.Exists(housingOutputPath)) Directory.CreateDirectory(housingOutputPath);
-
 		foreach (var item in items)
 		{
-			if (item.item_type != "Housing") continue;
+			if (item.item_type != 0) continue;
 
 			HousingItemData newItem = ScriptableObject.CreateInstance<HousingItemData>();
-			SerializedObject serializedObject = new SerializedObject(newItem);
 
-			serializedObject.FindProperty("itemId").intValue = item.item_id;
-			serializedObject.FindProperty("itemName").stringValue = item.item_name;
-			serializedObject.FindProperty("itemDescription").stringValue = item.item_description;
-			serializedObject.FindProperty("itemType").enumValueIndex = (int)ItemTypes.HousingItem;
-			serializedObject.FindProperty("itemIcon").objectReferenceValue = GetSpriteByItemId(item.item_id);
+			newItem.ItemId = item.item_id;
+			newItem.ItemName = item.item_name;
+			newItem.ItemDescription = item.item_description;
+			newItem.ItemType = (ItemTypes)item.item_type;
+			newItem.ItemIcon = GetSpriteByItemId(item.item_id);
+			newItem.ItemPrefab = GetPrefabByName(item.item_prefab);
+			newItem.ItemGridSize = item.item_gridsize;
 
-			serializedObject.ApplyModifiedProperties();
-
-			string assetPath = housingOutputPath + $"HousingItem_{item.item_id}.asset";
-			AssetDatabase.CreateAsset(newItem, assetPath);
-			Debug.Log($"Housing 아이템 생성됨: {assetPath}");
+			HousingItemsList.Add(newItem);
 		}
+		Debug.Log("하우징 아이템 생성 갯수 : " + HousingItemsList.Count);
 	}
 
 	private static Sprite GetSpriteByItemId(int itemId)
@@ -101,16 +91,22 @@ public static class ItemDataLoader
 		return spriteDataBase?.GetSprite(itemId);
 	}
 
+	private static GameObject GetPrefabByName(string prefabName)
+	{
+		if (string.IsNullOrEmpty(prefabName)) return null;
+		return Resources.Load<GameObject>($"Prefabs/3DObjects/{prefabName}");
+	}
+
 	private static void LoadSpriteDataBase()
 	{
 		if (spriteDataBase == null)
 		{
-			spriteDataBase = Resources.Load<SpriteDataBase>("SpriteDataBase");
+			spriteDataBase = Resources.Load<SpriteDataBase>("DataBase/SpriteDataBase");
 		}
 	}
-	private static async Task<string> LoadJsonFromStreamingAssets()
+	private static async Task<string> LoadJsonFromStreamingAssets(string fileName)
 	{
-		string path = jsonFilePath;
+		string path = Path.Combine(Application.streamingAssetsPath, fileName);
 
 		if (Application.platform == RuntimePlatform.Android)
 		{
@@ -141,4 +137,3 @@ public static class ItemDataLoader
 		}
 	}
 }
-#endif

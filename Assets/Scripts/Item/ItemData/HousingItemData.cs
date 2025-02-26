@@ -10,7 +10,7 @@ public class HousingItemData : ItemData
 	[SerializeField] private Vector2Int itemGridSize;
 
 	#region Public Members
-	public GameObject ItemPrefab => itemPrefab;
-	public Vector2Int ItemGridSize => itemGridSize;
+	public GameObject ItemPrefab { get => itemPrefab; set => itemPrefab = value; }
+	public Vector2Int ItemGridSize { get => itemGridSize; set => itemGridSize = value; }
 	#endregion
 }
