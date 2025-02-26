@@ -255,4 +255,19 @@ public class MyPlayer : MonoBehaviour
         if (interactInput)
             interactManager.eventF.Invoke();
     }
+
+    public void Stun(float timer)
+    {
+        transform.Find("StunEffect").gameObject.SetActive(true);
+        NavAgent.velocity = Vector3.zero;
+        NavAgent.ResetPath();
+        NavAgent.isStopped = true;
+        Invoke(nameof(StunOut), timer);
+    }
+
+    private void StunOut()
+    {
+        transform.Find("StunEffect").gameObject.SetActive(false);
+        NavAgent.isStopped = false;
+    }
 }

@@ -142,6 +142,22 @@ public class TempPlayer : MonoBehaviour
             interactManager.eventR.Invoke();
     }
 
+    public void Stun(float timer)
+    {
+        Debug.Log($"걸린 녀석 : {ID}");
+        transform.Find("StunEffect").gameObject.SetActive(true);
+        NavAgent.velocity = Vector3.zero;
+        NavAgent.ResetPath();
+        NavAgent.isStopped = true;
+        Invoke(nameof(StunOut), timer);
+    }
+
+    private void StunOut()
+    {
+        transform.Find("StunEffect").gameObject.SetActive(false);
+        NavAgent.isStopped = false;
+    }
+
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))

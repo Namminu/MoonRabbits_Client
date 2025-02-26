@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Rendering;
 
 public class SkillObj : MonoBehaviour
@@ -67,13 +68,20 @@ public class SkillObj : MonoBehaviour
             explosionRange, // 설정한 반경의 구체 Ray를
             Vector3.up, // 위 방향으로
             0, // 현 위치와 이격 없이 쏘는데
-            LayerMask.GetMask("Monster", "Character") // 레이어에 맞는 오브젝트들을 배열로 반환
-        // "Character" 레이어 잘 되는지 확인 필요하고, 결국 레이어 이름도 플레이어로 바꿔야할 듯
+            LayerMask.GetMask("Monster", "Player") // 레이어에 맞는 오브젝트들을 배열로 반환
         );
 
         foreach (RaycastHit hitObj in rayHits)
         {
-            StartCoroutine(nameof(Stun), hitObj.transform.gameObject);
+            var target = hitObj.transform.gameObject;
+            if (target.CompareTag("Monster"))
+            {
+                target.GetComponent<MonsterController>().Stun(stunTimer);
+            }
+            else if (target.CompareTag("Player"))
+            {
+                target.GetComponent<TempPlayer>().Stun(stunTimer); // 나중에 myplayer로 수정
+            }
         }
 
         yield return new WaitForSeconds(1f);
@@ -82,41 +90,15 @@ public class SkillObj : MonoBehaviour
 
     IEnumerator ActivateTrap(GameObject target)
     {
-        yield return null; // 로직 채우기
         isActive = true;
 
         var rune = transform.Find("Rune").gameObject;
         rune.SetActive(false);
         effect.SetActive(true);
 
-        StartCoroutine(Stun(target));
+        target.GetComponent<TempPlayer>().Stun(stunTimer); // 나중에 myplayer로 수정
 
         yield return new WaitForSeconds(stunTimer);
         Destroy(gameObject);
-    }
-
-    IEnumerator Stun(GameObject target)
-    {
-        var agent = target.CompareTag("Monster")
-            ? target.GetComponent<MonsterController>().NavAgent
-            : target.GetComponent<TempPlayer>().NavAgent; // 이거 나중에 수정해야해 다른 플레이어엔 에이전트 없음
-
-        if (target.CompareTag("Monster"))
-        {
-            Debug.Log($"걸린 녀석 : {target.GetComponent<MonsterController>().ID}");
-        }
-        else
-        {
-            Debug.Log($"걸린 녀석 : {target.GetComponent<TempPlayer>().ID}");
-        }
-
-        agent.isStopped = true;
-        agent.destination = target.transform.position;
-        Debug.Log($"못 움직이지요? {agent.isStopped}");
-
-        yield return new WaitForSeconds(stunTimer);
-        agent.isStopped = false;
-        Debug.Log($"왜 안오지 여길...");
-        Debug.Log($"이제 움직이지요? {agent.isStopped}");
     }
 }

@@ -144,4 +144,18 @@ public class MonsterController : MonoBehaviour
     {
         _targetPosition = position;
     }
+
+    public void Stun(float timer)
+    {
+        Debug.Log($"걸린 녀석 : {ID}");
+        NavAgent.velocity = Vector3.zero;
+        NavAgent.ResetPath();
+        NavAgent.isStopped = true;
+        Invoke(nameof(StunOut), timer);
+    }
+
+    private void StunOut()
+    {
+        NavAgent.isStopped = false;
+    }
 }
