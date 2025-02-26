@@ -314,6 +314,11 @@ public class UIPlayer : MonoBehaviour
         StartCoroutine(CoolTimeFunc(cooltime, cooltime, qSkillMask));
     }
 
+    public void WSkillCool(float cooltime)
+    {
+        StartCoroutine(CoolTimeFunc(cooltime, cooltime, wSkillMask));
+    }
+
     IEnumerator CoolTimeFunc(float curCooltime, float cooltime, Image skillImage)
     {
         while (curCooltime > 0.0f)

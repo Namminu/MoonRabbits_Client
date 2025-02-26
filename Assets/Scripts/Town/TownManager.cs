@@ -194,7 +194,7 @@ public class TownManager : MonoBehaviour
     {
         uiStart.gameObject.SetActive(false);
         uiChat.gameObject.SetActive(true);
-        uiAnimation.gameObject.SetActive(true);
+        // uiAnimation.gameObject.SetActive(true);
         uiPlayer.gameObject.SetActive(true);
     }
 
