@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -145,11 +146,11 @@ class PacketHandler
         }
     }
 
-    public static void S2CPlayerDespawnHandler(PacketSession session, IMessage packet)
+    public static void S2CDespawnHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CDespawn pkt)
             return;
-        Debug.Log($"S2CPlayerDespawn 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CDespawn 패킷 무사 도착 : {pkt}");
 
         switch (pkt.CurrentScene)
         {
@@ -217,11 +218,33 @@ class PacketHandler
     }
 
     #region Collision
-    public static void S2CPlayerCollisionHandler(PacketSession session, IMessage packet)
+    public static void S2CCollisionHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CCollision pkt)
             return;
-        Debug.Log($"S2CPlayerCollision 패킷 무사 도착 : {pkt}");
+        //Debug.Log($"S2CPlayerCollision 패킷 무사 도착 : {pkt}");
+        //1: 플레이어
+        //2: 몬스터
+        S2CCollision collisionPushInfo = (S2CCollision)packet;
+        var info = collisionPushInfo.CollisionPushInfo;
+
+        if (info.HasCollision == false)
+        {
+            Debug.LogError("해당 충돌은 거짓 판명이 나왔다.");
+            return;
+        }
+        switch (info.MyType)
+        {
+            case 1:
+                var players = GameObject.FindObjectsOfType<Player>(); // 모든 플레이어를 배열로 가져옴
+                var player = Array.Find(players, x => x.PlayerId == info.MyId); // 특정 ID를 가진 플레이어 찾기
+                player.SetCollision(info);
+                break;
+            case 2:
+                var monster = MonsterManager.Instance.GetMonster(info.MyId); // 몬스터 찾기
+                monster?.SetCollision(info);
+                break;
+        }
     }
     #endregion
 
@@ -320,7 +343,7 @@ class PacketHandler
         Vector3 position = new Vector3(monsterPosition.PosX, monsterPosition.PosY, monsterPosition.PosZ);
         MonsterManager.Instance.SendPositionPacket(monsterId, position);
 
-        Debug.Log($"S2CMonsterLocation 패킷 무사 도착 : {pkt}");
+        //Debug.Log($"S2CMonsterLocation 패킷 무사 도착 : {pkt}");
     }
 
     public static void S2CDetectedPlayerHandler(PacketSession session, IMessage packet)
