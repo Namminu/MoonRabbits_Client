@@ -13,7 +13,7 @@ public class ResourceController : MonoBehaviour
     private GameObject unavailableIcon;
     private bool isAvailable = true;
 
-    private int idx;
+    public int idx;
 
     public int resourceId; // 1이면 나무, 2면 바위 (도끼와 곡괭이 enum 및 index와 맞춰져있음다)
     private int startTime;
@@ -23,10 +23,40 @@ public class ResourceController : MonoBehaviour
     public int Durability
     {
         get => durability;
+        set 
+        {
+            if(value < 1)
+               {
+                isAvailable = false;
+                ChangeIcon(isAvailable);
+            }
+            else
+            {
+                isAvailable = true;
+                ChangeIcon(isAvailable);
+            }
+            durability = value;
+        }
+    }
+    private int angle = 180;
+    public int Angle
+    {
+        get => angle;
+        set => angle=value;
     }
     private const int maxDurability = 5;
     private int difficulty;
-    private int angle;
+    public int Difficulty
+    {
+        get => difficulty;
+        set => difficulty = value;
+    }
+    private long starttime;
+    public long Starttime
+    {
+        get => starttime;
+        set => starttime = value; 
+    }
 
     public void DecreaseDurability(int cnt)
     {

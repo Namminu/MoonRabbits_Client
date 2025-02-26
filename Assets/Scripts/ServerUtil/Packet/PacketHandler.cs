@@ -365,6 +365,7 @@ class PacketHandler
         if (packet is not S2CResourceList pkt)
             return;
         Debug.Log($"S2CResourceList 패킷 무사 도착 : {pkt}");
+        ResourcesManager.Instance.ResourcesInit(pkt);
     }
 
     public static void S2CUpdateDurabilityHandler(PacketSession session, IMessage packet)
@@ -372,6 +373,7 @@ class PacketHandler
         if (packet is not S2CUpdateDurability pkt)
             return;
         Debug.Log($"S2CUpdateDurability 패킷 무사 도착 : {pkt}");
+        ResourcesManager.Instance.ResourcesUpdateDurability(pkt);
     }
 
     public static void S2CGatheringStartHandler(PacketSession session, IMessage packet)
@@ -379,6 +381,7 @@ class PacketHandler
         if (packet is not S2CGatheringStart pkt)
             return;
         Debug.Log($"S2CGatheringStart 패킷 무사 도착 : {pkt}");
+        ResourcesManager.Instance.ResourcesGatheringStart(pkt);
     }
 
     public static void S2CGatheringSkillCheckHandler(PacketSession session, IMessage packet)
@@ -386,6 +389,7 @@ class PacketHandler
         if (packet is not S2CGatheringSkillCheck pkt)
             return;
         Debug.Log($"S2CGatheringSkillCheck 패킷 무사 도착 : {pkt}");
+        ResourcesManager.Instance.ResourcesGatheringSkillCheck(pkt);
     }
 
     public static void S2CGatheringDoneHandler(PacketSession session, IMessage packet)
@@ -414,7 +418,7 @@ class PacketHandler
         // }
     }
 
-    public static void S2CSectorLeaveHandler(PacketSession session, IMessage packet)
+    public static void S2CSectorMoveHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CSectorLeave pkt)
             return;
