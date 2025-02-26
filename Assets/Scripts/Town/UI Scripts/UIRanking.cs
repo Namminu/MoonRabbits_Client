@@ -1,15 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using Google.Protobuf.Protocol;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class UIRanking : MonoBehaviour
 {
-    // void updateRanking(S2CUpdateRanking pkt)
+    public string status { get; private set; }
+    public string type { get; private set; }
+
+    // void updateRanking(S2CUpdateRanking rankData)
     // {
-    //     if (pkt.status == "success")
+    //     status = rankData.Status;
+        
+
+    //     if (rankData.status == "success")
     //     {
-    //         foreach (var rank in pkt.data.rankingList)
+    //         foreach (var rank in rankData.data.rankingList)
     //         {
     //             // Unity UI 요소 업데이트 (예: RankSheet에 데이터 추가)
     //             UpdateRankUI(rank.rank, rank.nickname, rank.exp);
@@ -21,16 +28,16 @@ public class UIRanking : MonoBehaviour
     //     }
     // }
 
-    // void UpdateRankUI(int rank, string nickname, int exp)
-    // {
-    //     // RankSheet의 UI 요소 업데이트 로직 구현
-    // }
+    void UpdateRankUI(int rank, string nickname, int exp)
+    {
+        // RankSheet의 UI 요소 업데이트 로직 구현
+    }
     #region 패킷 전송 함수
-    // void SendRankingListPacket(string type) // type은 "ALL" 또는 "TOP"
-    // {
-    //     var requestRankingList = new C2SRankingList {type = type}
-    //     GameManager.Network.Send(requestRankingList);
-    // }
+    void SendRankingListPacket(string type) // type은 "ALL" 또는 "TOP"
+    {
+        var requestRankingList = new C2SRankingList { Type = type };
+        GameManager.Network.Send(requestRankingList);
+    } 
 
     #endregion
 }

@@ -18,7 +18,8 @@ public class InventoryUI : MonoBehaviour
         /* contentArea 내의 인벤토리 슬롯들을 List : itemSlots 에 할당 */
         if (contentArea != null)
             itemSlots = new List<ItemSlotUI>(contentArea.GetComponentsInChildren<ItemSlotUI>());
-		
+
+
         /* 슬롯들에 인덱스 넘버 부여 과정 */
 		AssignSlotIndex();
 
@@ -97,6 +98,30 @@ public class InventoryUI : MonoBehaviour
 			return -1;
 		}
 	}
+
+        /// <summary>
+    /// InventoryManager에서 넘겨받은 inventoryDictionary를 바탕으로 UI를 갱신합니다.
+    /// 각 ItemSlotUI의 슬롯 번호(SlotIndex)에 따라 해당 슬롯의 itemId와 stack을 업데이트하거나,
+    /// 데이터가 없는 슬롯은 클리어합니다.
+    /// </summary>
+    /// <param name="inventoryDictionary">키가 슬롯 인덱스, 값이 InventorySlotData인 딕셔너리</param>
+    public void RefreshInventory(Dictionary<int, MaterialItem> inventoryItems)
+    {
+        foreach (var slotUI in itemSlots)
+        {
+            int slotIndex = slotUI.GetItemIndex();
+            if (inventoryItems.TryGetValue(slotIndex, out MaterialItem materialItem))
+            {
+                // MaterialItem을 전달하면 UpdateSlot 내부에서 ItemData를 활용하여 아이템 ID, 아이콘 등을 갱신합니다.
+                slotUI.UpdateSlot(materialItem, materialItem.CurItemStack);
+            }
+            else
+            {
+                slotUI.ClearSlot();
+            }
+        }
+    }
+
 
 	#region
 	public ItemSlotUI GetItemSlotByIndex(int index)
