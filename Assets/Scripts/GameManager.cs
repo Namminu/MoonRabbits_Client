@@ -76,6 +76,11 @@ public class GameManager : MonoBehaviour
         StartCoroutine(EnterScene(sceneName, playerInfo));
     }
 
+    public void WaitForSceneAwake(S2CSpawn pkt)
+    {
+        StartCoroutine(SpawnPlayer(pkt));
+    }
+
     IEnumerator EnterScene(string sceneName, PlayerInfo playerInfo)
     {
         switch (sceneName)
@@ -92,6 +97,72 @@ public class GameManager : MonoBehaviour
                 yield return new WaitUntil(() => S2Manager.Instance != null);
                 S2Manager.Instance.Enter(playerInfo);
                 break;
+        }
+    }
+
+    IEnumerator SpawnPlayer(S2CSpawn pkt)
+    {
+        foreach (var playerInfo in pkt.Players)
+        {
+            switch (playerInfo.CurrentSector)
+            {
+                case 100:
+                    yield return new WaitUntil(() => TownManager.Instance != null);
+                    if (
+                        TownManager.Instance.MyPlayer != null
+                        && playerInfo.PlayerId == TownManager.Instance.MyPlayer.PlayerId
+                    )
+                        continue;
+
+                    Vector3 spawnPosTown = new Vector3(
+                        playerInfo.Transform.PosX,
+                        playerInfo.Transform.PosY,
+                        playerInfo.Transform.PosZ
+                    );
+                    var townPlayer = TownManager.Instance.CreatePlayer(playerInfo, spawnPosTown);
+                    townPlayer.SetIsMine(false);
+                    break;
+                case 2:
+                    if (
+                        ASectorManager.Instance.MyPlayer != null
+                        && playerInfo.PlayerId == ASectorManager.Instance.MyPlayer.PlayerId
+                    )
+                        continue;
+
+                    Vector3 spawnPosSectorA = new Vector3(
+                        playerInfo.Transform.PosX,
+                        playerInfo.Transform.PosY,
+                        playerInfo.Transform.PosZ
+                    );
+                    var sectorPlayer = ASectorManager.Instance.CreatePlayer(
+                        playerInfo,
+                        spawnPosSectorA
+                    );
+                    sectorPlayer.SetIsMine(false);
+                    break;
+                case 101:
+                    yield return new WaitUntil(() => S1Manager.Instance != null);
+                    Debug.Log($"S1Manager 인스턴스 확인 {S1Manager.Instance == null}");
+                    if (
+                        S1Manager.Instance.myPlayer != null
+                        && playerInfo.PlayerId == S1Manager.Instance.myPlayer.PlayerId
+                    )
+                        continue;
+                    var s1Player = S1Manager.Instance.SpawnPlayer(playerInfo);
+                    s1Player.SetIsMine(false);
+                    break;
+                case 102:
+                    yield return new WaitUntil(() => S2Manager.Instance != null);
+                    Debug.Log($"S2Manager 인스턴스 확인 {S2Manager.Instance == null}");
+                    if (
+                        S2Manager.Instance.myPlayer != null
+                        && playerInfo.PlayerId == S2Manager.Instance.myPlayer.PlayerId
+                    )
+                        continue;
+                    var s2Player = S2Manager.Instance.SpawnPlayer(playerInfo);
+                    s2Player.SetIsMine(false);
+                    break;
+            }
         }
     }
 }

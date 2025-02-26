@@ -112,65 +112,67 @@ class PacketHandler
             return;
         Debug.Log($"S2CPlayerSpawn 패킷 무사 도착 : {pkt}");
 
-        foreach (var playerInfo in pkt.Players)
-        {
-            switch (playerInfo.CurrentSector)
-            {
-                case 100:
-                    if (
-                        TownManager.Instance.MyPlayer != null
-                        && playerInfo.PlayerId == TownManager.Instance.MyPlayer.PlayerId
-                    )
-                        continue;
+        GameManager.Instance.WaitForSceneAwake(pkt);
 
-                    Vector3 spawnPosTown = new Vector3(
-                        playerInfo.Transform.PosX,
-                        playerInfo.Transform.PosY,
-                        playerInfo.Transform.PosZ
-                    );
-                    var townPlayer = TownManager.Instance.CreatePlayer(playerInfo, spawnPosTown);
-                    townPlayer.SetIsMine(false);
-                    break;
-                case 2:
-                    if (
-                        ASectorManager.Instance.MyPlayer != null
-                        && playerInfo.PlayerId == ASectorManager.Instance.MyPlayer.PlayerId
-                    )
-                        continue;
+        // @@@ 섹터 매니저 awake까지 기다려야해.... @@@
+        // foreach (var playerInfo in pkt.Players)
+        // {
+        //     switch (playerInfo.CurrentSector)
+        //     {
+        //         case 100:
+        //             if (
+        //                 TownManager.Instance.MyPlayer != null
+        //                 && playerInfo.PlayerId == TownManager.Instance.MyPlayer.PlayerId
+        //             )
+        //                 continue;
 
-                    Vector3 spawnPosSectorA = new Vector3(
-                        playerInfo.Transform.PosX,
-                        playerInfo.Transform.PosY,
-                        playerInfo.Transform.PosZ
-                    );
-                    var sectorPlayer = ASectorManager.Instance.CreatePlayer(
-                        playerInfo,
-                        spawnPosSectorA
-                    );
-                    sectorPlayer.SetIsMine(false);
-                    break;
-                case 101:
-                    if (
-                        S1Manager.Instance.myPlayer != null
-                        && playerInfo.PlayerId == S1Manager.Instance.myPlayer.PlayerId
-                    )
-                        continue;
-                    var s1Player = S1Manager.Instance.SpawnPlayer(playerInfo);
-                    s1Player.SetIsMine(false);
-                    break;
-                case 102:
-                    if (
-                        S2Manager.Instance.myPlayer != null
-                        && playerInfo.PlayerId == S2Manager.Instance.myPlayer.PlayerId
-                    )
-                        continue;
-                    var s2Player = S2Manager.Instance.SpawnPlayer(playerInfo);
-                    s2Player.SetIsMine(false);
-                    break;
-            }
+        //             Vector3 spawnPosTown = new Vector3(
+        //                 playerInfo.Transform.PosX,
+        //                 playerInfo.Transform.PosY,
+        //                 playerInfo.Transform.PosZ
+        //             );
+        //             var townPlayer = TownManager.Instance.CreatePlayer(playerInfo, spawnPosTown);
+        //             townPlayer.SetIsMine(false);
+        //             break;
+        //         case 2:
+        //             if (
+        //                 ASectorManager.Instance.MyPlayer != null
+        //                 && playerInfo.PlayerId == ASectorManager.Instance.MyPlayer.PlayerId
+        //             )
+        //                 continue;
 
-            // 여기에서 localPlayer 설정이 작동하지 않는 버그가 발생 하여 해당 예외처리를 추가함.
-        }
+        //             Vector3 spawnPosSectorA = new Vector3(
+        //                 playerInfo.Transform.PosX,
+        //                 playerInfo.Transform.PosY,
+        //                 playerInfo.Transform.PosZ
+        //             );
+        //             var sectorPlayer = ASectorManager.Instance.CreatePlayer(
+        //                 playerInfo,
+        //                 spawnPosSectorA
+        //             );
+        //             sectorPlayer.SetIsMine(false);
+        //             break;
+        //         case 101:
+        //         Debug.Log($"S1Manager 인스턴스 확인 {S1Manager.Instance==null}");
+        //             if (S1Manager.Instance.myPlayer != null && playerInfo.PlayerId == S1Manager.Instance.myPlayer.PlayerId)
+        //                 continue;
+        //             var s1Player = S1Manager.Instance.SpawnPlayer(playerInfo);
+        //             s1Player.SetIsMine(false);
+        //             break;
+        //         case 102:
+        //         Debug.Log($"S2Manager 인스턴스 확인 {S2Manager.Instance==null}");
+        //             if (
+        //                 S2Manager.Instance.myPlayer != null
+        //                 && playerInfo.PlayerId == S2Manager.Instance.myPlayer.PlayerId
+        //             )
+        //                 continue;
+        //             var s2Player = S2Manager.Instance.SpawnPlayer(playerInfo);
+        //             s2Player.SetIsMine(false);
+        //             break;
+        //     }
+
+        //     // 여기에서 localPlayer 설정이 작동하지 않는 버그가 발생 하여 해당 예외처리를 추가함.
+        // }
     }
 
     public static void S2CPlayerDespawnHandler(PacketSession session, IMessage packet)
