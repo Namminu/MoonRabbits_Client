@@ -83,8 +83,21 @@ class PacketHandler
             return;
         Debug.Log($"S2CAnimation 패킷 무사 도착 : {pkt}");
 
-        var player = TownManager.Instance.GetPlayerAvatarById(pkt.PlayerId);
-        player?.PlayAnimation(pkt.AnimCode);
+        switch (pkt.CurrentSector)
+        {
+            case 100:
+                var townPlayer = TownManager.Instance.GetPlayerAvatarById(pkt.PlayerId);
+                townPlayer?.PlayAnimation(pkt.AnimCode);
+                break;
+            case 101:
+                var s1Player = S1Manager.Instance.GetPlayer(pkt.PlayerId);
+                s1Player?.PlayAnimation(pkt.AnimCode);
+                break;
+            case 102:
+                var s2Player = S2Manager.Instance.GetPlayer(pkt.PlayerId);
+                s2Player?.PlayAnimation(pkt.AnimCode);
+                break;
+        }
     }
     #endregion
 
