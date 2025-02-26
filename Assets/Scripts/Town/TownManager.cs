@@ -47,7 +47,7 @@ public class TownManager : MonoBehaviour
 
     public Player MyPlayer { get; private set; }
 
-    private int sceneCode = 1;
+    private int sectorCode = 100;
 
     private void Awake()
     {
@@ -110,7 +110,7 @@ public class TownManager : MonoBehaviour
         {
             Nickname = GameManager.Instance.UserName,
             ClassCode = GameManager.Instance.ClassCode,
-            TargetScene = sceneCode,
+            TargetSector = sectorCode,
         };
 
         GameManager.Network.Send(enterPacket);
@@ -120,11 +120,11 @@ public class TownManager : MonoBehaviour
     {
         Vector3 spawnPos = CalculateSpawnPosition(playerInfo.Transform);
 
+        ActivateGameUI();
         MyPlayer = CreatePlayer(playerInfo, spawnPos);
         MyPlayer.SetIsMine(true);
-        uiPlayer.SetNickname(playerInfo.Nickname);
-
-        ActivateGameUI();
+        MyPlayer.SetNickname(playerInfo.Nickname);
+        MyPlayer.SetStatInfo(playerInfo.StatInfo);
     }
 
     private Vector3 CalculateSpawnPosition(TransformInfo transformInfo)

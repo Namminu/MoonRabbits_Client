@@ -49,13 +49,23 @@ class PacketHandler
             return;
         Debug.Log($"S2CEnter 패킷 무사 도착 : {pkt}");
 
-        switch (pkt.Player.CurrentScene)
+        switch (pkt.Player.CurrentSector)
         {
-            case 1:
+            case 100:
                 TownManager.Instance.Spawn(pkt.Player);
                 break;
             case 2:
                 ASectorManager.Instance.Spawn(pkt.Player);
+                break;
+            case 101:
+                SceneManager.LoadScene("Sector1");
+                GameManager.Instance.WaitForSceneAwake("Sector1", pkt.Player);
+                // S1Manager.Instance.Enter(pkt.Player);
+                break;
+            case 102:
+                SceneManager.LoadScene("Sector2");
+                GameManager.Instance.WaitForSceneAwake("Sector2", pkt.Player);
+                // S2Manager.Instance.Enter(pkt.Player);
                 break;
         }
     }
@@ -64,7 +74,7 @@ class PacketHandler
     {
         if (packet is not S2CMoveSector pkt)
             return;
-        Debug.Log($"S2CLeave 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CMoveSector 패킷 무사 도착 : {pkt}");
     }
 
     public static void S2CAnimationHandler(PacketSession session, IMessage packet)
@@ -98,15 +108,15 @@ class PacketHandler
 
     public static void S2CPlayerSpawnHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CPlayerSpawn pkt)
+        if (packet is not S2CSpawn pkt)
             return;
         Debug.Log($"S2CPlayerSpawn 패킷 무사 도착 : {pkt}");
 
         foreach (var playerInfo in pkt.Players)
         {
-            switch (playerInfo.CurrentScene)
+            switch (playerInfo.CurrentSector)
             {
-                case 1:
+                case 100:
                     if (
                         TownManager.Instance.MyPlayer != null
                         && playerInfo.PlayerId == TownManager.Instance.MyPlayer.PlayerId
@@ -139,6 +149,24 @@ class PacketHandler
                     );
                     sectorPlayer.SetIsMine(false);
                     break;
+                case 101:
+                    if (
+                        S1Manager.Instance.myPlayer != null
+                        && playerInfo.PlayerId == S1Manager.Instance.myPlayer.PlayerId
+                    )
+                        continue;
+                    var s1Player = S1Manager.Instance.SpawnPlayer(playerInfo);
+                    s1Player.SetIsMine(false);
+                    break;
+                case 102:
+                    if (
+                        S2Manager.Instance.myPlayer != null
+                        && playerInfo.PlayerId == S2Manager.Instance.myPlayer.PlayerId
+                    )
+                        continue;
+                    var s2Player = S2Manager.Instance.SpawnPlayer(playerInfo);
+                    s2Player.SetIsMine(false);
+                    break;
             }
 
             // 여기에서 localPlayer 설정이 작동하지 않는 버그가 발생 하여 해당 예외처리를 추가함.
@@ -147,13 +175,13 @@ class PacketHandler
 
     public static void S2CPlayerDespawnHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CPlayerDespawn pkt)
+        if (packet is not S2CDespawn pkt)
             return;
         Debug.Log($"S2CPlayerDespawn 패킷 무사 도착 : {pkt}");
 
-        switch (pkt.CurrentScene)
+        switch (pkt.CurrentSector)
         {
-            case 1:
+            case 100:
                 foreach (int playerId in pkt.PlayerIds)
                 {
                     TownManager.Instance.ReleasePlayer(playerId);
@@ -163,6 +191,18 @@ class PacketHandler
                 foreach (int playerId in pkt.PlayerIds)
                 {
                     ASectorManager.Instance.ReleasePlayer(playerId);
+                }
+                break;
+            case 101:
+                foreach (int playerId in pkt.PlayerIds)
+                {
+                    S1Manager.Instance.DespawnPlayer(playerId);
+                }
+                break;
+            case 102:
+                foreach (int playerId in pkt.PlayerIds)
+                {
+                    S2Manager.Instance.DespawnPlayer(playerId);
                 }
                 break;
         }
@@ -188,15 +228,23 @@ class PacketHandler
         Quaternion rotation = Quaternion.Euler(0, transform.Rot, 0);
         bool isValidTransform = pkt.IsValidTransform;
 
-        switch (pkt.CurrentScene)
+        switch (pkt.CurrentSector)
         {
-            case 1:
+            case 100:
                 var townPlayer = TownManager.Instance.GetPlayerAvatarById(pkt.PlayerId);
                 townPlayer?.Move(position, rotation);
                 break;
             case 2:
                 var sectorPlayer = ASectorManager.Instance.GetPlayerAvatarById(pkt.PlayerId);
                 sectorPlayer?.Move(position, rotation);
+                break;
+            case 101:
+                var s1Player = S1Manager.Instance.GetPlayer(pkt.PlayerId);
+                s1Player.Move(position, rotation);
+                break;
+            case 102:
+                var s2Player = S2Manager.Instance.GetPlayer(pkt.PlayerId);
+                s2Player.Move(position, rotation);
                 break;
         }
     }
@@ -219,32 +267,9 @@ class PacketHandler
     #region Collision
     public static void S2CPlayerCollisionHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CPlayerCollision pkt)
+        if (packet is not S2CCollision pkt)
             return;
         Debug.Log($"S2CPlayerCollision 패킷 무사 도착 : {pkt}");
-    }
-
-    public static void S2CMonsterCollisionHandler(PacketSession session, IMessage packet)
-    {
-        if (packet is not S2CMonsterCollision pkt)
-            return;
-        Debug.Log($"S2CMonsterCollision 패킷 무사 도착 : {pkt}");
-    }
-    #endregion
-
-    #region Store
-    public static void S2CSelectStoreHandler(PacketSession session, IMessage packet)
-    {
-        if (packet is not S2CSelectStore pkt)
-            return;
-        Debug.Log($"S2CSelectStore 패킷 무사 도착 : {pkt}");
-    }
-
-    public static void S2CBuyItemHandler(PacketSession session, IMessage packet)
-    {
-        if (packet is not S2CBuyItem pkt)
-            return;
-        Debug.Log($"S2CBuyItem 패킷 무사 도착 : {pkt}");
     }
     #endregion
 
@@ -324,6 +349,7 @@ class PacketHandler
         Debug.Log($"S2CDisbandParty 패킷 무사 도착 : {pkt}");
         PartyUI.instance.KickedOut(pkt.Msg);
     }
+
     public static void S2CRejectInviteHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CRejectInvite pkt)
@@ -340,7 +366,11 @@ class PacketHandler
         var monsterId = pkt.MonsterId;
         var monsterPosition = pkt.TransformInfo;
 
-        Vector3 position = new Vector3(monsterPosition.PosX, monsterPosition.PosY, monsterPosition.PosZ);
+        Vector3 position = new Vector3(
+            monsterPosition.PosX,
+            monsterPosition.PosY,
+            monsterPosition.PosZ
+        );
         MonsterManager.Instance.SendPositionPacket(monsterId, position);
 
         Debug.Log($"S2CMonsterLocation 패킷 무사 도착 : {pkt}");
@@ -362,7 +392,7 @@ class PacketHandler
 
     public static void S2CResourceListHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CResourceList pkt)
+        if (packet is not S2CResourcesList pkt)
             return;
         Debug.Log($"S2CResourceList 패킷 무사 도착 : {pkt}");
         ResourcesManager.Instance.ResourcesInit(pkt);
@@ -443,7 +473,7 @@ class PacketHandler
             return;
         Debug.Log($"S2CAddExp 패킷 무사 도착 : {pkt}");
 
-        TownManager.Instance.UiPlayer.SetExp(pkt.UpdatedExp);
+        TownManager.Instance.MyPlayer.SetExp(pkt.UpdatedExp);
     }
 
     public static void S2CLevelUpHandler(PacketSession session, IMessage packet)
@@ -452,7 +482,28 @@ class PacketHandler
             return;
         Debug.Log($"S2CLevelUp 패킷 무사 도착 : {pkt}");
 
-        TownManager.Instance.UiPlayer.LevelUp(pkt.UpdatedLevel, pkt.NewTargetExp, pkt.UpdatedExp, pkt.AbilityPoint);
+        if (
+            TownManager.Instance.MyPlayer != null
+            && pkt.PlayerId == TownManager.Instance.MyPlayer.PlayerId
+        )
+        {
+            Debug.Log(
+                $"1. 패킷플레이어ID:{pkt.PlayerId}, 내플레이어ID:{TownManager.Instance.MyPlayer.PlayerId}"
+            );
+            TownManager.Instance.MyPlayer.LevelUp(
+                pkt.UpdatedLevel,
+                pkt.NewTargetExp,
+                pkt.UpdatedExp,
+                pkt.AbilityPoint
+            );
+        }
+        else
+        {
+            Debug.Log(
+                $"2. 패킷플레이어ID:{pkt.PlayerId}, 내플레이어ID:{TownManager.Instance.MyPlayer.PlayerId}"
+            );
+            TownManager.Instance.GetPlayerAvatarById(pkt.PlayerId).LevelUpOther();
+        }
     }
 
     public static void S2CInvestPointHandler(PacketSession session, IMessage packet)
@@ -461,7 +512,7 @@ class PacketHandler
             return;
         Debug.Log($"S2CInvestPoint 패킷 무사 도착 : {pkt}");
 
-        TownManager.Instance.UiPlayer.InvestPoint(pkt.StatInfo);
+        TownManager.Instance.MyPlayer.InvestPoint(pkt.StatInfo);
     }
     #endregion
 }

@@ -7,6 +7,9 @@ using UnityEngine.EventSystems;
 
 public class TempPlayer : MonoBehaviour
 {
+    private int id = 555;
+    public int ID => id;
+
     [SerializeField]
     private NavMeshAgent agent;
     public NavMeshAgent NavAgent
@@ -23,14 +26,13 @@ public class TempPlayer : MonoBehaviour
 
     public bool IsAlive = false;
 
-    /* 섬광탄 관련 변수 */
-    private Transform throwPoint;
-    private int throwPower = 15;
+    /* 스킬 관련 변수 */
+    public GameObject grenade;
+    public GameObject trap;
     private bool grenadeInput;
     private bool trapInput;
-    private bool isThrow = false;
-    private GameObject grenade;
-    private GameObject trap;
+    private bool recallInput;
+    private TempSkillManager skillManager;
 
     /* 상호작용 관련 변수 */
     public GameObject axe;
@@ -46,10 +48,6 @@ public class TempPlayer : MonoBehaviour
 
     private bool equipChangeInput;
     private bool interactInput;
-    public bool InteractInput
-    {
-        get => interactInput;
-    }
     private TempInteractionManager interactManager;
 
     void Awake()
@@ -57,7 +55,6 @@ public class TempPlayer : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
 
-        throwPoint = transform.Find("ThrowPoint").transform;
         grenade = GetComponentInParent<Player>().grenade;
         trap = GetComponentInParent<Player>().trap;
         axe = GetComponentInParent<Player>().axe;
@@ -69,20 +66,23 @@ public class TempPlayer : MonoBehaviour
 
         InitializeCamera();
 
+        skillManager = GetComponentInChildren<TempSkillManager>();
         interactManager = GetComponentInChildren<TempInteractionManager>();
     }
 
     void Update()
     {
         HandleInput();
-        Throw();
+        ThrowGrenade();
+        SetTrap();
+        Recall();
         EquipChange();
         Interact();
     }
 
     private void InitializeCamera()
     {
-        Camera.main.gameObject.GetComponent<TempCamera>().target = transform;
+        Camera.main.gameObject.GetComponent<QuarterView>().target = transform;
     }
 
     private void HandleInput()
@@ -105,45 +105,35 @@ public class TempPlayer : MonoBehaviour
             }
         }
 
-        grenadeInput = Input.GetButtonDown("Grenade");
-        trapInput = Input.GetButtonDown("Trap");
-        interactInput = Input.GetButtonDown("Interact");
-        equipChangeInput = Input.GetButtonDown("EquipChange");
+        grenadeInput = Input.GetKeyDown(KeyCode.Q);
+        trapInput = Input.GetKeyDown(KeyCode.E);
+        recallInput = Input.GetKeyDown(KeyCode.T);
+        interactInput = Input.GetKeyDown(KeyCode.F);
+        equipChangeInput = Input.GetKeyDown(KeyCode.R);
     }
 
-    private void Throw()
+    private void ThrowGrenade()
     {
-        if (!isThrow && (grenadeInput || trapInput))
-        {
-            isThrow = true;
-
-            if (grenadeInput)
-            {
-                GameObject currentObj = Instantiate(
-                    grenade,
-                    throwPoint.position,
-                    throwPoint.rotation
-                );
-
-                Rigidbody rigid = currentObj.GetComponent<Rigidbody>();
-
-                Vector3 forceVec = throwPoint.forward * throwPower + throwPoint.up * throwPower / 2;
-
-                rigid.AddForce(forceVec, ForceMode.VelocityChange);
-                rigid.AddTorque(Vector3.right, ForceMode.Impulse);
-            }
-            else if (trapInput)
-            {
-                // currentObj = Instantiate(trap, throwPoint.position, throwPoint.rotation);
-            }
-
-            Invoke(nameof(ThrowEnd), 3f);
-        }
+        if (grenadeInput)
+            skillManager.eventQ.Invoke();
     }
 
-    private void ThrowEnd()
+    private void SetTrap()
     {
-        isThrow = false;
+        if (trapInput)
+            skillManager.eventE.Invoke();
+    }
+
+    private void Recall()
+    {
+        if (recallInput)
+            skillManager.eventT.Invoke();
+    }
+
+    private void Interact()
+    {
+        if (interactInput)
+            interactManager.eventF.Invoke();
     }
 
     private void EquipChange()
@@ -152,10 +142,20 @@ public class TempPlayer : MonoBehaviour
             interactManager.eventR.Invoke();
     }
 
-    private void Interact()
+    public void Stun(float timer)
     {
-        if (interactInput)
-            interactManager.eventF.Invoke();
+        Debug.Log($"걸린 녀석 : {ID}");
+        transform.Find("StunEffect").gameObject.SetActive(true);
+        NavAgent.velocity = Vector3.zero;
+        NavAgent.ResetPath();
+        NavAgent.isStopped = true;
+        Invoke(nameof(StunOut), timer);
+    }
+
+    private void StunOut()
+    {
+        transform.Find("StunEffect").gameObject.SetActive(false);
+        NavAgent.isStopped = false;
     }
 
     void OnCollisionEnter(Collision collision)

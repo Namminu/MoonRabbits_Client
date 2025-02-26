@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using Google.Protobuf.Protocol;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,8 +23,7 @@ public class GameManager : MonoBehaviour
     public int ClassCode;
 
     public JsonContainer<Resource> resourceContainer;
-
-    private void Awake()
+    private async void Awake()
     {
         if (_instance == null)
         {
@@ -38,8 +38,8 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        SoundManager.Instance.Play(19, Define.Sound.Bgm);
-
+        //SoundManager.Instance.Play(19, Define.Sound.Bgm);
+        await ItemDataLoader.GenerateAllItems();
     }
 
     void Start()
@@ -64,6 +64,10 @@ public class GameManager : MonoBehaviour
         Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[0].quest_name}");
         Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[1].quest_name}");
         Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[2].quest_name}");
+        
+        Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[0].quest_id}");
+        Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[1].quest_id}");
+        Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[2].quest_id}");
 
         // 단일 JSON 파일 로드
         string resourceFilePath = Path.Combine(Application.streamingAssetsPath, "Resource.json");
@@ -86,5 +90,29 @@ public class GameManager : MonoBehaviour
     {
         if (network != null)
             network.Update();
+    }
+
+    public void WaitForSceneAwake(string sceneName, PlayerInfo playerInfo)
+    {
+        StartCoroutine(EnterScene(sceneName, playerInfo));
+    }
+
+    IEnumerator EnterScene(string sceneName, PlayerInfo playerInfo)
+    {
+        switch (sceneName)
+        {
+            case "Town":
+                yield return new WaitUntil(() => TownManager.Instance != null);
+                TownManager.Instance.Spawn(playerInfo);
+                break;
+            case "Sector1":
+                yield return new WaitUntil(() => S1Manager.Instance != null);
+                S1Manager.Instance.Enter(playerInfo);
+                break;
+            case "Sector2":
+                yield return new WaitUntil(() => S2Manager.Instance != null);
+                S2Manager.Instance.Enter(playerInfo);
+                break;
+        }
     }
 }
