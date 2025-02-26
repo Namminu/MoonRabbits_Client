@@ -131,6 +131,12 @@ public class MyPlayer : MonoBehaviour
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            float cooltime = 5;
+            TownManager.Instance.UiPlayer.QSkillCool(cooltime);
+        }
+
         // grenadeInput = Input.GetButtonDown("Grenade");
         // trapInput = Input.GetButtonDown("Trap");
         // interactInput = Input.GetButtonDown("Interact");

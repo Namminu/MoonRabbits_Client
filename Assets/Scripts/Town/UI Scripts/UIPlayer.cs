@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Google.Protobuf.Protocol;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,6 +34,8 @@ public class UIPlayer : MonoBehaviour
     public Transform heartBgsPos;
     private List<GameObject> hearts = new List<GameObject>();
     private List<GameObject> heartBgs = new List<GameObject>();
+    public Image qSkillMask;
+    public Image wSkillMask;
 
     private void Awake()
     {
@@ -303,6 +306,23 @@ public class UIPlayer : MonoBehaviour
             GameObject heart = Instantiate(heartPrefab, heartsPos);
             hearts.Add(heart);
             hearts[i] = heart;
+        }
+    }
+
+    public void QSkillCool(float cooltime)
+    {
+        StartCoroutine(CoolTimeFunc(cooltime, cooltime, qSkillMask));
+    }
+
+    IEnumerator CoolTimeFunc(float curCooltime, float cooltime, Image skillImage)
+    {
+        while (curCooltime > 0.0f)
+        {
+            curCooltime -= Time.deltaTime;
+
+            skillImage.fillAmount = curCooltime / cooltime;
+
+            yield return new WaitForFixedUpdate();
         }
     }
 }
