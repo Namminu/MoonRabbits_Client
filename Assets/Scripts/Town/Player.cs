@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Google.Protobuf.Protocol;
 using UnityEngine;
 using UnityEngine.AI;
@@ -38,6 +39,8 @@ public class Player : MonoBehaviour
     public GameObject axe;
     public GameObject pickAxe;
 
+    private Dictionary<int, string> emotions = new();
+
     // PlayerInfo
     private int maxHp;
     private int curHp;
@@ -55,6 +58,10 @@ public class Player : MonoBehaviour
     {
         Avatar = GetComponent<Avatar>();
         animator = GetComponent<Animator>();
+
+        emotions[111] = "Happy";
+        emotions[222] = "Sad";
+        emotions[333] = "Greeting";
     }
 
     public void SetPlayerId(int playerId)
@@ -151,7 +158,7 @@ public class Player : MonoBehaviour
             PlayerId = PlayerId,
             SenderName = nickname,
             ChatMsg = msg,
-            ChatType = chatType
+            ChatType = chatType,
         };
 
         GameManager.Network.Send(chatPacket);
@@ -171,7 +178,7 @@ public class Player : MonoBehaviour
 
     public void PlayAnimation(int animCode)
     {
-        animator?.SetTrigger(animCode);
+        animator?.SetTrigger(emotions[animCode]);
     }
 
     private void CheckMove()
@@ -195,7 +202,8 @@ public class Player : MonoBehaviour
         moveSpeed = statInfo.MoveSpeed;
         abilityPoint = statInfo.AbilityPoint;
 
-        if (IsMine) TownManager.Instance.UiPlayer.SetStatInfo(statInfo);
+        if (IsMine)
+            TownManager.Instance.UiPlayer.SetStatInfo(statInfo);
     }
 
     public void SetExp(int updatedExp)
@@ -209,13 +217,15 @@ public class Player : MonoBehaviour
         }
         Debug.Log($"updatedExp : {updatedExp}");
 
-        if (IsMine) TownManager.Instance.UiPlayer.SetExp(updatedExp, targetExp);
+        if (IsMine)
+            TownManager.Instance.UiPlayer.SetExp(updatedExp, targetExp);
     }
 
     public void InvestPoint(StatInfo statInfo)
     {
         abilityPoint = statInfo.AbilityPoint;
-        if (IsMine) TownManager.Instance.UiPlayer.SetAbilityPoint(abilityPoint);
+        if (IsMine)
+            TownManager.Instance.UiPlayer.SetAbilityPoint(abilityPoint);
 
         if (statInfo.Stamina > stamina)
         {
@@ -230,20 +240,24 @@ public class Player : MonoBehaviour
             SetMoveSpeed(statInfo.MoveSpeed);
         }
 
-        if (IsMine && abilityPoint <= 0) TownManager.Instance.UiPlayer.DeActiveAP();
+        if (IsMine && abilityPoint <= 0)
+            TownManager.Instance.UiPlayer.DeActiveAP();
     }
 
     private void SetStamina(int stamina)
     {
-        if (stamina > this.stamina) this.cur_stamina += (stamina - this.stamina);
+        if (stamina > this.stamina)
+            this.cur_stamina += (stamina - this.stamina);
         this.stamina = stamina;
-        if (IsMine) TownManager.Instance.UiPlayer.SetStamina(cur_stamina, stamina, abilityPoint > 0);
+        if (IsMine)
+            TownManager.Instance.UiPlayer.SetStamina(cur_stamina, stamina, abilityPoint > 0);
     }
 
     private void SetPickSpeed(int pickSpeed)
     {
         this.pickSpeed = pickSpeed;
-        if (IsMine) TownManager.Instance.UiPlayer.SetPickSpeed(pickSpeed, abilityPoint > 0);
+        if (IsMine)
+            TownManager.Instance.UiPlayer.SetPickSpeed(pickSpeed, abilityPoint > 0);
     }
 
     private void SetMoveSpeed(int moveSpeed)
@@ -254,7 +268,8 @@ public class Player : MonoBehaviour
         GetComponent<NavMeshAgent>().acceleration = moveSpeed * 2 + 3;
 
         this.moveSpeed = moveSpeed;
-        if (IsMine) TownManager.Instance.UiPlayer.SetMoveSpeed(moveSpeed, abilityPoint > 0);
+        if (IsMine)
+            TownManager.Instance.UiPlayer.SetMoveSpeed(moveSpeed, abilityPoint > 0);
     }
 
     public void LevelUp(int updatedLevel, int newTargetExp, int updatedExp, int updatedAbilityPoint)
@@ -264,7 +279,14 @@ public class Player : MonoBehaviour
         exp = updatedExp;
 
         Debug.Log($"레벨업 응답 실행 {level}/ap{abilityPoint}/{exp}/{targetExp} isMine?{IsMine}");
-        if (IsMine) TownManager.Instance.UiPlayer.LevelUp(updatedLevel, newTargetExp, updatedExp, abilityPoint, updatedAbilityPoint);
+        if (IsMine)
+            TownManager.Instance.UiPlayer.LevelUp(
+                updatedLevel,
+                newTargetExp,
+                updatedExp,
+                abilityPoint,
+                updatedAbilityPoint
+            );
 
         abilityPoint = updatedAbilityPoint;
     }

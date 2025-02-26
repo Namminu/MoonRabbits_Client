@@ -26,6 +26,13 @@ public class TempPlayer : MonoBehaviour
 
     public bool IsAlive = false;
 
+    /* 감정표현 관련 */
+    private bool isEmoting;
+    private bool happyInput;
+    private bool sadInput;
+    private bool greetingInput;
+    private TempEmoteManager emoteManager;
+
     /* 스킬 관련 변수 */
     public GameObject grenade;
     public GameObject trap;
@@ -68,11 +75,13 @@ public class TempPlayer : MonoBehaviour
 
         skillManager = GetComponentInChildren<TempSkillManager>();
         interactManager = GetComponentInChildren<TempInteractionManager>();
+        emoteManager = GetComponent<TempEmoteManager>();
     }
 
     void Update()
     {
         HandleInput();
+        Emote();
         ThrowGrenade();
         SetTrap();
         Recall();
@@ -100,16 +109,42 @@ public class TempPlayer : MonoBehaviour
                 )
             )
             {
+                isEmoting = false;
                 targetPosition = rayHit.point;
                 agent.SetDestination(targetPosition);
             }
         }
 
+        happyInput = Input.GetKeyDown(KeyCode.Alpha1);
+        sadInput = Input.GetKeyDown(KeyCode.Alpha2);
+        greetingInput = Input.GetKeyDown(KeyCode.Alpha3);
         grenadeInput = Input.GetKeyDown(KeyCode.Q);
         trapInput = Input.GetKeyDown(KeyCode.E);
         recallInput = Input.GetKeyDown(KeyCode.T);
         interactInput = Input.GetKeyDown(KeyCode.F);
         equipChangeInput = Input.GetKeyDown(KeyCode.R);
+    }
+
+    private void Emote()
+    {
+        if (isEmoting)
+            return;
+
+        if (happyInput)
+        {
+            isEmoting = true;
+            emoteManager.event1.Invoke();
+        }
+        else if (sadInput)
+        {
+            isEmoting = true;
+            emoteManager.event2.Invoke();
+        }
+        else if (greetingInput)
+        {
+            isEmoting = true;
+            emoteManager.event3.Invoke();
+        }
     }
 
     private void ThrowGrenade()
