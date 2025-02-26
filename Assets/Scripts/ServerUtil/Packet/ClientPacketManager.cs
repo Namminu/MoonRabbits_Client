@@ -56,7 +56,7 @@ class PacketManager
         _onRecv.Add((ushort)MsgId.S2CUpdateRanking, MakePacket<S2CUpdateRanking>);
         _handler.Add((ushort)MsgId.S2CUpdateRanking, PacketHandler.S2CUpdateRankingHandler);
         _onRecv.Add((ushort)MsgId.S2CCollision, MakePacket<S2CCollision>);
-        _handler.Add((ushort)MsgId.S2CCollision, PacketHandler.S2CPlayerCollisionHandler);
+        _handler.Add((ushort)MsgId.S2CCollision, PacketHandler.S2CCollisionHandler);
         _onRecv.Add((ushort)MsgId.S2CCreateParty, MakePacket<S2CCreateParty>);
         _handler.Add((ushort)MsgId.S2CCreateParty, PacketHandler.S2CCreatePartyHandler);
         _onRecv.Add((ushort)MsgId.S2CInviteParty, MakePacket<S2CInviteParty>);

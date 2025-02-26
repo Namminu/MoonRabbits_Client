@@ -42,8 +42,6 @@ public class MonsterController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("트리거");
-        //Debug.Log($"감지되었던것이 {other} 이고 해당 태그는 {other.tag}");
         if (other.CompareTag("Player") == false) return;
         Debug.Log("플레이어가 몬스터와 충돌하였다.");
         CapsuleCollider playerCollider = other.GetComponent<CapsuleCollider>();
@@ -66,12 +64,26 @@ public class MonsterController : MonoBehaviour
         collisionPacket.CollisionInfo = collisionInfo;
 
         GameManager.Network.Send(collisionPacket);
-
-
     }
 
     public void SetPosition(Vector3 position)
     {
         _targetPosition = position;
+    }
+
+    public void SetCollision(CollisionPushInfo info)
+    {
+
+        var type = info.TargetType;
+        switch (type)
+        {
+            //충돌한 자가 플레이어면
+            case 1:
+                anim.SetTrigger("Attack");
+                break;
+            default:
+                break;
+        }
+
     }
 }
