@@ -43,26 +43,29 @@ public class ResourcesManager : MonoBehaviour
                     break;
                 }
             }
-            var resourceController = resources[resource.ResourceIdx].GetComponent<ResourceController>();
-            resourceController.idx = resource.ResourceIdx;
-            resourceController.resourceId = resourceType;
+            if(resourceType != 0 && resources.Length >= resource.ResourceIdx)
+            {
+                var resourceController = resources[resource.ResourceIdx - 1].GetComponent<ResourceController>();
+                resourceController.idx = resource.ResourceIdx;
+                resourceController.resourceId = resourceType;
+            }
         }
     }
     public void ResourcesUpdateDurability(S2CUpdateDurability pkt)
     {
-        var resourceController = resources[pkt.PlacedId].GetComponent<ResourceController>();
+        var resourceController = resources[pkt.PlacedId - 1].GetComponent<ResourceController>();
         resourceController.Durability = pkt.Durability;
     }
     public void ResourcesGatheringStart(S2CGatheringStart pkt)
     {
-        var resourceController = resources[pkt.PlacedId].GetComponent<ResourceController>();
+        var resourceController = resources[pkt.PlacedId - 1].GetComponent<ResourceController>();
         resourceController.Angle = pkt.Angle;
         resourceController. Difficulty = pkt.Difficulty;
         resourceController.Starttime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
     }
     public void ResourcesGatheringSkillCheck(S2CGatheringSkillCheck pkt)
     {
-        var resourceController = resources[pkt.PlacedId].GetComponent<ResourceController>();
+        var resourceController = resources[pkt.PlacedId - 1].GetComponent<ResourceController>();
         if( resourceController.Durability > pkt.Durability)
         {
             //¼º°ø

@@ -27,7 +27,7 @@ public class UIBattlePopup : MonoBehaviour
     {
         SceneManager.LoadScene("Test");
 
-        var pkt = new C2SLeave { };
+        var pkt = new C2SMoveSector { };
 
         GameManager.Network.Send(pkt);
         // EnterDungeon(dungeonIndex);

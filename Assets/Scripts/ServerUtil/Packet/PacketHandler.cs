@@ -60,9 +60,9 @@ class PacketHandler
         }
     }
 
-    public static void S2CLeaveHandler(PacketSession session, IMessage packet)
+    public static void S2CMoveSectorHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CLeave pkt)
+        if (packet is not S2CMoveSector pkt)
             return;
         Debug.Log($"S2CLeave 패킷 무사 도착 : {pkt}");
     }
@@ -418,13 +418,14 @@ class PacketHandler
         // }
     }
 
-    public static void S2CSectorMoveHandler(PacketSession session, IMessage packet)
+    public static void S2CSectorLeaveHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CSectorLeave pkt)
             return;
-        Debug.Log($"S2CSectorLeave 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CSectorMove 패킷 무사 도착 : {pkt}");
 
-        // SceneManager.LoadScene(GameManager.TownScene);
+         //Scene currentScene = SceneManager.GetActiveScene();
+
     }
 
     public static void S2CInPortalHandler(PacketSession session, IMessage packet)
