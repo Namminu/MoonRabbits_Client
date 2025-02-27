@@ -16,7 +16,7 @@ public abstract class ItemData : ScriptableObject
 
 	[Header("Item Sprite")]
 	[SerializeField] private Sprite itemIcon;
-
+ 
 
 	#region Public Members
 	public int ItemId { get => itemId; set => itemId = value; }
