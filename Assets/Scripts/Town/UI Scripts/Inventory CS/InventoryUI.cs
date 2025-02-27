@@ -24,12 +24,12 @@ public class InventoryUI : MonoBehaviour
         /* ���Ե鿡 �ε��� �ѹ� �ο� ���� */
 		AssignSlotIndex();
 
-		// DB에서 인벤토리 정보 받아오는 과정..?
-		// AddItem(DB에서 받아온 정보)?
+        // DB���� �κ��丮 ���� �޾ƿ��� ����..?
+		// AddItem(DB���� �޾ƿ� ����)?
 
 	}
 
-	private class ItemSortComparer : IComparer<Item>
+    private class ItemSortComparer : IComparer<Item>
     {
         public int Compare(Item x, Item y)
         {

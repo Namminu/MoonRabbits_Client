@@ -17,38 +17,6 @@
       "item_description": "테스트용 하우징 아이템",
       "item_prefab": "TestCube",
       "item_gridSize": [1, 1]
-    },
-    {
-      "item_id": 30002,
-      "item_name": "CharItem",
-      "item_type": 0,
-      "item_description": "누군가 앉을 수 있을 것 같은 의자이다.",
-      "item_prefab": "Chair",
-      "item_gridSize": [1, 1]
-    },
-    {
-      "item_id": 30003,
-      "item_name": "BedBigItem",
-      "item_type": 0,
-      "item_description": "두 사람이 누울 수 있을 크기의 침대이다.",
-      "item_prefab": "BedBig",
-      "item_gridSize": [2, 2]
-    },
-    {
-      "item_id": 30004,
-      "item_name": "FloorItem",
-      "item_type": 0,
-      "item_description": "바닥에 설치할 수 있는 카펫이다.",
-      "item_prefab": "Floor",
-      "item_gridSize": [1, 1]
-    },
-    {
-      "item_id": 30005,
-      "item_name": "TableItem",
-      "item_type": 0,
-      "item_description": "의자와 함께 있으면 어울릴 듯한 탁자이다.",
-      "item_prefab": "Table",
-      "item_gridSize": [2, 1]
     }
   ]
 }
