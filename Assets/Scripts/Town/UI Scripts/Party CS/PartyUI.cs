@@ -34,7 +34,15 @@ public class PartyUI : MonoBehaviour
 
   private void Awake()
   {
-    instance = this;
+    if (instance == null)
+    {
+      instance = this;
+      DontDestroyOnLoad(gameObject);
+    }
+    else
+    {
+      Destroy(gameObject);
+    }
   }
 
   void Start()
@@ -55,6 +63,10 @@ public class PartyUI : MonoBehaviour
   {
     // 현재 파티 정보 가져오기
     Party party = Party.instance;
+    if (party == null)
+    {
+      Debug.LogError("Party 인스턴스가 존재하지 않음");
+    }
 
     if (isInParty)
     {
@@ -91,10 +103,7 @@ public class PartyUI : MonoBehaviour
         Debug.LogWarning("PartyMemberUI 인스턴스가 존재하지 않습니다.");
       }
 
-      if (Party.instance == null)
-      {
-        Debug.LogError("Party 인스턴스가 존재하지 않음");
-      }
+
     }
     else
     {

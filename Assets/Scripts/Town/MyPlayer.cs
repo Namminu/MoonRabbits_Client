@@ -8,13 +8,14 @@ using UnityEngine.EventSystems;
 public class MyPlayer : MonoBehaviour
 {
     [SerializeField]
+    public static MyPlayer instance { get; private set; }
     private NavMeshAgent agent;
     public NavMeshAgent NavAgent
     {
         get => agent;
     }
     private RaycastHit rayHit;
-    private EventSystem eSystem;
+    public EventSystem eSystem;
     private Animator anim;
     public Animator Anim
     {
@@ -64,6 +65,8 @@ public class MyPlayer : MonoBehaviour
 
     void Awake()
     {
+        instance = this;
+
         eSystem = TownManager.Instance.E_System;
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();

@@ -8,9 +8,20 @@ public class UIAnimation : MonoBehaviour
 
     private MyPlayer mPlayer;
 
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     void Start()
     {
-        mPlayer = TownManager.Instance.MyPlayer?.MPlayer;
+        mPlayer = TownManager.Instance.MyPlayer != null && TownManager.Instance.MyPlayer.MPlayer != null
+        ? TownManager.Instance.MyPlayer.MPlayer
+        : S1Manager.Instance.MyPlayer != null && S1Manager.Instance.MyPlayer.MPlayer != null
+            ? S1Manager.Instance.MyPlayer.MPlayer
+            : S2Manager.Instance.MyPlayer != null && S2Manager.Instance.MyPlayer.MPlayer != null
+                ? S2Manager.Instance.MyPlayer.MPlayer
+                : null;
 
         if (mPlayer == null)
         {
