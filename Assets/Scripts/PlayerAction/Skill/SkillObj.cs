@@ -21,8 +21,8 @@ public class SkillObj : MonoBehaviour
     private TrailRenderer trail;
     private GameObject effect;
 
+    private const float lifeTime = 5f;
     private const float explosionRange = 5f;
-    private const float sensorRange = 1f;
     private const float stunTimer = 5f;
 
     private bool isActive = false;
@@ -33,6 +33,21 @@ public class SkillObj : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         trail = GetComponentInChildren<TrailRenderer>();
         effect = transform.Find("Effect").gameObject;
+
+        DestroyObj();
+    }
+
+    private void DestroyObj()
+    {
+        switch (type)
+        {
+            case ObjType.grenade:
+                Destroy(gameObject, lifeTime);
+                break;
+            case ObjType.trap:
+                Destroy(gameObject, lifeTime * 4);
+                break;
+        }
     }
 
     void OnCollisionEnter(Collision collision)
@@ -80,7 +95,7 @@ public class SkillObj : MonoBehaviour
             }
             else if (target.CompareTag("Player"))
             {
-                target.GetComponent<TempPlayer>().Stun(stunTimer); // 나중에 myplayer로 수정
+                target.GetComponent<TempPlayer>().Stun(stunTimer); // 나중에 player로 수정
             }
         }
 

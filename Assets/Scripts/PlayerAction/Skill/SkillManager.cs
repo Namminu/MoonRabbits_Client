@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Google.Protobuf.Protocol;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,6 +12,11 @@ public class SkillManager : MonoBehaviour
 
     private const int throwPower = 5;
     private bool isCasting = false;
+    public bool IsCasting
+    {
+        get => isCasting;
+        set { isCasting = value; }
+    }
 
     private bool isGrenadeReady = true;
     private const float coolTimeQ = 5f;
@@ -53,8 +59,8 @@ public class SkillManager : MonoBehaviour
                 LayerMask.GetMask("Ground")
             )
         )
-        {
-            Vector3 forceVec = throwTargetPos.point - transform.position;
+        {           
+           Vector3 forceVec = throwTargetPos.point - transform.position;
             forceVec.y = throwPower;
 
             GameObject skillObj = Instantiate(
@@ -118,35 +124,9 @@ public class SkillManager : MonoBehaviour
 
         isCasting = true;
 
-        NavMeshAgent agent = player.NavAgent;
+        player.NavAgent.SetDestination(player.transform.position);
 
-        agent.isStopped = true;
-        agent.destination = player.transform.position;
-
-        GameObject effect = player.transform.Find("RecallEffect").gameObject;
-        effect.SetActive(true);
-
-        int castingTime = 0;
-
-        while (castingTime < recallTimer)
-        {
-            if (agent.destination != player.transform.position)
-            {
-                isCasting = false;
-                agent.isStopped = false;
-                effect.SetActive(false);
-                yield break;
-            }
-
-            yield return new WaitForSeconds(1);
-            Debug.Log($"귀환까지 남은 시간 : {recallTimer - castingTime}초");
-            castingTime += 1;
-        }
-
-        yield return new WaitForSeconds(0.5f);
-        isCasting = false;
-        agent.isStopped = false;
-        effect.SetActive(false);
-        // 서버로 마을 가는 패킷?!
+        var pkt = new C2SRecall { };
+        GameManager.Network.Send(pkt);
     }
 }

@@ -10,7 +10,7 @@ public class TempSkillManager : MonoBehaviour
     [SerializeField]
     private TempPlayer player;
 
-    private const int throwPower = 5;
+    private const int throwPower = 4;
     private bool isCasting = false;
 
     private bool isGrenadeReady = true;
@@ -55,21 +55,36 @@ public class TempSkillManager : MonoBehaviour
             )
         )
         {
-            Vector3 forceVec = throwTargetPos.point - transform.position;
-            forceVec.y = throwPower;
+            Vector3 startPos = transform.position;
+            Vector3 targetPos = throwTargetPos.point;
 
-            GameObject skillObj = Instantiate(
-                player.grenade,
-                transform.position,
-                transform.rotation
-            );
+            float gravity = Mathf.Abs(Physics.gravity.y); // 중력 (절댓값 사용)
 
+            // 수평 거리 및 높이 차이 계산
+            Vector3 flatTarget = new Vector3(targetPos.x, startPos.y, targetPos.z);
+            float distance = Vector3.Distance(startPos, flatTarget);
+            float heightDifference = targetPos.y - startPos.y;
+
+            // 🟢 수직 방향 속도 계산
+            float initialVelocityY = Mathf.Sqrt(2 * gravity * throwPower); // throwPower는 목표 높이
+            float timeUp = initialVelocityY / gravity; // 상승 시간
+            float timeDown = Mathf.Sqrt(2 * Mathf.Max(0, heightDifference) / gravity); // 하강 시간
+            float timeToTarget = timeUp + timeDown; // 총 비행 시간
+
+            // 🟢 수평 방향 속도 계산 (X, Z)
+            float initialVelocityXZ = distance / timeToTarget;
+            Vector3 direction = (flatTarget - startPos).normalized;
+            Vector3 velocity = direction * initialVelocityXZ;
+            velocity.y = initialVelocityY; // Y축 속도 추가
+
+            // 🟢 수류탄 생성 및 속도 적용
+            GameObject skillObj = Instantiate(player.grenade, startPos, Quaternion.identity);
             Rigidbody rigid = skillObj.GetComponent<Rigidbody>();
-            rigid.AddForce(forceVec, ForceMode.Impulse);
+            rigid.velocity = velocity; // 물리 엔진 기반 속도 설정
             rigid.AddTorque(Vector3.back, ForceMode.Impulse);
         }
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.3f);
         isCasting = false;
 
         yield return new WaitForSeconds(coolTimeQ);

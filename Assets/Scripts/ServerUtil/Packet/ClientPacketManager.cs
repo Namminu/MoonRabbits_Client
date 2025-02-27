@@ -91,6 +91,10 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CGatheringSkillCheck, PacketHandler.S2CGatheringSkillCheckHandler);
         _onRecv.Add((ushort)MsgId.S2CGatheringDone, MakePacket<S2CGatheringDone>);
         _handler.Add((ushort)MsgId.S2CGatheringDone, PacketHandler.S2CGatheringDoneHandler);
+        _onRecv.Add((ushort)MsgId.S2CRecall, MakePacket<S2CRecall>);
+        _handler.Add((ushort)MsgId.S2CRecall, PacketHandler.S2CRecallHandler);
+        _onRecv.Add((ushort)MsgId.S2CThrowGrenade, MakePacket<S2CThrowGrenade>);
+        _handler.Add((ushort)MsgId.S2CThrowGrenade, PacketHandler.S2CThrowGrenadeHandler);
         _onRecv.Add((ushort)MsgId.S2CSectorEnter, MakePacket<S2CSectorEnter>);
         _handler.Add((ushort)MsgId.S2CSectorEnter, PacketHandler.S2CSectorEnterHandler);
         _onRecv.Add((ushort)MsgId.S2CSectorLeave, MakePacket<S2CSectorLeave>);

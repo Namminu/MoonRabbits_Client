@@ -22,12 +22,20 @@ public class MyPlayer : MonoBehaviour
     }
     private Vector3 lastPos;
     private Vector3 targetPosition;
+    public Vector3 TargetPos => targetPosition;
     private Vector3 lastTargetPosition;
     private readonly List<int> animHash = new List<int>();
     private int frameCount = 0;
     private const int targetFrames = 10; // 10 프레임마다 실행
 
-    /* 스킬 관련 변수 */
+    /* 감정표현 관련 */
+    private bool isEmoting;
+    private bool happyInput;
+    private bool sadInput;
+    private bool greetingInput;
+    private EmoteManager emoteManager;
+
+    /* 스킬 관련 */
     public GameObject grenade;
     public GameObject trap;
     private bool grenadeInput;
@@ -35,8 +43,9 @@ public class MyPlayer : MonoBehaviour
     private bool recallInput;
 
     private SkillManager skillManager;
+    public SkillManager SkillManager => skillManager;
 
-    /* 상호작용 관련 변수 */
+    /* 상호작용 관련 */
     public GameObject axe;
     public GameObject pickAxe;
     public int currentEquip = (int)EquipState.none;
@@ -51,6 +60,7 @@ public class MyPlayer : MonoBehaviour
     private bool equipChangeInput;
     private bool interactInput;
     private InteractManager interactManager;
+    public InteractManager InteractManager => interactManager;
 
     void Awake()
     {
@@ -70,6 +80,7 @@ public class MyPlayer : MonoBehaviour
 
         skillManager = GetComponentInChildren<SkillManager>();
         interactManager = GetComponentInChildren<InteractManager>();
+        emoteManager = GetComponent<EmoteManager>();
     }
 
     void Start()
@@ -80,6 +91,7 @@ public class MyPlayer : MonoBehaviour
     void Update()
     {
         HandleInput();
+        Emote();
         ThrowGrenade();
         SetTrap();
         Recall();
@@ -125,10 +137,14 @@ public class MyPlayer : MonoBehaviour
                 )
             )
             {
+                isEmoting = false;
                 targetPosition = rayHit.point;
             }
         }
 
+        happyInput = Input.GetKeyDown(KeyCode.Alpha1);
+        sadInput = Input.GetKeyDown(KeyCode.Alpha2);
+        greetingInput = Input.GetKeyDown(KeyCode.Alpha3);
         grenadeInput = Input.GetKeyDown(KeyCode.Q);
         trapInput = Input.GetKeyDown(KeyCode.E);
         recallInput = Input.GetKeyDown(KeyCode.T);
@@ -224,6 +240,28 @@ public class MyPlayer : MonoBehaviour
         {
             SendLocationPacket();
             lastPos = transform.position;
+        }
+    }
+
+    private void Emote()
+    {
+        if (isEmoting)
+            return;
+
+        if (happyInput)
+        {
+            isEmoting = true;
+            emoteManager.event1.Invoke();
+        }
+        else if (sadInput)
+        {
+            isEmoting = true;
+            emoteManager.event2.Invoke();
+        }
+        else if (greetingInput)
+        {
+            isEmoting = true;
+            emoteManager.event3.Invoke();
         }
     }
 
