@@ -15,6 +15,8 @@ public class MonsterController : MonoBehaviour
 
     [SerializeField] private int sectorCode = 2;
 
+    private bool _isAttack = false;
+
     public int ID
     {
         get { return id; }
@@ -117,9 +119,18 @@ public class MonsterController : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    IEnumerator CoMonsterAttackCoolTime()
+    {
+        _isAttack = true;
+        yield return new WaitForSeconds(2f);
+        _isAttack = false;
+    }
+
+    void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player") == false) return;
+        if (_isAttack) return;
+        StartCoroutine(CoMonsterAttackCoolTime());
         Debug.Log("플레이어가 몬스터와 충돌하였다.");
         CapsuleCollider playerCollider = other.GetComponent<CapsuleCollider>();
         C2SCollision collisionPacket = new C2SCollision();
