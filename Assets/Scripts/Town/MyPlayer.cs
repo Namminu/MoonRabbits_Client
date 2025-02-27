@@ -7,6 +7,8 @@ using UnityEngine.EventSystems;
 
 public class MyPlayer : MonoBehaviour
 {
+    private Player player;
+
     [SerializeField]
     private NavMeshAgent agent;
     public NavMeshAgent NavAgent
@@ -36,7 +38,6 @@ public class MyPlayer : MonoBehaviour
     private EmoteManager emoteManager;
 
     /* 스킬 관련 */
-    public bool isStun = false;
     public GameObject grenade;
     public GameObject trap;
     private bool grenadeInput;
@@ -65,6 +66,7 @@ public class MyPlayer : MonoBehaviour
 
     void Awake()
     {
+        player = GetComponent<Player>();
         eSystem = TownManager.Instance.E_System;
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
@@ -186,7 +188,7 @@ public class MyPlayer : MonoBehaviour
 
     private void MoveAndSendMovePacket()
     {
-        if (isStun)
+        if (player.IsStun)
             return;
 
         // 플레이어 이동시키기
@@ -249,7 +251,7 @@ public class MyPlayer : MonoBehaviour
 
     private void Emote()
     {
-        if (!isStun && !isEmoting)
+        if (!player.IsStun && !isEmoting)
         {
             if (happyInput)
             {
@@ -271,31 +273,31 @@ public class MyPlayer : MonoBehaviour
 
     private void ThrowGrenade()
     {
-        if (grenadeInput && !isStun)
+        if (grenadeInput && !player.IsStun)
             skillManager.eventQ.Invoke();
     }
 
     private void SetTrap()
     {
-        if (trapInput && !isStun)
+        if (trapInput && !player.IsStun)
             skillManager.eventE.Invoke();
     }
 
     private void Recall()
     {
-        if (recallInput && !isStun)
+        if (recallInput && !player.IsStun)
             skillManager.eventT.Invoke();
     }
 
     private void EquipChange()
     {
-        if (equipChangeInput && !isStun)
+        if (equipChangeInput && !player.IsStun)
             interactManager.eventR.Invoke();
     }
 
     private void Interact()
     {
-        if (interactInput && !isStun)
+        if (interactInput && !player.IsStun)
             interactManager.eventF.Invoke();
     }
 

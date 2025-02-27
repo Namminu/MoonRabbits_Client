@@ -85,8 +85,6 @@ public class SkillObj : MonoBehaviour
 
         yield return new WaitForSeconds(0.1f);
         effect.SetActive(true);
-        Debug.Log($"던진 사람 : {casterId}");
-        Debug.Log($"게임매니저 아이디 : {GameManager.Instance.PlayerId}");
         if (casterId == GameManager.Instance.PlayerId)
         {
             var pkt = new C2SStun();

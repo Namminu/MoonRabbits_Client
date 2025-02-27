@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Google.Protobuf.Protocol;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.EventSystems;
 
 public abstract class SManagerBase : MonoBehaviour
@@ -76,10 +78,10 @@ public abstract class SManagerBase : MonoBehaviour
         }
         // [2] Resources 폴더에서 플레이어 프리펩 로드
         Player playerPrefab = Resources.Load<Player>(prefabPath);
+
         // [3] 프리펩 생성 및 정보 연동
         var player = Instantiate(playerPrefab, spawnArea.position, Quaternion.identity);
         player.Move(spawnArea.position, Quaternion.identity);
-        Debug.Log($"섹터 입장한 사람 : {playerInfo.PlayerId}");
         player.SetPlayerId(playerInfo.PlayerId);
         player.SetNickname(playerInfo.Nickname);
         player.SetLevel(playerInfo.Level);

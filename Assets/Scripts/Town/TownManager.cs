@@ -145,7 +145,6 @@ public class TownManager : MonoBehaviour
 
         var player = Instantiate(playerPrefab, validatedSpawnPos, Quaternion.identity);
         player.Move(validatedSpawnPos, Quaternion.identity);
-        Debug.Log($"마을 입장한 사람 : {playerInfo.PlayerId}");
         player.SetPlayerId(playerInfo.PlayerId);
         player.SetNickname(playerInfo.Nickname);
         player.SetLevel(playerInfo.Level);

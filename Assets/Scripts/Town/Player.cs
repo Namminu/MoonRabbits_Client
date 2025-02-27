@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Google.Protobuf.Protocol;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -40,6 +41,7 @@ public class Player : MonoBehaviour
     public GameObject pickAxe;
     private Transform throwPoint;
     private Dictionary<int, string> emotions = new();
+    public bool IsStun = false;
 
     // PlayerInfo
     private int maxHp;
@@ -216,7 +218,7 @@ public class Player : MonoBehaviour
 
         while (castingTime < recallTimer)
         {
-            if (Vector3.Distance(startPos, transform.position) > 0.2 && MPlayer.isStun)
+            if (Vector3.Distance(startPos, transform.position) > 0.2 || IsStun)
             {
                 effect.SetActive(false);
 
@@ -249,7 +251,6 @@ public class Player : MonoBehaviour
     {
         GameObject grenadeObj = Instantiate(grenade, throwPoint.position, Quaternion.identity);
 
-        Debug.Log($"스킬 쓴 사람 : {PlayerId}");
         grenadeObj.GetComponent<SkillObj>().CasterId = PlayerId;
 
         Rigidbody rigid = grenadeObj.GetComponent<Rigidbody>();
@@ -273,12 +274,12 @@ public class Player : MonoBehaviour
     public void Stun(float timer)
     {
         transform.Find("StunEffect").gameObject.SetActive(true);
+        IsStun = true;
 
         if (IsMine)
         {
             MPlayer.NavAgent.ResetPath();
             MPlayer.NavAgent.velocity = Vector3.zero;
-            MPlayer.isStun = true;
         }
 
         Invoke(nameof(StunOut), timer);
@@ -287,11 +288,7 @@ public class Player : MonoBehaviour
     private void StunOut()
     {
         transform.Find("StunEffect").gameObject.SetActive(false);
-
-        if (IsMine)
-        {
-            MPlayer.isStun = false;
-        }
+        IsStun = false;
     }
 
     private void CheckMove()
