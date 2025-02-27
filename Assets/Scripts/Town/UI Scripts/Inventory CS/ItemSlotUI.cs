@@ -1,6 +1,9 @@
 using TMPro;
+using Unity.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Profiling;
 using UnityEngine.UI;
 
 public class ItemSlotUI
@@ -122,9 +125,10 @@ public class ItemSlotUI
     {
         if (item == null)
             return;
+        if (eventData.button == PointerEventData.InputButton.Right) return;
 
-        // Image copy process when dragging starts from an item slot
-        DragSlot.instance.dragSlot = this;
+		// Image copy process when dragging starts from an item slot
+		DragSlot.instance.dragSlot = this;
         DragSlot.instance.DragSetImage(itemImage);
         DragSlot.instance.transform.position = eventData.position;
     }
@@ -157,34 +161,50 @@ public class ItemSlotUI
     {
         if (item == null) return;
 
-        if (eventData.button == PointerEventData.InputButton.Right)
+		#region Right Click Event
+		if (eventData.button == PointerEventData.InputButton.Right)
         {
             DecomUI = GameObject.Find("UIDecomItem");
             if (DecomUI == null) return;
 
-            if (isInven && DecomUI.activeSelf) /* 인벤토리에서 우클릭 시  */
+            if(DecomUI.activeSelf)  /* 분해창이 열려 있을 때 */
             {
-                Debug.Log("Right Click On Inventory Slot");
-                ItemSlotUI emptySlot = FindEmptySlot(false);
-                if (emptySlot != null)
-                {
-                    emptySlot.AddItem(item);
-                    emptySlot.originSlot = this;
-                    ClearSlot();
-                }
-                else return;
-            }
-            else if (!isInven) /* 분해창에서 우클릭 시 */
+				if (isInven) /* 인벤토리에서 우클릭 시  */
+				{
+					Debug.Log("Right Click On Inventory Slot");
+					ItemSlotUI emptySlot = FindEmptySlot(false);
+					if (emptySlot != null)
+					{
+						emptySlot.AddItem(item);
+						emptySlot.originSlot = this;
+						ClearSlot();
+					}
+					else return;
+				}
+				else if (!isInven) /* 분해창에서 우클릭 시 */
+				{
+					Debug.Log("Right Click On Decom Slot");
+					ReturnToOriginSlot();
+				}
+			}
+            else /* 분해창이 닫혀있을 때 */
             {
-                Debug.Log("Right Click On Decom Slot");
-                ReturnToOriginSlot();
+				SeperatingItem();
 			}
         }
-    }
-    #endregion
+        #endregion
 
-    #region Getter n Setter
-    public MaterialItem GetItem()
+        #region Left Click Event
+        if (eventData.button == PointerEventData.InputButton.Left)
+        { 
+
+        }
+		#endregion
+	}
+	#endregion
+
+	#region Getter n Setter
+	public MaterialItem GetItem()
     {
         return item;
     }
@@ -212,9 +232,26 @@ public class ItemSlotUI
         itemIndex = index;
         return itemIndex;
     }
-	#endregion
 
+
+	#endregion
 	#region Local Method
+	/// <summary>
+	/// Seperate Item To Half Count
+	/// </summary>
+	/// <returns>Half Item Count : If CurItemStack is an odd number, allocate a smaller number</returns>
+	private int SeperatingItem()
+	{
+        int halfItemCount = item.CurItemStack / 2;
+        item.CurItemStack -= halfItemCount;
+		text_ItemAmount.text = item.CurItemStack.ToString();
+
+        MaterialItem tempItem = item;
+        tempItem.CurItemStack = halfItemCount;
+
+		DragSlot.instance.dragSlot.AddItem(tempItem);
+		return halfItemCount;
+    }
 
 	// 아이템 등록 시 이미지 객체의 투명도 조절을 위한 메서드
 	private void SetItemImageAlpha(float alpha)
