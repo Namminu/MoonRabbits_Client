@@ -38,7 +38,7 @@ public class Player : MonoBehaviour
     public GameObject trap;
     public GameObject axe;
     public GameObject pickAxe;
-
+    private Transform throwPoint;
     private Dictionary<int, string> emotions = new();
 
     // PlayerInfo
@@ -58,6 +58,7 @@ public class Player : MonoBehaviour
     {
         Avatar = GetComponent<Avatar>();
         animator = GetComponent<Animator>();
+        throwPoint = transform.Find("ThrowPoint");
 
         SetAnimTrigger();
     }
@@ -97,6 +98,7 @@ public class Player : MonoBehaviour
         if (IsMine)
         {
             MPlayer = gameObject.AddComponent<MyPlayer>();
+            GameManager.Instance.PlayerId = PlayerId;
         }
         else
         {
@@ -214,7 +216,7 @@ public class Player : MonoBehaviour
 
         while (castingTime < recallTimer)
         {
-            if (Vector3.Distance(startPos, transform.position) > 0.2)
+            if (Vector3.Distance(startPos, transform.position) > 0.2 && MPlayer.isStun)
             {
                 effect.SetActive(false);
 
@@ -240,6 +242,55 @@ public class Player : MonoBehaviour
 
             var pkt = new C2SMoveSector { TargetSector = 100 };
             GameManager.Network.Send(pkt);
+        }
+    }
+
+    public void CastGrenade(Vec3 vel, float coolTime)
+    {
+        GameObject grenadeObj = Instantiate(grenade, throwPoint.position, Quaternion.identity);
+
+        Debug.Log($"스킬 쓴 사람 : {PlayerId}");
+        grenadeObj.GetComponent<SkillObj>().CasterId = PlayerId;
+
+        Rigidbody rigid = grenadeObj.GetComponent<Rigidbody>();
+        rigid.velocity = new Vector3(vel.X, vel.Y, vel.Z);
+        rigid.AddTorque(Vector3.back, ForceMode.Impulse);
+
+        if (IsMine)
+        {
+            StartCoroutine(RunCoolTime(coolTime));
+        }
+    }
+
+    IEnumerator RunCoolTime(float coolTime)
+    {
+        MPlayer.SkillManager.IsCasting = false;
+
+        yield return new WaitForSeconds(coolTime);
+        MPlayer.SkillManager.IsGrenadeReady = true;
+    }
+
+    public void Stun(float timer)
+    {
+        transform.Find("StunEffect").gameObject.SetActive(true);
+
+        if (IsMine)
+        {
+            MPlayer.NavAgent.ResetPath();
+            MPlayer.NavAgent.velocity = Vector3.zero;
+            MPlayer.isStun = true;
+        }
+
+        Invoke(nameof(StunOut), timer);
+    }
+
+    private void StunOut()
+    {
+        transform.Find("StunEffect").gameObject.SetActive(false);
+
+        if (IsMine)
+        {
+            MPlayer.isStun = false;
         }
     }
 

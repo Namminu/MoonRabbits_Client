@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public S2CSectorEnter Pkt;
 
     public string UserName;
+    public int PlayerId;
     public int ClassCode;
 
     private async void Awake()

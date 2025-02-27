@@ -429,6 +429,7 @@ class PacketHandler
         Debug.Log($"S2CGatheringDone 패킷 무사 도착 : {pkt}");
     }
 
+    #region Skill
     public static void S2CRecallHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CRecall pkt)
@@ -438,8 +439,7 @@ class PacketHandler
         switch (pkt.CurrentSector)
         {
             case 100:
-                var townPlayer = TownManager.Instance.GetPlayer(pkt.PlayerId);
-                townPlayer.CastRecall(pkt.RecallTimer);
+                Debug.Log("마을에선 스킬을 사용할 수 없습니다");
                 break;
             case 101:
                 var s1Player = S1Manager.Instance.GetPlayer(pkt.PlayerId);
@@ -461,17 +461,47 @@ class PacketHandler
         switch (pkt.CurrentSector)
         {
             case 100:
-                var townPlayer = TownManager.Instance.GetPlayer(pkt.PlayerId);
+                Debug.Log("마을에선 스킬을 사용할 수 없습니다");
                 break;
             case 101:
                 var s1Player = S1Manager.Instance.GetPlayer(pkt.PlayerId);
+                s1Player.CastGrenade(pkt.Velocity, pkt.CoolTime);
                 break;
             case 102:
                 var s2Player = S2Manager.Instance.GetPlayer(pkt.PlayerId);
+                s2Player.CastGrenade(pkt.Velocity, pkt.CoolTime);
                 break;
         }
     }
 
+    public static void S2CStunHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CStun pkt)
+            return;
+        Debug.Log($"S2CStun 패킷 무사 도착 : {pkt}");
+
+        switch (pkt.CurrentSector)
+        {
+            case 100:
+                Debug.Log("마을에선 상태 이상에 빠지지 않습니다");
+                break;
+            case 101:
+                foreach (int playerId in pkt.PlayerIds)
+                {
+                    var s1Player = S1Manager.Instance.GetPlayer(playerId);
+                    s1Player.Stun(pkt.StunTimer);
+                }
+                break;
+            case 102:
+                foreach (int playerId in pkt.PlayerIds)
+                {
+                    var s2Player = S2Manager.Instance.GetPlayer(playerId);
+                    s2Player.Stun(pkt.StunTimer);
+                }
+                break;
+        }
+    }
+    #endregion
     public static void S2CSectorEnterHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CSectorEnter pkt)

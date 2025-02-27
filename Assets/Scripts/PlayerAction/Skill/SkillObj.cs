@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Google.Protobuf.Protocol;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
@@ -15,6 +16,13 @@ public class SkillObj : MonoBehaviour
     }
 
     public ObjType type;
+
+    private int casterId;
+    public int CasterId
+    {
+        get { return casterId; }
+        set { casterId = value; }
+    }
 
     private MeshRenderer mesh;
     private Rigidbody rigid;
@@ -77,26 +85,36 @@ public class SkillObj : MonoBehaviour
 
         yield return new WaitForSeconds(0.1f);
         effect.SetActive(true);
-
-        RaycastHit[] rayHits = Physics.SphereCastAll(
-            transform.position, // 이 위치에서 (슈류탄 현 위치)
-            explosionRange, // 설정한 반경의 구체 Ray를
-            Vector3.up, // 위 방향으로
-            0, // 현 위치와 이격 없이 쏘는데
-            LayerMask.GetMask("Monster", "Player") // 레이어에 맞는 오브젝트들을 배열로 반환
-        );
-
-        foreach (RaycastHit hitObj in rayHits)
+        Debug.Log($"던진 사람 : {casterId}");
+        Debug.Log($"게임매니저 아이디 : {GameManager.Instance.PlayerId}");
+        if (casterId == GameManager.Instance.PlayerId)
         {
-            var target = hitObj.transform.gameObject;
-            if (target.CompareTag("Monster"))
+            var pkt = new C2SStun();
+            pkt.SkillType = (int)type;
+
+            RaycastHit[] rayHits = Physics.SphereCastAll(
+                transform.position, // 이 위치에서 (슈류탄 현 위치)
+                explosionRange, // 설정한 반경의 구체 Ray를
+                Vector3.up, // 위 방향으로
+                0, // 현 위치와 이격 없이 쏘는데
+                LayerMask.GetMask("Monster", "Player") // 레이어에 맞는 오브젝트들을 배열로 반환
+            );
+
+            foreach (RaycastHit hitObj in rayHits)
             {
-                target.GetComponent<MonsterController>().Stun(stunTimer);
+                var target = hitObj.transform.gameObject;
+
+                if (target.CompareTag("Monster"))
+                {
+                    pkt.MonsterIds.Add(target.GetComponent<MonsterController>().ID);
+                }
+                else if (target.CompareTag("Player"))
+                {
+                    pkt.PlayerIds.Add(target.GetComponent<Player>().PlayerId);
+                }
             }
-            else if (target.CompareTag("Player"))
-            {
-                target.GetComponent<TempPlayer>().Stun(stunTimer); // 나중에 player로 수정
-            }
+
+            GameManager.Network.Send(pkt);
         }
 
         yield return new WaitForSeconds(1f);
@@ -111,7 +129,7 @@ public class SkillObj : MonoBehaviour
         rune.SetActive(false);
         effect.SetActive(true);
 
-        target.GetComponent<TempPlayer>().Stun(stunTimer); // 나중에 myplayer로 수정
+        target.GetComponent<TempPlayer>().Stun(stunTimer); // 나중에 player로 수정
 
         yield return new WaitForSeconds(stunTimer);
         Destroy(gameObject);

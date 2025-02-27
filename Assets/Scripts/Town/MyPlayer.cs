@@ -29,13 +29,14 @@ public class MyPlayer : MonoBehaviour
     private const int targetFrames = 10; // 10 프레임마다 실행
 
     /* 감정표현 관련 */
-    private bool isEmoting;
+    public bool isEmoting;
     private bool happyInput;
     private bool sadInput;
     private bool greetingInput;
     private EmoteManager emoteManager;
 
     /* 스킬 관련 */
+    public bool isStun = false;
     public GameObject grenade;
     public GameObject trap;
     private bool grenadeInput;
@@ -185,6 +186,9 @@ public class MyPlayer : MonoBehaviour
 
     private void MoveAndSendMovePacket()
     {
+        if (isStun)
+            return;
+
         // 플레이어 이동시키기
         agent.SetDestination(targetPosition);
 
@@ -245,53 +249,53 @@ public class MyPlayer : MonoBehaviour
 
     private void Emote()
     {
-        if (isEmoting)
-            return;
-
-        if (happyInput)
+        if (!isStun && !isEmoting)
         {
-            isEmoting = true;
-            emoteManager.event1.Invoke();
-        }
-        else if (sadInput)
-        {
-            isEmoting = true;
-            emoteManager.event2.Invoke();
-        }
-        else if (greetingInput)
-        {
-            isEmoting = true;
-            emoteManager.event3.Invoke();
+            if (happyInput)
+            {
+                isEmoting = true;
+                emoteManager.event1.Invoke();
+            }
+            else if (sadInput)
+            {
+                isEmoting = true;
+                emoteManager.event2.Invoke();
+            }
+            else if (greetingInput)
+            {
+                isEmoting = true;
+                emoteManager.event3.Invoke();
+            }
         }
     }
 
     private void ThrowGrenade()
     {
-        if (grenadeInput)
+        if (grenadeInput && !isStun)
             skillManager.eventQ.Invoke();
     }
 
     private void SetTrap()
     {
-        if (trapInput)
+        if (trapInput && !isStun)
             skillManager.eventE.Invoke();
     }
 
     private void Recall()
     {
-        if (recallInput)
+        if (recallInput && !isStun)
             skillManager.eventT.Invoke();
     }
 
     private void EquipChange()
     {
-        if (equipChangeInput)
+        if (equipChangeInput && !isStun)
             interactManager.eventR.Invoke();
     }
 
     private void Interact()
     {
-        if (interactInput)
+        if (interactInput && !isStun)
             interactManager.eventF.Invoke();
     }
 
