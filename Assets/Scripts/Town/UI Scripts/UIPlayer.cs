@@ -264,7 +264,7 @@ public class UIPlayer : MonoBehaviour
         }
     }
 
-    private void SubHp() // HP 증가 -> hearts 그리드에서 하트 삭제
+    private void SubHp() // HP 감소 -> hearts 그리드에서 하트 삭제
     {
         if (hearts.Count > 0 && heartBgs.Count > 0)
         {
