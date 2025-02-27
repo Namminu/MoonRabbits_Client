@@ -62,17 +62,6 @@ public class ASectorManager : MonoBehaviour
         MyPlayer.SetIsMine(true, playerInfo.CurrentSector);
         // MyPlayer.SetNickname(playerInfo.Nickname);
         // MyPlayer.SetStatInfo(playerInfo.StatInfo);
-
-        var tr = new TransformInfo
-        {
-            PosX = MyPlayer.transform.position.x,
-            PosY = MyPlayer.transform.position.y,
-            PosZ = MyPlayer.transform.position.z,
-            Rot = MyPlayer.transform.eulerAngles.y,
-        };
-
-        var locationPacket = new C2SPlayerLocation { Transform = tr };
-        GameManager.Network.Send(locationPacket);
     }
 
     private Vector3 CalculateSpawnPosition(TransformInfo transformInfo)
