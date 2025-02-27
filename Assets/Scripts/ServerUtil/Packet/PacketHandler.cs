@@ -539,21 +539,11 @@ class PacketHandler
         Debug.Log($"S2CAddExp 패킷 무사 도착 : {pkt}");
 
         if (TownManager.Instance.MyPlayer != null)
-        {
             TownManager.Instance.MyPlayer.SetExp(pkt.UpdatedExp);
-            Debug.Log("MyPlayer is in the TownManager");
-        }
         else if (S1Manager.Instance.MyPlayer != null)
-        {
             S1Manager.Instance.MyPlayer.SetExp(pkt.UpdatedExp);
-            Debug.Log("MyPlayer is in the S1Manager");
-        }
         else if (S2Manager.Instance.MyPlayer != null)
-        {
             S2Manager.Instance.MyPlayer.SetExp(pkt.UpdatedExp);
-            Debug.Log("MyPlayer is in the S2Manager");
-        }
-
     }
 
     public static void S2CLevelUpHandler(PacketSession session, IMessage packet)
@@ -618,7 +608,12 @@ class PacketHandler
             return;
         Debug.Log($"S2CInvestPoint 패킷 무사 도착 : {pkt}");
 
-        TownManager.Instance.MyPlayer.InvestPoint(pkt.StatInfo);
+        if (TownManager.Instance.MyPlayer != null)
+            TownManager.Instance.MyPlayer.InvestPoint(pkt.StatInfo);
+        else if (S1Manager.Instance.MyPlayer != null)
+            S1Manager.Instance.MyPlayer.InvestPoint(pkt.StatInfo);
+        else if (S2Manager.Instance.MyPlayer != null)
+            S2Manager.Instance.MyPlayer.InvestPoint(pkt.StatInfo);
     }
     #endregion
 

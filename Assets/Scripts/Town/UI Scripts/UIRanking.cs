@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Google.Protobuf.Protocol;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class UIRanking : MonoBehaviour
