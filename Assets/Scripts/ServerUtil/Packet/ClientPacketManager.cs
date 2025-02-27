@@ -88,19 +88,20 @@ class PacketManager
         _onRecv.Add((ushort)MsgId.S2CGatheringStart, MakePacket<S2CGatheringStart>);
         _handler.Add((ushort)MsgId.S2CGatheringStart, PacketHandler.S2CGatheringStartHandler);
         _onRecv.Add((ushort)MsgId.S2CGatheringSkillCheck, MakePacket<S2CGatheringSkillCheck>);
-        _handler.Add((ushort)MsgId.S2CGatheringSkillCheck, PacketHandler.S2CGatheringSkillCheckHandler);
+        _handler.Add(
+            (ushort)MsgId.S2CGatheringSkillCheck,
+            PacketHandler.S2CGatheringSkillCheckHandler
+        );
         _onRecv.Add((ushort)MsgId.S2CGatheringDone, MakePacket<S2CGatheringDone>);
         _handler.Add((ushort)MsgId.S2CGatheringDone, PacketHandler.S2CGatheringDoneHandler);
         _onRecv.Add((ushort)MsgId.S2CRecall, MakePacket<S2CRecall>);
         _handler.Add((ushort)MsgId.S2CRecall, PacketHandler.S2CRecallHandler);
         _onRecv.Add((ushort)MsgId.S2CThrowGrenade, MakePacket<S2CThrowGrenade>);
         _handler.Add((ushort)MsgId.S2CThrowGrenade, PacketHandler.S2CThrowGrenadeHandler);
-        _onRecv.Add((ushort)MsgId.S2CSectorEnter, MakePacket<S2CSectorEnter>);
-        _handler.Add((ushort)MsgId.S2CSectorEnter, PacketHandler.S2CSectorEnterHandler);
-        _onRecv.Add((ushort)MsgId.S2CSectorLeave, MakePacket<S2CSectorLeave>);
-        _handler.Add((ushort)MsgId.S2CSectorLeave, PacketHandler.S2CSectorLeaveHandler);
-        _onRecv.Add((ushort)MsgId.S2CInPortal, MakePacket<S2CInPortal>);
-        _handler.Add((ushort)MsgId.S2CInPortal, PacketHandler.S2CInPortalHandler);
+        _onRecv.Add((ushort)MsgId.S2CStun, MakePacket<S2CStun>);
+        _handler.Add((ushort)MsgId.S2CStun, PacketHandler.S2CStunHandler);
+        _onRecv.Add((ushort)MsgId.S2CEquipChange, MakePacket<S2CEquipChange>);
+        _handler.Add((ushort)MsgId.S2CEquipChange, PacketHandler.S2CEquipChangeHandler);
         _onRecv.Add((ushort)MsgId.S2CAddExp, MakePacket<S2CAddExp>);
         _handler.Add((ushort)MsgId.S2CAddExp, PacketHandler.S2CAddExpHandler);
         _onRecv.Add((ushort)MsgId.S2CLevelUp, MakePacket<S2CLevelUp>);

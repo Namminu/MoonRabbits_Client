@@ -19,6 +19,7 @@ public class SkillManager : MonoBehaviour
     }
 
     private bool isGrenadeReady = true;
+    public bool IsGrenadeReady { get => isGrenadeReady; set { isGrenadeReady = value; } }
     private const float coolTimeQ = 5f;
 
     private bool isTrapReady = true;
@@ -35,15 +36,15 @@ public class SkillManager : MonoBehaviour
     private void Start()
     {
         player = GetComponentInParent<MyPlayer>();
-        eventQ += () => StartCoroutine(nameof(ThrowGrenade));
+        eventQ += ThrowGrenade;
         eventE += () => StartCoroutine(nameof(SetTrap));
-        eventT += () => StartCoroutine(nameof(Recall));
+        eventT += Recall;
     }
 
-    IEnumerator ThrowGrenade()
+    private void ThrowGrenade()
     {
         if (isCasting || !isGrenadeReady)
-            yield break;
+            return;
 
         isCasting = true;
         isGrenadeReady = false;
@@ -59,26 +60,43 @@ public class SkillManager : MonoBehaviour
                 LayerMask.GetMask("Ground")
             )
         )
-        {           
-           Vector3 forceVec = throwTargetPos.point - transform.position;
-            forceVec.y = throwPower;
+        {
+            var sp = new Vec3
+            {
+                X = transform.position.x,
+                Y = transform.position.y,
+                Z = transform.position.z,
+            };
 
-            GameObject skillObj = Instantiate(
-                player.grenade,
-                transform.position,
-                transform.rotation
-            );
+            var tp = new Vec3
+            {
+                X = throwTargetPos.point.x,
+                Y = throwTargetPos.point.y,
+                Z = throwTargetPos.point.z,
+            };
 
-            Rigidbody rigid = skillObj.GetComponent<Rigidbody>();
-            rigid.AddForce(forceVec, ForceMode.Impulse);
-            rigid.AddTorque(Vector3.back, ForceMode.Impulse);
+            var pkt = new C2SThrowGrenade { StartPos = sp, TargetPos = tp };
+            GameManager.Network.Send(pkt);
+
+            // Vector3 forceVec = throwTargetPos.point - transform.position;
+            // forceVec.y = throwPower;
+
+            // GameObject skillObj = Instantiate(
+            //     player.grenade,
+            //     transform.position,
+            //     transform.rotation
+            // );
+
+            // Rigidbody rigid = skillObj.GetComponent<Rigidbody>();
+            // rigid.AddForce(forceVec, ForceMode.Impulse);
+            // rigid.AddTorque(Vector3.back, ForceMode.Impulse);
         }
 
-        yield return new WaitForSeconds(1f);
-        isCasting = false;
+        // yield return new WaitForSeconds(1f);
+        // isCasting = false;
 
-        yield return new WaitForSeconds(coolTimeQ);
-        isGrenadeReady = true;
+        // yield return new WaitForSeconds(coolTimeQ);
+        // isGrenadeReady = true;
     }
 
     IEnumerator SetTrap()
@@ -117,10 +135,10 @@ public class SkillManager : MonoBehaviour
         isTrapReady = true;
     }
 
-    IEnumerator Recall()
+    private void Recall()
     {
         if (isCasting)
-            yield break;
+            return;
 
         isCasting = true;
 

@@ -4,9 +4,12 @@ using Google.Protobuf.Protocol;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class MyPlayer : MonoBehaviour
 {
+    public Player P;
+
     [SerializeField]
     public static MyPlayer instance { get; private set; }
     private NavMeshAgent agent;
@@ -30,7 +33,7 @@ public class MyPlayer : MonoBehaviour
     private const int targetFrames = 10; // 10 프레임마다 실행
 
     /* 감정표현 관련 */
-    private bool isEmoting;
+    public bool isEmoting;
     private bool happyInput;
     private bool sadInput;
     private bool greetingInput;
@@ -47,16 +50,7 @@ public class MyPlayer : MonoBehaviour
     public SkillManager SkillManager => skillManager;
 
     /* 상호작용 관련 */
-    public GameObject axe;
-    public GameObject pickAxe;
-    public int currentEquip = (int)EquipState.none;
-
-    public enum EquipState
-    {
-        none = 0,
-        axe = 1,
-        pickAxe = 2,
-    }
+    public int currentEquip = 0;
 
     private bool equipChangeInput;
     private bool interactInput;
@@ -67,14 +61,13 @@ public class MyPlayer : MonoBehaviour
     {
         instance = this;
 
+        P = GetComponent<Player>();
         eSystem = TownManager.Instance.E_System;
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
 
         grenade = GetComponentInParent<Player>().grenade;
         trap = GetComponentInParent<Player>().trap;
-        axe = GetComponentInParent<Player>().axe;
-        pickAxe = GetComponentInParent<Player>().pickAxe;
 
         InitializeCamera();
         lastPos = transform.position;
@@ -173,6 +166,9 @@ public class MyPlayer : MonoBehaviour
 
     private void MoveAndSendMovePacket()
     {
+        if (P.IsStun)
+            return;
+
         // 플레이어 이동시키기
         agent.SetDestination(targetPosition);
 
@@ -233,53 +229,62 @@ public class MyPlayer : MonoBehaviour
 
     private void Emote()
     {
-        if (isEmoting)
-            return;
-
-        if (happyInput)
+        if (!P.IsStun && !isEmoting)
         {
-            isEmoting = true;
-            emoteManager.event1.Invoke();
-        }
-        else if (sadInput)
-        {
-            isEmoting = true;
-            emoteManager.event2.Invoke();
-        }
-        else if (greetingInput)
-        {
-            isEmoting = true;
-            emoteManager.event3.Invoke();
+            if (happyInput)
+            {
+                isEmoting = true;
+                emoteManager.event1.Invoke();
+            }
+            else if (sadInput)
+            {
+                isEmoting = true;
+                emoteManager.event2.Invoke();
+            }
+            else if (greetingInput)
+            {
+                isEmoting = true;
+                emoteManager.event3.Invoke();
+            }
         }
     }
 
     private void ThrowGrenade()
     {
-        if (grenadeInput)
+        if (grenadeInput && !P.IsStun)
+        {
             skillManager.eventQ.Invoke();
+
+            float cooltime = 5;
+
+            if (SceneManager.GetActiveScene().name == "Sector1")
+                S1Manager.Instance.UiPlayer.QSkillCool(cooltime);
+            else if (SceneManager.GetActiveScene().name == "Sector2")
+                S2Manager.Instance.UiPlayer.WSkillCool(cooltime);
+        }
     }
 
     private void SetTrap()
     {
-        if (trapInput)
+        if (trapInput && !P.IsStun)
             skillManager.eventE.Invoke();
     }
 
     private void Recall()
     {
-        if (recallInput)
+        if (recallInput && !P.IsStun)
             skillManager.eventT.Invoke();
     }
 
     private void EquipChange()
     {
-        if (equipChangeInput)
+        if (equipChangeInput && !P.IsStun)
             interactManager.eventR.Invoke();
     }
 
     private void Interact()
     {
-        if (interactInput)
+        if (interactInput && !P.IsStun)
             interactManager.eventF.Invoke();
     }
 

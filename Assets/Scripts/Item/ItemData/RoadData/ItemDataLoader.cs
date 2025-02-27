@@ -1,139 +1,154 @@
-using System.IO;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
-using UnityEngine.Networking;
 using UnityEditor;
+using UnityEngine;
+using UnityEngine.Networking;
 
 public static class ItemDataLoader
 {
-	/* Sprite : ID ∏≈ƒ™ ≈¨∑°Ω∫ */
-	private static SpriteDataBase spriteDataBase;
+    /* Sprite : ID Îß§Ïπ≠ ÌÅ¥ÎûòÏä§ */
+    private static SpriteDataBase spriteDataBase;
 
-	/* µ•¿Ã≈Õ ¿˙¿Â ∏ÆΩ∫∆Æ */
-	public static List<MaterialItemData> MaterialItemsList { get; private set; }  = new List<MaterialItemData>();
-	public static List<HousingItemData> HousingItemsList { get; private set; } = new List<HousingItemData>();
+    /* Îç∞Ïù¥ÌÑ∞ Ï†ÄÏû• Î¶¨Ïä§Ìä∏ */
+    public static List<MaterialItemData> MaterialItemsList { get; private set; } =
+        new List<MaterialItemData>();
+    public static List<HousingItemData> HousingItemsList { get; private set; } =
+        new List<HousingItemData>();
 
-	/* Json ∆ƒ¿œ ¿–±‚ ∞Ê∑Œ */
-	private static readonly string MTItemjsonFilePath = "material_item_data.json";
-	private static readonly string HSItemjsonFilePath = "housing_item_data.json";
-	 
-	public static async Task GenerateAllItems()
-	{
-		string mtJsonText = await LoadJsonFromStreamingAssets(MTItemjsonFilePath);
-		string hsJsonText = await LoadJsonFromStreamingAssets(HSItemjsonFilePath);
+    /* Json ÌååÏùº ÏùΩÍ∏∞ Í≤ΩÎ°ú */
+    private static readonly string MTItemjsonFilePath = "material_item_data.json";
+    private static readonly string HSItemjsonFilePath = "housing_item_data.json";
 
-		if (string.IsNullOrEmpty(mtJsonText)|| string.IsNullOrEmpty(hsJsonText))
-		{
-			Debug.LogError("JSON ∆ƒ¿œ¿ª ∫“∑Øø¿¥¬ µ• Ω«∆–«ﬂΩ¿¥œ¥Ÿ.");
-			return;
-		}
+    public static async Task GenerateAllItems()
+    {
+        string mtJsonText = await LoadJsonFromStreamingAssets(MTItemjsonFilePath);
+        string hsJsonText = await LoadJsonFromStreamingAssets(HSItemjsonFilePath);
 
-		MaterialItemJsonWrapper mtItemWrapper = JsonUtility.FromJson<MaterialItemJsonWrapper>(mtJsonText);
-		HousingItemJsonWrapper hsItemWrapper = JsonUtility.FromJson<HousingItemJsonWrapper>(hsJsonText);
+        if (string.IsNullOrEmpty(mtJsonText) || string.IsNullOrEmpty(hsJsonText))
+        {
+            Debug.LogError("JSON ÌååÏùºÏùÑ Î∂àÎü¨Ïò§Îäî Îç∞ Ïã§Ìå®ÌñàÏäµÎãàÎã§.");
+            return;
+        }
 
-		if (mtItemWrapper == null || hsItemWrapper == null || mtItemWrapper.data == null || hsItemWrapper.data == null)
-		{
-			Debug.LogError("JSON µ•¿Ã≈Õ∏¶ ¿–¥¬ µ• Ω«∆–«ﬂΩ¿¥œ¥Ÿ.");
-			return;
-		}
+        MaterialItemJsonWrapper mtItemWrapper = JsonUtility.FromJson<MaterialItemJsonWrapper>(
+            mtJsonText
+        );
+        HousingItemJsonWrapper hsItemWrapper = JsonUtility.FromJson<HousingItemJsonWrapper>(
+            hsJsonText
+        );
 
-		LoadSpriteDataBase();
-		GenerateMaterialItems(mtItemWrapper.data);
-		GenerateHousingItems(hsItemWrapper.data);
-	}
+        if (
+            mtItemWrapper == null
+            || hsItemWrapper == null
+            || mtItemWrapper.data == null
+            || hsItemWrapper.data == null
+        )
+        {
+            Debug.LogError("JSON Îç∞Ïù¥ÌÑ∞Î•º ÏùΩÎäî Îç∞ Ïã§Ìå®ÌñàÏäµÎãàÎã§.");
+            return;
+        }
 
-	private static void GenerateMaterialItems(List<MaterialItemJsonData> items)
-	{
-		foreach(var item in items)
-		{
-			if (item.item_type != 1) continue;
+        LoadSpriteDataBase();
+        GenerateMaterialItems(mtItemWrapper.data);
+        GenerateHousingItems(hsItemWrapper.data);
+    }
 
-			MaterialItemData newItem = ScriptableObject.CreateInstance<MaterialItemData>();
+    private static void GenerateMaterialItems(List<MaterialItemJsonData> items)
+    {
+        foreach (var item in items)
+        {
+            if (item.item_type != 1)
+                continue;
 
-			newItem.ItemId = item.item_id;
-			newItem.ItemName = item.item_name;
-			newItem.ItemDescription = item.item_description;
-			newItem.ItemType = (ItemTypes)item.item_type;
-			newItem.ItemIcon = GetSpriteByItemId(item.item_id);
-			newItem.ItemMaxStack = 99;
+            MaterialItemData newItem = ScriptableObject.CreateInstance<MaterialItemData>();
 
-			MaterialItemsList.Add(newItem);
-		}
-		Debug.Log("¿Á∑· æ∆¿Ã≈€ ª˝º∫ ∞πºˆ : " + MaterialItemsList.Count);
-	}
+            newItem.ItemId = item.item_id;
+            newItem.ItemName = item.item_name;
+            newItem.ItemDescription = item.item_description;
+            newItem.ItemType = (ItemTypes)item.item_type;
+            newItem.ItemIcon = GetSpriteByItemId(item.item_id);
+            newItem.ItemMaxStack = 99;
 
-	private static void GenerateHousingItems(List<HousingItemJsonData> items)
-	{
-		foreach (var item in items)
-		{
-			if (item.item_type != 0) continue;
+            MaterialItemsList.Add(newItem);
+        }
+        Debug.Log("Ïû¨Î£å ÏïÑÏù¥ÌÖú ÏÉùÏÑ± Í∞ØÏàò : " + MaterialItemsList.Count);
+    }
 
-			HousingItemData newItem = ScriptableObject.CreateInstance<HousingItemData>();
+    private static void GenerateHousingItems(List<HousingItemJsonData> items)
+    {
+        foreach (var item in items)
+        {
+            if (item.item_type != 0)
+                continue;
 
-			newItem.ItemId = item.item_id;
-			newItem.ItemName = item.item_name;
-			newItem.ItemDescription = item.item_description;
-			newItem.ItemType = (ItemTypes)item.item_type;
-			newItem.ItemIcon = GetSpriteByItemId(item.item_id);
-			newItem.ItemPrefab = GetPrefabByName(item.item_prefab);
-			newItem.ItemGridSize = item.item_gridsize;
+            HousingItemData newItem = ScriptableObject.CreateInstance<HousingItemData>();
 
-			HousingItemsList.Add(newItem);
-		}
-		Debug.Log("«œøÏ¬° æ∆¿Ã≈€ ª˝º∫ ∞πºˆ : " + HousingItemsList.Count);
-	}
+            newItem.ItemId = item.item_id;
+            newItem.ItemName = item.item_name;
+            newItem.ItemDescription = item.item_description;
+            newItem.ItemType = (ItemTypes)item.item_type;
+            newItem.ItemIcon = GetSpriteByItemId(item.item_id);
+            newItem.ItemPrefab = GetPrefabByName(item.item_prefab);
+            newItem.ItemGridSize = item.item_gridsize;
 
-	private static Sprite GetSpriteByItemId(int itemId)
-	{
-		LoadSpriteDataBase();
-		return spriteDataBase?.GetSprite(itemId);
-	}
+            HousingItemsList.Add(newItem);
+        }
+        Debug.Log("ÌïòÏö∞Ïßï ÏïÑÏù¥ÌÖú ÏÉùÏÑ± Í∞ØÏàò : " + HousingItemsList.Count);
+    }
 
-	private static GameObject GetPrefabByName(string prefabName)
-	{
-		if (string.IsNullOrEmpty(prefabName)) return null;
-		return Resources.Load<GameObject>($"Prefabs/3DObjects/{prefabName}");
-	}
+    private static Sprite GetSpriteByItemId(int itemId)
+    {
+        LoadSpriteDataBase();
+        return spriteDataBase?.GetSprite(itemId);
+    }
 
-	private static void LoadSpriteDataBase()
-	{
-		if (spriteDataBase == null)
-		{
-			spriteDataBase = Resources.Load<SpriteDataBase>("DataBase/SpriteDataBase");
-		}
-	}
-	private static async Task<string> LoadJsonFromStreamingAssets(string fileName)
-	{
-		string path = Path.Combine(Application.streamingAssetsPath, fileName);
+    private static GameObject GetPrefabByName(string prefabName)
+    {
+        if (string.IsNullOrEmpty(prefabName))
+            return null;
+        return Resources.Load<GameObject>($"Prefabs/3DObjects/{prefabName}");
+    }
 
-		if (Application.platform == RuntimePlatform.Android)
-		{
-			path = "file://" + path;
-			using (UnityWebRequest request = UnityWebRequest.Get(path))
-			{
-				var operation = request.SendWebRequest();
+    private static void LoadSpriteDataBase()
+    {
+        if (spriteDataBase == null)
+        {
+            spriteDataBase = Resources.Load<SpriteDataBase>("DataBase/SpriteDataBase");
+        }
+    }
 
-				while (!operation.isDone)
-				{
-					await Task.Yield(); // ∫Òµø±‚¿˚¿∏∑Œ ¥Î±‚
-				}
+    private static async Task<string> LoadJsonFromStreamingAssets(string fileName)
+    {
+        string path = Path.Combine(Application.streamingAssetsPath, fileName);
 
-				if (request.result == UnityWebRequest.Result.Success)
-				{
-					return request.downloadHandler.text;
-				}
-				else
-				{
-					Debug.LogError($"JSON ∑ŒµÂ Ω«∆–: {request.error}");
-					return null;
-				}
-			}
-		}
-		else
-		{
-			return File.ReadAllText(path);
-		}
-	}
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            path = "file://" + path;
+            using (UnityWebRequest request = UnityWebRequest.Get(path))
+            {
+                var operation = request.SendWebRequest();
+
+                while (!operation.isDone)
+                {
+                    await Task.Yield(); // ÎπÑÎèôÍ∏∞Ï†ÅÏúºÎ°ú ÎåÄÍ∏∞
+                }
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    return request.downloadHandler.text;
+                }
+                else
+                {
+                    Debug.LogError($"JSON Î°úÎìú Ïã§Ìå®: {request.error}");
+                    return null;
+                }
+            }
+        }
+        else
+        {
+            return File.ReadAllText(path);
+        }
+    }
 }

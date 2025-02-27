@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Google.Protobuf.Protocol;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,6 +10,7 @@ public class Player : MonoBehaviour
     [Header("Player Settings")]
     [SerializeField]
     private UINameChat uiNameChat;
+    private UIPlayer uiPlayer;
 
     [Header("Movement Settings")]
     public float SmoothMoveSpeed = 10f; // 위치 보간 속도
@@ -38,8 +40,11 @@ public class Player : MonoBehaviour
     public GameObject trap;
     public GameObject axe;
     public GameObject pickAxe;
-
+    private Transform throwPoint;
     private Dictionary<int, string> emotions = new();
+    public bool IsStun = false;
+    private Dictionary<int, GameObject> equips = new();
+    public GameObject ActiveEquipObj = null;
 
     // PlayerInfo
     private int maxHp;
@@ -58,8 +63,10 @@ public class Player : MonoBehaviour
     {
         Avatar = GetComponent<Avatar>();
         animator = GetComponent<Animator>();
+        throwPoint = transform.Find("ThrowPoint");
 
         SetAnimTrigger();
+        SetEquipObj();
     }
 
     private void SetAnimTrigger()
@@ -67,6 +74,12 @@ public class Player : MonoBehaviour
         emotions[111] = "Happy";
         emotions[222] = "Sad";
         emotions[333] = "Greeting";
+    }
+
+    private void SetEquipObj()
+    {
+        equips[1] = axe;
+        equips[2] = pickAxe;
     }
 
     public void SetPlayerId(int playerId)
@@ -78,11 +91,6 @@ public class Player : MonoBehaviour
     {
         this.nickname = nickname;
         uiNameChat.SetName(nickname);
-        if (IsMine)
-        {
-            TownManager.Instance.UiPlayer.SetNickname(nickname);
-            TownManager.Instance.UiPlayer.InitHp(3);
-        }
     }
 
     public void SetLevel(int level)
@@ -97,6 +105,7 @@ public class Player : MonoBehaviour
         if (IsMine)
         {
             MPlayer = gameObject.AddComponent<MyPlayer>();
+            GameManager.Instance.PlayerId = PlayerId;
         }
         else
         {
@@ -245,7 +254,7 @@ public class Player : MonoBehaviour
 
         while (castingTime < recallTimer)
         {
-            if (Vector3.Distance(startPos, transform.position) > 0.2)
+            if (Vector3.Distance(startPos, transform.position) > 0.2 || IsStun)
             {
                 effect.SetActive(false);
 
@@ -274,6 +283,67 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void CastGrenade(Vec3 vel, float coolTime)
+    {
+        GameObject grenadeObj = Instantiate(grenade, throwPoint.position, Quaternion.identity);
+
+        grenadeObj.GetComponent<SkillObj>().CasterId = PlayerId;
+
+        Rigidbody rigid = grenadeObj.GetComponent<Rigidbody>();
+        rigid.velocity = new Vector3(vel.X, vel.Y, vel.Z);
+        rigid.AddTorque(Vector3.back, ForceMode.Impulse);
+
+        if (IsMine)
+        {
+            StartCoroutine(RunCoolTime(coolTime));
+        }
+    }
+
+    IEnumerator RunCoolTime(float coolTime)
+    {
+        MPlayer.SkillManager.IsCasting = false;
+
+        yield return new WaitForSeconds(coolTime);
+        MPlayer.SkillManager.IsGrenadeReady = true;
+    }
+
+    public void Stun(float timer)
+    {
+        transform.Find("StunEffect").gameObject.SetActive(true);
+        IsStun = true;
+
+        if (IsMine)
+        {
+            MPlayer.NavAgent.ResetPath();
+            MPlayer.NavAgent.velocity = Vector3.zero;
+        }
+
+        Invoke(nameof(StunOut), timer);
+    }
+
+    private void StunOut()
+    {
+        transform.Find("StunEffect").gameObject.SetActive(false);
+        IsStun = false;
+    }
+
+    public void ChangeEquip(int nextEquip)
+    {
+        if (ActiveEquipObj != null && ActiveEquipObj.activeSelf)
+        {
+            ActiveEquipObj.SetActive(false);
+        }
+
+        ActiveEquipObj = equips[nextEquip];
+        ActiveEquipObj.SetActive(true);
+
+        if (IsMine)
+        {
+            MPlayer.currentEquip = nextEquip;
+            MPlayer.InteractManager.isEquipChanging = false;
+        }
+    }
+
     private void CheckMove()
     {
         float dist = Vector3.Distance(lastPos, transform.position);
@@ -296,29 +366,30 @@ public class Player : MonoBehaviour
         abilityPoint = statInfo.AbilityPoint;
 
         if (IsMine)
-            TownManager.Instance.UiPlayer.SetStatInfo(statInfo);
+        {
+            if(uiPlayer == null) Debug.LogError("uiPlayer is null. 먼저 세팅돼야함");
+            uiPlayer.SetStatInfo(statInfo);
+            uiPlayer.SetNickname(nickname);
+            uiPlayer.InitHp(3);
+        }
     }
 
     public void SetExp(int updatedExp)
     {
-        Debug.Log("경험치 응답 실행");
         exp = updatedExp;
         if (exp > targetExp)
         {
             Debug.LogError($"exp({exp}) > targetExp({targetExp})");
             return;
         }
-        Debug.Log($"updatedExp : {updatedExp}");
-
-        if (IsMine)
-            TownManager.Instance.UiPlayer.SetExp(updatedExp, targetExp);
+        if (IsMine) uiPlayer.SetExp(updatedExp, targetExp);
     }
 
     public void InvestPoint(StatInfo statInfo)
     {
         abilityPoint = statInfo.AbilityPoint;
         if (IsMine)
-            TownManager.Instance.UiPlayer.SetAbilityPoint(abilityPoint);
+            uiPlayer.SetAbilityPoint(abilityPoint);
 
         if (statInfo.Stamina > stamina)
         {
@@ -334,7 +405,7 @@ public class Player : MonoBehaviour
         }
 
         if (IsMine && abilityPoint <= 0)
-            TownManager.Instance.UiPlayer.DeActiveAP();
+            uiPlayer.DeActiveAP();
     }
 
     private void SetStamina(int stamina)
@@ -343,14 +414,14 @@ public class Player : MonoBehaviour
             this.cur_stamina += (stamina - this.stamina);
         this.stamina = stamina;
         if (IsMine)
-            TownManager.Instance.UiPlayer.SetStamina(cur_stamina, stamina, abilityPoint > 0);
+            uiPlayer.SetStamina(cur_stamina, stamina, abilityPoint > 0);
     }
 
     private void SetPickSpeed(int pickSpeed)
     {
         this.pickSpeed = pickSpeed;
         if (IsMine)
-            TownManager.Instance.UiPlayer.SetPickSpeed(pickSpeed, abilityPoint > 0);
+            uiPlayer.SetPickSpeed(pickSpeed, abilityPoint > 0);
     }
 
     private void SetMoveSpeed(int moveSpeed)
@@ -362,7 +433,7 @@ public class Player : MonoBehaviour
 
         this.moveSpeed = moveSpeed;
         if (IsMine)
-            TownManager.Instance.UiPlayer.SetMoveSpeed(moveSpeed, abilityPoint > 0);
+            uiPlayer.SetMoveSpeed(moveSpeed, abilityPoint > 0);
     }
 
     public void LevelUp(int updatedLevel, int newTargetExp, int updatedExp, int updatedAbilityPoint)
@@ -373,7 +444,7 @@ public class Player : MonoBehaviour
 
         Debug.Log($"레벨업 응답 실행 {level}/ap{abilityPoint}/{exp}/{targetExp} isMine?{IsMine}");
         if (IsMine)
-            TownManager.Instance.UiPlayer.LevelUp(
+            uiPlayer.LevelUp(
                 updatedLevel,
                 newTargetExp,
                 updatedExp,
@@ -391,5 +462,11 @@ public class Player : MonoBehaviour
 
         // 레벨업 이펙트
         // TownManager.Instance.GetPlayerAvatarById(playerId).이펙트함수;
+    }
+    
+    public void SetUI(UIPlayer uiPlayer)
+    {
+        this.uiPlayer = uiPlayer;
+        this.uiPlayer.gameObject.SetActive(true);
     }
 }
