@@ -123,6 +123,7 @@ public class TownManager : MonoBehaviour
         ActivateGameUI();
         MyPlayer = SpawnPlayer(playerInfo, spawnPos);
         MyPlayer.SetIsMine(true, playerInfo.CurrentSector);
+        MyPlayer.SetUI(UiPlayer);
         MyPlayer.SetNickname(playerInfo.Nickname);
         MyPlayer.SetStatInfo(playerInfo.StatInfo);
     }
@@ -195,7 +196,6 @@ public class TownManager : MonoBehaviour
         uiStart.gameObject.SetActive(false);
         uiChat.gameObject.SetActive(true);
         uiAnimation.gameObject.SetActive(true);
-        uiPlayer.gameObject.SetActive(true);
     }
 
     public Player GetPlayer(int playerId)
