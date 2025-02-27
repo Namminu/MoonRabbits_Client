@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Google.Protobuf.Protocol;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -39,8 +40,11 @@ public class Player : MonoBehaviour
     public GameObject trap;
     public GameObject axe;
     public GameObject pickAxe;
-
+    private Transform throwPoint;
     private Dictionary<int, string> emotions = new();
+    public bool IsStun = false;
+    private Dictionary<int, GameObject> equips = new();
+    public GameObject ActiveEquipObj = null;
 
     // PlayerInfo
     private int maxHp;
@@ -59,8 +63,10 @@ public class Player : MonoBehaviour
     {
         Avatar = GetComponent<Avatar>();
         animator = GetComponent<Animator>();
+        throwPoint = transform.Find("ThrowPoint");
 
         SetAnimTrigger();
+        SetEquipObj();
     }
 
     private void SetAnimTrigger()
@@ -68,6 +74,12 @@ public class Player : MonoBehaviour
         emotions[111] = "Happy";
         emotions[222] = "Sad";
         emotions[333] = "Greeting";
+    }
+
+    private void SetEquipObj()
+    {
+        equips[1] = axe;
+        equips[2] = pickAxe;
     }
 
     public void SetPlayerId(int playerId)
@@ -93,6 +105,7 @@ public class Player : MonoBehaviour
         if (IsMine)
         {
             MPlayer = gameObject.AddComponent<MyPlayer>();
+            GameManager.Instance.PlayerId = PlayerId;
         }
         else
         {
@@ -241,7 +254,7 @@ public class Player : MonoBehaviour
 
         while (castingTime < recallTimer)
         {
-            if (Vector3.Distance(startPos, transform.position) > 0.2)
+            if (Vector3.Distance(startPos, transform.position) > 0.2 || IsStun)
             {
                 effect.SetActive(false);
 
@@ -267,6 +280,67 @@ public class Player : MonoBehaviour
 
             var pkt = new C2SMoveSector { TargetSector = 100 };
             GameManager.Network.Send(pkt);
+        }
+    }
+
+    public void CastGrenade(Vec3 vel, float coolTime)
+    {
+        GameObject grenadeObj = Instantiate(grenade, throwPoint.position, Quaternion.identity);
+
+        grenadeObj.GetComponent<SkillObj>().CasterId = PlayerId;
+
+        Rigidbody rigid = grenadeObj.GetComponent<Rigidbody>();
+        rigid.velocity = new Vector3(vel.X, vel.Y, vel.Z);
+        rigid.AddTorque(Vector3.back, ForceMode.Impulse);
+
+        if (IsMine)
+        {
+            StartCoroutine(RunCoolTime(coolTime));
+        }
+    }
+
+    IEnumerator RunCoolTime(float coolTime)
+    {
+        MPlayer.SkillManager.IsCasting = false;
+
+        yield return new WaitForSeconds(coolTime);
+        MPlayer.SkillManager.IsGrenadeReady = true;
+    }
+
+    public void Stun(float timer)
+    {
+        transform.Find("StunEffect").gameObject.SetActive(true);
+        IsStun = true;
+
+        if (IsMine)
+        {
+            MPlayer.NavAgent.ResetPath();
+            MPlayer.NavAgent.velocity = Vector3.zero;
+        }
+
+        Invoke(nameof(StunOut), timer);
+    }
+
+    private void StunOut()
+    {
+        transform.Find("StunEffect").gameObject.SetActive(false);
+        IsStun = false;
+    }
+
+    public void ChangeEquip(int nextEquip)
+    {
+        if (ActiveEquipObj != null && ActiveEquipObj.activeSelf)
+        {
+            ActiveEquipObj.SetActive(false);
+        }
+
+        ActiveEquipObj = equips[nextEquip];
+        ActiveEquipObj.SetActive(true);
+
+        if (IsMine)
+        {
+            MPlayer.currentEquip = nextEquip;
+            MPlayer.InteractManager.isEquipChanging = false;
         }
     }
 

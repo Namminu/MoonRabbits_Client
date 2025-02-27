@@ -13,7 +13,7 @@ public class DecomUI : MonoBehaviour
 	[SerializeField] private GameObject PopupUI;
 	private PopupUI popupUICs;
 
-	private readonly string decomText = "ºĞÇØÇÏ½Ã°Ú½À´Ï±î?";
+	private readonly string decomText = "ë¶„í•´í•˜ì‹œê² ìŠµë‹ˆê¹Œ?";
 
 	private void Awake()
 	{
@@ -39,7 +39,7 @@ public class DecomUI : MonoBehaviour
 		{
 			slot.ClearSlot();
 		}
-		/* ¾ÆÀÌÅÛ ºĞÇØ ·ÎÁ÷ */
+		/* ì•„ì´í…œ ë¶„í•´ ë¡œì§ */
 	}
 
 	private void ReturnItemsToInven()

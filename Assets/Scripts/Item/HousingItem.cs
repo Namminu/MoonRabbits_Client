@@ -4,33 +4,32 @@ using UnityEngine;
 
 public class HousingItem : MonoBehaviour
 {
-	public HousingItemData HsItemData { get; private set; }
-	private GameObject spawnObject;
+    public HousingItemData HsItemData { get; private set; }
+    private GameObject spawnObject;
 
-	public void Initialize(HousingItemData data)
-	{
-		HsItemData = data;
-	}
+    public void Initialize(HousingItemData data)
+    {
+        HsItemData = data;
+    }
 
-	/// <summary>
-	/// UIÀÇ 2D ¿ÀºêÁ§Æ®¸¦ Å¬¸¯ÇÏ¿© ¸¶¿ì½º À§Ä¡¿¡ ¹Ì¸®º¸±â ÇÒ´ç
-	/// </summary>
-	public void PreviewItem(Vector3 position)
-	{
-		Debug.Log("ÇÏ¿ìÂ¡ ¾ÆÀÌÅÛ ¹Ì¸®º¸±â" + HsItemData.ItemName);
+    /// <summary>
+    /// UIì˜ 2D ì˜¤ë¸Œì íŠ¸ë¥¼ í´ë¦­í•˜ì—¬ ë§ˆìš°ìŠ¤ ìœ„ì¹˜ì— ë¯¸ë¦¬ë³´ê¸° í• ë‹¹
+    /// </summary>
+    public void PreviewItem(Vector3 position)
+    {
+        Debug.Log("í•˜ìš°ì§• ì•„ì´í…œ ë¯¸ë¦¬ë³´ê¸°" + HsItemData.ItemName);
+    }
 
-	}
-
-	/// <summary>
-	/// ¾ÀÀÇ ¿øÇÏ´Â À§Ä¡¿¡ Å¬¸¯ÇÏ¿© 3D ¿ÀºêÁ§Æ® ¹èÄ¡
-	/// </summary>
-	public void PlaceItem(Vector3 position) 
-	{
-		Debug.Log("ÇÏ¿ìÂ¡ ¾ÆÀÌÅÛ ¹èÄ¡" + position + HsItemData.ItemName);
-		if(spawnObject != null)
-		{
-			spawnObject.transform.position = position;
-			spawnObject = null;
-		}
-	}
+    /// <summary>
+    ///  ì”¬ì˜ ì›í•˜ëŠ” ìœ„ì¹˜ì— í´ë¦­í•˜ì—¬ 3D ì˜¤ë¸Œì íŠ¸ ë°°ì¹˜
+    /// </summary>
+    public void PlaceItem(Vector3 position)
+    {
+        Debug.Log("í•˜ìš°ì§• ì•„ì´í…œ ë°°ì¹˜" + position + HsItemData.ItemName);
+        if (spawnObject != null)
+        {
+            spawnObject.transform.position = position;
+            spawnObject = null;
+        }
+    }
 }

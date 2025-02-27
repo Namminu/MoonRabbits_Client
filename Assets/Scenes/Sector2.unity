@@ -2954,7 +2954,7 @@ MonoBehaviour:
   m_IsGlobal: 1
   priority: 0
   blendDistance: 0
-  weight: 0.5
+  weight: 0.2
   sharedProfile: {fileID: 11400000, guid: 9be9af7b83b13344da456a6f70fd408b, type: 2}
 --- !u!4 &280503166
 Transform:
@@ -4272,10 +4272,65 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 442787115}
     m_Modifications:
+    - target: {fileID: 1882186920434430024, guid: ba32852701fc4e94c8038110937921ac,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1882186920434430024, guid: ba32852701fc4e94c8038110937921ac,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2432935926044314329, guid: ba32852701fc4e94c8038110937921ac,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2432935926044314329, guid: ba32852701fc4e94c8038110937921ac,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2432935926044314329, guid: ba32852701fc4e94c8038110937921ac,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2432935926044314329, guid: ba32852701fc4e94c8038110937921ac,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4999884034202559595, guid: ba32852701fc4e94c8038110937921ac,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4999884034202559595, guid: ba32852701fc4e94c8038110937921ac,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4999884034202559595, guid: ba32852701fc4e94c8038110937921ac,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4999884034202559595, guid: ba32852701fc4e94c8038110937921ac,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7425247205764167969, guid: ba32852701fc4e94c8038110937921ac,
         type: 3}
       propertyPath: m_Name
       value: TempPlayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 7425247205764167969, guid: ba32852701fc4e94c8038110937921ac,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8467434873633744513, guid: ba32852701fc4e94c8038110937921ac,
         type: 3}
@@ -5176,7 +5231,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnArea: {fileID: 0}
   despawnArea: {fileID: 0}
-  eSystem: {fileID: 0}
+  eSystem: {fileID: 2100666817}
   uiChat: {fileID: 1410755364}
   uiPlayer: {fileID: 594471325}
 --- !u!1001 &447813992

@@ -1261,6 +1261,7 @@ MonoBehaviour:
   player: {fileID: 0}
   targetResource: {fileID: 0}
   targetPortal: {fileID: 0}
+  isEquipChanging: 0
 --- !u!1 &1185129363352741488
 GameObject:
   m_ObjectHideFlags: 0
@@ -5884,6 +5885,8 @@ MonoBehaviour:
   trap: {fileID: 3247187282469108057, guid: 692c5615becf9374399780ae2d5f16e5, type: 3}
   axe: {fileID: 5528637490553966875}
   pickAxe: {fileID: 8541576677380642239}
+  IsStun: 0
+  ActiveEquipObj: {fileID: 0}
 --- !u!54 &-7262842235820314449
 Rigidbody:
   m_ObjectHideFlags: 0

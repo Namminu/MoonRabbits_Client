@@ -94,15 +94,15 @@ class PacketHandler
         {
             case 100:
                 var townPlayer = TownManager.Instance.GetPlayer(pkt.PlayerId);
-                townPlayer?.Emote(pkt.AnimCode);
+                townPlayer.Emote(pkt.AnimCode);
                 break;
             case 101:
                 var s1Player = S1Manager.Instance.GetPlayer(pkt.PlayerId);
-                s1Player?.Emote(pkt.AnimCode);
+                s1Player.Emote(pkt.AnimCode);
                 break;
             case 102:
                 var s2Player = S2Manager.Instance.GetPlayer(pkt.PlayerId);
-                s2Player?.Emote(pkt.AnimCode);
+                s2Player.Emote(pkt.AnimCode);
                 break;
         }
     }
@@ -174,7 +174,6 @@ class PacketHandler
             return;
         Debug.Log($"S2CPlayerSpawn 패킷 무사 도착 : {pkt}");
 
-        // @@@ 섹터 매니저 awake까지 기다려야해.... @@@
         GameManager.Instance.WaitForSceneAwake(pkt);
     }
 
@@ -226,7 +225,7 @@ class PacketHandler
     {
         if (packet is not S2CPlayerLocation pkt)
             return;
-        Debug.Log($"S2CPlayerLocation 패킷 무사 도착 : {pkt}");
+        // Debug.Log($"S2CPlayerLocation 패킷 무사 도착 : {pkt}");
 
         TransformInfo transform = pkt.Transform;
         Vector3 position = new Vector3(transform.PosX, transform.PosY, transform.PosZ);
@@ -456,7 +455,9 @@ class PacketHandler
             return;
         Debug.Log($"S2CGatheringDone 패킷 무사 도착 : {pkt}");
     }
+    #endregion
 
+    #region PlayerAction
     public static void S2CRecallHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CRecall pkt)
@@ -466,8 +467,7 @@ class PacketHandler
         switch (pkt.CurrentSector)
         {
             case 100:
-                var townPlayer = TownManager.Instance.GetPlayer(pkt.PlayerId);
-                townPlayer.CastRecall(pkt.RecallTimer);
+                Debug.Log("마을에선 스킬을 사용할 수 없습니다");
                 break;
             case 101:
                 var s1Player = S1Manager.Instance.GetPlayer(pkt.PlayerId);
@@ -489,51 +489,67 @@ class PacketHandler
         switch (pkt.CurrentSector)
         {
             case 100:
-                var townPlayer = TownManager.Instance.GetPlayer(pkt.PlayerId);
+                Debug.Log("마을에선 스킬을 사용할 수 없습니다");
                 break;
             case 101:
                 var s1Player = S1Manager.Instance.GetPlayer(pkt.PlayerId);
+                s1Player.CastGrenade(pkt.Velocity, pkt.CoolTime);
                 break;
             case 102:
                 var s2Player = S2Manager.Instance.GetPlayer(pkt.PlayerId);
+                s2Player.CastGrenade(pkt.Velocity, pkt.CoolTime);
                 break;
         }
     }
 
-    public static void S2CSectorEnterHandler(PacketSession session, IMessage packet)
+    public static void S2CStunHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CSectorEnter pkt)
+        if (packet is not S2CStun pkt)
             return;
-        Debug.Log($"S2CSectorEnter 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CStun 패킷 무사 도착 : {pkt}");
 
-        // Scene currentScene = SceneManager.GetActiveScene();
-
-        // if (currentScene.name == GameManager.BattleScene)
-        // {
-        //     BattleManager.Instance.ConfigureGame(pkt);
-        // }
-        // else
-        // {
-        //     GameManager.Instance.Pkt = pkt;
-        //     SceneManager.LoadScene(GameManager.BattleScene);
-        // }
+        switch (pkt.CurrentSector)
+        {
+            case 100:
+                Debug.Log("마을에선 상태 이상에 빠지지 않습니다");
+                break;
+            case 101:
+                foreach (int playerId in pkt.PlayerIds)
+                {
+                    var s1Player = S1Manager.Instance.GetPlayer(playerId);
+                    s1Player.Stun(pkt.StunTimer);
+                }
+                break;
+            case 102:
+                foreach (int playerId in pkt.PlayerIds)
+                {
+                    var s2Player = S2Manager.Instance.GetPlayer(playerId);
+                    s2Player.Stun(pkt.StunTimer);
+                }
+                break;
+        }
     }
 
-    public static void S2CSectorLeaveHandler(PacketSession session, IMessage packet)
+    public static void S2CEquipChangeHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CSectorLeave pkt)
+        if (packet is not S2CEquipChange pkt)
             return;
-        Debug.Log($"S2CSectorMove 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CEquipChange 패킷 무사 도착 : {pkt}");
 
-         //Scene currentScene = SceneManager.GetActiveScene();
-
-    }
-
-    public static void S2CInPortalHandler(PacketSession session, IMessage packet)
-    {
-        if (packet is not S2CInPortal pkt)
-            return;
-        Debug.Log($"S2CInPortal 패킷 무사 도착 : {pkt}");
+        switch (pkt.CurrentSector)
+        {
+            case 100:
+                Debug.Log("마을에선 도구를 꺼낼 수 없습니다");
+                break;
+            case 101:
+                var s1Player = S1Manager.Instance.GetPlayer(pkt.PlayerId);
+                s1Player.ChangeEquip(pkt.NextEquip);
+                break;
+            case 102:
+                var s2Player = S2Manager.Instance.GetPlayer(pkt.PlayerId);
+                s2Player.ChangeEquip(pkt.NextEquip);
+                break;
+        }
     }
     #endregion
 
@@ -550,6 +566,7 @@ class PacketHandler
             S1Manager.Instance.MyPlayer.SetExp(pkt.UpdatedExp);
         else if (S2Manager.Instance.MyPlayer != null)
             S2Manager.Instance.MyPlayer.SetExp(pkt.UpdatedExp);
+        Debug.Log("MyPlayer is in the S2Manager");
     }
 
     public static void S2CLevelUpHandler(PacketSession session, IMessage packet)

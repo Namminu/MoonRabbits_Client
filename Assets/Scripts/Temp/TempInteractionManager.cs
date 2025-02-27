@@ -40,17 +40,17 @@ public class TempInteractionManager : MonoBehaviour
         {
             case 0:
                 player.axe.SetActive(true);
-                player.currentEquip = (int)MyPlayer.EquipState.axe;
+                player.currentEquip = (int)TempPlayer.EquipState.axe;
                 break;
             case 1:
                 player.axe.SetActive(false);
                 player.pickAxe.SetActive(true);
-                player.currentEquip = (int)MyPlayer.EquipState.pickAxe;
+                player.currentEquip = (int)TempPlayer.EquipState.pickAxe;
                 break;
             case 2:
                 player.axe.SetActive(true);
                 player.pickAxe.SetActive(false);
-                player.currentEquip = (int)MyPlayer.EquipState.axe;
+                player.currentEquip = (int)TempPlayer.EquipState.axe;
                 break;
         }
 

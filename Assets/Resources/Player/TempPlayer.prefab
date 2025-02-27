@@ -5900,6 +5900,8 @@ MonoBehaviour:
   trap: {fileID: 3247187282469108057, guid: 692c5615becf9374399780ae2d5f16e5, type: 3}
   axe: {fileID: 6225718226373126434}
   pickAxe: {fileID: 5491641690042556141}
+  IsStun: 0
+  ActiveEquipObj: {fileID: 0}
 --- !u!54 &1935561345901497539
 Rigidbody:
   m_ObjectHideFlags: 0

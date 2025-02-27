@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Google.Protobuf.Protocol;
 using UnityEngine;
 
@@ -11,7 +9,7 @@ public class UIRanking : MonoBehaviour
     // void updateRanking(S2CUpdateRanking rankData)
     // {
     //     status = rankData.Status;
-        
+
 
     //     if (rankData.status == "success")
     //     {
@@ -31,12 +29,13 @@ public class UIRanking : MonoBehaviour
     {
         // RankSheet의 UI 요소 업데이트 로직 구현
     }
+
     #region 패킷 전송 함수
     void SendRankingListPacket(string type) // type은 "ALL" 또는 "TOP"
     {
         var requestRankingList = new C2SRankingList { Type = type };
         GameManager.Network.Send(requestRankingList);
-    } 
+    }
 
     #endregion
 }
