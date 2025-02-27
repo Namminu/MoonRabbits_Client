@@ -86,7 +86,7 @@ public class UIPlayer : MonoBehaviour
         };
         GameManager.Network.Send(pkt);
     }
-    
+
     public void SetStatInfo(StatInfo statInfo)
     {
         staminaSlider.value = (float)statInfo.Stamina / statInfo.Stamina;
@@ -132,19 +132,19 @@ public class UIPlayer : MonoBehaviour
         staminaText.text = stamina.ToString();
         staminaSlider.maxValue = stamina;
         staminaSlider.value = cur_stamina;
-        if(!hasAP) DeActiveAP();
+        if (!hasAP) DeActiveAP();
     }
 
     public void SetPickSpeed(int pickSpeed, bool hasAP)
     {
         pickSpeedText.text = pickSpeed.ToString();
-        if(!hasAP) DeActiveAP();
+        if (!hasAP) DeActiveAP();
     }
 
     public void SetMoveSpeed(int moveSpeed, bool hasAP)
     {
         moveSpeedText.text = moveSpeed.ToString();
-        if(!hasAP) DeActiveAP();
+        if (!hasAP) DeActiveAP();
     }
 
     public void LevelUp(int newLevel, int newTargetExp, int updatedExp, int abilityPoint, int updatedAbilityPoint)
@@ -257,7 +257,7 @@ public class UIPlayer : MonoBehaviour
 
     private void AddHp() // HP 증가 -> hearts 그리드에 하트 추가
     {
-        if(hearts.Count <= heartBgs.Count)
+        if (hearts.Count <= heartBgs.Count)
         {
             GameObject heart = Instantiate(heartPrefab, heartsPos);
             hearts.Add(heart);
