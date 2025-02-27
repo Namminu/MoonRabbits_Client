@@ -6712,7 +6712,9 @@ namespace Google.Protobuf.Protocol
     /// <summary>Field number for the "data" field.</summary>
     public const int DataFieldNumber = 2;
     private global::Google.Protobuf.Protocol.RankingList data_;
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+        internal object data;
+
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::Google.Protobuf.Protocol.RankingList Data
     {
