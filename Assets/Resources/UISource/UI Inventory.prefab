@@ -2123,7 +2123,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   p_Text: {fileID: 3836643347207011035}
   btn_Yes: {fileID: 590526807170721916}
-  btn_No: {fileID: 7337772675188087632}
+  btn_No: {fileID: 0}
 --- !u!1 &5976878302415538916
 GameObject:
   m_ObjectHideFlags: 0
