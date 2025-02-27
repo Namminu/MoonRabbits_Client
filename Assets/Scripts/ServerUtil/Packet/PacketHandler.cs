@@ -94,15 +94,15 @@ class PacketHandler
         {
             case 100:
                 var townPlayer = TownManager.Instance.GetPlayer(pkt.PlayerId);
-                townPlayer?.Emote(pkt.AnimCode);
+                townPlayer.Emote(pkt.AnimCode);
                 break;
             case 101:
                 var s1Player = S1Manager.Instance.GetPlayer(pkt.PlayerId);
-                s1Player?.Emote(pkt.AnimCode);
+                s1Player.Emote(pkt.AnimCode);
                 break;
             case 102:
                 var s2Player = S2Manager.Instance.GetPlayer(pkt.PlayerId);
-                s2Player?.Emote(pkt.AnimCode);
+                s2Player.Emote(pkt.AnimCode);
                 break;
         }
     }
@@ -174,7 +174,6 @@ class PacketHandler
             return;
         Debug.Log($"S2CPlayerSpawn 패킷 무사 도착 : {pkt}");
 
-        // @@@ 섹터 매니저 awake까지 기다려야해.... @@@
         GameManager.Instance.WaitForSceneAwake(pkt);
     }
 
@@ -567,8 +566,7 @@ class PacketHandler
             S1Manager.Instance.MyPlayer.SetExp(pkt.UpdatedExp);
         else if (S2Manager.Instance.MyPlayer != null)
             S2Manager.Instance.MyPlayer.SetExp(pkt.UpdatedExp);
-            Debug.Log("MyPlayer is in the S2Manager");
-        }
+        Debug.Log("MyPlayer is in the S2Manager");
     }
 
     public static void S2CLevelUpHandler(PacketSession session, IMessage packet)

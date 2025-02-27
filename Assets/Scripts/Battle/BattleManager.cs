@@ -61,7 +61,6 @@ public class BattleManager : MonoBehaviour
 
         InitializeMonsterDatabase();
         // ConfigureGame(GameManager.Instance.Pkt);
-        GameManager.Instance.Pkt = null;
     }
 
     private void InitializeMonsterDatabase()

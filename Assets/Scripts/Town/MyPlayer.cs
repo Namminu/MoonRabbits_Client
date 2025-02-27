@@ -4,6 +4,7 @@ using Google.Protobuf.Protocol;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class MyPlayer : MonoBehaviour
 {
@@ -251,13 +252,14 @@ public class MyPlayer : MonoBehaviour
     private void ThrowGrenade()
     {
         if (grenadeInput && !P.IsStun)
+        {
             skillManager.eventQ.Invoke();
-            
+
             float cooltime = 5;
-            
-            if (S1Manager.Instance.MyPlayer != null)
+
+            if (SceneManager.GetActiveScene().name == "Sector1")
                 S1Manager.Instance.UiPlayer.QSkillCool(cooltime);
-            else if (S2Manager.Instance.MyPlayer != null)
+            else if (SceneManager.GetActiveScene().name == "Sector2")
                 S2Manager.Instance.UiPlayer.WSkillCool(cooltime);
         }
     }
