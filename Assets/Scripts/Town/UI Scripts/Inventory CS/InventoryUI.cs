@@ -107,11 +107,8 @@ public class InventoryUI : MonoBehaviour
     /// <param name="inventoryDictionary">Ű�� ���� �ε���, ���� InventorySlotData�� ��ųʸ�</param>
     public void RefreshInventory(Dictionary<int, MaterialItem> inventoryItems)
     {
-        Debug.Log("RefreshInventory In");
-        Debug.Log("itemSlots" + itemSlots.Count);
         foreach (var slotUI in itemSlots)
         {
-            Debug.Log("들어오나?");
             int slotIndex = slotUI.GetItemIndex();
             if (inventoryItems.TryGetValue(slotIndex, out MaterialItem materialItem))
             {
@@ -125,9 +122,17 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        // InventoryManager에 저장된 인벤토리 데이터를 불러와 갱신
+        if (InventoryManager.instance != null)
+        {
+            RefreshInventory(InventoryManager.instance.GetCurrentInventoryDictionary());
+        }
+    }
 
-	#region
-	public ItemSlotUI GetItemSlotByIndex(int index)
+    #region
+    public ItemSlotUI GetItemSlotByIndex(int index)
     {
         if(index < 0 || index > itemSlots.Count)
         {

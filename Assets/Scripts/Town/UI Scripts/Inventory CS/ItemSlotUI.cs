@@ -75,42 +75,6 @@ public class ItemSlotUI
     }
 
     /// <summary>
-    /// MaterialItem 인스턴스와 스택 정보를 받아, ItemData를 이용하여 슬롯 UI를 갱신합니다.
-    /// </summary>
-    /// <param name="materialItem">MaterialItem 인스턴스 (ItemData에 접근 가능)</param>
-    /// <param name="stack">현재 아이템 수량</param>
-    public void UpdateSlot(MaterialItem materialItem, int stack)
-    {
-        // ItemData를 통해 아이템 고유 번호(ItemId)를 가져옵니다. (ItemData.cs 참고)[3]
-        int itemId = materialItem.ItemData.ItemId;
-        Debug.Log($"Slot {itemIndex} 업데이트: ItemId {itemId}, 스택 {stack}");
-
-        // ItemData에서 아이콘(Sprite)을 가져와 UI Image에 할당합니다.
-        Sprite itemSprite = materialItem.ItemData.ItemIcon;
-        if (itemSprite != null)
-        {
-            itemImage.sprite = itemSprite;
-            itemImage.enabled = true;
-        }
-        else
-        {
-            itemImage.enabled = false;
-        }
-
-        // 아이템 스택이 1보다 큰 경우에만 텍스트 표시
-        if (stack > 0)
-        {
-            text_ItemAmount.text = stack.ToString();
-            text_ItemAmount.enabled = true;
-        }
-        else
-        {
-            text_ItemAmount.text = "";
-            text_ItemAmount.enabled = false;
-        }
-    }
-
-    /// <summary>
     /// Update Item Count Method, When Count Under/Equal 0, auto call ClearSlot()
     /// </summary>
     public int UpdateItemCount(int itemAmount)

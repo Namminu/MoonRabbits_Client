@@ -10,6 +10,11 @@ public class InventoryManager : MonoBehaviour
     // 인벤토리 슬롯 데이터. key: 슬롯 인덱스, value: MaterialItem
     private Dictionary<int, MaterialItem> inventoryDictionary  = new Dictionary<int, MaterialItem>();
 
+    public Dictionary<int, MaterialItem> GetCurrentInventoryDictionary()
+    {
+        return inventoryDictionary;
+    }
+
     // InventoryUI.cs에서 인벤토리 슬롯들을 관리하는 컴포넌트 (InventoryUI.cs 파일 참조; 내용 확인 불가한 경우 Inspector에 할당)
     [SerializeField]
     private InventoryUI inventoryUI;
