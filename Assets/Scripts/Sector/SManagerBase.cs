@@ -50,7 +50,7 @@ public abstract class SManagerBase : MonoBehaviour
     private void ActivateUI()
     {
         uiChat.gameObject.SetActive(true);
-        uiPlayer.gameObject.SetActive(true);
+        // uiPlayer.gameObject.SetActive(true);
     }
 
     public void Enter(PlayerInfo playerInfo)
@@ -58,9 +58,9 @@ public abstract class SManagerBase : MonoBehaviour
         // [1] 프리펩 생성 및 정보 연동
         MyPlayer = SpawnPlayer(playerInfo);
         // [2] "내" 프리펩인 걸 선언
-        MyPlayer.SetIsMine(true);
+        MyPlayer.SetIsMine(true, playerInfo.CurrentSector);
         // [3] 머리 위 닉네임 UI에 이름 박음
-        // ActivateUI();
+        ActivateUI();
         // UiPlayer.SetNickname(playerInfo.Nickname);
     }
 

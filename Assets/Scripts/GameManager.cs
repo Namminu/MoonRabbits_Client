@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour
         {
             case "Town":
                 yield return new WaitUntil(() => TownManager.Instance != null);
-                TownManager.Instance.Spawn(playerInfo);
+                TownManager.Instance.Enter(playerInfo);
                 break;
             case "Sector1":
                 yield return new WaitUntil(() => S1Manager.Instance != null);
@@ -119,8 +119,8 @@ public class GameManager : MonoBehaviour
                         playerInfo.Transform.PosY,
                         playerInfo.Transform.PosZ
                     );
-                    var townPlayer = TownManager.Instance.CreatePlayer(playerInfo, spawnPosTown);
-                    townPlayer.SetIsMine(false);
+                    var townPlayer = TownManager.Instance.SpawnPlayer(playerInfo, spawnPosTown);
+                    townPlayer.SetIsMine(false, playerInfo.CurrentSector);
                     break;
                 case 2:
                     if (
@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
                         playerInfo,
                         spawnPosSectorA
                     );
-                    sectorPlayer.SetIsMine(false);
+                    sectorPlayer.SetIsMine(false, playerInfo.CurrentSector);
                     break;
                 case 101:
                     yield return new WaitUntil(() => S1Manager.Instance != null);
@@ -148,7 +148,7 @@ public class GameManager : MonoBehaviour
                     )
                         continue;
                     var s1Player = S1Manager.Instance.SpawnPlayer(playerInfo);
-                    s1Player.SetIsMine(false);
+                    s1Player.SetIsMine(false, playerInfo.CurrentSector);
                     break;
                 case 102:
                     yield return new WaitUntil(() => S2Manager.Instance != null);
@@ -158,7 +158,7 @@ public class GameManager : MonoBehaviour
                     )
                         continue;
                     var s2Player = S2Manager.Instance.SpawnPlayer(playerInfo);
-                    s2Player.SetIsMine(false);
+                    s2Player.SetIsMine(false, playerInfo.CurrentSector);
                     break;
             }
         }

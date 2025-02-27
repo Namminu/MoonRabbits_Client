@@ -59,6 +59,11 @@ public class Player : MonoBehaviour
         Avatar = GetComponent<Avatar>();
         animator = GetComponent<Animator>();
 
+        SetAnimTrigger();
+    }
+
+    private void SetAnimTrigger()
+    {
         emotions[111] = "Happy";
         emotions[222] = "Sad";
         emotions[333] = "Greeting";
@@ -85,7 +90,7 @@ public class Player : MonoBehaviour
         this.level = level;
     }
 
-    public void SetIsMine(bool isMine)
+    public void SetIsMine(bool isMine, int currentSector)
     {
         IsMine = isMine;
 
@@ -98,7 +103,19 @@ public class Player : MonoBehaviour
             Destroy(GetComponent<NavMeshAgent>());
         }
 
-        uiChat = TownManager.Instance.UiChat;
+        switch (currentSector)
+        {
+            case 100:
+                uiChat = TownManager.Instance.UiChat;
+                break;
+            case 101:
+                uiChat = S1Manager.Instance.UiChat;
+                break;
+            case 102:
+                uiChat = S2Manager.Instance.UiChat;
+                break;
+        }
+
         isInitialized = true;
     }
 
@@ -176,9 +193,54 @@ public class Player : MonoBehaviour
         goalRot = rot;
     }
 
-    public void PlayAnimation(int animCode)
+    public void Emote(int animCode)
     {
         animator?.SetTrigger(emotions[animCode]);
+    }
+
+    public void CastRecall(int recallTimer)
+    {
+        StartCoroutine(TryRecall(recallTimer));
+    }
+
+    IEnumerator TryRecall(int recallTimer)
+    {
+        GameObject effect = transform.Find("RecallEffect").gameObject;
+        effect.SetActive(true);
+
+        Vector3 startPos = transform.position;
+
+        int castingTime = 0;
+
+        while (castingTime < recallTimer)
+        {
+            if (Vector3.Distance(startPos, transform.position) > 0.2)
+            {
+                effect.SetActive(false);
+
+                if (IsMine)
+                {
+                    MPlayer.SkillManager.IsCasting = false;
+                }
+
+                yield break;
+            }
+
+            yield return new WaitForSeconds(1);
+            Debug.Log($"귀환까지 남은 시간 : {recallTimer - castingTime}초");
+            castingTime += 1;
+        }
+
+        yield return new WaitForSeconds(0.5f);
+        effect.SetActive(false);
+
+        if (IsMine)
+        {
+            MPlayer.SkillManager.IsCasting = false;
+
+            var pkt = new C2SMoveSector { TargetSector = 100 };
+            GameManager.Network.Send(pkt);
+        }
     }
 
     private void CheckMove()

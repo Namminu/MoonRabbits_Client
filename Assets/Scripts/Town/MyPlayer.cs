@@ -22,6 +22,7 @@ public class MyPlayer : MonoBehaviour
     }
     private Vector3 lastPos;
     private Vector3 targetPosition;
+    public Vector3 TargetPos => targetPosition;
     private Vector3 lastTargetPosition;
     private readonly List<int> animHash = new List<int>();
     private int frameCount = 0;
@@ -42,6 +43,7 @@ public class MyPlayer : MonoBehaviour
     private bool recallInput;
 
     private SkillManager skillManager;
+    public SkillManager SkillManager => skillManager;
 
     /* 상호작용 관련 */
     public GameObject axe;
@@ -58,6 +60,7 @@ public class MyPlayer : MonoBehaviour
     private bool equipChangeInput;
     private bool interactInput;
     private InteractManager interactManager;
+    public InteractManager InteractManager => interactManager;
 
     void Awake()
     {

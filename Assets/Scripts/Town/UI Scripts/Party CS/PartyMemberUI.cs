@@ -6,43 +6,44 @@ using UnityEngine.UI;
 
 public class PartyMemberUI : MonoBehaviour
 {
-  public static PartyMemberUI instance { get; private set; }
+    public static PartyMemberUI instance { get; private set; }
 
-  public Transform memberContainer; // MemberInfo를 담을 부모 오브젝트 (BG)
-  public GameObject memberPrefab;  // MemberInfo 프리팹
-  private List<GameObject> memberUIs = new List<GameObject>();
+    public Transform memberContainer; // MemberInfo를 담을 부모 오브젝트 (BG)
+    public GameObject memberPrefab; // MemberInfo 프리팹
+    private List<GameObject> memberUIs = new List<GameObject>();
 
-  private void Awake()
-  {
-    instance = this;
-  }
-
-  public void UpdateUI()
-  {
-    // 기존 UI 삭제
-    foreach (GameObject memberUI in memberUIs)
+    private void Awake()
     {
-      Destroy(memberUI);
+        instance = this;
     }
-    memberUIs.Clear();
 
-    // `Party.cs`에서 멤버 리스트 가져오기
-    List<MemberCardInfo> members = Party.instance.members;
-
-    // 새로운 멤버 UI 동적 생성
-    foreach (var member in members)
+    public void UpdateUI()
     {
-      // 자기 자신이면 return
-      // if (member.IsMine)
-      //   return;
-      Debug.Log("멤버 UI 생성");
+        // 기존 UI 삭제
+        foreach (GameObject memberUI in memberUIs)
+        {
+            Destroy(memberUI);
+        }
+        memberUIs.Clear();
 
-      GameObject newMember = Instantiate(memberPrefab, memberContainer);
-      newMember.transform.Find("Nickname").GetComponent<TMP_Text>().text = member.Nickname;
-      newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{TownManager.Instance.GetPlayerAvatarById(member.Id).level}";
+        // `Party.cs`에서 멤버 리스트 가져오기
+        List<MemberCardInfo> members = Party.instance.members;
 
-      // 생성된 멤버 UI 저장
-      memberUIs.Add(newMember);
+        // 새로운 멤버 UI 동적 생성
+        foreach (var member in members)
+        {
+            // 자기 자신이면 return
+            // if (member.IsMine)
+            //   return;
+            Debug.Log("멤버 UI 생성");
+
+            GameObject newMember = Instantiate(memberPrefab, memberContainer);
+            newMember.transform.Find("Nickname").GetComponent<TMP_Text>().text = member.Nickname;
+            newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text =
+                $"{TownManager.Instance.GetPlayer(member.Id).level}";
+
+            // 생성된 멤버 UI 저장
+            memberUIs.Add(newMember);
+        }
     }
-  }
 }

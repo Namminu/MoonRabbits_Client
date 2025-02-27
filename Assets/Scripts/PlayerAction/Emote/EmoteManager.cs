@@ -9,11 +9,7 @@ public class EmoteManager : MonoBehaviour
     [SerializeField]
     private MyPlayer player;
 
-    private string[] anims = { "Happy", "Sad", "Greeting" };
-
     private int[] animKeys = { 111, 222, 333 };
-
-    private bool isEmoting = false;
 
     public Action event1;
     public Action event2;
