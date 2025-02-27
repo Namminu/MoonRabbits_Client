@@ -37,8 +37,8 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CCreateCharacter, PacketHandler.S2CCreateCharacterHandler);
         _onRecv.Add((ushort)MsgId.S2CEnter, MakePacket<S2CEnter>);
         _handler.Add((ushort)MsgId.S2CEnter, PacketHandler.S2CEnterHandler);
-        _onRecv.Add((ushort)MsgId.S2CLeave, MakePacket<S2CLeave>);
-        _handler.Add((ushort)MsgId.S2CLeave, PacketHandler.S2CLeaveHandler);
+        _onRecv.Add((ushort)MsgId.S2CMoveSector, MakePacket<S2CMoveSector>);
+        _handler.Add((ushort)MsgId.S2CMoveSector, PacketHandler.S2CMoveSectorHandler);
         _onRecv.Add((ushort)MsgId.S2CAnimation, MakePacket<S2CAnimation>);
         _handler.Add((ushort)MsgId.S2CAnimation, PacketHandler.S2CAnimationHandler);
         _onRecv.Add((ushort)MsgId.S2CChat, MakePacket<S2CChat>);
@@ -91,6 +91,10 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CGatheringSkillCheck, PacketHandler.S2CGatheringSkillCheckHandler);
         _onRecv.Add((ushort)MsgId.S2CGatheringDone, MakePacket<S2CGatheringDone>);
         _handler.Add((ushort)MsgId.S2CGatheringDone, PacketHandler.S2CGatheringDoneHandler);
+        _onRecv.Add((ushort)MsgId.S2CRecall, MakePacket<S2CRecall>);
+        _handler.Add((ushort)MsgId.S2CRecall, PacketHandler.S2CRecallHandler);
+        _onRecv.Add((ushort)MsgId.S2CThrowGrenade, MakePacket<S2CThrowGrenade>);
+        _handler.Add((ushort)MsgId.S2CThrowGrenade, PacketHandler.S2CThrowGrenadeHandler);
         _onRecv.Add((ushort)MsgId.S2CSectorEnter, MakePacket<S2CSectorEnter>);
         _handler.Add((ushort)MsgId.S2CSectorEnter, PacketHandler.S2CSectorEnterHandler);
         _onRecv.Add((ushort)MsgId.S2CSectorLeave, MakePacket<S2CSectorLeave>);

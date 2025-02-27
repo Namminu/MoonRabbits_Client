@@ -135,7 +135,8 @@ public class UIStart : MonoBehaviour
         serverUrl = inputNickname.text;
         port = inputPort.text;
         TownManager.Instance.TryConnectToServer(serverUrl, port);
-        SetNicknameUI();
+        gameObject.SetActive(false);
+        UILogin.SetActive(true);
     }
 
     private void ConfirmNickname()
