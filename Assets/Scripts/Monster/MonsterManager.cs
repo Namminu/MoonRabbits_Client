@@ -29,7 +29,7 @@ public class MonsterManager : MonoBehaviour
     public void SendPositionPacket(int id, Vector3 position)
     {
         var monster = monsterList.Find(x => x.ID == id);
-        if (monster == null) return;
+        if (monster == null || position == null) return;
         monster.SetPosition(position);
 
     }

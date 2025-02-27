@@ -8,13 +8,14 @@ using UnityEngine.EventSystems;
 public class MyPlayer : MonoBehaviour
 {
     [SerializeField]
+    public static MyPlayer instance { get; private set; }
     private NavMeshAgent agent;
     public NavMeshAgent NavAgent
     {
         get => agent;
     }
     private RaycastHit rayHit;
-    private EventSystem eSystem;
+    public EventSystem eSystem;
     private Animator anim;
     public Animator Anim
     {
@@ -64,6 +65,8 @@ public class MyPlayer : MonoBehaviour
 
     void Awake()
     {
+        instance = this;
+
         eSystem = TownManager.Instance.E_System;
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
@@ -85,7 +88,7 @@ public class MyPlayer : MonoBehaviour
 
     void Start()
     {
-        // StartCoroutine(ExecuteEvery10Frames());
+        StartCoroutine(ExecuteEvery10Frames());
     }
 
     void Update()
@@ -97,8 +100,6 @@ public class MyPlayer : MonoBehaviour
         Recall();
         EquipChange();
         Interact();
-        CheckMoveByFrame();
-        // CheckMove();
     }
 
     private void InitializeCamera()
@@ -156,7 +157,7 @@ public class MyPlayer : MonoBehaviour
     {
         while (true)
         {
-            yield return null; // 1 프레임 대기
+            yield return null;
             frameCount++;
 
             CheckMove();
@@ -167,19 +168,6 @@ public class MyPlayer : MonoBehaviour
                 frameCount = 0;
                 MoveAndSendMovePacket();
             }
-        }
-    }
-
-    private void CheckMoveByFrame()
-    {
-        frameCount += 1;
-
-        CheckMove();
-
-        if (frameCount >= targetFrames && targetPosition != lastTargetPosition)
-        {
-            frameCount = 0;
-            MoveAndSendMovePacket();
         }
     }
 

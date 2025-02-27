@@ -1,9 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Rendering;
+using Google.Protobuf.Protocol;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Scripting.APIUpdating;
 
 // 한 칸에 Extents (34.52, 0, 34.52)
 
@@ -15,6 +13,8 @@ public class MonsterController : MonoBehaviour
     [SerializeField]
     private int id;
 
+    [SerializeField] private int sectorCode = 2;
+
     public int ID
     {
         get { return id; }
@@ -23,6 +23,7 @@ public class MonsterController : MonoBehaviour
     [SerializeField]
     private Transform monsterArea;
     private const float maxDistance = 34f;
+    private CapsuleCollider _collider;
 
     [SerializeField]
     private Transform target;
@@ -34,7 +35,7 @@ public class MonsterController : MonoBehaviour
 
     private Vector3 _targetPosition;
 
-    // private Rigidbody rigid;
+    private Rigidbody rigid;
 
     private Animator anim;
 
@@ -45,16 +46,9 @@ public class MonsterController : MonoBehaviour
 
     private void Start()
     {
-        // rigid = GetComponent<Rigidbody>();
-        agent = GetComponent<NavMeshAgent>();
+        rigid = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
-
-        //coDefaultMove = StartCoroutine(DefaultMove());
-        agent.speed = 10f;
-        agent.acceleration = 0;
-        agent.angularSpeed = float.MaxValue;
-        agent.isStopped = false;
-        agent.stoppingDistance = 0;
+        _collider = GetComponent<CapsuleCollider>();
         MonsterManager.Instance.AddMonster(this);
     }
 
@@ -125,19 +119,28 @@ public class MonsterController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            var player = other.gameObject.GetComponent<TempPlayer>();
+        if (other.CompareTag("Player") == false) return;
+        Debug.Log("플레이어가 몬스터와 충돌하였다.");
+        CapsuleCollider playerCollider = other.GetComponent<CapsuleCollider>();
+        C2SCollision collisionPacket = new C2SCollision();
+        var collisionInfo = new CollisionInfo();
+        var myPos = transform.position;
+        var targetPos = playerCollider.transform.position;
+        var targetId = playerCollider.GetComponent<Player>().PlayerId;
+        collisionInfo.SectorCode = sectorCode;
+        collisionInfo.MyType = 2;
+        collisionInfo.MyId = id;
+        collisionInfo.MyPosition = new Vec3() { X = myPos.x, Y = myPos.y, Z = myPos.z };
+        collisionInfo.MyHeight = _collider.height;
+        collisionInfo.MyRadius = _collider.radius;
+        collisionInfo.TargetType = 1;
+        collisionInfo.TargetId = targetId;
+        collisionInfo.TargetPosition = new Vec3() { X = targetPos.x, Y = targetPos.y, Z = targetPos.z };
+        collisionInfo.TargetHeight = playerCollider.height;
+        collisionInfo.TargetRadius = playerCollider.radius;
+        collisionPacket.CollisionInfo = collisionInfo;
 
-            if (player && player.IsAlive)
-            {
-                anim.SetTrigger("Attack");
-                player.Anim.SetTrigger("Attacked");
-                player.IsAlive = false;
-            }
-
-            target = null;
-        }
+        GameManager.Network.Send(collisionPacket);
     }
 
     public void SetPosition(Vector3 position)
@@ -157,5 +160,21 @@ public class MonsterController : MonoBehaviour
     private void StunOut()
     {
         NavAgent.isStopped = false;
+    }
+
+    public void SetCollision(CollisionPushInfo info)
+    {
+
+        var type = info.TargetType;
+        switch (type)
+        {
+            //충돌한 자가 플레이어면
+            case 1:
+                anim.SetTrigger("Attack");
+                break;
+            default:
+                break;
+        }
+
     }
 }

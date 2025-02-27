@@ -113,10 +113,12 @@ public class GameManager : MonoBehaviour
             case "Sector1":
                 yield return new WaitUntil(() => S1Manager.Instance != null);
                 S1Manager.Instance.Enter(playerInfo);
+                MyPlayer.instance.eSystem = S1Manager.Instance.ESystem;
                 break;
             case "Sector2":
                 yield return new WaitUntil(() => S2Manager.Instance != null);
                 S2Manager.Instance.Enter(playerInfo);
+                MyPlayer.instance.eSystem = S2Manager.Instance.ESystem;
                 break;
         }
     }

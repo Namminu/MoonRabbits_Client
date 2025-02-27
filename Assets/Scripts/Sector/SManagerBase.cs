@@ -13,7 +13,7 @@ public abstract class SManagerBase : MonoBehaviour
     private Transform despawnArea;
 
     [SerializeField]
-    private EventSystem eSystem;
+    public EventSystem eSystem;
     public EventSystem ESystem => eSystem;
 
     [SerializeField]
