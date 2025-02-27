@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
         JsonFileLoader loader = new JsonFileLoader();
 
         // 단일 JSON 파일 로드
-        string filePath = Path.Combine(Application.streamingAssetsPath, "Quest.json");
+        string filePath = Path.Combine(Application.streamingAssetsPath, "material_item_data.json");
 
         if (!File.Exists(filePath))
         {

@@ -580,4 +580,16 @@ class PacketHandler
         TownManager.Instance.MyPlayer.InvestPoint(pkt.StatInfo);
     }
     #endregion
+
+    #region Item & Inventory
+
+    public static void S2CInventoryUpdate(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CInventoryUpdate pkt)
+            return;
+        Debug.Log($"S2CInventoryUpdate 패킷 무사 도착 : {pkt}");
+        InventoryManager.instance.UpdateInventoryData(pkt);
+    }
+
+    #endregion
 }

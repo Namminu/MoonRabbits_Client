@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MaterialItem : Item
 {
+	public int SlotIdx { get; set; } 
 	private int curItemStack;
 	public MaterialItemData ItemData => base.Data as MaterialItemData;
 	public int CurItemStack

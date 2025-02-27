@@ -191,7 +191,7 @@ public class Player : MonoBehaviour
     {
         if (goalRot != Quaternion.identity)
         {
-            float t = Mathf.Clamp(Time.deltaTime * SmoothRotateSpeed, 0, 0.99f);
+            float t = Mathf.Clamp(Time.deltaTime * SmoothRotateSpeed, 0, 0.3f);
             transform.rotation = Quaternion.Lerp(transform.rotation, goalRot, t);
         }
     }
