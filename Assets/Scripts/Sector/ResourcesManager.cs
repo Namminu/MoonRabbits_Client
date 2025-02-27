@@ -14,11 +14,29 @@ public class ResourcesManager : MonoBehaviour
     public static ResourcesManager Instance => _instance;
     private GameObject[] resources;
 
-    private JsonContainer<Resource> resourceContainer = GameManager.Instance.resourceContainer;
+    private JsonContainer<Resource> resourceContainer;
+
+    private void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+        resourceContainer = GameManager.Instance.resourceContainer;
+
+        var pkt = new C2SResourcesList {  };
+
+        GameManager.Network.Send(pkt);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        resources = GameObject.FindGameObjectsWithTag("Resource").OrderBy(resource => resource.tag).ToArray();
     }
 
 
@@ -31,6 +49,11 @@ public class ResourcesManager : MonoBehaviour
     public void ResourcesInit(S2CResourcesList pkt)
     {
         var resourcesPacket = pkt.Resources;
+        resources = GameObject.FindGameObjectsWithTag("Resource").OrderBy(resource => resource.GetComponent<ResourceController>().idx).ToArray();
+        foreach (var resource in resources)
+        {
+            Debug.Log(resource.name + ": " + resource.GetComponent<ResourceController>().idx);
+        }
 
         foreach (var resource in resourcesPacket)
         {
@@ -53,16 +76,19 @@ public class ResourcesManager : MonoBehaviour
     }
     public void ResourcesUpdateDurability(S2CUpdateDurability pkt)
     {
+        Debug.Log("자원 id" + pkt.PlacedId);
         var resourceController = resources[pkt.PlacedId - 1].GetComponent<ResourceController>();
         resourceController.ResourcesUpdateDurability(pkt.Durability);
     }
     public void ResourcesGatheringStart(S2CGatheringStart pkt)
     {
+        Debug.Log("자원 id" + pkt.PlacedId);
         var resourceController = resources[pkt.PlacedId - 1].GetComponent<ResourceController>();
         resourceController.ResourcesGatheringStart(pkt.Angle, pkt.Difficulty);
     }
     public void ResourcesGatheringSkillCheck(S2CGatheringSkillCheck pkt)
     {
+        Debug.Log("자원 id" + pkt.PlacedId);
         var resourceController = resources[pkt.PlacedId - 1].GetComponent<ResourceController>();
         resourceController.ResourcesGatheringSkillCheck(pkt.Durability);
     }

@@ -422,6 +422,7 @@ class PacketHandler
         if (packet is not S2CResourcesList pkt)
             return;
         Debug.Log($"S2CResourceList 패킷 무사 도착 : {pkt}");
+
         ResourcesManager.Instance.ResourcesInit(pkt);
     }
 

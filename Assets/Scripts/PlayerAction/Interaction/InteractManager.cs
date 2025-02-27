@@ -1,5 +1,7 @@
+using Google.Protobuf.Protocol;
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class InteractManager : MonoBehaviour
@@ -100,6 +102,14 @@ public class InteractManager : MonoBehaviour
 
             player.Anim.SetTrigger(anims[player.currentEquip]);
 
+
+            GameManager.Network.Send(new C2SGatheringStart { PlacedId = targetResource.idx });
+
+
+            GameManager.Network.Send(new C2SGatheringSkillCheck { DeltaTime = (int)(DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - targetResource.Starttime) });
+
+
+
             Invoke(nameof(GatherOut), 0.7f); // 재상호작용은 일단 0.7초 후에 가능 (애니메이션 출력시간)
         }
         else
@@ -110,7 +120,7 @@ public class InteractManager : MonoBehaviour
 
     private void GatherOut()
     {
-        targetResource.DecreaseDurability(1); // 숫자 만큼 감소시킴 나중에 능력치만큼 적용?
+        //targetResource.DecreaseDurability(1); // 숫자 만큼 감소시킴 나중에 능력치만큼 적용?
         isInteracting = false;
         player.NavAgent.isStopped = false;
     }

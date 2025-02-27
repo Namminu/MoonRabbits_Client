@@ -19,7 +19,7 @@ public class ResourceController : MonoBehaviour
         set => isAvailable = value;
     }
 
-    public int idx;
+    public int idx = 100;
 
     public int resourceId; // 1이면 나무, 2면 바위 (도끼와 곡괭이 enum 및 index와 맞춰져있음다)
     private int startTime;
