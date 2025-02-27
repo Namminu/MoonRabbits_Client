@@ -257,6 +257,13 @@ public class MyPlayer : MonoBehaviour
     {
         if (grenadeInput){
             skillManager.eventQ.Invoke();
+            
+            float cooltime = 5;
+            
+            if (S1Manager.Instance.MyPlayer != null)
+                S1Manager.Instance.UiPlayer.QSkillCool(cooltime);
+            else if (S2Manager.Instance.MyPlayer != null)
+                S2Manager.Instance.UiPlayer.WSkillCool(cooltime);
         }
     }
 
