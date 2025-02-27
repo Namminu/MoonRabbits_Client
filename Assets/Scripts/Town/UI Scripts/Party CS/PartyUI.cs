@@ -23,7 +23,6 @@ public class PartyUI : MonoBehaviour
   public GameObject memberCardPrefab;
   public Transform partyListContainer;
   public GameObject partyCardPrefab;
-  public ScrollRect scrollRect;
 
   public Button createPartyButton; // 파티 생성 버튼
   public Button invitePartyButton; // 파티 생성 버튼

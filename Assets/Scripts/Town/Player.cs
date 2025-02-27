@@ -95,6 +95,37 @@ public class Player : MonoBehaviour
         isInitialized = true;
     }
 
+    public void SetCollision(CollisionPushInfo info)
+    {
+        var type = info.MyType;
+        switch (type)
+        {
+            case 1: SetMyCollision(info); break; //플레이어
+            case 2: SetMonsterCollision(info); break; // 몬스터
+        }
+    }
+
+    private void SetMyCollision(CollisionPushInfo info) // 내가 인식 했을경우
+    {
+        var type = info.TargetType;
+        switch (type)
+        {
+            case 1: //플레이어와의 충돌
+                break;
+            case 2: // 몬스터와의 충돌
+                break;
+            case 3: //덫?
+                break;
+            case 4: // 폭탄?
+                break;
+        }
+    }
+
+    private void SetMonsterCollision(CollisionPushInfo info) // 몬스터가 나에게 알려줄경우
+    {
+        //체력을 깎는다.
+    }
+
     private void Update()
     {
         if (!isInitialized)
