@@ -37,18 +37,18 @@ public class PartyMemberUI : MonoBehaviour
             //   return;
             Debug.Log("멤버 UI 생성");
 
-      GameObject newMember = Instantiate(memberPrefab, memberContainer);
-      newMember.transform.Find("Nickname").GetComponent<TMP_Text>().text = member.Nickname;
+            GameObject newMember = Instantiate(memberPrefab, memberContainer);
+            newMember.transform.Find("Nickname").GetComponent<TMP_Text>().text = member.Nickname;
 
-      switch (member.CurrentSector)
-      {
-        case 1:
-          newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{TownManager.Instance.GetPlayerAvatarById(member.Id).level}";
-          break;
-        case 2:
-          newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{ASectorManager.Instance.GetPlayerAvatarById(member.Id).level}";
-          break;
-      }
+            switch (member.CurrentSector)
+            {
+                case 1:
+                    newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{TownManager.Instance.GetPlayer(member.Id).level}";
+                    break;
+                case 2:
+                    newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{ASectorManager.Instance.GetPlayerAvatarById(member.Id).level}";
+                    break;
+            }
 
 
 
