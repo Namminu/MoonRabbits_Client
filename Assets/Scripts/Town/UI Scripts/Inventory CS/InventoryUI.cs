@@ -12,21 +12,24 @@ public class InventoryUI : MonoBehaviour
     private int goldAmount;
 
     [SerializeField] [ReadOnly] private List<ItemSlotUI> itemSlots;
+    private bool hasInitialized = false;
 
     private void Awake()
     {
-        /* contentArea ³»ÀÇ ÀÎº¥Åä¸® ½½·ÔµéÀ» List : itemSlots ¿¡ ÇÒ´ç */
+        /* contentArea ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½Ôµï¿½ï¿½ï¿½ List : itemSlots ï¿½ï¿½ ï¿½Ò´ï¿½ */
         if (contentArea != null)
             itemSlots = new List<ItemSlotUI>(contentArea.GetComponentsInChildren<ItemSlotUI>());
-		
-        /* ½½·Ôµé¿¡ ÀÎµ¦½º ³Ñ¹ö ºÎ¿© °úÁ¤ */
+
+
+        /* ï¿½ï¿½ï¿½Ôµé¿¡ ï¿½Îµï¿½ï¿½ï¿½ ï¿½Ñ¹ï¿½ ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ */
 		AssignSlotIndex();
 
-        // DB¿¡¼­ ÀÎº¥Åä¸® Á¤º¸ ¹Ş¾Æ¿À´Â °úÁ¤..?
-        // AddItem(DB¿¡¼­ ¹Ş¾Æ¿Â Á¤º¸)?
+		// DBì—ì„œ ì¸ë²¤í† ë¦¬ ì •ë³´ ë°›ì•„ì˜¤ëŠ” ê³¼ì •..?
+		// AddItem(DBì—ì„œ ë°›ì•„ì˜¨ ì •ë³´)?
+
 	}
 
-    private class ItemSortComparer : IComparer<Item>
+	private class ItemSortComparer : IComparer<Item>
     {
         public int Compare(Item x, Item y)
         {
@@ -97,8 +100,45 @@ public class InventoryUI : MonoBehaviour
 		}
 	}
 
-	#region
-	public ItemSlotUI GetItemSlotByIndex(int index)
+    /// <summary>
+    /// InventoryManagerï¿½ï¿½ï¿½ï¿½ ï¿½Ñ°Ü¹ï¿½ï¿½ï¿½ inventoryDictionaryï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ UIï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
+    /// ï¿½ï¿½ ItemSlotUIï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£(SlotIndex)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ itemIdï¿½ï¿½ stackï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½Ï°Å³ï¿½,
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
+    /// </summary>
+    /// <param name="inventoryDictionary">Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ InventorySlotDataï¿½ï¿½ ï¿½ï¿½Å³Ê¸ï¿½</param>
+    public void RefreshInventory(Dictionary<int, MaterialItem> inventoryItems)
+    {
+        foreach (var slotUI in itemSlots)
+        {
+            int slotIndex = slotUI.GetItemIndex();
+            if (inventoryItems.TryGetValue(slotIndex, out MaterialItem materialItem))
+            {
+                // MaterialItemï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ UpdateSlot ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ ItemDataï¿½ï¿½ È°ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ID, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
+                slotUI.AddItem(materialItem);
+            }
+            else
+          {
+                slotUI.ClearSlot();
+          }
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (hasInitialized)
+            return;  // ì´ë¯¸ ì´ˆê¸°í™”ëœ ê²½ìš° ì‹¤í–‰í•˜ì§€ ì•ŠìŒ
+
+        hasInitialized = true;
+
+        // InventoryManagerì— ì €ì¥ëœ ì¸ë²¤í† ë¦¬ ë°ì´í„°ë¥¼ ë¶ˆëŸ¬ì™€ ê°±ì‹ 
+        if (InventoryManager.instance != null)
+        {
+            RefreshInventory(InventoryManager.instance.GetCurrentInventoryDictionary());
+        }
+    }
+
+    #region
+    public ItemSlotUI GetItemSlotByIndex(int index)
     {
         if(index < 0 || index > itemSlots.Count)
         {

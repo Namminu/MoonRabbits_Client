@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIChat : MonoBehaviour
@@ -43,14 +44,29 @@ public class UIChat : MonoBehaviour
     {
         if (chatType == null)
         {
-            Debug.LogError("Dropdown(chatType)이 null입니다. 인스펙터에서 할당되었는지 확인하세요.");
+            Debug.LogError(
+                "Dropdown(chatType)이 null입니다. 인스펙터에서 할당되었는지 확인하세요."
+            );
             return;
         }
 
         inputChat.text = "";
 
         baseChatItemWidth = txtChatItemBase.rectTransform.sizeDelta.x;
-        player = TownManager.Instance.MyPlayer;
+
+        string currentScene = SceneManager.GetActiveScene().name;
+        switch (currentScene)
+        {
+            case "Town":
+                player = TownManager.Instance.MyPlayer;
+                break;
+            case "Sector1":
+                player = S1Manager.Instance.MyPlayer;
+                break;
+            case "Sector2":
+                player = S2Manager.Instance.MyPlayer;
+                break;
+        }
 
         btnSend.onClick.AddListener(SendMessage);
         btnToggle.onClick.AddListener(ToggleChatWindow);
@@ -87,7 +103,6 @@ public class UIChat : MonoBehaviour
             inputChat.placeholder.GetComponent<TMP_Text>().text = "파티 채팅 입력";
         }
     }
-
 
     void Update()
     {

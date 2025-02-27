@@ -44,17 +44,4 @@ public class JsonFileLoader
       throw new Exception($"JSON 파일 로드 중 오류 발생: {filePath} - {ex.Message}");
     }
   }
-
-  public List<T> ReadAllJsonFiles<T>(string dirPath)
-  {
-    string[] filePaths = SearchAllJsonFiles(dirPath);
-    List<T> dataList = new();
-
-    foreach (var filePath in filePaths)
-    {
-      dataList.Add(ReadJsonFile<T>(filePath));
-    }
-
-    return dataList;
-  }
 }

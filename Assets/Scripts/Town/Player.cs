@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Google.Protobuf.Protocol;
 using UnityEngine;
 using UnityEngine.AI;
@@ -38,6 +39,8 @@ public class Player : MonoBehaviour
     public GameObject axe;
     public GameObject pickAxe;
 
+    private Dictionary<int, string> emotions = new();
+
     // PlayerInfo
     private int maxHp;
     private int curHp;
@@ -55,6 +58,15 @@ public class Player : MonoBehaviour
     {
         Avatar = GetComponent<Avatar>();
         animator = GetComponent<Animator>();
+
+        SetAnimTrigger();
+    }
+
+    private void SetAnimTrigger()
+    {
+        emotions[111] = "Happy";
+        emotions[222] = "Sad";
+        emotions[333] = "Greeting";
     }
 
     public void SetPlayerId(int playerId)
@@ -78,7 +90,7 @@ public class Player : MonoBehaviour
         this.level = level;
     }
 
-    public void SetIsMine(bool isMine)
+    public void SetIsMine(bool isMine, int currentSector)
     {
         IsMine = isMine;
 
@@ -91,8 +103,51 @@ public class Player : MonoBehaviour
             Destroy(GetComponent<NavMeshAgent>());
         }
 
-        uiChat = TownManager.Instance.UiChat;
+        switch (currentSector)
+        {
+            case 100:
+                uiChat = TownManager.Instance.UiChat;
+                break;
+            case 101:
+                uiChat = S1Manager.Instance.UiChat;
+                break;
+            case 102:
+                uiChat = S2Manager.Instance.UiChat;
+                break;
+        }
+
         isInitialized = true;
+    }
+
+    public void SetCollision(CollisionPushInfo info)
+    {
+        var type = info.MyType;
+        switch (type)
+        {
+            case 1: SetMyCollision(info); break; //플레이어
+            case 2: SetMonsterCollision(info); break; // 몬스터
+        }
+    }
+
+    private void SetMyCollision(CollisionPushInfo info) // 내가 인식 했을경우
+    {
+        var type = info.TargetType;
+        switch (type)
+        {
+            case 1: //플레이어와의 충돌
+                break;
+            case 2: // 몬스터와의 충돌
+                break;
+            case 3: //덫?
+                break;
+            case 4: // 폭탄?
+                break;
+        }
+    }
+
+    private void SetMonsterCollision(CollisionPushInfo info) // 몬스터가 나에게 알려줄경우
+    {
+        //체력을 깎는다.
     }
 
     private void Update()
@@ -136,7 +191,7 @@ public class Player : MonoBehaviour
     {
         if (goalRot != Quaternion.identity)
         {
-            float t = Mathf.Clamp(Time.deltaTime * SmoothRotateSpeed, 0, 0.99f);
+            float t = Mathf.Clamp(Time.deltaTime * SmoothRotateSpeed, 0, 0.3f);
             transform.rotation = Quaternion.Lerp(transform.rotation, goalRot, t);
         }
     }
@@ -151,7 +206,7 @@ public class Player : MonoBehaviour
             PlayerId = PlayerId,
             SenderName = nickname,
             ChatMsg = msg,
-            ChatType = chatType
+            ChatType = chatType,
         };
 
         GameManager.Network.Send(chatPacket);
@@ -169,9 +224,54 @@ public class Player : MonoBehaviour
         goalRot = rot;
     }
 
-    public void PlayAnimation(int animCode)
+    public void Emote(int animCode)
     {
-        animator?.SetTrigger(animCode);
+        animator?.SetTrigger(emotions[animCode]);
+    }
+
+    public void CastRecall(int recallTimer)
+    {
+        StartCoroutine(TryRecall(recallTimer));
+    }
+
+    IEnumerator TryRecall(int recallTimer)
+    {
+        GameObject effect = transform.Find("RecallEffect").gameObject;
+        effect.SetActive(true);
+
+        Vector3 startPos = transform.position;
+
+        int castingTime = 0;
+
+        while (castingTime < recallTimer)
+        {
+            if (Vector3.Distance(startPos, transform.position) > 0.2)
+            {
+                effect.SetActive(false);
+
+                if (IsMine)
+                {
+                    MPlayer.SkillManager.IsCasting = false;
+                }
+
+                yield break;
+            }
+
+            yield return new WaitForSeconds(1);
+            Debug.Log($"귀환까지 남은 시간 : {recallTimer - castingTime}초");
+            castingTime += 1;
+        }
+
+        yield return new WaitForSeconds(0.5f);
+        effect.SetActive(false);
+
+        if (IsMine)
+        {
+            MPlayer.SkillManager.IsCasting = false;
+
+            var pkt = new C2SMoveSector { TargetSector = 100 };
+            GameManager.Network.Send(pkt);
+        }
     }
 
     private void CheckMove()
@@ -195,7 +295,8 @@ public class Player : MonoBehaviour
         moveSpeed = statInfo.MoveSpeed;
         abilityPoint = statInfo.AbilityPoint;
 
-        if (IsMine) TownManager.Instance.UiPlayer.SetStatInfo(statInfo);
+        if (IsMine)
+            TownManager.Instance.UiPlayer.SetStatInfo(statInfo);
     }
 
     public void SetExp(int updatedExp)
@@ -209,13 +310,15 @@ public class Player : MonoBehaviour
         }
         Debug.Log($"updatedExp : {updatedExp}");
 
-        if (IsMine) TownManager.Instance.UiPlayer.SetExp(updatedExp, targetExp);
+        if (IsMine)
+            TownManager.Instance.UiPlayer.SetExp(updatedExp, targetExp);
     }
 
     public void InvestPoint(StatInfo statInfo)
     {
         abilityPoint = statInfo.AbilityPoint;
-        if (IsMine) TownManager.Instance.UiPlayer.SetAbilityPoint(abilityPoint);
+        if (IsMine)
+            TownManager.Instance.UiPlayer.SetAbilityPoint(abilityPoint);
 
         if (statInfo.Stamina > stamina)
         {
@@ -230,20 +333,24 @@ public class Player : MonoBehaviour
             SetMoveSpeed(statInfo.MoveSpeed);
         }
 
-        if (IsMine && abilityPoint <= 0) TownManager.Instance.UiPlayer.DeActiveAP();
+        if (IsMine && abilityPoint <= 0)
+            TownManager.Instance.UiPlayer.DeActiveAP();
     }
 
     private void SetStamina(int stamina)
     {
-        if (stamina > this.stamina) this.cur_stamina += (stamina - this.stamina);
+        if (stamina > this.stamina)
+            this.cur_stamina += (stamina - this.stamina);
         this.stamina = stamina;
-        if (IsMine) TownManager.Instance.UiPlayer.SetStamina(cur_stamina, stamina, abilityPoint > 0);
+        if (IsMine)
+            TownManager.Instance.UiPlayer.SetStamina(cur_stamina, stamina, abilityPoint > 0);
     }
 
     private void SetPickSpeed(int pickSpeed)
     {
         this.pickSpeed = pickSpeed;
-        if (IsMine) TownManager.Instance.UiPlayer.SetPickSpeed(pickSpeed, abilityPoint > 0);
+        if (IsMine)
+            TownManager.Instance.UiPlayer.SetPickSpeed(pickSpeed, abilityPoint > 0);
     }
 
     private void SetMoveSpeed(int moveSpeed)
@@ -254,7 +361,8 @@ public class Player : MonoBehaviour
         GetComponent<NavMeshAgent>().acceleration = moveSpeed * 2 + 3;
 
         this.moveSpeed = moveSpeed;
-        if (IsMine) TownManager.Instance.UiPlayer.SetMoveSpeed(moveSpeed, abilityPoint > 0);
+        if (IsMine)
+            TownManager.Instance.UiPlayer.SetMoveSpeed(moveSpeed, abilityPoint > 0);
     }
 
     public void LevelUp(int updatedLevel, int newTargetExp, int updatedExp, int updatedAbilityPoint)
@@ -264,7 +372,14 @@ public class Player : MonoBehaviour
         exp = updatedExp;
 
         Debug.Log($"레벨업 응답 실행 {level}/ap{abilityPoint}/{exp}/{targetExp} isMine?{IsMine}");
-        if (IsMine) TownManager.Instance.UiPlayer.LevelUp(updatedLevel, newTargetExp, updatedExp, abilityPoint, updatedAbilityPoint);
+        if (IsMine)
+            TownManager.Instance.UiPlayer.LevelUp(
+                updatedLevel,
+                newTargetExp,
+                updatedExp,
+                abilityPoint,
+                updatedAbilityPoint
+            );
 
         abilityPoint = updatedAbilityPoint;
     }

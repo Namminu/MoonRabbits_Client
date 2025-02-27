@@ -14,9 +14,17 @@ public class Party : MonoBehaviour
   // 싱글톤 패턴 (필요 시 사용)
   public static Party instance { get; private set; }
 
-  public Party()
+  private void Awake()
   {
-    instance = this;
+    if (instance == null)
+    {
+      instance = this;
+      DontDestroyOnLoad(gameObject);
+    }
+    else
+    {
+      Destroy(gameObject);
+    }
   }
 
   #region 파티 정보 업데이트

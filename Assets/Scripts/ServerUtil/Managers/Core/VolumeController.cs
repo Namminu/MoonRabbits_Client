@@ -6,6 +6,11 @@ public class VolumeController : MonoBehaviour
   public Slider bgmSlider;
   public Slider effectSlider;
 
+  private void Awake()
+  {
+    DontDestroyOnLoad(gameObject);
+  }
+
   void Start()
   {
     // 슬라이더 값 설정 (저장된 값 불러오기)

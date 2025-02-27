@@ -8,13 +8,14 @@ using UnityEngine.EventSystems;
 public class MyPlayer : MonoBehaviour
 {
     [SerializeField]
+    public static MyPlayer instance { get; private set; }
     private NavMeshAgent agent;
     public NavMeshAgent NavAgent
     {
         get => agent;
     }
     private RaycastHit rayHit;
-    private EventSystem eSystem;
+    public EventSystem eSystem;
     private Animator anim;
     public Animator Anim
     {
@@ -22,21 +23,30 @@ public class MyPlayer : MonoBehaviour
     }
     private Vector3 lastPos;
     private Vector3 targetPosition;
+    public Vector3 TargetPos => targetPosition;
     private Vector3 lastTargetPosition;
     private readonly List<int> animHash = new List<int>();
     private int frameCount = 0;
     private const int targetFrames = 10; // 10 프레임마다 실행
 
-    /* 섬광탄 관련 변수 */
-    private Transform throwPoint;
-    private int throwPower = 15;
+    /* 감정표현 관련 */
+    private bool isEmoting;
+    private bool happyInput;
+    private bool sadInput;
+    private bool greetingInput;
+    private EmoteManager emoteManager;
+
+    /* 스킬 관련 */
+    public GameObject grenade;
+    public GameObject trap;
     private bool grenadeInput;
     private bool trapInput;
-    private bool isThrow = false;
-    private GameObject grenade;
-    private GameObject trap;
+    private bool recallInput;
 
-    /* 상호작용 관련 변수 */
+    private SkillManager skillManager;
+    public SkillManager SkillManager => skillManager;
+
+    /* 상호작용 관련 */
     public GameObject axe;
     public GameObject pickAxe;
     public int currentEquip = (int)EquipState.none;
@@ -50,19 +60,17 @@ public class MyPlayer : MonoBehaviour
 
     private bool equipChangeInput;
     private bool interactInput;
-    public bool InteractInput
-    {
-        get => interactInput;
-    }
     private InteractManager interactManager;
+    public InteractManager InteractManager => interactManager;
 
     void Awake()
     {
+        instance = this;
+
         eSystem = TownManager.Instance.E_System;
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
 
-        throwPoint = transform.Find("ThrowPoint").transform;
         grenade = GetComponentInParent<Player>().grenade;
         trap = GetComponentInParent<Player>().trap;
         axe = GetComponentInParent<Player>().axe;
@@ -73,27 +81,30 @@ public class MyPlayer : MonoBehaviour
 
         LoadAnimationHashes();
 
+        skillManager = GetComponentInChildren<SkillManager>();
         interactManager = GetComponentInChildren<InteractManager>();
+        emoteManager = GetComponent<EmoteManager>();
     }
 
     void Start()
     {
-        // StartCoroutine(ExecuteEvery10Frames());
+        StartCoroutine(ExecuteEvery10Frames());
     }
 
     void Update()
     {
         HandleInput();
-        Throw();
+        Emote();
+        ThrowGrenade();
+        SetTrap();
+        Recall();
         EquipChange();
         Interact();
-        CheckMoveByFrame();
-        // CheckMove();
     }
 
     private void InitializeCamera()
     {
-        Camera.main.gameObject.GetComponent<TempCamera>().target = transform;
+        Camera.main.gameObject.GetComponent<QuarterView>().target = transform;
 
         // var freeLook = TownManager.Instance.FreeLook;
         // freeLook.Follow = transform;
@@ -127,21 +138,26 @@ public class MyPlayer : MonoBehaviour
                 )
             )
             {
+                isEmoting = false;
                 targetPosition = rayHit.point;
             }
         }
 
-        // grenadeInput = Input.GetButtonDown("Grenade");
-        // trapInput = Input.GetButtonDown("Trap");
-        // interactInput = Input.GetButtonDown("Interact");
-        // equipChangeInput = Input.GetButtonDown("EquipChange");
+        happyInput = Input.GetKeyDown(KeyCode.Alpha1);
+        sadInput = Input.GetKeyDown(KeyCode.Alpha2);
+        greetingInput = Input.GetKeyDown(KeyCode.Alpha3);
+        grenadeInput = Input.GetKeyDown(KeyCode.Q);
+        trapInput = Input.GetKeyDown(KeyCode.E);
+        recallInput = Input.GetKeyDown(KeyCode.T);
+        interactInput = Input.GetKeyDown(KeyCode.F);
+        equipChangeInput = Input.GetKeyDown(KeyCode.R);
     }
 
     IEnumerator ExecuteEvery10Frames()
     {
         while (true)
         {
-            yield return null; // 1 프레임 대기
+            yield return null;
             frameCount++;
 
             CheckMove();
@@ -152,19 +168,6 @@ public class MyPlayer : MonoBehaviour
                 frameCount = 0;
                 MoveAndSendMovePacket();
             }
-        }
-    }
-
-    private void CheckMoveByFrame()
-    {
-        frameCount += 1;
-
-        CheckMove();
-
-        if (frameCount >= targetFrames && targetPosition != lastTargetPosition)
-        {
-            frameCount = 0;
-            MoveAndSendMovePacket();
         }
     }
 
@@ -212,6 +215,7 @@ public class MyPlayer : MonoBehaviour
         agent.SetDestination(transform.position);
 
         var animationPacket = new C2SAnimation { AnimCode = animKey };
+        Debug.Log($"감정표현?? : {animationPacket}");
         GameManager.Network.Send(animationPacket);
     }
 
@@ -227,39 +231,44 @@ public class MyPlayer : MonoBehaviour
         }
     }
 
-    private void Throw()
+    private void Emote()
     {
-        if (!isThrow && (grenadeInput || trapInput))
+        if (isEmoting)
+            return;
+
+        if (happyInput)
         {
-            isThrow = true;
-
-            if (grenadeInput)
-            {
-                GameObject currentObj = Instantiate(
-                    grenade,
-                    throwPoint.position,
-                    throwPoint.rotation
-                );
-
-                Rigidbody rigid = currentObj.GetComponent<Rigidbody>();
-
-                Vector3 forceVec = throwPoint.forward * throwPower + throwPoint.up * throwPower / 2;
-
-                rigid.AddForce(forceVec, ForceMode.VelocityChange);
-                rigid.AddTorque(Vector3.right, ForceMode.Impulse);
-            }
-            else if (trapInput)
-            {
-                // currentObj = Instantiate(trap, throwPoint.position, throwPoint.rotation);
-            }
-
-            Invoke(nameof(ThrowEnd), 3f);
+            isEmoting = true;
+            emoteManager.event1.Invoke();
+        }
+        else if (sadInput)
+        {
+            isEmoting = true;
+            emoteManager.event2.Invoke();
+        }
+        else if (greetingInput)
+        {
+            isEmoting = true;
+            emoteManager.event3.Invoke();
         }
     }
 
-    private void ThrowEnd()
+    private void ThrowGrenade()
     {
-        isThrow = false;
+        if (grenadeInput)
+            skillManager.eventQ.Invoke();
+    }
+
+    private void SetTrap()
+    {
+        if (trapInput)
+            skillManager.eventE.Invoke();
+    }
+
+    private void Recall()
+    {
+        if (recallInput)
+            skillManager.eventT.Invoke();
     }
 
     private void EquipChange()
@@ -272,5 +281,20 @@ public class MyPlayer : MonoBehaviour
     {
         if (interactInput)
             interactManager.eventF.Invoke();
+    }
+
+    public void Stun(float timer)
+    {
+        transform.Find("StunEffect").gameObject.SetActive(true);
+        NavAgent.velocity = Vector3.zero;
+        NavAgent.ResetPath();
+        NavAgent.isStopped = true;
+        Invoke(nameof(StunOut), timer);
+    }
+
+    private void StunOut()
+    {
+        transform.Find("StunEffect").gameObject.SetActive(false);
+        NavAgent.isStopped = false;
     }
 }
