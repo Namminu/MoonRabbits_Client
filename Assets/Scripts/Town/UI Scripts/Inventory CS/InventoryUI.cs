@@ -23,8 +23,7 @@ public class InventoryUI : MonoBehaviour
 		AssignSlotIndex();
 
         // DB에서 인벤토리 정보 받아오는 과정..?
-		// AddItem(DB에서 받아온 정보)?
-
+        // AddItem(DB에서 받아온 정보)?
 	}
 
     private class ItemSortComparer : IComparer<Item>
