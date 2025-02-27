@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     [Header("Player Settings")]
     [SerializeField]
     private UINameChat uiNameChat;
-    public UIPlayer uiPlayer;
+    private UIPlayer uiPlayer;
 
     [Header("Movement Settings")]
     public float SmoothMoveSpeed = 10f; // 위치 보간 속도

@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 
 public class ASectorManager : MonoBehaviour
 {
-    private static ASectorManager _instance;
+    private static ASectorManager _instance = new ASectorManager();
     public static ASectorManager Instance => _instance;
 
     [SerializeField]

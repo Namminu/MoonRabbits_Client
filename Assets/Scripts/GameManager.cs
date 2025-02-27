@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     public int PlayerId;
     public int ClassCode;
 
+    public JsonContainer<Resource> resourceContainer;
     private async void Awake()
     {
         if (_instance == null)
@@ -47,23 +48,44 @@ public class GameManager : MonoBehaviour
         JsonFileLoader loader = new JsonFileLoader();
 
         // 단일 JSON 파일 로드
+        string questFilePath = Path.Combine(Application.streamingAssetsPath, "Quest.json");
         string filePath = Path.Combine(Application.streamingAssetsPath, "material_item_data.json");
 
-        if (!File.Exists(filePath))
+        if (!File.Exists(questFilePath))
         {
-            Debug.LogError($"JSON 파일을 찾을 수 없습니다: {filePath}");
+            Debug.LogError($"quest JSON 파일을 찾을 수 없습니다: {questFilePath}");
             return;
         }
 
-        var questContainer = loader.ReadJsonFile<JsonContainer<Quest>>(filePath);
+        var questContainer = loader.ReadJsonFile<JsonContainer<Quest>>(questFilePath);
         if (questContainer == null || questContainer.data == null || questContainer.data.Count == 0)
         {
-            Debug.LogError("JSON 파싱 실패: 데이터가 없습니다.");
+            Debug.LogError("quest JSON 파싱 실패: 데이터가 없습니다.");
             return;
         }
+        Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[0].quest_name}");
+        Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[1].quest_name}");
+        Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[2].quest_name}");
+        
         Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[0].quest_id}");
         Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[1].quest_id}");
         Debug.Log($"퀘스트 데이터 로드 완료: {questContainer.data[2].quest_id}");
+
+        // 단일 JSON 파일 로드
+        string resourceFilePath = Path.Combine(Application.streamingAssetsPath, "Resource.json");
+
+        if (!File.Exists(resourceFilePath))
+        {
+            Debug.LogError($"resouce JSON 파일을 찾을 수 없습니다: {resourceFilePath}");
+            return;
+        }
+
+        resourceContainer = loader.ReadJsonFile<JsonContainer<Resource>>(resourceFilePath);
+        if (resourceContainer == null || resourceContainer.data == null || resourceContainer.data.Count == 0)
+        {
+            Debug.LogError("resouce JSON 파싱 실패: 데이터가 없습니다.");
+            return;
+        }
     }
 
     private void Update()

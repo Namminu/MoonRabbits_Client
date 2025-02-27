@@ -33,6 +33,8 @@ public class UIPlayer : MonoBehaviour
     public Transform heartBgsPos;
     private List<GameObject> hearts = new List<GameObject>();
     private List<GameObject> heartBgs = new List<GameObject>();
+    public Image qSkillMask;
+    public Image wSkillMask;
 
     private void Awake()
     {
@@ -303,6 +305,27 @@ public class UIPlayer : MonoBehaviour
             GameObject heart = Instantiate(heartPrefab, heartsPos);
             hearts.Add(heart);
             hearts[i] = heart;
+        }
+    }
+    public void QSkillCool(float cooltime)
+    {
+        StartCoroutine(CoolTimeFunc(cooltime, cooltime, qSkillMask));
+    }
+
+    public void WSkillCool(float cooltime)
+    {
+        StartCoroutine(CoolTimeFunc(cooltime, cooltime, wSkillMask));
+    }
+
+    IEnumerator CoolTimeFunc(float curCooltime, float cooltime, Image skillImage)
+    {
+        while (curCooltime > 0.0f)
+        {
+            curCooltime -= Time.deltaTime;
+
+            skillImage.fillAmount = curCooltime / cooltime;
+
+            yield return new WaitForFixedUpdate();
         }
     }
 }
