@@ -123,8 +123,10 @@ public class ItemSlotUI
         if (item == null)
             return;
 
-        // Image copy process when dragging starts from an item slot
-        DragSlot.instance.dragSlot = this;
+		if (eventData.button == PointerEventData.InputButton.Right) return;
+
+		// Image copy process when dragging starts from an item slot
+		DragSlot.instance.dragSlot = this;
         DragSlot.instance.DragSetImage(itemImage);
         DragSlot.instance.transform.position = eventData.position;
     }
@@ -151,40 +153,62 @@ public class ItemSlotUI
     {
         if (DragSlot.instance.dragSlot != null)
             ChangeSlot();
+
+        if(DragSlot.instance.dragSlot != null && !HasItem())
+        {
+            AddItem(DragSlot.instance.dragSlot.GetItem());
+            DragSlot.instance.SetItemImageAlpha(0);
+			DragSlot.instance.dragSlot = null;
+		}
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
         if (item == null) return;
-
-        if (eventData.button == PointerEventData.InputButton.Right)
+		
+        #region Right Mouse Click
+		if (eventData.button == PointerEventData.InputButton.Right)
         {
-            DecomUI = GameObject.Find("UIDecomItem");
-            if (DecomUI == null) return;
+			DecomUI = GameObject.Find("UIDecomItem");
 
-            if (isInven && DecomUI.activeSelf) /* 인벤토리에서 우클릭 시  */
+            if (DecomUI != null && DecomUI.activeSelf) /* 분해창이 활성화 되어 있을 시 */
             {
-                Debug.Log("Right Click On Inventory Slot");
-                ItemSlotUI emptySlot = FindEmptySlot(false);
-                if (emptySlot != null)
+                if (isInven) /* 인벤토리에서 우클릭 시  */
                 {
-                    emptySlot.AddItem(item);
-                    emptySlot.originSlot = this;
-                    ClearSlot();
+                    Debug.Log("Right Click On Inventory Slot");
+                    ItemSlotUI emptySlot = FindEmptySlot(false);
+                    if (emptySlot != null)
+                    {
+                        emptySlot.AddItem(item);
+                        emptySlot.originSlot = this;
+                        ClearSlot();
+                    }
+                    else return;
                 }
-                else return;
+                else if (!isInven) /* 분해창에서 우클릭 시 */
+                {
+                    Debug.Log("Right Click On Decom Slot");
+                    ReturnToOriginSlot();
+                }
             }
-            else if (!isInven) /* 분해창에서 우클릭 시 */
-            {
-                Debug.Log("Right Click On Decom Slot");
-                ReturnToOriginSlot();
-			}
-        }
-    }
-    #endregion
+            else if(DecomUI == null || !DecomUI.activeSelf) /* 분해창 비활성화 때 우클릭 시 아이템 분리 */
+			{
+				SeperatingItem(); 
+			} 
+		}
+		#endregion
 
-    #region Getter n Setter
-    public MaterialItem GetItem()
+		#region Left Mouse Click
+		if (eventData.button == PointerEventData.InputButton.Left)
+        {
+
+        }
+		#endregion
+	}
+	#endregion
+
+	#region Getter n Setter
+	public MaterialItem GetItem()
     {
         return item;
     }
@@ -216,7 +240,31 @@ public class ItemSlotUI
 
 	#region Local Method
 
-	// 아이템 등록 시 이미지 객체의 투명도 조절을 위한 메서드
+	/// <summary>
+	/// Seperate Cur Slot Item Count Method 
+	/// </summary>
+	/// <returns>seperated item count, If the number of items is odd, a smaller value is returned</returns>
+	private int SeperatingItem()
+    {
+        if (item.CurItemStack <= 1) return -1;
+
+        Debug.Log("Seperate Item Method");
+        int seperateLeftCount = item.CurItemStack / 2;
+        item.CurItemStack -= seperateLeftCount;
+		text_ItemAmount.text = item.CurItemStack.ToString();
+
+		MaterialItem tempItem = new MaterialItem(item.ItemData, seperateLeftCount);
+        DragSlot.instance.dragSlot = this;
+
+        DragSlot.instance.DragSetImage(itemImage);
+        DragSlot.instance.SetItemImageAlpha(1);
+
+        DragSlot.instance.dragSlot.AddItem(tempItem);
+
+		return seperateLeftCount;
+    }
+
+	/* 아이템 등록 시 이미지 객체의 투명도 조절을 위한 메서드 */
 	private void SetItemImageAlpha(float alpha)
 	{
 		Color newColor = itemImage.color;
