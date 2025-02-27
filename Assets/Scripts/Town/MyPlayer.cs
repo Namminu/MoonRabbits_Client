@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 
 public class MyPlayer : MonoBehaviour
 {
-    private Player player;
+    public Player P;
 
     [SerializeField]
     private NavMeshAgent agent;
@@ -48,16 +48,7 @@ public class MyPlayer : MonoBehaviour
     public SkillManager SkillManager => skillManager;
 
     /* 상호작용 관련 */
-    public GameObject axe;
-    public GameObject pickAxe;
-    public int currentEquip = (int)EquipState.none;
-
-    public enum EquipState
-    {
-        none = 0,
-        axe = 1,
-        pickAxe = 2,
-    }
+    public int currentEquip = 0;
 
     private bool equipChangeInput;
     private bool interactInput;
@@ -66,15 +57,13 @@ public class MyPlayer : MonoBehaviour
 
     void Awake()
     {
-        player = GetComponent<Player>();
+        P = GetComponent<Player>();
         eSystem = TownManager.Instance.E_System;
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
 
         grenade = GetComponentInParent<Player>().grenade;
         trap = GetComponentInParent<Player>().trap;
-        axe = GetComponentInParent<Player>().axe;
-        pickAxe = GetComponentInParent<Player>().pickAxe;
 
         InitializeCamera();
         lastPos = transform.position;
@@ -188,7 +177,7 @@ public class MyPlayer : MonoBehaviour
 
     private void MoveAndSendMovePacket()
     {
-        if (player.IsStun)
+        if (P.IsStun)
             return;
 
         // 플레이어 이동시키기
@@ -251,7 +240,7 @@ public class MyPlayer : MonoBehaviour
 
     private void Emote()
     {
-        if (!player.IsStun && !isEmoting)
+        if (!P.IsStun && !isEmoting)
         {
             if (happyInput)
             {
@@ -273,31 +262,31 @@ public class MyPlayer : MonoBehaviour
 
     private void ThrowGrenade()
     {
-        if (grenadeInput && !player.IsStun)
+        if (grenadeInput && !P.IsStun)
             skillManager.eventQ.Invoke();
     }
 
     private void SetTrap()
     {
-        if (trapInput && !player.IsStun)
+        if (trapInput && !P.IsStun)
             skillManager.eventE.Invoke();
     }
 
     private void Recall()
     {
-        if (recallInput && !player.IsStun)
+        if (recallInput && !P.IsStun)
             skillManager.eventT.Invoke();
     }
 
     private void EquipChange()
     {
-        if (equipChangeInput && !player.IsStun)
+        if (equipChangeInput && !P.IsStun)
             interactManager.eventR.Invoke();
     }
 
     private void Interact()
     {
-        if (interactInput && !player.IsStun)
+        if (interactInput && !P.IsStun)
             interactManager.eventF.Invoke();
     }
 

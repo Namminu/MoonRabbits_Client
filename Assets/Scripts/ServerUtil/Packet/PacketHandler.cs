@@ -428,8 +428,9 @@ class PacketHandler
             return;
         Debug.Log($"S2CGatheringDone 패킷 무사 도착 : {pkt}");
     }
+    #endregion
 
-    #region Skill
+    #region PlayerAction
     public static void S2CRecallHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CRecall pkt)
@@ -501,6 +502,28 @@ class PacketHandler
                 break;
         }
     }
+
+    public static void S2CEquipChangeHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CEquipChange pkt)
+            return;
+        Debug.Log($"S2CEquipChange 패킷 무사 도착 : {pkt}");
+
+        switch (pkt.CurrentSector)
+        {
+            case 100:
+                Debug.Log("마을에선 도구를 꺼낼 수 없습니다");
+                break;
+            case 101:
+                var s1Player = S1Manager.Instance.GetPlayer(pkt.PlayerId);
+                s1Player.ChangeEquip(pkt.NextEquip);
+                break;
+            case 102:
+                var s2Player = S2Manager.Instance.GetPlayer(pkt.PlayerId);
+                s2Player.ChangeEquip(pkt.NextEquip);
+                break;
+        }
+    }
     #endregion
     public static void S2CSectorEnterHandler(PacketSession session, IMessage packet)
     {
@@ -536,7 +559,6 @@ class PacketHandler
             return;
         Debug.Log($"S2CInPortal 패킷 무사 도착 : {pkt}");
     }
-    #endregion
 
     #region LevelUp
     public static void S2CAddExpHandler(PacketSession session, IMessage packet)

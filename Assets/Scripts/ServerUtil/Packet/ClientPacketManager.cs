@@ -100,6 +100,8 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CThrowGrenade, PacketHandler.S2CThrowGrenadeHandler);
         _onRecv.Add((ushort)MsgId.S2CStun, MakePacket<S2CStun>);
         _handler.Add((ushort)MsgId.S2CStun, PacketHandler.S2CStunHandler);
+        _onRecv.Add((ushort)MsgId.S2CEquipChange, MakePacket<S2CEquipChange>);
+        _handler.Add((ushort)MsgId.S2CEquipChange, PacketHandler.S2CEquipChangeHandler);
         _onRecv.Add((ushort)MsgId.S2CSectorEnter, MakePacket<S2CSectorEnter>);
         _handler.Add((ushort)MsgId.S2CSectorEnter, PacketHandler.S2CSectorEnterHandler);
         _onRecv.Add((ushort)MsgId.S2CSectorLeave, MakePacket<S2CSectorLeave>);

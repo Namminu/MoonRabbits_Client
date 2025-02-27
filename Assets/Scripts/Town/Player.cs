@@ -42,6 +42,8 @@ public class Player : MonoBehaviour
     private Transform throwPoint;
     private Dictionary<int, string> emotions = new();
     public bool IsStun = false;
+    private Dictionary<int, GameObject> equips = new();
+    public GameObject ActiveEquipObj = null;
 
     // PlayerInfo
     private int maxHp;
@@ -63,6 +65,7 @@ public class Player : MonoBehaviour
         throwPoint = transform.Find("ThrowPoint");
 
         SetAnimTrigger();
+        SetEquipObj();
     }
 
     private void SetAnimTrigger()
@@ -70,6 +73,12 @@ public class Player : MonoBehaviour
         emotions[111] = "Happy";
         emotions[222] = "Sad";
         emotions[333] = "Greeting";
+    }
+
+    private void SetEquipObj()
+    {
+        equips[1] = axe;
+        equips[2] = pickAxe;
     }
 
     public void SetPlayerId(int playerId)
@@ -289,6 +298,23 @@ public class Player : MonoBehaviour
     {
         transform.Find("StunEffect").gameObject.SetActive(false);
         IsStun = false;
+    }
+
+    public void ChangeEquip(int nextEquip)
+    {
+        if (ActiveEquipObj != null && ActiveEquipObj.activeSelf)
+        {
+            ActiveEquipObj.SetActive(false);
+        }
+
+        ActiveEquipObj = equips[nextEquip];
+        ActiveEquipObj.SetActive(true);
+
+        if (IsMine)
+        {
+            MPlayer.currentEquip = nextEquip;
+            MPlayer.InteractManager.isEquipChanging = false;
+        }
     }
 
     private void CheckMove()

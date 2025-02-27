@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Google.Protobuf.Protocol;
 using UnityEngine;
 
 public class InteractManager : MonoBehaviour
@@ -15,7 +16,7 @@ public class InteractManager : MonoBehaviour
     private const int portalTimer = 5;
     private bool isPortalReady = true;
     private bool isInteracting = false;
-    private bool isEquipChanging = false;
+    public bool isEquipChanging = false;
 
     private string[] anims = { "none", "Axe", "PickAxe" };
 
@@ -26,40 +27,19 @@ public class InteractManager : MonoBehaviour
     {
         player = GetComponentInParent<MyPlayer>();
         eventF += Interact;
-        eventR += EquipChange;
+        eventR += ChangeEquip;
     }
 
-    private void EquipChange()
+    private void ChangeEquip()
     {
         if (isInteracting || isEquipChanging)
             return;
 
         isEquipChanging = true;
 
-        switch (player.currentEquip)
-        {
-            case 0:
-                player.axe.SetActive(true);
-                player.currentEquip = (int)MyPlayer.EquipState.axe;
-                break;
-            case 1:
-                player.axe.SetActive(false);
-                player.pickAxe.SetActive(true);
-                player.currentEquip = (int)MyPlayer.EquipState.pickAxe;
-                break;
-            case 2:
-                player.axe.SetActive(true);
-                player.pickAxe.SetActive(false);
-                player.currentEquip = (int)MyPlayer.EquipState.axe;
-                break;
-        }
-
-        Invoke(nameof(EquipChangeOut), 0.5f);
-    }
-
-    private void EquipChangeOut()
-    {
-        isEquipChanging = false;
+        int nextEquip = player.currentEquip == 1 ? 2 : 1;
+        var pkt = new C2SEquipChange { NextEquip = nextEquip };
+        GameManager.Network.Send(pkt);
     }
 
     private void Interact()
