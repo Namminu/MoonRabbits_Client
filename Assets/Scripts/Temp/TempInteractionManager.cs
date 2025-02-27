@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Google.Protobuf.Protocol;
 using UnityEngine;
 
 public class TempInteractionManager : MonoBehaviour
@@ -10,7 +8,12 @@ public class TempInteractionManager : MonoBehaviour
     private TempPlayer player;
 
     [SerializeField]
-    private ResourceController target = null;
+    private ResourceController targetResource = null;
+
+    [SerializeField]
+    private Portal targetPortal = null;
+    private const int portalTimer = 5;
+    private bool isPortalReady = true;
     private bool isInteracting = false;
     private bool isEquipChanging = false;
 
@@ -61,29 +64,43 @@ public class TempInteractionManager : MonoBehaviour
 
     private void Interact()
     {
-        if (isInteracting || target == null)
+        if (targetResource != null)
+        {
+            GatherResource();
+        }
+        else if (targetPortal != null)
+        {
+            UsePortal();
+        }
+    }
+
+    private void GatherResource()
+    {
+        if (isInteracting)
             return;
 
-        if (player.currentEquip != target.resourceId)
+        if (player.currentEquip != targetResource.resourceId)
         {
             Debug.Log("자원에 맞는 도구를 장비해주세요");
             return;
         }
 
-        if (target.Durability > 0)
+        if (targetResource.Durability > 0)
         {
             isInteracting = true;
 
             player.NavAgent.isStopped = true;
             player.NavAgent.destination = player.transform.position;
 
-            Vector3 direction = (target.transform.position - player.transform.position).normalized;
+            Vector3 direction = (
+                targetResource.transform.position - player.transform.position
+            ).normalized;
             direction.y = 0;
             player.transform.rotation = Quaternion.LookRotation(direction);
 
             player.Anim.SetTrigger(anims[player.currentEquip]);
 
-            Invoke(nameof(InteractOut), 0.7f); // 재상호작용은 일단 0.7초 후에 가능 (애니메이션 출력시간)
+            Invoke(nameof(GatherOut), 0.7f); // 재상호작용은 일단 0.7초 후에 가능 (애니메이션 출력시간)
         }
         else
         {
@@ -91,26 +108,70 @@ public class TempInteractionManager : MonoBehaviour
         }
     }
 
-    private void InteractOut()
+    private void GatherOut()
     {
-        target.DecreaseDurability(1); // 숫자 만큼 감소시킴 나중에 능력치만큼 적용?
+        targetResource.DecreaseDurability(1); // 숫자 만큼 감소시킴 나중에 능력치만큼 적용?
         isInteracting = false;
         player.NavAgent.isStopped = false;
     }
 
+    private void UsePortal()
+    {
+        if (isInteracting)
+            return;
+        if (!isPortalReady)
+        {
+            Debug.Log("아직 포탈을 이용할 수 없습니다");
+            return;
+        }
+
+        isInteracting = true;
+        isPortalReady = false;
+
+        Vector3 portalPos = targetPortal.ConnectedPortal.position;
+        portalPos.y = 0;
+
+        player.NavAgent.Warp(portalPos);
+        player.NavAgent.ResetPath();
+
+        StartCoroutine(SetPortalTimer());
+        isInteracting = false;
+    }
+
+    IEnumerator SetPortalTimer()
+    {
+        int remainingTime = 0;
+        while (remainingTime < portalTimer)
+        {
+            yield return new WaitForSeconds(1f);
+            Debug.Log($"포탈 재이용까지 남은 시간 : {portalTimer - remainingTime}");
+            remainingTime += 1;
+        }
+        yield return new WaitForSeconds(0.5f);
+        isPortalReady = true;
+    }
+
     private void OnTriggerStay(Collider other)
     {
-        if (target == null & other.gameObject.CompareTag("Resource"))
+        if (targetResource == null && other.gameObject.CompareTag("Resource"))
         {
-            target = other.GetComponent<ResourceController>();
+            targetResource = other.GetComponent<ResourceController>();
+        }
+        else if (targetPortal == null && other.gameObject.CompareTag("Portal"))
+        {
+            targetPortal = other.GetComponent<Portal>();
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (target != null && other.gameObject.CompareTag("Resource"))
+        if (targetResource != null && other.gameObject.CompareTag("Resource"))
         {
-            target = null;
+            targetResource = null;
+        }
+        else if (targetPortal != null & other.gameObject.CompareTag("Portal"))
+        {
+            targetPortal = null;
         }
     }
 }

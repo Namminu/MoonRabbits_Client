@@ -47,7 +47,7 @@ public class TownManager : MonoBehaviour
 
     public Player MyPlayer { get; private set; }
 
-    private int sceneCode = 1;
+    private int sectorCode = 100;
 
     private void Awake()
     {
@@ -70,7 +70,7 @@ public class TownManager : MonoBehaviour
         {
             uiStart.gameObject.SetActive(true);
         }
-        else
+        else if (GameManager.Instance.UserName == null)
         {
             Connected();
         }
@@ -110,19 +110,19 @@ public class TownManager : MonoBehaviour
         {
             Nickname = GameManager.Instance.UserName,
             ClassCode = GameManager.Instance.ClassCode,
-            TargetScene = sceneCode,
+            TargetSector = sectorCode,
         };
 
         GameManager.Network.Send(enterPacket);
     }
 
-    public void Spawn(PlayerInfo playerInfo)
+    public void Enter(PlayerInfo playerInfo)
     {
         Vector3 spawnPos = CalculateSpawnPosition(playerInfo.Transform);
 
         ActivateGameUI();
-        MyPlayer = CreatePlayer(playerInfo, spawnPos);
-        MyPlayer.SetIsMine(true);
+        MyPlayer = SpawnPlayer(playerInfo, spawnPos);
+        MyPlayer.SetIsMine(true, playerInfo.CurrentSector);
         MyPlayer.SetNickname(playerInfo.Nickname);
         MyPlayer.SetStatInfo(playerInfo.StatInfo);
     }
@@ -135,7 +135,7 @@ public class TownManager : MonoBehaviour
         return spawnPos;
     }
 
-    public Player CreatePlayer(PlayerInfo playerInfo, Vector3 spawnPos)
+    public Player SpawnPlayer(PlayerInfo playerInfo, Vector3 spawnPos)
     {
         string playerResPath = playerDb.GetValueOrDefault(playerInfo.ClassCode, DefaultPlayerPath);
         Player playerPrefab = Resources.Load<Player>(playerResPath);
@@ -177,7 +177,7 @@ public class TownManager : MonoBehaviour
         }
     }
 
-    public void ReleasePlayer(int playerId)
+    public void DespawnPlayer(int playerId)
     {
         if (!playerList.TryGetValue(playerId, out var player))
             return;
@@ -198,7 +198,7 @@ public class TownManager : MonoBehaviour
         uiPlayer.gameObject.SetActive(true);
     }
 
-    public Player GetPlayerAvatarById(int playerId)
+    public Player GetPlayer(int playerId)
     {
         return playerList.TryGetValue(playerId, out var player) ? player : null;
     }
