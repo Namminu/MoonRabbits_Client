@@ -255,8 +255,9 @@ public class MyPlayer : MonoBehaviour
 
     private void ThrowGrenade()
     {
-        if (grenadeInput)
+        if (grenadeInput){
             skillManager.eventQ.Invoke();
+        }
     }
 
     private void SetTrap()
