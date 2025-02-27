@@ -12,6 +12,7 @@ public class InventoryUI : MonoBehaviour
     private int goldAmount;
 
     [SerializeField] [ReadOnly] private List<ItemSlotUI> itemSlots;
+    private bool hasInitialized = false;
 
     private void Awake()
     {
@@ -124,6 +125,11 @@ public class InventoryUI : MonoBehaviour
 
     private void OnEnable()
     {
+        if (hasInitialized)
+            return;  // 이미 초기화된 경우 실행하지 않음
+
+        hasInitialized = true;
+
         // InventoryManager에 저장된 인벤토리 데이터를 불러와 갱신
         if (InventoryManager.instance != null)
         {
