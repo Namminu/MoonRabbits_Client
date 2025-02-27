@@ -14,7 +14,15 @@ public class PartyMemberUI : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void UpdateUI()
@@ -39,8 +47,18 @@ public class PartyMemberUI : MonoBehaviour
 
             GameObject newMember = Instantiate(memberPrefab, memberContainer);
             newMember.transform.Find("Nickname").GetComponent<TMP_Text>().text = member.Nickname;
-            newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text =
-                $"{TownManager.Instance.GetPlayer(member.Id).level}";
+
+            switch (member.CurrentSector)
+            {
+                case 1:
+                    newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{TownManager.Instance.GetPlayer(member.Id).level}";
+                    break;
+                case 2:
+                    newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{ASectorManager.Instance.GetPlayerAvatarById(member.Id).level}";
+                    break;
+            }
+
+
 
             // 생성된 멤버 UI 저장
             memberUIs.Add(newMember);

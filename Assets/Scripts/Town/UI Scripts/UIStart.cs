@@ -34,6 +34,7 @@ public class UIStart : MonoBehaviour
     [SerializeField]
     private GameObject UILogin;
 
+    [SerializeField]
     private TMP_Text placeHolder;
 
     private int classIdx = 0;
@@ -49,7 +50,8 @@ public class UIStart : MonoBehaviour
 
     void Awake()
     {
-        placeHolder = inputNickname.placeholder.GetComponent<TMP_Text>();
+        // placeHolder = inputNickname.placeholder.GetComponent<TMP_Text>();
+
         btnBack.onClick.AddListener(SetServerUI);
         localServerBtn.onClick.AddListener(OnClickLocalServer);
         SetServerUI();
@@ -135,7 +137,8 @@ public class UIStart : MonoBehaviour
         serverUrl = inputNickname.text;
         port = inputPort.text;
         TownManager.Instance.TryConnectToServer(serverUrl, port);
-        SetNicknameUI();
+        gameObject.SetActive(false);
+        UILogin.SetActive(true);
     }
 
     private void ConfirmNickname()

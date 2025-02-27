@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     [Header("Player Settings")]
     [SerializeField]
     private UINameChat uiNameChat;
+    public UIPlayer uiPlayer;
 
     [Header("Movement Settings")]
     public float SmoothMoveSpeed = 10f; // 위치 보간 속도
@@ -90,11 +91,6 @@ public class Player : MonoBehaviour
     {
         this.nickname = nickname;
         uiNameChat.SetName(nickname);
-        if (IsMine)
-        {
-            TownManager.Instance.UiPlayer.SetNickname(nickname);
-            TownManager.Instance.UiPlayer.InitHp(3);
-        }
     }
 
     public void SetLevel(int level)
@@ -130,6 +126,37 @@ public class Player : MonoBehaviour
         }
 
         isInitialized = true;
+    }
+
+    public void SetCollision(CollisionPushInfo info)
+    {
+        var type = info.MyType;
+        switch (type)
+        {
+            case 1: SetMyCollision(info); break; //플레이어
+            case 2: SetMonsterCollision(info); break; // 몬스터
+        }
+    }
+
+    private void SetMyCollision(CollisionPushInfo info) // 내가 인식 했을경우
+    {
+        var type = info.TargetType;
+        switch (type)
+        {
+            case 1: //플레이어와의 충돌
+                break;
+            case 2: // 몬스터와의 충돌
+                break;
+            case 3: //덫?
+                break;
+            case 4: // 폭탄?
+                break;
+        }
+    }
+
+    private void SetMonsterCollision(CollisionPushInfo info) // 몬스터가 나에게 알려줄경우
+    {
+        //체력을 깎는다.
     }
 
     private void Update()
@@ -173,7 +200,7 @@ public class Player : MonoBehaviour
     {
         if (goalRot != Quaternion.identity)
         {
-            float t = Mathf.Clamp(Time.deltaTime * SmoothRotateSpeed, 0, 0.99f);
+            float t = Mathf.Clamp(Time.deltaTime * SmoothRotateSpeed, 0, 0.3f);
             transform.rotation = Quaternion.Lerp(transform.rotation, goalRot, t);
         }
     }
@@ -339,29 +366,30 @@ public class Player : MonoBehaviour
         abilityPoint = statInfo.AbilityPoint;
 
         if (IsMine)
-            TownManager.Instance.UiPlayer.SetStatInfo(statInfo);
+        {
+            if(uiPlayer == null) Debug.LogError("uiPlayer is null. 먼저 세팅돼야함");
+            uiPlayer.SetStatInfo(statInfo);
+            uiPlayer.SetNickname(nickname);
+            uiPlayer.InitHp(3);
+        }
     }
 
     public void SetExp(int updatedExp)
     {
-        Debug.Log("경험치 응답 실행");
         exp = updatedExp;
         if (exp > targetExp)
         {
             Debug.LogError($"exp({exp}) > targetExp({targetExp})");
             return;
         }
-        Debug.Log($"updatedExp : {updatedExp}");
-
-        if (IsMine)
-            TownManager.Instance.UiPlayer.SetExp(updatedExp, targetExp);
+        if (IsMine) uiPlayer.SetExp(updatedExp, targetExp);
     }
 
     public void InvestPoint(StatInfo statInfo)
     {
         abilityPoint = statInfo.AbilityPoint;
         if (IsMine)
-            TownManager.Instance.UiPlayer.SetAbilityPoint(abilityPoint);
+            uiPlayer.SetAbilityPoint(abilityPoint);
 
         if (statInfo.Stamina > stamina)
         {
@@ -377,7 +405,7 @@ public class Player : MonoBehaviour
         }
 
         if (IsMine && abilityPoint <= 0)
-            TownManager.Instance.UiPlayer.DeActiveAP();
+            uiPlayer.DeActiveAP();
     }
 
     private void SetStamina(int stamina)
@@ -386,14 +414,14 @@ public class Player : MonoBehaviour
             this.cur_stamina += (stamina - this.stamina);
         this.stamina = stamina;
         if (IsMine)
-            TownManager.Instance.UiPlayer.SetStamina(cur_stamina, stamina, abilityPoint > 0);
+            uiPlayer.SetStamina(cur_stamina, stamina, abilityPoint > 0);
     }
 
     private void SetPickSpeed(int pickSpeed)
     {
         this.pickSpeed = pickSpeed;
         if (IsMine)
-            TownManager.Instance.UiPlayer.SetPickSpeed(pickSpeed, abilityPoint > 0);
+            uiPlayer.SetPickSpeed(pickSpeed, abilityPoint > 0);
     }
 
     private void SetMoveSpeed(int moveSpeed)
@@ -405,7 +433,7 @@ public class Player : MonoBehaviour
 
         this.moveSpeed = moveSpeed;
         if (IsMine)
-            TownManager.Instance.UiPlayer.SetMoveSpeed(moveSpeed, abilityPoint > 0);
+            uiPlayer.SetMoveSpeed(moveSpeed, abilityPoint > 0);
     }
 
     public void LevelUp(int updatedLevel, int newTargetExp, int updatedExp, int updatedAbilityPoint)
@@ -416,7 +444,7 @@ public class Player : MonoBehaviour
 
         Debug.Log($"레벨업 응답 실행 {level}/ap{abilityPoint}/{exp}/{targetExp} isMine?{IsMine}");
         if (IsMine)
-            TownManager.Instance.UiPlayer.LevelUp(
+            uiPlayer.LevelUp(
                 updatedLevel,
                 newTargetExp,
                 updatedExp,
@@ -434,5 +462,11 @@ public class Player : MonoBehaviour
 
         // 레벨업 이펙트
         // TownManager.Instance.GetPlayerAvatarById(playerId).이펙트함수;
+    }
+    
+    public void SetUI(UIPlayer uiPlayer)
+    {
+        this.uiPlayer = uiPlayer;
+        this.uiPlayer.gameObject.SetActive(true);
     }
 }

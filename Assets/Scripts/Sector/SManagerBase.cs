@@ -15,7 +15,7 @@ public abstract class SManagerBase : MonoBehaviour
     private Transform despawnArea;
 
     [SerializeField]
-    private EventSystem eSystem;
+    public EventSystem eSystem;
     public EventSystem ESystem => eSystem;
 
     [SerializeField]
@@ -52,7 +52,6 @@ public abstract class SManagerBase : MonoBehaviour
     private void ActivateUI()
     {
         uiChat.gameObject.SetActive(true);
-        // uiPlayer.gameObject.SetActive(true);
     }
 
     public void Enter(PlayerInfo playerInfo)
@@ -61,9 +60,11 @@ public abstract class SManagerBase : MonoBehaviour
         MyPlayer = SpawnPlayer(playerInfo);
         // [2] "내" 프리펩인 걸 선언
         MyPlayer.SetIsMine(true, playerInfo.CurrentSector);
+        MyPlayer.SetUI(UiPlayer);
         // [3] 머리 위 닉네임 UI에 이름 박음
-        ActivateUI();
         // UiPlayer.SetNickname(playerInfo.Nickname);
+        MyPlayer.SetNickname(playerInfo.Nickname);
+        MyPlayer.SetStatInfo(playerInfo.StatInfo);
     }
 
     public Player SpawnPlayer(PlayerInfo playerInfo)

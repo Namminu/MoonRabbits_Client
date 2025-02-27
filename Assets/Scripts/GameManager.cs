@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
         JsonFileLoader loader = new JsonFileLoader();
 
         // 단일 JSON 파일 로드
-        string filePath = Path.Combine(Application.streamingAssetsPath, "Quest.json");
+        string filePath = Path.Combine(Application.streamingAssetsPath, "material_item_data.json");
 
         if (!File.Exists(filePath))
         {
@@ -93,10 +93,12 @@ public class GameManager : MonoBehaviour
             case "Sector1":
                 yield return new WaitUntil(() => S1Manager.Instance != null);
                 S1Manager.Instance.Enter(playerInfo);
+                MyPlayer.instance.eSystem = S1Manager.Instance.ESystem;
                 break;
             case "Sector2":
                 yield return new WaitUntil(() => S2Manager.Instance != null);
                 S2Manager.Instance.Enter(playerInfo);
+                MyPlayer.instance.eSystem = S2Manager.Instance.ESystem;
                 break;
         }
     }
