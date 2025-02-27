@@ -422,6 +422,8 @@ class PacketHandler
         if (packet is not S2CResourcesList pkt)
             return;
         Debug.Log($"S2CResourceList 패킷 무사 도착 : {pkt}");
+
+        ResourcesManager.Instance.ResourcesInit(pkt);
     }
 
     public static void S2CUpdateDurabilityHandler(PacketSession session, IMessage packet)
@@ -429,6 +431,7 @@ class PacketHandler
         if (packet is not S2CUpdateDurability pkt)
             return;
         Debug.Log($"S2CUpdateDurability 패킷 무사 도착 : {pkt}");
+        ResourcesManager.Instance.ResourcesUpdateDurability(pkt);
     }
 
     public static void S2CGatheringStartHandler(PacketSession session, IMessage packet)
@@ -436,6 +439,7 @@ class PacketHandler
         if (packet is not S2CGatheringStart pkt)
             return;
         Debug.Log($"S2CGatheringStart 패킷 무사 도착 : {pkt}");
+        ResourcesManager.Instance.ResourcesGatheringStart(pkt);
     }
 
     public static void S2CGatheringSkillCheckHandler(PacketSession session, IMessage packet)
@@ -443,6 +447,7 @@ class PacketHandler
         if (packet is not S2CGatheringSkillCheck pkt)
             return;
         Debug.Log($"S2CGatheringSkillCheck 패킷 무사 도착 : {pkt}");
+        ResourcesManager.Instance.ResourcesGatheringSkillCheck(pkt);
     }
 
     public static void S2CGatheringDoneHandler(PacketSession session, IMessage packet)
@@ -518,9 +523,10 @@ class PacketHandler
     {
         if (packet is not S2CSectorLeave pkt)
             return;
-        Debug.Log($"S2CSectorLeave 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CSectorMove 패킷 무사 도착 : {pkt}");
 
-        // SceneManager.LoadScene(GameManager.TownScene);
+         //Scene currentScene = SceneManager.GetActiveScene();
+
     }
 
     public static void S2CInPortalHandler(PacketSession session, IMessage packet)
