@@ -12,7 +12,7 @@ public class InvenSlotEditor : Editor
 		base.OnInspectorGUI();
 
 		ItemSlotUI slot = (ItemSlotUI)target;
-		if(GUILayout.Button("테스트 아이템 추가"))
+		if(GUILayout.Button("Test Button"))
 		{
 			slot.AddTestItem();
 			EditorUtility.SetDirty(slot);

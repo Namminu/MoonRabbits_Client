@@ -62,7 +62,7 @@ public abstract class SManagerBase : MonoBehaviour
         MyPlayer.SetIsMine(true, playerInfo.CurrentSector);
         MyPlayer.SetUI(UiPlayer);
         // [3] 머리 위 닉네임 UI에 이름 박음
-        // UiPlayer.SetNickname(playerInfo.Nickname);
+        ActivateUI();
         MyPlayer.SetNickname(playerInfo.Nickname);
         MyPlayer.SetStatInfo(playerInfo.StatInfo);
     }
