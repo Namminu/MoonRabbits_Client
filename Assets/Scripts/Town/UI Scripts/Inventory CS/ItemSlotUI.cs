@@ -98,7 +98,7 @@ public class ItemSlotUI
         }
 
         // 아이템 스택이 1보다 큰 경우에만 텍스트 표시
-        if (stack > 1)
+        if (stack > 0)
         {
             text_ItemAmount.text = stack.ToString();
             text_ItemAmount.enabled = true;

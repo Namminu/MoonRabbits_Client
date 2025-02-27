@@ -7,7 +7,7 @@ public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager instance { get; private set; }  // 싱글톤 인스턴스
 
-    // 인벤토리 슬롯 데이터. key: 슬롯 인덱스, value: InventorySlotData
+    // 인벤토리 슬롯 데이터. key: 슬롯 인덱스, value: MaterialItem
     private Dictionary<int, MaterialItem> inventoryDictionary  = new Dictionary<int, MaterialItem>();
 
     // InventoryUI.cs에서 인벤토리 슬롯들을 관리하는 컴포넌트 (InventoryUI.cs 파일 참조; 내용 확인 불가한 경우 Inspector에 할당)
@@ -32,40 +32,45 @@ public class InventoryManager : MonoBehaviour
     /// InventoryUI의 RefreshInventory 메서드를 호출하여 UI도 갱신합니다.
     /// </summary>
     /// <param name="pkt">S2CInventoryUpdate 패킷</param>
-    // public void UpdateInventoryData(S2CInventoryUpdate pkt)
-    // {
-    //     inventoryDictionary.Clear();
+    public void UpdateInventoryData(S2CInventoryUpdate pkt)
+    {
+        inventoryDictionary.Clear();
 
-    //     foreach (var slot in pkt.Slots)
-    //     {
-    //         // slot.ItemId와 slot.Stack이 전달됩니다.
-    //         // 여기서는 예시로 ItemDatabase.GetMaterialItemData()를 호출해 MaterialItemData를 조회한다고 가정합니다.
+        foreach (var slot in pkt.Slots)
+        {
+            // 먼저 slot.itemId가 null인지 확인하여 빈 슬롯인 경우 처리
+            if (slot.ItemId == null)
+            {
+                // 예: 빈 슬롯인 경우 특별히 처리를 하거나 그냥 건너뛰기
+                Debug.Log($"슬롯 {slot.SlotIdx}은 빈 슬롯입니다.");
+                continue;
+            }
 
-    //         MaterialItemData itemData = ItemDataLoader; // [3][4]
+            // slot.ItemId가 null이 아닌 경우 MaterialItemData를 찾아 MaterialItem 생성
+            MaterialItemData itemData = ItemDataLoader.MaterialItemsList.Find(item => item.ItemId == slot.ItemId);
 
-    //         if (itemData != null)
-    //         {
-    //             // MaterialItem 생성자에서 ItemData와 초기 stack을 할당합니다. [1]
-    //             MaterialItem materialItem = new MaterialItem(itemData, slot.Stack);
-    //             inventoryDictionary.Add(slot.SlotIdx, materialItem);
-    //         }
-    //         else
-    //         {
-    //             Debug.LogWarning("아이템 데이터가 존재하지 않음. ItemId: " + slot.ItemId);
-    //         }
-    //     }
-    //     Debug.Log("S2CInventoryUpdate 패킷 처리 완료: " + pkt);
+            if (itemData != null)
+            {
+                MaterialItem materialItem = new MaterialItem(itemData, slot.Stack);
+                inventoryDictionary.Add(slot.SlotIdx, materialItem);
+            }
+            else
+            {
+                Debug.LogWarning("아이템 데이터가 존재하지 않음. ItemId: " + slot.ItemId);
+            }
+        }
 
-    //     // 갱신된 인벤토리 데이터를 UI에 반영합니다.
-    //     if (inventoryUI != null)
-    //     {
-    //         inventoryUI.RefreshInventory(inventoryDictionary);
-    //     }
-    //     else
-    //     {
-    //         Debug.LogWarning("InventoryUI 참조가 없음");
-    //     }
-    // }
+        Debug.Log("S2CInventoryUpdate 패킷 처리 완료: " + pkt);
+
+        if (inventoryUI != null)
+        {
+            inventoryUI.RefreshInventory(inventoryDictionary);
+        }
+        else
+        {
+            Debug.LogWarning("InventoryUI 참조가 없음");
+        }
+    }
 
     // ----------------------------
     // 인벤토리 관련 패킷 전송 함수들
@@ -116,20 +121,21 @@ public class InventoryManager : MonoBehaviour
     /// 인벤토리 정렬 패킷 전송 함수
     /// sortedSlots: 정렬된 인벤토리 슬롯 데이터를 리스트 형태로 전달
     /// </summary>
-    public void SendInventorySort(List<InventorySlotData> sortedSlots)
+    public void SendInventorySort(List<MaterialItem> sortedSlots)
     {
         C2SInventorySort packet = new C2SInventorySort();
-        foreach (var slotData in sortedSlots)
+        foreach (var materialItem in sortedSlots)
         {
+            // MaterialItem의 필요한 값을 사용해 InventorySlot 객체 생성
             InventorySlot newSlot = new InventorySlot
             {
-                SlotIdx = slotData.slotIdx,
-                ItemId = slotData.itemId,
-                Stack = slotData.stack
+                SlotIdx = materialItem.SlotIdx,
+                ItemId = materialItem.ItemData.ItemId,
+                Stack = materialItem.CurItemStack
             };
             packet.Slots.Add(newSlot);
         }
-        GameManager.Network.Send(packet);
+    GameManager.Network.Send(packet);
     }
 }
 

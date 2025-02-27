@@ -457,6 +457,7 @@ class PacketHandler
         if (packet is not S2CInventoryUpdate pkt)
             return;
         Debug.Log($"S2CInventoryUpdate 패킷 무사 도착 : {pkt}");
+        InventoryManager.instance.UpdateInventoryData(pkt);
     }
 
     #endregion

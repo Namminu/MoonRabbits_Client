@@ -15,16 +15,16 @@ public class InventoryUI : MonoBehaviour
 
     private void Awake()
     {
-        /* contentArea ³»ÀÇ ÀÎº¥Åä¸® ½½·ÔµéÀ» List : itemSlots ¿¡ ÇÒ´ç */
+        /* contentArea ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½Ôµï¿½ï¿½ï¿½ List : itemSlots ï¿½ï¿½ ï¿½Ò´ï¿½ */
         if (contentArea != null)
             itemSlots = new List<ItemSlotUI>(contentArea.GetComponentsInChildren<ItemSlotUI>());
 
 
-        /* ½½·Ôµé¿¡ ÀÎµ¦½º ³Ñ¹ö ºÎ¿© °úÁ¤ */
+        /* ï¿½ï¿½ï¿½Ôµé¿¡ ï¿½Îµï¿½ï¿½ï¿½ ï¿½Ñ¹ï¿½ ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ */
 		AssignSlotIndex();
 
-        // DB¿¡¼­ ÀÎº¥Åä¸® Á¤º¸ ¹Þ¾Æ¿À´Â °úÁ¤..?
-		// AddItem(DB¿¡¼­ ¹Þ¾Æ¿Â Á¤º¸)?
+        // DBï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½..?
+		// AddItem(DBï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ ï¿½ï¿½ï¿½ï¿½)?
 
 	}
 
@@ -99,26 +99,29 @@ public class InventoryUI : MonoBehaviour
 		}
 	}
 
-        /// <summary>
-    /// InventoryManager¿¡¼­ ³Ñ°Ü¹ÞÀº inventoryDictionary¸¦ ¹ÙÅÁÀ¸·Î UI¸¦ °»½ÅÇÕ´Ï´Ù.
-    /// °¢ ItemSlotUIÀÇ ½½·Ô ¹øÈ£(SlotIndex)¿¡ µû¶ó ÇØ´ç ½½·ÔÀÇ itemId¿Í stackÀ» ¾÷µ¥ÀÌÆ®ÇÏ°Å³ª,
-    /// µ¥ÀÌÅÍ°¡ ¾ø´Â ½½·ÔÀº Å¬¸®¾îÇÕ´Ï´Ù.
+    /// <summary>
+    /// InventoryManagerï¿½ï¿½ï¿½ï¿½ ï¿½Ñ°Ü¹ï¿½ï¿½ï¿½ inventoryDictionaryï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ UIï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
+    /// ï¿½ï¿½ ItemSlotUIï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£(SlotIndex)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ itemIdï¿½ï¿½ stackï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½Ï°Å³ï¿½,
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
     /// </summary>
-    /// <param name="inventoryDictionary">Å°°¡ ½½·Ô ÀÎµ¦½º, °ªÀÌ InventorySlotDataÀÎ µñ¼Å³Ê¸®</param>
+    /// <param name="inventoryDictionary">Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ InventorySlotDataï¿½ï¿½ ï¿½ï¿½Å³Ê¸ï¿½</param>
     public void RefreshInventory(Dictionary<int, MaterialItem> inventoryItems)
     {
+        Debug.Log("RefreshInventory In");
+        Debug.Log("itemSlots" + itemSlots.Count);
         foreach (var slotUI in itemSlots)
         {
+            Debug.Log("ë“¤ì–´ì˜¤ë‚˜?");
             int slotIndex = slotUI.GetItemIndex();
             if (inventoryItems.TryGetValue(slotIndex, out MaterialItem materialItem))
             {
-                // MaterialItemÀ» Àü´ÞÇÏ¸é UpdateSlot ³»ºÎ¿¡¼­ ItemData¸¦ È°¿ëÇÏ¿© ¾ÆÀÌÅÛ ID, ¾ÆÀÌÄÜ µîÀ» °»½ÅÇÕ´Ï´Ù.
-                slotUI.UpdateSlot(materialItem, materialItem.CurItemStack);
+                // MaterialItemï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ UpdateSlot ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ ItemDataï¿½ï¿½ È°ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ID, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
+                slotUI.AddItem(materialItem);
             }
             else
-            {
+          {
                 slotUI.ClearSlot();
-            }
+          }
         }
     }
 
