@@ -125,6 +125,7 @@ public class InventoryManager : MonoBehaviour
     /// <summary>
     /// 인벤토리 정렬 패킷 전송 함수
     /// sortedSlots: 정렬된 인벤토리 슬롯 데이터를 리스트 형태로 전달
+    /// 클라이언트가 종료될 때, 인벤토리 상태를 전하는 용도로도 사용할 수 있습니다.
     /// </summary>
     public void SendInventorySort(List<MaterialItem> sortedSlots)
     {
