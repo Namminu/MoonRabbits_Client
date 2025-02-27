@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
 
         // 단일 JSON 파일 로드
         string questFilePath = Path.Combine(Application.streamingAssetsPath, "Quest.json");
+        string filePath = Path.Combine(Application.streamingAssetsPath, "material_item_data.json");
 
         if (!File.Exists(questFilePath))
         {

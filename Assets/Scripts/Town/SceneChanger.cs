@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
+// using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -58,3 +58,9 @@ public class SceneChanger : MonoBehaviour, IMouseHoverable
     }
     #endregion
 }
+// 	public void OnMouseHoverExit()
+// 	{
+// 		transform.localScale = originScale;
+// 	}
+// 	#endregion
+// }

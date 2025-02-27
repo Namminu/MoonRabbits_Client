@@ -226,7 +226,7 @@ class PacketHandler
     {
         if (packet is not S2CPlayerLocation pkt)
             return;
-        // Debug.Log($"S2CPlayerLocation 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CPlayerLocation 패킷 무사 도착 : {pkt}");
 
         TransformInfo transform = pkt.Transform;
         Vector3 position = new Vector3(transform.PosX, transform.PosY, transform.PosZ);
@@ -544,7 +544,12 @@ class PacketHandler
             return;
         Debug.Log($"S2CAddExp 패킷 무사 도착 : {pkt}");
 
-        TownManager.Instance.MyPlayer.SetExp(pkt.UpdatedExp);
+        if (TownManager.Instance.MyPlayer != null)
+            TownManager.Instance.MyPlayer.SetExp(pkt.UpdatedExp);
+        else if (S1Manager.Instance.MyPlayer != null)
+            S1Manager.Instance.MyPlayer.SetExp(pkt.UpdatedExp);
+        else if (S2Manager.Instance.MyPlayer != null)
+            S2Manager.Instance.MyPlayer.SetExp(pkt.UpdatedExp);
     }
 
     public static void S2CLevelUpHandler(PacketSession session, IMessage packet)
@@ -553,27 +558,53 @@ class PacketHandler
             return;
         Debug.Log($"S2CLevelUp 패킷 무사 도착 : {pkt}");
 
-        if (
-            TownManager.Instance.MyPlayer != null
-            && pkt.PlayerId == TownManager.Instance.MyPlayer.PlayerId
-        )
+        if (TownManager.Instance.MyPlayer != null)
         {
-            Debug.Log(
-                $"1. 패킷플레이어ID:{pkt.PlayerId}, 내플레이어ID:{TownManager.Instance.MyPlayer.PlayerId}"
-            );
-            TownManager.Instance.MyPlayer.LevelUp(
-                pkt.UpdatedLevel,
-                pkt.NewTargetExp,
-                pkt.UpdatedExp,
-                pkt.AbilityPoint
-            );
+            if (pkt.PlayerId == TownManager.Instance.MyPlayer.PlayerId)
+            {
+                TownManager.Instance.MyPlayer.LevelUp(
+                    pkt.UpdatedLevel,
+                    pkt.NewTargetExp,
+                    pkt.UpdatedExp,
+                    pkt.AbilityPoint
+                );
+            }
+            else
+            {
+                TownManager.Instance.GetPlayer(pkt.PlayerId).LevelUpOther();
+            }
         }
-        else
+        else if (S1Manager.Instance.MyPlayer != null)
         {
-            Debug.Log(
-                $"2. 패킷플레이어ID:{pkt.PlayerId}, 내플레이어ID:{TownManager.Instance.MyPlayer.PlayerId}"
-            );
-            TownManager.Instance.GetPlayer(pkt.PlayerId).LevelUpOther();
+            if (pkt.PlayerId == S1Manager.Instance.MyPlayer.PlayerId)
+            {
+                S1Manager.Instance.MyPlayer.LevelUp(
+                    pkt.UpdatedLevel,
+                    pkt.NewTargetExp,
+                    pkt.UpdatedExp,
+                    pkt.AbilityPoint
+                );
+            }
+            else
+            {
+                S1Manager.Instance.GetPlayer(pkt.PlayerId).LevelUpOther();
+            }
+        }
+        else if (S2Manager.Instance.MyPlayer != null)
+        {
+            if (pkt.PlayerId == S2Manager.Instance.MyPlayer.PlayerId)
+            {
+                S2Manager.Instance.MyPlayer.LevelUp(
+                    pkt.UpdatedLevel,
+                    pkt.NewTargetExp,
+                    pkt.UpdatedExp,
+                    pkt.AbilityPoint
+                );
+            }
+            else
+            {
+                S2Manager.Instance.GetPlayer(pkt.PlayerId).LevelUpOther();
+            }
         }
     }
 
@@ -583,7 +614,24 @@ class PacketHandler
             return;
         Debug.Log($"S2CInvestPoint 패킷 무사 도착 : {pkt}");
 
-        TownManager.Instance.MyPlayer.InvestPoint(pkt.StatInfo);
+        if (TownManager.Instance.MyPlayer != null)
+            TownManager.Instance.MyPlayer.InvestPoint(pkt.StatInfo);
+        else if (S1Manager.Instance.MyPlayer != null)
+            S1Manager.Instance.MyPlayer.InvestPoint(pkt.StatInfo);
+        else if (S2Manager.Instance.MyPlayer != null)
+            S2Manager.Instance.MyPlayer.InvestPoint(pkt.StatInfo);
     }
+    #endregion
+
+    #region Item & Inventory
+
+    public static void S2CInventoryUpdate(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CInventoryUpdate pkt)
+            return;
+        Debug.Log($"S2CInventoryUpdate 패킷 무사 도착 : {pkt}");
+        InventoryManager.instance.UpdateInventoryData(pkt);
+    }
+
     #endregion
 }
