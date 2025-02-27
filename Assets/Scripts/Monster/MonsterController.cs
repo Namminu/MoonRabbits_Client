@@ -1,5 +1,7 @@
+using System.Collections;
 using Google.Protobuf.Protocol;
 using UnityEngine;
+using UnityEngine.AI;
 
 // 한 칸에 Extents (34.52, 0, 34.52)
 
@@ -21,6 +23,7 @@ public class MonsterController : MonoBehaviour
     [SerializeField]
     private Transform monsterArea;
     private const float maxDistance = 34f;
+    private CapsuleCollider _collider;
 
     [SerializeField]
     private Transform target;
