@@ -107,6 +107,13 @@ public class GameManager : MonoBehaviour
         StartCoroutine(SpawnPlayer(pkt));
     }
 
+    private void OnApplicationQuit()
+    {
+        network.Discconect();
+        Debug.Log("애플리케이션이 종료됩니다.");
+        // 애플리케이션 종료 시 처리할 작업을 여기에 추가하세요
+    }
+
     IEnumerator EnterScene(string sceneName, PlayerInfo playerInfo)
     {
         switch (sceneName)
