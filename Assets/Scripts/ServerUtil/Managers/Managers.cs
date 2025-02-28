@@ -79,8 +79,6 @@ public class Managers : MonoBehaviour
     // 모든 매니저를 초기화 상태로 리셋
     public static void Clear()
     {
-
-        Scene.Clear();
         Pool.Clear();
     }
 }

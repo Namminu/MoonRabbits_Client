@@ -14,7 +14,11 @@ public class SceneTransition : MonoBehaviour
     public RectTransform topShutter;  // 위쪽 셔터 패널
     public RectTransform bottomShutter; // 아래쪽 셔터 패널
 
+    private Dictionary<string, Sprite> _spriteDict = new();
+
     public CanvasGroup cg;
+
+    public Image image;
 
     public Slider progressBar;
 
@@ -29,6 +33,12 @@ public class SceneTransition : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             isDondestroy = true;
             gameObject.SetActive(false);
+
+            var resources = Resources.LoadAll<Sprite>("SceneTransition");
+            foreach (var resource in resources)
+            {
+                _spriteDict.Add(resource.name, resource);
+            }
             return;
         }
         LoadScene();
@@ -40,13 +50,16 @@ public class SceneTransition : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    public void LoadScene()
+    private void LoadScene()
     {
         StartCoroutine(ShutterAndLoad());
     }
 
     private IEnumerator ShutterAndLoad()
     {
+        if (_spriteDict.ContainsKey(sceneName))
+            image.sprite = _spriteDict[sceneName];
+
         tmp.text = sceneName;
         yield return CloseShutters();
         yield return FadeIn();

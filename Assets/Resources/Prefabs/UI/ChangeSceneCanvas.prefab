@@ -375,7 +375,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 1
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 500
@@ -435,6 +435,7 @@ MonoBehaviour:
   topShutter: {fileID: 8730930304538219724}
   bottomShutter: {fileID: 3192348521063086985}
   cg: {fileID: 7143229165219011139}
+  image: {fileID: 1735928167504695452}
   progressBar: {fileID: 8572061392248567469}
   tmp: {fileID: 3823911904600892700}
   sceneName: Sector1

@@ -1,10 +1,7 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using Google.Protobuf.Protocol;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -30,6 +27,8 @@ public class GameManager : MonoBehaviour
             _instance = this;
 
             network = new NetworkManager();
+
+            SceneManagerEx.SetTransition();
 
             DontDestroyOnLoad(gameObject);
         }
