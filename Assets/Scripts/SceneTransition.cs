@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -10,15 +9,13 @@ public class SceneTransition : MonoBehaviour
 {
     private bool _isPersisting = false; // 씬 전환 시 오브젝트를 유지할지 여부
 
-    public RectTransform topShutter;  // 위쪽 셔터 패널
-    public RectTransform bottomShutter; // 아래쪽 셔터 패널
+    [SerializeField] private RectTransform topShutter;  // 위쪽 셔터 패널
+    [SerializeField] private RectTransform bottomShutter; // 아래쪽 셔터 패널
 
-    private Dictionary<string, Sprite> _spriteDict = new(); // 스프라이트 캐시
-
-    public CanvasGroup cg; // 캔버스 그룹
-    public Image image; // 씬 전환 이미지
-    public Slider progressBar; // 프로그래스 바
-    public TextMeshProUGUI tmp; // 씬 이름 표시 텍스트
+    [SerializeField] private CanvasGroup cg; // 캔버스 그룹
+    [SerializeField] private Image image; // 씬 전환 이미지
+    [SerializeField] private Slider progressBar; // 프로그래스 바
+    [SerializeField] private TextMeshProUGUI tmp; // 씬 이름 표시 텍스트
 
     private const string DefaultSceneName = "Sector1"; // 기본 씬 이름
     [SerializeField] private string sceneName = DefaultSceneName; // 현재 씬 이름
@@ -33,13 +30,6 @@ public class SceneTransition : MonoBehaviour
 
             // ResourceManager를 통해 모든 스프라이트 로드
             Managers.Resource.LoadAllSprites("SceneTransition");
-
-            // 스프라이트 이름을 가져와서 캐시에 추가
-            foreach (var spriteName in Managers.Resource.GetSpriteNames())
-            {
-                Sprite sprite = Managers.Resource.GetSprite(spriteName);
-                _spriteDict[sprite.name] = sprite; // 스프라이트를 딕셔너리에 추가
-            }
             return;
         }
         LoadScene();
@@ -59,7 +49,8 @@ public class SceneTransition : MonoBehaviour
     private IEnumerator ShutterAndLoad()
     {
         // 씬 이름에 해당하는 스프라이트 설정
-        if (_spriteDict.TryGetValue(sceneName, out var sprite))
+        Sprite sprite = Managers.Resource.GetSprite(sceneName);
+        if (sprite != null)
             image.sprite = sprite;
 
         tmp.text = sceneName; // 씬 이름 텍스트 설정
