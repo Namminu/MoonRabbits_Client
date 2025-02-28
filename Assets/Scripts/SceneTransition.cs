@@ -1,6 +1,7 @@
 using System.Collections;
 using DG.Tweening;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -35,6 +36,46 @@ public class SceneTransition : MonoBehaviour
         LoadScene();
     }
 
+    private void SetCam()
+    {
+        // 모든 AudioListener를 찾아 비활성화
+        AudioListener[] listeners = FindObjectsOfType<AudioListener>();
+        foreach (var listener in listeners)
+        {
+            listener.enabled = false; // 모든 리스너 비활성화
+        }
+
+        // 메인 카메라 찾기
+        Camera mainCam = Camera.main;
+        if (mainCam == null) return; // 메인 카메라가 없으면 종료
+
+        // 메인 카메라에 AudioListener가 없으면 추가
+        var listenerComponent = mainCam.GetComponent<AudioListener>();
+        if (listenerComponent == null)
+        {
+            listenerComponent = mainCam.gameObject.AddComponent<AudioListener>();
+        }
+        listenerComponent.enabled = true; // 메인 카메라의 리스너 활성화
+    }
+
+    private void SetSound()
+    {
+        SetCam();
+
+        switch (sceneName)
+        {
+            case "Town":
+                SoundManager.Instance.Play(0, Define.Sound.Bgm);
+                break;
+            case "Sector1":
+                SoundManager.Instance.Play(19, Define.Sound.Bgm);
+                break;
+            case "Sector2":
+                SoundManager.Instance.Play(15, Define.Sound.Bgm);
+                break;
+        }
+    }
+
     public void SetScene(string sceneName)
     {
         this.sceneName = sceneName; // 씬 이름 설정
@@ -60,6 +101,7 @@ public class SceneTransition : MonoBehaviour
         ApplyRenderSettings(); // 렌더 설정 적용
         yield return FadeOut(); // 페이드 아웃
         yield return OpenShutters(); // 셔터 열기
+        SetSound();
 
         gameObject.SetActive(false); // UI 비활성화
     }
