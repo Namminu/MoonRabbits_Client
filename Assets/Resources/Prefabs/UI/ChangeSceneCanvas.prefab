@@ -311,7 +311,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4659211454349920219}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
@@ -506,8 +506,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Sector1
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b322ed54ae39fcd4785a7e4fdc42bd1e, type: 2}
-  m_sharedMaterial: {fileID: 655808461212083387, guid: b322ed54ae39fcd4785a7e4fdc42bd1e,
+  m_fontAsset: {fileID: 11400000, guid: afac851b475d1994b9fa416b740d7f70, type: 2}
+  m_sharedMaterial: {fileID: 655808461212083387, guid: afac851b475d1994b9fa416b740d7f70,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}

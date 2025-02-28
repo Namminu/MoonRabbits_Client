@@ -8,36 +8,37 @@ using UnityEngine.UI;
 
 public class SceneTransition : MonoBehaviour
 {
-    // Start is called before the first frame update
-    private bool isDondestroy = false;
+    private bool _isPersisting = false; // 씬 전환 시 오브젝트를 유지할지 여부
 
     public RectTransform topShutter;  // 위쪽 셔터 패널
     public RectTransform bottomShutter; // 아래쪽 셔터 패널
 
-    private Dictionary<string, Sprite> _spriteDict = new();
+    private Dictionary<string, Sprite> _spriteDict = new(); // 스프라이트 캐시
 
-    public CanvasGroup cg;
+    public CanvasGroup cg; // 캔버스 그룹
+    public Image image; // 씬 전환 이미지
+    public Slider progressBar; // 프로그래스 바
+    public TextMeshProUGUI tmp; // 씬 이름 표시 텍스트
 
-    public Image image;
-
-    public Slider progressBar;
-
-    public TextMeshProUGUI tmp;
-
-    [SerializeField] private string sceneName = "Sector1";
+    private const string DefaultSceneName = "Sector1"; // 기본 씬 이름
+    [SerializeField] private string sceneName = DefaultSceneName; // 현재 씬 이름
 
     private void OnEnable()
     {
-        if (isDondestroy == false)
+        if (!_isPersisting)
         {
             DontDestroyOnLoad(gameObject);
-            isDondestroy = true;
+            _isPersisting = true;
             gameObject.SetActive(false);
 
-            var resources = Resources.LoadAll<Sprite>("SceneTransition");
-            foreach (var resource in resources)
+            // ResourceManager를 통해 모든 스프라이트 로드
+            Managers.Resource.LoadAllSprites("SceneTransition");
+
+            // 스프라이트 이름을 가져와서 캐시에 추가
+            foreach (var spriteName in Managers.Resource.GetSpriteNames())
             {
-                _spriteDict.Add(resource.name, resource);
+                Sprite sprite = Managers.Resource.GetSprite(spriteName);
+                _spriteDict[sprite.name] = sprite; // 스프라이트를 딕셔너리에 추가
             }
             return;
         }
@@ -46,41 +47,37 @@ public class SceneTransition : MonoBehaviour
 
     public void SetScene(string sceneName)
     {
-        this.sceneName = sceneName;
-        gameObject.SetActive(true);
+        this.sceneName = sceneName; // 씬 이름 설정
+        gameObject.SetActive(true); // 씬 전환 UI 활성화
     }
 
     private void LoadScene()
     {
-        StartCoroutine(ShutterAndLoad());
+        StartCoroutine(ShutterAndLoad()); // 씬 전환 코루틴 시작
     }
 
     private IEnumerator ShutterAndLoad()
     {
-        if (_spriteDict.ContainsKey(sceneName))
-            image.sprite = _spriteDict[sceneName];
+        // 씬 이름에 해당하는 스프라이트 설정
+        if (_spriteDict.TryGetValue(sceneName, out var sprite))
+            image.sprite = sprite;
 
-        tmp.text = sceneName;
-        yield return CloseShutters();
-        yield return FadeIn();
+        tmp.text = sceneName; // 씬 이름 텍스트 설정
+        yield return CloseShutters(); // 셔터 닫기
+        yield return FadeIn(); // 페이드 인
+        yield return LoadSceneAsync(); // 씬 비동기 로드
+        ApplyRenderSettings(); // 렌더 설정 적용
+        yield return FadeOut(); // 페이드 아웃
+        yield return OpenShutters(); // 셔터 열기
 
-        yield return LoadSceneAsync();
-
-        ApplyRenderSettings();
-
-        yield return FadeOut();
-        yield return OpenShutters();
-
-        gameObject.SetActive(false);
+        gameObject.SetActive(false); // UI 비활성화
     }
 
-    //프로그래스바 업데이트 끝나면 씬전환
     private IEnumerator LoadSceneAsync()
     {
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
         operation.allowSceneActivation = false; // 즉시 씬 전환 방지
 
-        // 프로그래스 바 업데이트
         while (!operation.isDone)
         {
             progressBar.value = operation.progress; // 프로그래스 바 업데이트
@@ -90,15 +87,16 @@ public class SceneTransition : MonoBehaviour
             }
             yield return null; // 다음 프레임 대기
         }
-        progressBar.value = 0f;
+        progressBar.value = 0f; // 프로그래스 바 초기화
     }
+
     private IEnumerator CloseShutters()
     {
         var sequence = DOTween.Sequence();
         sequence.Append(topShutter.DOAnchorPosY(0, 0.5f).SetEase(Ease.OutQuad));
         sequence.Join(bottomShutter.DOAnchorPosY(0, 0.5f).SetEase(Ease.OutQuad));
 
-        yield return sequence.WaitForCompletion();
+        yield return sequence.WaitForCompletion(); // 애니메이션 완료 대기
     }
 
     private IEnumerator OpenShutters()
@@ -107,26 +105,25 @@ public class SceneTransition : MonoBehaviour
         sequence.Append(topShutter.DOAnchorPosY(540, 0.5f).SetEase(Ease.OutQuad));
         sequence.Join(bottomShutter.DOAnchorPosY(-540, 0.5f).SetEase(Ease.OutQuad));
 
-        yield return sequence.WaitForCompletion();
+        yield return sequence.WaitForCompletion(); // 애니메이션 완료 대기
     }
 
     private IEnumerator FadeIn()
     {
-        cg.alpha = 0f;
-        cg.gameObject.SetActive(true);
+        cg.alpha = 0f; // 초기 투명도 설정
+        cg.gameObject.SetActive(true); // 캔버스 그룹 활성화
         yield return cg.DOFade(1, 0.5f).WaitForCompletion(); // 페이드 인
     }
 
     private IEnumerator FadeOut()
     {
         yield return cg.DOFade(0, 0.5f).WaitForCompletion(); // 페이드 아웃
-        cg.gameObject.SetActive(false);
+        cg.gameObject.SetActive(false); // 캔버스 그룹 비활성화
     }
 
-    //Unity Editor 에서 로드시 색감차이 나는 문제를 해결하기 위한 함수
     void ApplyRenderSettings()
     {
-        RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Skybox;
-        DynamicGI.UpdateEnvironment();
+        RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Skybox; // 환경 설정
+        DynamicGI.UpdateEnvironment(); // 환경 업데이트
     }
 }
