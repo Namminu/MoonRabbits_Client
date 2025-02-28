@@ -336,6 +336,7 @@ public class Player : MonoBehaviour
 
         ActiveEquipObj = equips[nextEquip];
         ActiveEquipObj.SetActive(true);
+        PartyMemberUI.instance.UpdateUI();
 
         if (IsMine)
         {
@@ -367,7 +368,7 @@ public class Player : MonoBehaviour
 
         if (IsMine)
         {
-            if(uiPlayer == null) Debug.LogError("uiPlayer is null. 먼저 세팅돼야함");
+            if (uiPlayer == null) Debug.LogError("uiPlayer is null. 먼저 세팅돼야함");
             uiPlayer.SetStatInfo(statInfo);
             uiPlayer.SetNickname(nickname);
             uiPlayer.InitHp(3);
@@ -463,7 +464,7 @@ public class Player : MonoBehaviour
         // 레벨업 이펙트
         // TownManager.Instance.GetPlayerAvatarById(playerId).이펙트함수;
     }
-    
+
     public void SetUI(UIPlayer uiPlayer)
     {
         this.uiPlayer = uiPlayer;

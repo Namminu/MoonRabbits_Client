@@ -263,9 +263,13 @@ public class PartyUI : MonoBehaviour
     TMP_Text nameText = newMemberCard.transform.Find("MemberNickname").GetComponent<TMP_Text>();
     Button leaveButton = newMemberCard.transform.Find("PartyLeaveBtn").GetComponent<Button>();
     Button kickOutButton = newMemberCard.transform.Find("KickOutBtn").GetComponent<Button>();
+    // TMP_Text levelText = newMemberCard.transform.Find("MemberLv").GetComponent<TMP_Text>();
 
     // 닉네임 설정
     if (nameText != null) nameText.text = nickname;
+
+    // // 레벨 설정(TODO : 패킷으로 멤버별 레벨도 받기)
+    // if (levelText != null) levelText.text = 
 
     // 리더 아이콘 설정
     if (leaderIcon != null)

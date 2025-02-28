@@ -623,6 +623,8 @@ class PacketHandler
                 S2Manager.Instance.GetPlayer(pkt.PlayerId).LevelUpOther();
             }
         }
+
+        PartyMemberUI.instance.UpdateUI();
     }
 
     public static void S2CInvestPointHandler(PacketSession session, IMessage packet)
