@@ -1,8 +1,6 @@
 using Google.Protobuf.Protocol;
 using System;
 using System.Collections;
-using Google.Protobuf.Protocol;
-using TMPro;
 using UnityEngine;
 
 public class InteractManager : MonoBehaviour
