@@ -4,21 +4,42 @@ using UnityEngine;
 
 public class ResourceManager
 {
+    private Dictionary<string, Object> _resourceCache = new Dictionary<string, Object>();
+
+    public void RegisterResource(string key, Object resource)
+    {
+        if (!_resourceCache.ContainsKey(key))
+        {
+            _resourceCache[key] = resource;
+        }
+    }
+
     public T Load<T>(string path) where T : Object
     {
-        if (typeof(T) == typeof(GameObject))
-        {
-            string name = path;
-            int index = name.LastIndexOf('/');
-            if (index >= 0)
-                name = name.Substring(index + 1);
+        string key = path.Substring(path.LastIndexOf('/') + 1);
 
-            GameObject go = Managers.Pool.GetOriginal(name);
-            if (go != null)
-                return go as T;
+        if (_resourceCache.TryGetValue(key, out Object cachedResource))
+        {
+            return cachedResource as T;
         }
 
-        return Resources.Load<T>(path);
+        T resource = Resources.Load<T>(path);
+        if (resource != null)
+        {
+            RegisterResource(key, resource);
+        }
+
+        return resource;
+    }
+
+    public void LoadAll<T>(string folderPath) where T : Object
+    {
+        T[] resources = Resources.LoadAll<T>(folderPath);
+        foreach (var resource in resources)
+        {
+            string key = resource.name; // 리소스의 이름을 키로 사용
+            RegisterResource(key, resource);
+        }
     }
 
     public GameObject Instantiate(string path, Transform parent = null)

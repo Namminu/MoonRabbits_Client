@@ -49,6 +49,7 @@ public class SoundManager
         }
 
         LoadSoundPaths();
+        LoadAudioClips(); // 사운드 클립 로드
 
         // 저장된 볼륨 값 불러오기
         if (PlayerPrefs.HasKey("Volume_Bgm"))
@@ -85,9 +86,9 @@ public class SoundManager
             "Sounds/Loop/13", // 굉장히 수상해지는 분위기 한명 몰아가서 마피아로 만들것만 같은 분위기
             "Sounds/Loop/14", // 뱀파이어가 나올듯한 짙은 밤의 분위기
             "Sounds/Loop/15", // 사건이 일어나서 수사를 하는듯한 분위기
-            "Sounds/Loop/16", // 축제분위기 오늘 무슨축제야?!
+            "Sounds/Loop/16", // 축제 분위기 오늘 무슨 축제야?!
             "Sounds/Loop/17", // 시큰둥한 분위기 설레발 치지말고 진정하라는 듯한 느낌의 분위기
-            "Sounds/Loop/18", // 저글링 4마리를 부를듯한 느낌의 분위기
+            "Sounds/Loop/18", // 저글링 4마리를 부를듯한 느낌
             "Sounds/Loop/19"  // 북적북적 한 분위기 신비로움 한줌 수상한 분위기
         };
 
@@ -148,19 +149,37 @@ public class SoundManager
             "Sounds/Effect/26", // 애매한 알림소리
             "Sounds/Effect/27", // 의미 불분명한 소리
             "Sounds/Effect/28", // 또롱!
-            "Sounds/Effect/29",  // 퐙뽭푸왑!
-            "Sounds/Effect/30",  // 도끼소리
-            "Sounds/Effect/31",  // 던지는소리
-            "Sounds/Effect/32",  // 장비변경 소리
-            "Sounds/Effect/33",  // 곡갱이 광석 소리
-            "Sounds/Effect/34",  // 곡갱이 돌 소리
-            "Sounds/Effect/35",  // 말벌 Loop 소리
+            "Sounds/Effect/29", // 퐙뽭푸왑!
+            "Sounds/Effect/30", // 도끼소리
+            "Sounds/Effect/31", // 던지는소리
+            "Sounds/Effect/32", // 장비변경 소리
+            "Sounds/Effect/33", // 곡갱이 광석 소리
+            "Sounds/Effect/34", // 곡갱이 돌 소리
+            "Sounds/Effect/35", // 말벌 Loop 소리
         };
+    }
+
+    private void LoadAudioClips()
+    {
+        foreach (var soundType in _soundPaths.Keys)
+        {
+            foreach (var path in _soundPaths[soundType])
+            {
+                AudioClip audioClip = Managers.Resource.Load<AudioClip>(path);
+                if (audioClip != null)
+                {
+                    _audioClips[path] = audioClip; // 등록
+                }
+                else
+                {
+                    Debug.Log($"AudioClip Missing! {path}");
+                }
+            }
+        }
     }
 
     public void Play(int index, Define.Sound type = Define.Sound.Effect, float pitch = 1.0f)
     {
-
         if (index < 0 || index >= _soundPaths[type].Count)
         {
             Debug.LogError("Invalid sound index");
@@ -209,7 +228,6 @@ public class SoundManager
         // 설정값 저장
         PlayerPrefs.SetFloat($"Volume_{type}", volume);
     }
-
 
     private AudioClip GetOrAddAudioClip(string path, Define.Sound type = Define.Sound.Effect)
     {
