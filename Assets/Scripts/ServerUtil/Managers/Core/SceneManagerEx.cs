@@ -1,33 +1,24 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneManagerEx
 {
-    // public BaseScene CurrentScene { get { return GameObject.FindObjectOfType<BaseScene>(); } }
-
-    public void LoadScene(Define.Scene type)
+    private static SceneTransition _transition;
+    private static bool _isTransition;
+    public static void SetTransition()
     {
-        Managers.Clear();
+        if (_isTransition) return;
 
-        SceneManager.LoadScene(GetSceneName(type));
+        _isTransition = true;
+        var resource = Resources.Load("Prefabs/UI/ChangeSceneCanvas");
+        _transition = GameObject.Instantiate(resource).GetComponent<SceneTransition>();
+    }
+    public static void SetScene(string sceneName)
+    {
+        _transition.SetScene(sceneName);
     }
 
-    public void LoadScene(string sceneName)
-    {
-        Managers.Clear();
-        SceneManager.LoadScene(sceneName);
-    }
-
-    string GetSceneName(Define.Scene type)
-    {
-        string name = System.Enum.GetName(typeof(Define.Scene), type);
-        return name;
-    }
-
-    public void Clear()
-    {
-        // CurrentScene.Clear();
-    }
 }
