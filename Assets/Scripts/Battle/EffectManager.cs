@@ -10,47 +10,34 @@ public class EffectManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                // 새로운 GameObject를 생성하고 EffectManager를 추가합니다.
                 GameObject obj = new GameObject("EffectManager");
                 _instance = obj.AddComponent<EffectManager>();
-                _instance.Initialize(); // 생성 시 초기화 호출
-                DontDestroyOnLoad(obj); // 씬 전환 시에도 유지
+                ResourceManager.Instance.LoadAll<GameObject>("Prefabs/Effects");
+                DontDestroyOnLoad(obj);
             }
             return _instance;
         }
     }
 
-    private void Initialize()
-    {
-        // 이펙트 리소스를 로드합니다.
-        ResourceManager.Instance.LoadAll<GameObject>("Prefabs/Effects");
-    }
-
     public GameObject CreateTemporaryEffect(string effectName, Vector3 position, Quaternion rotation, float duration)
     {
-        GameObject effectPrefab = ResourceManager.Instance.GetResource<GameObject>("Effects", effectName);
-
-        if (effectPrefab != null)
-        {
-            GameObject effectInstance = Object.Instantiate(effectPrefab, position, rotation);
-            Effect effectComponent = effectInstance.AddComponent<Effect>();
-            effectComponent.Initialize(true, duration);
-            return effectInstance;
-        }
-
-        Debug.LogError($"Effect not found: {effectName}");
-        return null;
+        return CreateEffect(effectName, position, rotation, true, duration);
     }
 
     public GameObject CreatePersistentEffect(string effectName, Vector3 position, Quaternion rotation)
     {
-        GameObject effectPrefab = ResourceManager.Instance.GetResource<GameObject>("Effects", effectName);
+        return CreateEffect(effectName, position, rotation, false, 0);
+    }
 
-        if (effectPrefab != null)
+    private GameObject CreateEffect(string effectName, Vector3 position, Quaternion rotation, bool isTemporary, float duration)
+    {
+        // ResourceManager의 Instantiate 메서드를 사용하여 이펙트를 생성합니다.
+        GameObject effectInstance = ResourceManager.Instance.Instantiate("Effects", effectName, position, rotation);
+
+        if (effectInstance != null)
         {
-            GameObject effectInstance = Object.Instantiate(effectPrefab, position, rotation);
             Effect effectComponent = effectInstance.AddComponent<Effect>();
-            effectComponent.Initialize(false, 0);
+            effectComponent.Initialize(isTemporary, duration);
             return effectInstance;
         }
 
