@@ -198,7 +198,7 @@ public class TempPlayer : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             var bounds = collision.gameObject.GetComponent<MeshCollider>().bounds;
-            Debug.Log($"땅 크기 ??! {bounds}");
+            Debug.Log($"닿은 땅 : {collision.gameObject.name} 땅 크기 ??! {bounds}");
         }
     }
 }

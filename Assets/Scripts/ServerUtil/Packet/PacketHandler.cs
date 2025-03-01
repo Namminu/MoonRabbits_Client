@@ -74,6 +74,10 @@ class PacketHandler
                 SceneManager.LoadScene("Sector2");
                 GameManager.Instance.WaitForSceneAwake("Sector2", pkt.Player);
                 break;
+            case 103:
+                SceneManager.LoadScene("Sector3");
+                GameManager.Instance.WaitForSceneAwake("Sector3", pkt.Player);
+                break;
         }
     }
 
@@ -103,6 +107,10 @@ class PacketHandler
             case 102:
                 var s2Player = S2Manager.Instance.GetPlayer(pkt.PlayerId);
                 s2Player.Emote(pkt.AnimCode);
+                break;
+            case 103:
+                var s3Player = S3Manager.Instance.GetPlayer(pkt.PlayerId);
+                s3Player.Emote(pkt.AnimCode);
                 break;
         }
     }
@@ -165,6 +173,22 @@ class PacketHandler
                     );
                 }
                 break;
+            case 103:
+                if (pkt.PlayerId > 0)
+                {
+                    var player = S3Manager.Instance.GetPlayer(pkt.PlayerId);
+                    player?.RecvMessage(pkt.ChatMsg, pkt.ChatType);
+                }
+                else
+                {
+                    S3Manager.Instance.UiChat.PushMessage(
+                        "System",
+                        pkt.ChatMsg,
+                        pkt.ChatType,
+                        true
+                    );
+                }
+                break;
         }
     }
 
@@ -209,6 +233,12 @@ class PacketHandler
                     S2Manager.Instance.DespawnPlayer(playerId);
                 }
                 break;
+            case 103:
+                foreach (int playerId in pkt.PlayerIds)
+                {
+                    S3Manager.Instance.DespawnPlayer(playerId);
+                }
+                break;
         }
     }
     #endregion
@@ -249,6 +279,10 @@ class PacketHandler
             case 102:
                 var s2Player = S2Manager.Instance.GetPlayer(pkt.PlayerId);
                 s2Player.Move(position, rotation);
+                break;
+            case 103:
+                var s3Player = S3Manager.Instance.GetPlayer(pkt.PlayerId);
+                s3Player.Move(position, rotation);
                 break;
         }
     }
@@ -477,6 +511,10 @@ class PacketHandler
                 var s2Player = S2Manager.Instance.GetPlayer(pkt.PlayerId);
                 s2Player.CastRecall(pkt.RecallTimer);
                 break;
+            case 103:
+                var s3Player = S3Manager.Instance.GetPlayer(pkt.PlayerId);
+                s3Player.CastRecall(pkt.RecallTimer);
+                break;
         }
     }
 
@@ -498,6 +536,10 @@ class PacketHandler
             case 102:
                 var s2Player = S2Manager.Instance.GetPlayer(pkt.PlayerId);
                 s2Player.CastGrenade(pkt.Velocity, pkt.CoolTime);
+                break;
+            case 103:
+                var s3Player = S3Manager.Instance.GetPlayer(pkt.PlayerId);
+                s3Player.CastGrenade(pkt.Velocity, pkt.CoolTime);
                 break;
         }
     }
@@ -527,6 +569,13 @@ class PacketHandler
                     s2Player.Stun(pkt.StunTimer);
                 }
                 break;
+            case 103:
+                foreach (int playerId in pkt.PlayerIds)
+                {
+                    var s3Player = S3Manager.Instance.GetPlayer(playerId);
+                    s3Player.Stun(pkt.StunTimer);
+                }
+                break;
         }
     }
 
@@ -549,6 +598,10 @@ class PacketHandler
                 var s2Player = S2Manager.Instance.GetPlayer(pkt.PlayerId);
                 s2Player.ChangeEquip(pkt.NextEquip);
                 break;
+            case 103:
+                var s3Player = S3Manager.Instance.GetPlayer(pkt.PlayerId);
+                s3Player.ChangeEquip(pkt.NextEquip);
+                break;
         }
     }
     #endregion
@@ -566,7 +619,9 @@ class PacketHandler
             S1Manager.Instance.MyPlayer.SetExp(pkt.UpdatedExp);
         else if (S2Manager.Instance.MyPlayer != null)
             S2Manager.Instance.MyPlayer.SetExp(pkt.UpdatedExp);
-        Debug.Log("MyPlayer is in the S2Manager");
+        else if (S3Manager.Instance.MyPlayer != null)
+            S3Manager.Instance.MyPlayer.SetExp(pkt.UpdatedExp);
+        // Debug.Log("MyPlayer is in the S2Manager");
     }
 
     public static void S2CLevelUpHandler(PacketSession session, IMessage packet)

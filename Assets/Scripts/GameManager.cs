@@ -125,6 +125,11 @@ public class GameManager : MonoBehaviour
                 S2Manager.Instance.Enter(playerInfo);
                 MyPlayer.instance.eSystem = S2Manager.Instance.ESystem;
                 break;
+            case "Sector3":
+                yield return new WaitUntil(() => S3Manager.Instance != null);
+                S3Manager.Instance.Enter(playerInfo);
+                MyPlayer.instance.eSystem = S3Manager.Instance.ESystem;
+                break;
         }
     }
 
@@ -187,6 +192,16 @@ public class GameManager : MonoBehaviour
                         continue;
                     var s2Player = S2Manager.Instance.SpawnPlayer(playerInfo);
                     s2Player.SetIsMine(false, playerInfo.CurrentSector);
+                    break;
+                case 103:
+                    yield return new WaitUntil(() => S3Manager.Instance != null);
+                    if (
+                        S3Manager.Instance.MyPlayer != null
+                        && playerInfo.PlayerId == S3Manager.Instance.MyPlayer.PlayerId
+                    )
+                        continue;
+                    var s3Player = S3Manager.Instance.SpawnPlayer(playerInfo);
+                    s3Player.SetIsMine(false, playerInfo.CurrentSector);
                     break;
             }
         }
