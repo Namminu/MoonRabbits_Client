@@ -13,6 +13,11 @@ public class NetworkManager
 
     private ServerSession _session = new ServerSession();
 
+    public void Discconect()
+    {
+        _session.Disconnect();
+    }
+
     public bool IsConnected => _session?.IsConnected ?? false;
 
     public void Send(IMessage packet)

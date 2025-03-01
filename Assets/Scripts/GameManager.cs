@@ -1,10 +1,7 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using Google.Protobuf.Protocol;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -30,6 +27,10 @@ public class GameManager : MonoBehaviour
             _instance = this;
 
             network = new NetworkManager();
+
+            SoundManager.Instance.Play(4, Define.Sound.Bgm);
+
+            SceneManagerEx.SetTransition();
 
             DontDestroyOnLoad(gameObject);
         }
@@ -105,6 +106,13 @@ public class GameManager : MonoBehaviour
     public void WaitForSceneAwake(S2CSpawn pkt)
     {
         StartCoroutine(SpawnPlayer(pkt));
+    }
+
+    private void OnApplicationQuit()
+    {
+        network.Discconect();
+        Debug.Log("애플리케이션이 종료됩니다.");
+        // 애플리케이션 종료 시 처리할 작업을 여기에 추가하세요
     }
 
     IEnumerator EnterScene(string sceneName, PlayerInfo playerInfo)
