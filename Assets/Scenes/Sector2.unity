@@ -2880,12 +2880,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd07b3be1580f664f9eaf2dffd2e8ace, type: 3}
---- !u!1 &256620585 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3432478152810623280, guid: 46954eb707364a744ab7fc7a00083e47,
-    type: 3}
-  m_PrefabInstance: {fileID: 540922177}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &262288551 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4012902584258435814, guid: 70f611a968974eb48911d69533fe5db1,
@@ -5279,8 +5273,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fe17fc6855fcaf41bf55a34286beac2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnArea: {fileID: 0}
-  despawnArea: {fileID: 0}
+  spawnArea: {fileID: 1007800317}
+  despawnArea: {fileID: 1591254737}
   eSystem: {fileID: 2100666817}
   uiChat: {fileID: 1410755364}
   uiPlayer: {fileID: 594471325}
@@ -6731,6 +6725,11 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Portal
       objectReference: {fileID: 0}
+    - target: {fileID: 3739909603267033202, guid: 46954eb707364a744ab7fc7a00083e47,
+        type: 3}
+      propertyPath: connectedPortal
+      value: 
+      objectReference: {fileID: 27376549}
     - target: {fileID: 3840486406194523447, guid: 46954eb707364a744ab7fc7a00083e47,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6790,15 +6789,7 @@ PrefabInstance:
     - {fileID: 8197329358146918059, guid: 46954eb707364a744ab7fc7a00083e47, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3432478152810623280, guid: 46954eb707364a744ab7fc7a00083e47,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2022575716}
-    - targetCorrespondingSourceObject: {fileID: 3432478152810623280, guid: 46954eb707364a744ab7fc7a00083e47,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2022575717}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46954eb707364a744ab7fc7a00083e47, type: 3}
 --- !u!4 &542753053 stripped
 Transform:
@@ -9339,7 +9330,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 841692045}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!20 &841692049
 Camera:
   m_ObjectHideFlags: 0
@@ -16562,49 +16553,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1491682676}
   m_CullTransparentMesh: 1
---- !u!1 &1497257536 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3432478152810623280, guid: 46954eb707364a744ab7fc7a00083e47,
-    type: 3}
-  m_PrefabInstance: {fileID: 1853432395}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1497257540
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1497257536}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae18a0a51aea51a4b84c81901bd6a614, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sectorCode: 102
-  connectedPortal: {fileID: 2022575712}
---- !u!136 &1497257541
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1497257536}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1.5
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &1499077903
 GameObject:
   m_ObjectHideFlags: 0
@@ -20411,6 +20359,11 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Portal
       objectReference: {fileID: 0}
+    - target: {fileID: 3739909603267033202, guid: 46954eb707364a744ab7fc7a00083e47,
+        type: 3}
+      propertyPath: connectedPortal
+      value: 
+      objectReference: {fileID: 2022575712}
     - target: {fileID: 3840486406194523447, guid: 46954eb707364a744ab7fc7a00083e47,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -20470,15 +20423,7 @@ PrefabInstance:
     - {fileID: 8197329358146918059, guid: 46954eb707364a744ab7fc7a00083e47, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3432478152810623280, guid: 46954eb707364a744ab7fc7a00083e47,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1497257540}
-    - targetCorrespondingSourceObject: {fileID: 3432478152810623280, guid: 46954eb707364a744ab7fc7a00083e47,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1497257541}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46954eb707364a744ab7fc7a00083e47, type: 3}
 --- !u!4 &1863412332 stripped
 Transform:
@@ -22014,43 +21959,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 540922177}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2022575716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 256620585}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae18a0a51aea51a4b84c81901bd6a614, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sectorCode: 102
-  connectedPortal: {fileID: 27376549}
---- !u!136 &2022575717
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 256620585}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1.5
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!4 &2029638379 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8492229326555554319, guid: cd07b3be1580f664f9eaf2dffd2e8ace,

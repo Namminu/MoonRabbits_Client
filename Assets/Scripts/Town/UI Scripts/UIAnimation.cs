@@ -4,7 +4,8 @@ using UnityEngine.UI;
 public class UIAnimation : MonoBehaviour
 {
     //[SerializeField] private Button btnBattle;
-    [SerializeField] private Button[] btnList;
+    [SerializeField]
+    private Button[] btnList;
 
     private MyPlayer mPlayer;
 
@@ -15,13 +16,15 @@ public class UIAnimation : MonoBehaviour
 
     void Start()
     {
-        mPlayer = TownManager.Instance.MyPlayer != null && TownManager.Instance.MyPlayer.MPlayer != null
-        ? TownManager.Instance.MyPlayer.MPlayer
-        : S1Manager.Instance.MyPlayer != null && S1Manager.Instance.MyPlayer.MPlayer != null
-            ? S1Manager.Instance.MyPlayer.MPlayer
-            : S2Manager.Instance.MyPlayer != null && S2Manager.Instance.MyPlayer.MPlayer != null
-                ? S2Manager.Instance.MyPlayer.MPlayer
-                : null;
+        mPlayer = GameManager.Instance.Me.MPlayer;
+        // mPlayer =
+        //     TownManager.Instance.me != null && TownManager.Instance.me.MPlayer != null
+        //         ? TownManager.Instance.me.MPlayer
+        //     : S1Manager.Instance.me != null && S1Manager.Instance.me.MPlayer != null
+        //         ? S1Manager.Instance.me.MPlayer
+        //     : S2Manager.Instance.me != null && S2Manager.Instance.me.MPlayer != null
+        //         ? S2Manager.Instance.me.MPlayer
+        //     : null;
 
         if (mPlayer == null)
         {

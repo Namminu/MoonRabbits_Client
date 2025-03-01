@@ -8,6 +8,13 @@ using UnityEngine.EventSystems;
 
 public abstract class SManagerBase : MonoBehaviour
 {
+    private int sectorCode;
+    public int SectorCode
+    {
+        get { return sectorCode; }
+        set { sectorCode = value; }
+    }
+
     [SerializeField]
     private Transform spawnArea;
 
@@ -15,7 +22,7 @@ public abstract class SManagerBase : MonoBehaviour
     private Transform despawnArea;
 
     [SerializeField]
-    public EventSystem eSystem;
+    private EventSystem eSystem;
     public EventSystem ESystem => eSystem;
 
     [SerializeField]
@@ -30,15 +37,8 @@ public abstract class SManagerBase : MonoBehaviour
     private Dictionary<int, string> prefabPaths = new();
     public Player MyPlayer { get; private set; }
 
-    private int planeCnt;
     private Dictionary<int, ResourceController> resources = new(); // key는 리소스인덱스
     private Dictionary<int, MonsterController> monsters = new(); // key는 몬스터인덱스
-
-    void Start()
-    {
-        spawnArea = transform.Find("SpawnArea");
-        despawnArea = transform.Find("DespawnArea");
-    }
 
     protected void SetPrefabPath()
     {
@@ -49,22 +49,21 @@ public abstract class SManagerBase : MonoBehaviour
         prefabPaths[1005] = "Player/Player5";
     }
 
-    private void ActivateUI()
-    {
-        uiChat.gameObject.SetActive(true);
-    }
+    protected virtual void ActivateUI() { }
 
-    public void Enter(PlayerInfo playerInfo)
+    public Player Enter(PlayerInfo playerInfo)
     {
+        ActivateUI();
         // [1] 프리펩 생성 및 정보 연동
         MyPlayer = SpawnPlayer(playerInfo);
         // [2] "내" 프리펩인 걸 선언
         MyPlayer.SetIsMine(true, playerInfo.CurrentSector);
         MyPlayer.SetUI(UiPlayer);
         // [3] 머리 위 닉네임 UI에 이름 박음
-        ActivateUI();
         MyPlayer.SetNickname(playerInfo.Nickname);
         MyPlayer.SetStatInfo(playerInfo.StatInfo);
+
+        return MyPlayer;
     }
 
     public Player SpawnPlayer(PlayerInfo playerInfo)
@@ -87,6 +86,7 @@ public abstract class SManagerBase : MonoBehaviour
         player.SetNickname(playerInfo.Nickname);
         player.SetLevel(playerInfo.Level);
         // [4] 이미 접속된 플레이어인지 확인
+        var playerList = GameManager.Instance.PlayerList[SectorCode];
         if (playerList.TryGetValue(playerInfo.PlayerId, out var existingPlayer))
         {
             // [4 A] 중복 접속이면 기존 거 파괴하고 이번 꺼 덧씌움
@@ -105,14 +105,18 @@ public abstract class SManagerBase : MonoBehaviour
     public void DespawnPlayer(int playerId)
     {
         // [1] 존재하는 플레이어인지 확인
-        bool isExist = playerList.TryGetValue(playerId, out var player);
-        if (!isExist)
+        var players = GameManager.Instance.PlayerList[SectorCode];
+        if (!players.TryGetValue(playerId, out var player))
+        {
             return;
-        // [2] 실존하는 플레이어인지 확인
+        }
+        // [2] 해당 플레이어 오브젝트 확인후 파괴
         if (player != null && player.gameObject != null)
+        {
             Destroy(player.gameObject);
+        }
         // [3] 플레이어 목록에서 제거
-        playerList.Remove(playerId);
+        players.Remove(playerId);
     }
 
     public Player GetPlayer(int playerId)

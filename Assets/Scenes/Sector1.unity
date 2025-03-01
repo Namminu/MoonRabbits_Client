@@ -5175,8 +5175,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f52060201e136c4ca621614bc6c68ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnArea: {fileID: 0}
-  despawnArea: {fileID: 0}
+  spawnArea: {fileID: 1007800317}
+  despawnArea: {fileID: 1591254737}
   eSystem: {fileID: 3309536583649361184}
   uiChat: {fileID: 1410755364}
   uiPlayer: {fileID: 602788997}
@@ -8965,7 +8965,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 841692045}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!20 &841692049
 Camera:
   m_ObjectHideFlags: 0

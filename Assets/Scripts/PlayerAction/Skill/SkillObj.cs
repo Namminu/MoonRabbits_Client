@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Google.Protobuf.Protocol;
 using Unity.Mathematics;
 using UnityEngine;
@@ -85,11 +86,9 @@ public class SkillObj : MonoBehaviour
 
         yield return new WaitForSeconds(0.1f);
         effect.SetActive(true);
-        if (casterId == GameManager.Instance.PlayerId)
-        {
-            var pkt = new C2SStun();
-            pkt.SkillType = (int)type;
 
+        if (casterId == GameManager.Instance.Me.PlayerId)
+        {
             RaycastHit[] rayHits = Physics.SphereCastAll(
                 transform.position, // 이 위치에서 (슈류탄 현 위치)
                 explosionRange, // 설정한 반경의 구체 Ray를
@@ -98,21 +97,27 @@ public class SkillObj : MonoBehaviour
                 LayerMask.GetMask("Monster", "Player") // 레이어에 맞는 오브젝트들을 배열로 반환
             );
 
-            foreach (RaycastHit hitObj in rayHits)
+            if (rayHits.Count() > 0)
             {
-                var target = hitObj.transform.gameObject;
+                var pkt = new C2SStun();
+                pkt.SkillType = (int)type;
 
-                if (target.CompareTag("Monster"))
+                foreach (RaycastHit hitObj in rayHits)
                 {
-                    pkt.MonsterIds.Add(target.GetComponent<MonsterController>().ID);
+                    var target = hitObj.transform.gameObject;
+
+                    if (target.CompareTag("Monster"))
+                    {
+                        pkt.MonsterIds.Add(target.GetComponent<MonsterController>().ID);
+                    }
+                    else if (target.CompareTag("Player"))
+                    {
+                        pkt.PlayerIds.Add(target.GetComponent<Player>().PlayerId);
+                    }
                 }
-                else if (target.CompareTag("Player"))
-                {
-                    pkt.PlayerIds.Add(target.GetComponent<Player>().PlayerId);
-                }
+
+                GameManager.Network.Send(pkt);
             }
-
-            GameManager.Network.Send(pkt);
         }
 
         yield return new WaitForSeconds(1f);

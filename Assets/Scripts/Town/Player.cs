@@ -105,25 +105,26 @@ public class Player : MonoBehaviour
         if (IsMine)
         {
             MPlayer = gameObject.AddComponent<MyPlayer>();
-            GameManager.Instance.PlayerId = PlayerId;
+            GameManager.Instance.Me = this;
         }
         else
         {
             Destroy(GetComponent<NavMeshAgent>());
         }
 
-        switch (currentSector)
-        {
-            case 100:
-                uiChat = TownManager.Instance.UiChat;
-                break;
-            case 101:
-                uiChat = S1Manager.Instance.UiChat;
-                break;
-            case 102:
-                uiChat = S2Manager.Instance.UiChat;
-                break;
-        }
+        uiChat = GameManager.Instance.SManager.UiChat;
+        // switch (currentSector)
+        // {
+        //     case 100:
+        //         uiChat = TownManager.Instance.UiChat;
+        //         break;
+        //     case 101:
+        //         uiChat = S1Manager.Instance.UiChat;
+        //         break;
+        //     case 102:
+        //         uiChat = S2Manager.Instance.UiChat;
+        //         break;
+        // }
 
         isInitialized = true;
     }
@@ -133,8 +134,12 @@ public class Player : MonoBehaviour
         var type = info.MyType;
         switch (type)
         {
-            case 1: SetMyCollision(info); break; //플레이어
-            case 2: SetMonsterCollision(info); break; // 몬스터
+            case 1:
+                SetMyCollision(info);
+                break; //플레이어
+            case 2:
+                SetMonsterCollision(info);
+                break; // 몬스터
         }
     }
 
@@ -367,7 +372,8 @@ public class Player : MonoBehaviour
 
         if (IsMine)
         {
-            if(uiPlayer == null) Debug.LogError("uiPlayer is null. 먼저 세팅돼야함");
+            if (uiPlayer == null)
+                Debug.LogError("uiPlayer is null. 먼저 세팅돼야함");
             uiPlayer.SetStatInfo(statInfo);
             uiPlayer.SetNickname(nickname);
             uiPlayer.InitHp(3);
@@ -382,7 +388,8 @@ public class Player : MonoBehaviour
             Debug.LogError($"exp({exp}) > targetExp({targetExp})");
             return;
         }
-        if (IsMine) uiPlayer.SetExp(updatedExp, targetExp);
+        if (IsMine)
+            uiPlayer.SetExp(updatedExp, targetExp);
     }
 
     public void InvestPoint(StatInfo statInfo)
@@ -461,9 +468,17 @@ public class Player : MonoBehaviour
         // TownManager.Instance.SetPlayerLevel(playerId, level);
 
         // 레벨업 이펙트
-        // TownManager.Instance.GetPlayerAvatarById(playerId).이펙트함수;
+        GameObject effect = transform.Find("LevelUp").gameObject;
+        effect.SetActive(true);
+        Invoke(nameof(EffectOff), 1f);
     }
-    
+
+    private void EffectOff()
+    {
+        GameObject effect = transform.Find("LevelUp").gameObject;
+        effect.SetActive(false);
+    }
+
     public void SetUI(UIPlayer uiPlayer)
     {
         this.uiPlayer = uiPlayer;

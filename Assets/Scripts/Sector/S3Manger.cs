@@ -10,14 +10,12 @@ public class S3Manager : SManagerBase
     private static S3Manager _instance;
     public static S3Manager Instance => _instance;
 
-    private int sectorCode = 103;
-    public int SectorCode => sectorCode;
-
     void Awake()
     {
         if (_instance == null)
         {
             _instance = this;
+            SectorCode = 103;
         }
         else
         {
@@ -26,5 +24,10 @@ public class S3Manager : SManagerBase
         }
 
         SetPrefabPath(); // 플레이어 프리펩 찾아갈 경로 미리 설정
+    }
+
+    protected override void ActivateUI()
+    {
+        UiChat.gameObject.SetActive(true);
     }
 }

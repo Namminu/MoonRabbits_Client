@@ -1,24 +1,59 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Google.Protobuf.Protocol;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Managers")]
     private static GameManager _instance = null;
     public static GameManager Instance => _instance;
 
     private NetworkManager network;
     public static NetworkManager Network => _instance.network;
 
-    public const string BattleScene = "Battle";
-    public const string TownScene = "Town";
-
+    [Header("Me")]
     public string UserName;
-    public int PlayerId;
+    public Player Me;
     public int ClassCode;
+    public int CurrentSector;
 
+    [Header("Players")]
+    private Dictionary<int, Dictionary<int, Player>> playerList = new();
+    public Dictionary<int, Dictionary<int, Player>> PlayerList => playerList;
+    private Dictionary<int, Player> townPlayers = new();
+    private Dictionary<int, Player> s1Players = new();
+    private Dictionary<int, Player> s2Players = new();
+    private Dictionary<int, Player> s3Players = new();
+    private Dictionary<int, Player> s4Players = new();
+
+    [Header("Managers")]
+    private readonly Dictionary<int, Func<SManagerBase>> managers = new()
+    {
+        { 100, () => TownManager.Instance },
+        { 101, () => S1Manager.Instance },
+        { 102, () => S2Manager.Instance },
+        { 103, () => S3Manager.Instance },
+        // { 104, () => S4Manager.Instance },
+    };
+    public Dictionary<int, Func<SManagerBase>> Managers => managers;
+    private SManagerBase sManager;
+    public SManagerBase SManager => sManager;
+
+    [Header("Utils")]
     public JsonContainer<Resource> resourceContainer;
+    private readonly Dictionary<int, string> sceneName = new()
+    {
+        { 100, "Town" },
+        { 101, "Sector1" },
+        { 102, "Sector2" },
+        { 103, "Sector3" },
+        { 104, "Sector4" },
+    };
+    public Dictionary<int, string> SceneName => sceneName;
 
     private async void Awake()
     {
@@ -32,6 +67,10 @@ public class GameManager : MonoBehaviour
 
             SceneManagerEx.SetTransition();
 
+            SetPlayerList();
+
+            CurrentSector = 100;
+
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -44,6 +83,121 @@ public class GameManager : MonoBehaviour
     }
 
     void Start()
+    {
+        sManager = TownManager.Instance;
+        LoadJson();
+    }
+
+    private void Update()
+    {
+        if (network != null)
+            network.Update();
+    }
+
+    private void SetPlayerList()
+    {
+        playerList.Add(100, townPlayers);
+        playerList.Add(101, s1Players);
+        playerList.Add(102, s2Players);
+        playerList.Add(103, s3Players);
+        playerList.Add(104, s4Players);
+    }
+
+    IEnumerator SetSManager(int sectorCode)
+    {
+        if (sectorCode == CurrentSector)
+            yield break;
+
+        switch (sectorCode)
+        {
+            case 100:
+                yield return new WaitUntil(() => TownManager.Instance != null);
+                sManager = TownManager.Instance;
+                break;
+            case 101:
+                yield return new WaitUntil(() => S1Manager.Instance != null);
+                sManager = S1Manager.Instance;
+                break;
+            case 102:
+                yield return new WaitUntil(() => S2Manager.Instance != null);
+                sManager = S2Manager.Instance;
+                break;
+            case 103:
+                yield return new WaitUntil(() => S3Manager.Instance != null);
+                sManager = S3Manager.Instance;
+                break;
+            case 104:
+                // yield return new WaitUntil(() => S4Manager.Instance != null);
+                // sManager = S4Manager.Instance;
+                break;
+            default:
+                Debug.Log($"유효하지 않은 섹터 코드입니다 : {sectorCode}");
+                break;
+        }
+    }
+
+    public void EnterAfterSceneAwake(PlayerInfo playerInfo)
+    {
+        // SceneManagerEx.SetScene(sceneName[playerInfo.CurrentSector]);
+        StartCoroutine(EnterSector(playerInfo));
+    }
+
+    public void SpawnAfterSceneAwake(S2CSpawn pkt)
+    {
+        StartCoroutine(SpawnOthers(pkt));
+    }
+
+    private void OnApplicationQuit()
+    {
+        network.Discconect();
+        Debug.Log("애플리케이션이 종료됩니다.");
+        // 애플리케이션 종료 시 처리할 작업을 여기에 추가하세요
+    }
+
+    public Player GetPlayer(int playerId)
+    {
+        foreach (Dictionary<int, Player> sector in playerList.Values)
+        {
+            if (sector.TryGetValue(playerId, out var player))
+            {
+                return player;
+            }
+        }
+
+        return null;
+    }
+
+    IEnumerator EnterSector(PlayerInfo playerInfo)
+    {
+        // [1] 이전 섹터의 플레이어리스트 비움
+        playerList[CurrentSector].Clear();
+        // [2] 이동할 섹터의 매니저 찾고, 씬 로드 기다림
+        StartCoroutine(SetSManager(playerInfo.CurrentSector));
+        yield return new WaitUntil(() => sManager != null);
+        // [3] 플레이어 오브젝트 생성 및 데이터 연동
+        Player me = sManager.Enter(playerInfo);
+        sManager.UiChat.Player = me;
+        // [4] 현재 위치한 섹터 값 최신화
+        CurrentSector = playerInfo.CurrentSector;
+    }
+
+    IEnumerator SpawnOthers(S2CSpawn pkt)
+    {
+        // [1] 스폰시킬 섹터의 매니저 찾고, 씬 로드 기다림
+        yield return new WaitUntil(() => sManager != null);
+        // [2] 플레이어 스폰 반복
+        foreach (PlayerInfo playerInfo in pkt.Players)
+        {
+            // [2-1] 플레이어 정보 중 내 정보는 패스
+            if (playerInfo.PlayerId == Me.PlayerId)
+                continue;
+            // [2-2] 플레이어 오브젝트 생성 및 데이터 연동
+            var player = sManager.SpawnPlayer(playerInfo);
+            player.SetIsMine(false, playerInfo.CurrentSector);
+        }
+    }
+
+    private void LoadJson()
     {
         JsonFileLoader loader = new JsonFileLoader();
 
@@ -89,129 +243,6 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("resouce JSON 파싱 실패: 데이터가 없습니다.");
             return;
-        }
-    }
-
-    private void Update()
-    {
-        if (network != null)
-            network.Update();
-    }
-
-    public void WaitForSceneAwake(string sceneName, PlayerInfo playerInfo)
-    {
-        StartCoroutine(EnterScene(sceneName, playerInfo));
-    }
-
-    public void WaitForSceneAwake(S2CSpawn pkt)
-    {
-        StartCoroutine(SpawnPlayer(pkt));
-    }
-
-    private void OnApplicationQuit()
-    {
-        network.Discconect();
-        Debug.Log("애플리케이션이 종료됩니다.");
-        // 애플리케이션 종료 시 처리할 작업을 여기에 추가하세요
-    }
-
-    IEnumerator EnterScene(string sceneName, PlayerInfo playerInfo)
-    {
-        switch (sceneName)
-        {
-            case "Town":
-                yield return new WaitUntil(() => TownManager.Instance != null);
-                TownManager.Instance.Enter(playerInfo);
-                break;
-            case "Sector1":
-                yield return new WaitUntil(() => S1Manager.Instance != null);
-                S1Manager.Instance.Enter(playerInfo);
-                MyPlayer.instance.eSystem = S1Manager.Instance.ESystem;
-                break;
-            case "Sector2":
-                yield return new WaitUntil(() => S2Manager.Instance != null);
-                S2Manager.Instance.Enter(playerInfo);
-                MyPlayer.instance.eSystem = S2Manager.Instance.ESystem;
-                break;
-            case "Sector3":
-                yield return new WaitUntil(() => S3Manager.Instance != null);
-                S3Manager.Instance.Enter(playerInfo);
-                MyPlayer.instance.eSystem = S3Manager.Instance.ESystem;
-                break;
-        }
-    }
-
-    IEnumerator SpawnPlayer(S2CSpawn pkt)
-    {
-        foreach (var playerInfo in pkt.Players)
-        {
-            switch (playerInfo.CurrentSector)
-            {
-                case 100:
-                    yield return new WaitUntil(() => TownManager.Instance != null);
-                    if (
-                        TownManager.Instance.MyPlayer != null
-                        && playerInfo.PlayerId == TownManager.Instance.MyPlayer.PlayerId
-                    )
-                        continue;
-
-                    Vector3 spawnPosTown = new Vector3(
-                        playerInfo.Transform.PosX,
-                        playerInfo.Transform.PosY,
-                        playerInfo.Transform.PosZ
-                    );
-                    var townPlayer = TownManager.Instance.SpawnPlayer(playerInfo, spawnPosTown);
-                    townPlayer.SetIsMine(false, playerInfo.CurrentSector);
-                    break;
-                case 2:
-                    if (
-                        ASectorManager.Instance.MyPlayer != null
-                        && playerInfo.PlayerId == ASectorManager.Instance.MyPlayer.PlayerId
-                    )
-                        continue;
-
-                    Vector3 spawnPosSectorA = new Vector3(
-                        playerInfo.Transform.PosX,
-                        playerInfo.Transform.PosY,
-                        playerInfo.Transform.PosZ
-                    );
-                    var sectorPlayer = ASectorManager.Instance.CreatePlayer(
-                        playerInfo,
-                        spawnPosSectorA
-                    );
-                    sectorPlayer.SetIsMine(false, playerInfo.CurrentSector);
-                    break;
-                case 101:
-                    yield return new WaitUntil(() => S1Manager.Instance != null);
-                    if (
-                        S1Manager.Instance.MyPlayer != null
-                        && playerInfo.PlayerId == S1Manager.Instance.MyPlayer.PlayerId
-                    )
-                        continue;
-                    var s1Player = S1Manager.Instance.SpawnPlayer(playerInfo);
-                    s1Player.SetIsMine(false, playerInfo.CurrentSector);
-                    break;
-                case 102:
-                    yield return new WaitUntil(() => S2Manager.Instance != null);
-                    if (
-                        S2Manager.Instance.MyPlayer != null
-                        && playerInfo.PlayerId == S2Manager.Instance.MyPlayer.PlayerId
-                    )
-                        continue;
-                    var s2Player = S2Manager.Instance.SpawnPlayer(playerInfo);
-                    s2Player.SetIsMine(false, playerInfo.CurrentSector);
-                    break;
-                case 103:
-                    yield return new WaitUntil(() => S3Manager.Instance != null);
-                    if (
-                        S3Manager.Instance.MyPlayer != null
-                        && playerInfo.PlayerId == S3Manager.Instance.MyPlayer.PlayerId
-                    )
-                        continue;
-                    var s3Player = S3Manager.Instance.SpawnPlayer(playerInfo);
-                    s3Player.SetIsMine(false, playerInfo.CurrentSector);
-                    break;
-            }
         }
     }
 }

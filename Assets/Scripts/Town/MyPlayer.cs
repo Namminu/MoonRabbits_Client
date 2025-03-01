@@ -62,7 +62,7 @@ public class MyPlayer : MonoBehaviour
         instance = this;
 
         P = GetComponent<Player>();
-        eSystem = TownManager.Instance.E_System;
+        eSystem = TownManager.Instance.ESystem;
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
 
@@ -118,6 +118,9 @@ public class MyPlayer : MonoBehaviour
     // 충돌한 위치로 NavMeshAgent를 이동시킴 (agent.SetDestination(rayHit.point);
     private void HandleInput()
     {
+        if (P.IsStun)
+            return;
+
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
         {
             int layerMask = 1 << LayerMask.NameToLayer("Ground");
@@ -229,7 +232,7 @@ public class MyPlayer : MonoBehaviour
 
     private void Emote()
     {
-        if (!P.IsStun && !isEmoting)
+        if (!isEmoting)
         {
             if (happyInput)
             {
@@ -251,40 +254,40 @@ public class MyPlayer : MonoBehaviour
 
     private void ThrowGrenade()
     {
-        if (grenadeInput && !P.IsStun)
+        if (grenadeInput && GameManager.Instance.CurrentSector != 100)
         {
             skillManager.eventQ.Invoke();
 
-            float cooltime = 5;
+            float coolTime = 5;
 
             if (SceneManager.GetActiveScene().name == "Sector1")
-                S1Manager.Instance.UiPlayer.QSkillCool(cooltime);
+                S1Manager.Instance.UiPlayer.QSkillCool(coolTime);
             else if (SceneManager.GetActiveScene().name == "Sector2")
-                S2Manager.Instance.UiPlayer.WSkillCool(cooltime);
+                S2Manager.Instance.UiPlayer.WSkillCool(coolTime);
         }
     }
 
     private void SetTrap()
     {
-        if (trapInput && !P.IsStun)
+        if (trapInput && GameManager.Instance.CurrentSector != 100)
             skillManager.eventE.Invoke();
     }
 
     private void Recall()
     {
-        if (recallInput && !P.IsStun)
+        if (recallInput && GameManager.Instance.CurrentSector != 100)
             skillManager.eventT.Invoke();
     }
 
     private void EquipChange()
     {
-        if (equipChangeInput && !P.IsStun)
+        if (equipChangeInput && GameManager.Instance.CurrentSector != 100)
             interactManager.eventR.Invoke();
     }
 
     private void Interact()
     {
-        if (interactInput && !P.IsStun)
+        if (interactInput)
             interactManager.eventF.Invoke();
     }
 
