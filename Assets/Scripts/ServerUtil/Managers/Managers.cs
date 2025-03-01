@@ -25,13 +25,11 @@ public class Managers : MonoBehaviour
 
     #region Core Managers
     private PoolManager _pool = new PoolManager();
-    private ResourceManager _resource = new ResourceManager();
     private SceneManagerEx _scene = new SceneManagerEx();
 
     private UIManager _ui = new UIManager();
 
     public static PoolManager Pool => Instance._pool;
-    public static ResourceManager Resource => Instance._resource;
     public static SceneManagerEx Scene => Instance._scene;
 
     public static UIManager UI => Instance._ui;
