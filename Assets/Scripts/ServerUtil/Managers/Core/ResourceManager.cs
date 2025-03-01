@@ -4,92 +4,101 @@ using UnityEngine;
 
 public class ResourceManager
 {
-    private Dictionary<string, Object> _resourceCache = new Dictionary<string, Object>();
-    private Dictionary<string, Sprite> _spriteCache = new Dictionary<string, Sprite>();
+    private Dictionary<string, Dictionary<string, Object>> _resourceCache = new Dictionary<string, Dictionary<string, Object>>();
 
-
-    public void RegisterResource(string key, Object resource)
+    public void RegisterResource<T>(string type, string key, T resource) where T : Object
     {
-        if (!_resourceCache.ContainsKey(key))
+        if (!_resourceCache.ContainsKey(type))
         {
-            _resourceCache[key] = resource;
+            _resourceCache[type] = new Dictionary<string, Object>();
+        }
+
+        if (!_resourceCache[type].ContainsKey(key))
+        {
+            _resourceCache[type][key] = resource;
         }
     }
 
-    public T Load<T>(string path) where T : Object
+    public T GetResource<T>(string type, string name) where T : Object
     {
-        string key = path.Substring(path.LastIndexOf('/') + 1);
-
-        if (_resourceCache.TryGetValue(key, out Object cachedResource))
+        if (_resourceCache.ContainsKey(type) && _resourceCache[type].TryGetValue(name, out Object cachedResource))
         {
-            return cachedResource as T;
+            return cachedResource as T; // T로 캐스팅하여 반환
         }
 
-        T resource = Resources.Load<T>(path);
-        if (resource != null)
-        {
-            RegisterResource(key, resource);
-        }
-
-        return resource;
+        Debug.Log($"Resource not found: {name} in type: {type}");
+        return null;
     }
 
     public void LoadAll<T>(string folderPath) where T : Object
     {
+        string folderName = folderPath.Substring(folderPath.LastIndexOf('/') + 1); // 마지막 폴더 이름 추출
+
+        if (!_resourceCache.ContainsKey(folderName))
+        {
+            _resourceCache[folderName] = new Dictionary<string, Object>();
+        }
+
         T[] resources = Resources.LoadAll<T>(folderPath);
+
         foreach (var resource in resources)
         {
-            string key = resource.name; // 리소스의 이름을 키로 사용
-            RegisterResource(key, resource);
+            string key = resource.name; // 파일 이름을 키로 사용
+            RegisterResource(folderName, key, resource);
         }
     }
-    public void LoadAllSprites(string folderPath)
+
+    public T Instantiate<T>(string type, string name, Vector3 position, Quaternion rotation = default, Transform parent = null) where T : MonoBehaviour
     {
-        Sprite[] sprites = Resources.LoadAll<Sprite>(folderPath);
-        foreach (var sprite in sprites)
+        if (_resourceCache.ContainsKey(type) && _resourceCache[type].TryGetValue(name, out Object cachedResource))
         {
-            _spriteCache[sprite.name] = sprite; // 스프라이트를 캐시에 저장
+            // T로 캐스팅
+            if (cachedResource is GameObject gameObject)
+            {
+                GameObject instance = Object.Instantiate(gameObject, position, rotation, parent);
+                T component = instance.GetOrAddComponent<T>();
+
+                return component; // 인스턴스화된 컴포넌트 반환
+            }
+            else
+            {
+                Debug.Log($"Resource is not a GameObject: {name}");
+                return null;
+            }
         }
-    }
-    public Sprite GetSprite(string spriteName)
-    {
-        _spriteCache.TryGetValue(spriteName, out Sprite sprite);
-        return sprite;
+
+        Debug.Log($"Resource not found: {name} in type: {type}");
+        return null;
     }
 
-    public List<string> GetSpriteNames()
+    public GameObject Instantiate(string type, string name, Vector3 position, Quaternion rotation = default, Transform parent = null)
     {
-        return new List<string>(_spriteCache.Keys); // 캐시된 스프라이트 이름 목록 반환
-    }
-
-    public GameObject Instantiate(string path, Transform parent = null)
-    {
-        GameObject original = Load<GameObject>($"Prefabs/{path}");
-        if (original == null)
+        if (_resourceCache.ContainsKey(type) && _resourceCache[type].TryGetValue(name, out Object cachedResource))
         {
-            Debug.Log($"Failed to load prefab : {path}");
-            return null;
+            // T로 캐스팅
+            if (cachedResource is GameObject gameObject)
+            {
+                GameObject instance = Object.Instantiate(gameObject, position, rotation, parent);
+
+                return instance; // 인스턴스화된 컴포넌트 반환
+            }
+            else
+            {
+                Debug.Log($"Resource is not a GameObject: {name}");
+                return null;
+            }
         }
 
-        if (original.GetComponent<Poolable>() != null)
-            return Managers.Pool.Pop(original, parent).gameObject;
-
-        GameObject go = Object.Instantiate(original, parent);
-        go.name = original.name;
-        return go;
+        Debug.Log($"Resource not found: {name} in type: {type}");
+        return null;
     }
+
+
 
     public void Destroy(GameObject go)
     {
         if (go == null)
             return;
-
-        Poolable poolable = go.GetComponent<Poolable>();
-        if (poolable != null)
-        {
-            Managers.Pool.Push(poolable);
-            return;
-        }
 
         Object.Destroy(go);
     }

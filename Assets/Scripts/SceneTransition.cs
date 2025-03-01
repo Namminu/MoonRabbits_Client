@@ -30,7 +30,7 @@ public class SceneTransition : MonoBehaviour
             gameObject.SetActive(false);
 
             // ResourceManager를 통해 모든 스프라이트 로드
-            Managers.Resource.LoadAllSprites("SceneTransition");
+            Managers.Resource.LoadAll<Sprite>("SceneTransition");
             return;
         }
         LoadScene();
@@ -90,7 +90,7 @@ public class SceneTransition : MonoBehaviour
     private IEnumerator ShutterAndLoad()
     {
         // 씬 이름에 해당하는 스프라이트 설정
-        Sprite sprite = Managers.Resource.GetSprite(sceneName);
+        Sprite sprite = Managers.Resource.GetResource<Sprite>("SceneTransition", sceneName);
         if (sprite != null)
             image.sprite = sprite;
 
