@@ -4,21 +4,62 @@ using UnityEngine;
 
 public class ResourceManager
 {
+    private Dictionary<string, Object> _resourceCache = new Dictionary<string, Object>();
+    private Dictionary<string, Sprite> _spriteCache = new Dictionary<string, Sprite>();
+
+
+    public void RegisterResource(string key, Object resource)
+    {
+        if (!_resourceCache.ContainsKey(key))
+        {
+            _resourceCache[key] = resource;
+        }
+    }
+
     public T Load<T>(string path) where T : Object
     {
-        if (typeof(T) == typeof(GameObject))
-        {
-            string name = path;
-            int index = name.LastIndexOf('/');
-            if (index >= 0)
-                name = name.Substring(index + 1);
+        string key = path.Substring(path.LastIndexOf('/') + 1);
 
-            GameObject go = Managers.Pool.GetOriginal(name);
-            if (go != null)
-                return go as T;
+        if (_resourceCache.TryGetValue(key, out Object cachedResource))
+        {
+            return cachedResource as T;
         }
 
-        return Resources.Load<T>(path);
+        T resource = Resources.Load<T>(path);
+        if (resource != null)
+        {
+            RegisterResource(key, resource);
+        }
+
+        return resource;
+    }
+
+    public void LoadAll<T>(string folderPath) where T : Object
+    {
+        T[] resources = Resources.LoadAll<T>(folderPath);
+        foreach (var resource in resources)
+        {
+            string key = resource.name; // 리소스의 이름을 키로 사용
+            RegisterResource(key, resource);
+        }
+    }
+    public void LoadAllSprites(string folderPath)
+    {
+        Sprite[] sprites = Resources.LoadAll<Sprite>(folderPath);
+        foreach (var sprite in sprites)
+        {
+            _spriteCache[sprite.name] = sprite; // 스프라이트를 캐시에 저장
+        }
+    }
+    public Sprite GetSprite(string spriteName)
+    {
+        _spriteCache.TryGetValue(spriteName, out Sprite sprite);
+        return sprite;
+    }
+
+    public List<string> GetSpriteNames()
+    {
+        return new List<string>(_spriteCache.Keys); // 캐시된 스프라이트 이름 목록 반환
     }
 
     public GameObject Instantiate(string path, Transform parent = null)

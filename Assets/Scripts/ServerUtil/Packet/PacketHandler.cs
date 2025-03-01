@@ -26,6 +26,8 @@ class PacketHandler
             return;
         Debug.Log($"S2CLogin 패킷 무사 도착 : {pkt}");
 
+        SoundManager.Instance.Play(0, Define.Sound.Bgm);
+
         if (!pkt.IsSuccess)
         {
             EventManager.Trigger("DisplayMessage", pkt.Msg);

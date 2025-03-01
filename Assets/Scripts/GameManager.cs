@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
 
             network = new NetworkManager();
 
+            SoundManager.Instance.Play(4, Define.Sound.Bgm);
+
             SceneManagerEx.SetTransition();
 
             DontDestroyOnLoad(gameObject);
