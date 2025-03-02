@@ -87,7 +87,7 @@ public class SkillObj : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         effect.SetActive(true);
 
-        if (casterId == GameManager.Instance.Me.PlayerId)
+        if (casterId == GameManager.Instance.MPlayer.PlayerId)
         {
             RaycastHit[] rayHits = Physics.SphereCastAll(
                 transform.position, // 이 위치에서 (슈류탄 현 위치)

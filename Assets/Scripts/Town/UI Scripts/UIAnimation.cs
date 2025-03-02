@@ -16,7 +16,7 @@ public class UIAnimation : MonoBehaviour
 
     void Start()
     {
-        mPlayer = GameManager.Instance.Me.MPlayer;
+        mPlayer = GameManager.Instance.MPlayer.MPlayer;
         // mPlayer =
         //     TownManager.Instance.me != null && TownManager.Instance.me.MPlayer != null
         //         ? TownManager.Instance.me.MPlayer

@@ -17,8 +17,6 @@ public class TownManager : SManagerBase
     [SerializeField]
     private TMP_Text txtServer;
 
-    private Dictionary<int, Player> playerList = new();
-
     private void Awake()
     {
         if (_instance == null)
@@ -76,9 +74,8 @@ public class TownManager : SManagerBase
 
     protected override void ActivateUI()
     {
+        base.ActivateUI();
         uiStart.gameObject.SetActive(false);
         uiAnimation.gameObject.SetActive(true);
-        if (!UiChat.gameObject.activeSelf)
-            UiChat.gameObject.SetActive(true);
     }
 }

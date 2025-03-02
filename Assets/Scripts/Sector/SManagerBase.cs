@@ -34,11 +34,8 @@ public abstract class SManagerBase : MonoBehaviour
     public UIPlayer UiPlayer => uiPlayer;
 
     private Dictionary<int, Player> playerList = new();
-    private Dictionary<int, string> prefabPaths = new();
+    private readonly Dictionary<int, string> prefabPaths = new();
     public Player MyPlayer { get; private set; }
-
-    private Dictionary<int, ResourceController> resources = new(); // key는 리소스인덱스
-    private Dictionary<int, MonsterController> monsters = new(); // key는 몬스터인덱스
 
     protected void SetPrefabPath()
     {
@@ -49,20 +46,25 @@ public abstract class SManagerBase : MonoBehaviour
         prefabPaths[1005] = "Player/Player5";
     }
 
-    protected virtual void ActivateUI() { }
+    protected virtual void ActivateUI()
+    {
+        if (!UiChat.gameObject.activeSelf)
+            UiChat.gameObject.SetActive(true);
+    }
 
     public Player Enter(PlayerInfo playerInfo)
     {
+        // [1] UI 활성화
         ActivateUI();
-        // [1] 프리펩 생성 및 정보 연동
+        // [2] 플레이어 프리펩 생성 및 정보 연동
         MyPlayer = SpawnPlayer(playerInfo);
-        // [2] "내" 프리펩인 걸 선언
+        // [3] "내" 프리펩임 선언
         MyPlayer.SetIsMine(true, playerInfo.CurrentSector);
+        // [4] 머리 위 닉네임 UI에 이름 박음
         MyPlayer.SetUI(UiPlayer);
-        // [3] 머리 위 닉네임 UI에 이름 박음
         MyPlayer.SetNickname(playerInfo.Nickname);
         MyPlayer.SetStatInfo(playerInfo.StatInfo);
-
+        // [5] "내" 플레이어 오브젝트 반환
         return MyPlayer;
     }
 

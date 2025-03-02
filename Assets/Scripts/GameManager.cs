@@ -15,9 +15,12 @@ public class GameManager : MonoBehaviour
     private NetworkManager network;
     public static NetworkManager Network => _instance.network;
 
+    private SManagerBase sManager;
+    public SManagerBase SManager => sManager;
+
     [Header("Me")]
     public string UserName;
-    public Player Me;
+    public Player MPlayer;
     public int ClassCode;
     public int CurrentSector;
 
@@ -29,19 +32,6 @@ public class GameManager : MonoBehaviour
     private Dictionary<int, Player> s2Players = new();
     private Dictionary<int, Player> s3Players = new();
     private Dictionary<int, Player> s4Players = new();
-
-    [Header("Managers")]
-    private readonly Dictionary<int, Func<SManagerBase>> managers = new()
-    {
-        { 100, () => TownManager.Instance },
-        { 101, () => S1Manager.Instance },
-        { 102, () => S2Manager.Instance },
-        { 103, () => S3Manager.Instance },
-        // { 104, () => S4Manager.Instance },
-    };
-    public Dictionary<int, Func<SManagerBase>> Managers => managers;
-    private SManagerBase sManager;
-    public SManagerBase SManager => sManager;
 
     [Header("Utils")]
     public JsonContainer<Resource> resourceContainer;
@@ -189,7 +179,7 @@ public class GameManager : MonoBehaviour
         foreach (PlayerInfo playerInfo in pkt.Players)
         {
             // [2-1] 플레이어 정보 중 내 정보는 패스
-            if (playerInfo.PlayerId == Me.PlayerId)
+            if (playerInfo.PlayerId == MPlayer.PlayerId)
                 continue;
             // [2-2] 플레이어 오브젝트 생성 및 데이터 연동
             var player = sManager.SpawnPlayer(playerInfo);

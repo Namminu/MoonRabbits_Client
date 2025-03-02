@@ -74,7 +74,8 @@ class PacketHandler
         Debug.Log($"S2CAnimation 패킷 무사 도착 : {pkt}");
 
         var player = GameManager.Instance.GetPlayer(pkt.PlayerId);
-        player.Emote(pkt.AnimCode);
+        if (player != null)
+            player.Emote(pkt.AnimCode);
     }
     #endregion
 
@@ -88,7 +89,8 @@ class PacketHandler
         if (pkt.PlayerId > 0)
         {
             var player = GameManager.Instance.GetPlayer(pkt.PlayerId);
-            player.RecvMessage(pkt.ChatMsg, pkt.ChatType);
+            if (player != null)
+                player.RecvMessage(pkt.ChatMsg, pkt.ChatType);
         }
         else
         {
@@ -142,7 +144,8 @@ class PacketHandler
         bool isValidTransform = pkt.IsValidTransform; // 이거 안 쓰나여?
 
         var player = GameManager.Instance.GetPlayer(pkt.PlayerId);
-        player.Move(position, rotation);
+        if (player != null)
+            player.Move(position, rotation);
     }
 
     public static void S2CPlayerRunningHandler(PacketSession session, IMessage packet)
@@ -357,7 +360,8 @@ class PacketHandler
         Debug.Log($"S2CRecall 패킷 무사 도착 : {pkt}");
 
         var player = GameManager.Instance.GetPlayer(pkt.PlayerId);
-        player.CastRecall(pkt.RecallTimer);
+        if (player != null)
+            player.CastRecall(pkt.RecallTimer);
     }
 
     public static void S2CThrowGrenadeHandler(PacketSession session, IMessage packet)
@@ -367,7 +371,8 @@ class PacketHandler
         Debug.Log($"S2CThrowGrenade 패킷 무사 도착 : {pkt}");
 
         var player = GameManager.Instance.GetPlayer(pkt.PlayerId);
-        player.CastGrenade(pkt.Velocity, pkt.CoolTime);
+        if (player != null)
+            player.CastGrenade(pkt.Velocity, pkt.CoolTime);
     }
 
     public static void S2CStunHandler(PacketSession session, IMessage packet)
@@ -375,11 +380,12 @@ class PacketHandler
         if (packet is not S2CStun pkt)
             return;
         Debug.Log($"S2CStun 패킷 무사 도착 : {pkt}");
-
+        // 몬스터 경우 처리도 추가해야함
         foreach (int playerId in pkt.PlayerIds)
         {
             var player = GameManager.Instance.GetPlayer(playerId);
-            player.Stun(pkt.StunTimer);
+            if (player != null)
+                player.Stun(pkt.StunTimer);
         }
     }
 
@@ -390,7 +396,8 @@ class PacketHandler
         Debug.Log($"S2CEquipChange 패킷 무사 도착 : {pkt}");
 
         var player = GameManager.Instance.GetPlayer(pkt.PlayerId);
-        player.ChangeEquip(pkt.NextEquip);
+        if (player != null)
+            player.ChangeEquip(pkt.NextEquip);
     }
     #endregion
 
@@ -401,9 +408,9 @@ class PacketHandler
             return;
         Debug.Log($"S2CAddExp 패킷 무사 도착 : {pkt}");
 
-        if (GameManager.Instance.Me != null)
+        if (GameManager.Instance.MPlayer != null)
         {
-            GameManager.Instance.Me.SetExp(pkt.UpdatedExp);
+            GameManager.Instance.MPlayer.SetExp(pkt.UpdatedExp);
         }
 
         // if (TownManager.Instance.MyPlayer != null)
@@ -423,20 +430,22 @@ class PacketHandler
             return;
         Debug.Log($"S2CLevelUp 패킷 무사 도착 : {pkt}");
 
-        if (GameManager.Instance.Me != null && GameManager.Instance.Me.PlayerId == pkt.PlayerId)
+        if (GameManager.Instance.MPlayer != null)
         {
-            GameManager.Instance.Me.LevelUp(
-                pkt.UpdatedLevel,
-                pkt.NewTargetExp,
-                pkt.UpdatedExp,
-                pkt.AbilityPoint
-            );
+            if (GameManager.Instance.MPlayer.PlayerId == pkt.PlayerId)
+            {
+                GameManager.Instance.MPlayer.LevelUp(
+                    pkt.UpdatedLevel,
+                    pkt.NewTargetExp,
+                    pkt.UpdatedExp,
+                    pkt.AbilityPoint
+                );
+            }
+            else if (GameManager.Instance.MPlayer.PlayerId != pkt.PlayerId)
+            {
+                GameManager.Instance.GetPlayer(pkt.PlayerId).ActiveLevelUpEffect();
+            }
         }
-        else if (GameManager.Instance.Me.PlayerId != pkt.PlayerId)
-        {
-            GameManager.Instance.GetPlayer(pkt.PlayerId).LevelUpOther();
-        }
-
         // if (TownManager.Instance.MyPlayer != null)
         // {
         //     if (pkt.PlayerId == TownManager.Instance.MyPlayer.PlayerId)
@@ -493,9 +502,9 @@ class PacketHandler
             return;
         Debug.Log($"S2CInvestPoint 패킷 무사 도착 : {pkt}");
 
-        if (GameManager.Instance.Me != null)
+        if (GameManager.Instance.MPlayer != null)
         {
-            GameManager.Instance.Me.InvestPoint(pkt.StatInfo);
+            GameManager.Instance.MPlayer.InvestPoint(pkt.StatInfo);
         }
 
         // if (TownManager.Instance.MyPlayer != null)

@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class MyPlayer : MonoBehaviour
 {
-    public Player P;
+    private Player player;
 
     [SerializeField]
     public static MyPlayer instance { get; private set; }
@@ -61,7 +61,7 @@ public class MyPlayer : MonoBehaviour
     {
         instance = this;
 
-        P = GetComponent<Player>();
+        player = GetComponent<Player>();
         eSystem = TownManager.Instance.ESystem;
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
@@ -118,7 +118,7 @@ public class MyPlayer : MonoBehaviour
     // 충돌한 위치로 NavMeshAgent를 이동시킴 (agent.SetDestination(rayHit.point);
     private void HandleInput()
     {
-        if (P.IsStun)
+        if (player.IsStun)
             return;
 
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
@@ -169,7 +169,7 @@ public class MyPlayer : MonoBehaviour
 
     private void MoveAndSendMovePacket()
     {
-        if (P.IsStun)
+        if (player.IsStun)
             return;
 
         // 플레이어 이동시키기

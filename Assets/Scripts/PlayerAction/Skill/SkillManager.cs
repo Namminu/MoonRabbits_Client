@@ -10,7 +10,6 @@ public class SkillManager : MonoBehaviour
     [SerializeField]
     private MyPlayer player;
 
-    private const int throwPower = 5;
     private bool isCasting = false;
     public bool IsCasting
     {
@@ -19,15 +18,16 @@ public class SkillManager : MonoBehaviour
     }
 
     private bool isGrenadeReady = true;
-    public bool IsGrenadeReady { get => isGrenadeReady; set { isGrenadeReady = value; } }
-    private const float coolTimeQ = 5f;
+    public bool IsGrenadeReady
+    {
+        get => isGrenadeReady;
+        set { isGrenadeReady = value; }
+    }
 
     private bool isTrapReady = true;
     private const float coolTimeE = 5f;
     private Queue<GameObject> traps = new();
-    private const int maxTraps = 3;
-
-    private const int recallTimer = 5;
+    private const int maxTraps = 2;
 
     public Action eventQ; // Q키 누르면 발동
     public Action eventE; // E키 누르면 발동
@@ -77,26 +77,7 @@ public class SkillManager : MonoBehaviour
 
             var pkt = new C2SThrowGrenade { StartPos = sp, TargetPos = tp };
             GameManager.Network.Send(pkt);
-
-            // Vector3 forceVec = throwTargetPos.point - transform.position;
-            // forceVec.y = throwPower;
-
-            // GameObject skillObj = Instantiate(
-            //     player.grenade,
-            //     transform.position,
-            //     transform.rotation
-            // );
-
-            // Rigidbody rigid = skillObj.GetComponent<Rigidbody>();
-            // rigid.AddForce(forceVec, ForceMode.Impulse);
-            // rigid.AddTorque(Vector3.back, ForceMode.Impulse);
         }
-
-        // yield return new WaitForSeconds(1f);
-        // isCasting = false;
-
-        // yield return new WaitForSeconds(coolTimeQ);
-        // isGrenadeReady = true;
     }
 
     IEnumerator SetTrap()

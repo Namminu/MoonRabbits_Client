@@ -105,7 +105,7 @@ public class Player : MonoBehaviour
         if (IsMine)
         {
             MPlayer = gameObject.AddComponent<MyPlayer>();
-            GameManager.Instance.Me = this;
+            GameManager.Instance.MPlayer = this;
         }
         else
         {
@@ -460,23 +460,21 @@ public class Player : MonoBehaviour
             );
 
         abilityPoint = updatedAbilityPoint;
+        ActiveLevelUpEffect();
     }
 
-    public void LevelUpOther()
+    public void ActiveLevelUpEffect()
     {
         // 다른 플레이어 레벨 표시 변경
         // TownManager.Instance.SetPlayerLevel(playerId, level);
 
         // 레벨업 이펙트
-        GameObject effect = transform.Find("LevelUp").gameObject;
-        effect.SetActive(true);
-        Invoke(nameof(EffectOff), 1f);
-    }
-
-    private void EffectOff()
-    {
-        GameObject effect = transform.Find("LevelUp").gameObject;
-        effect.SetActive(false);
+        GameObject effect = transform.Find("LevelUpEffect").gameObject;
+        if (effect.activeSelf)
+        {
+            effect.SetActive(false);
+        }
+        effect.SetActive(true); // 얘는 이펙트가 다 재생되면 알아서 꺼지는 넘입니다!
     }
 
     public void SetUI(UIPlayer uiPlayer)
