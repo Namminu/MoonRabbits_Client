@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEditor.Build;
 using UnityEngine;
 
 public class InventoryUI : MonoBehaviour
@@ -71,28 +72,41 @@ public class InventoryUI : MonoBehaviour
 			/* 인벤토리 내 아이템 탐색 */
 			List<MaterialItem> itemList = itemSlots.Where(slot => slot.HasItem()).Select(slot => slot.GetItem()).ToList();
 
-			/* 같은 아이템 합치기 */
-			Dictionary<int, int> itemStackCount = new();
-			Dictionary<int, MaterialItemData> itemDataMap = new();
-
-			foreach (var item in itemList)
+			/* 병합 아이템 리스트 */
+			List<MaterialItem> mergedItemList = new List<MaterialItem>();
+			foreach(var item in itemList)
 			{
 				int itemId = item.Data.ItemId;
-				if (itemStackCount.ContainsKey(itemId))
-				{
-					itemStackCount[itemId] += item.CurItemStack; // 아이템 개수 합산
-				}
-				else
-				{
-					itemStackCount[itemId] = item.CurItemStack;
-					itemDataMap[itemId] = (MaterialItemData)item.Data; // 아이템 데이터 저장
-				}
-			}
+				int maxStack = item.ItemData.ItemMaxStack;
+				int remainStack = item.CurItemStack;
 
-			/* 병합된 아이템 리스트 생성 */
-			List<MaterialItem> mergedItemList = itemStackCount
-				.Select(kvp => new MaterialItem(itemDataMap[kvp.Key], kvp.Value))
-				.ToList();
+				bool isMerged = false;
+				foreach (var mergedItem in mergedItemList)
+				{
+					if (mergedItem.Data.ItemId == itemId && mergedItem.CurItemStack < maxStack)
+					{
+						int spaceLeft = maxStack - mergedItem.CurItemStack;
+						if (remainStack <= spaceLeft)
+						{
+							mergedItem.CurItemStack += remainStack;
+							isMerged = true;
+							break;
+						}
+						else
+						{
+							mergedItem.CurItemStack = maxStack;
+							remainStack -= spaceLeft;
+						}
+					}
+				}
+				// 남은 개수가 있으면 새 스택 생성
+				while (remainStack > 0)
+				{
+					int stackToAdd = Mathf.Min(remainStack, maxStack);
+					mergedItemList.Add(new MaterialItem((MaterialItemData)item.Data, stackToAdd));
+					remainStack -= stackToAdd;
+				}
+			} 
 
 			/* 정렬 */
 			mergedItemList.Sort(_sortComparer.Compare);
@@ -117,6 +131,63 @@ public class InventoryUI : MonoBehaviour
 			Debug.LogError("Sort Item Method Error: " + ex);
 			return -1;
 		}
+	}
+
+	public bool AddItem(MaterialItem item)
+	{
+		foreach (var slot in itemSlots)
+		{
+			/* 슬롯에 추가되는 아이템과 동일한 아이템이 있을 경우 */
+			if (slot.HasItem() && slot.GetItem().Data.ItemId == item.ItemData.ItemId)
+			{
+				MaterialItem existItem = slot.GetItem();
+				int maxStack = item.ItemData.ItemMaxStack;
+
+				if (existItem.CurItemStack < maxStack)
+				{
+					int restStack = maxStack - existItem.CurItemStack;
+					if (item.CurItemStack <= restStack)
+					{
+						existItem.CurItemStack += item.CurItemStack;
+						slot.UpdateItemCount(existItem.CurItemStack);
+						return true;
+					}
+					else
+					{
+						existItem.CurItemStack = maxStack;
+						slot.UpdateItemCount(maxStack);
+						item.CurItemStack -= restStack;
+						break;
+					}
+				}
+			}
+		}
+
+		// 빈 슬롯을 찾아 아이템 추가
+		foreach (var slot in itemSlots)
+		{
+			if (!slot.HasItem())
+			{
+				slot.AddItem(item);
+				return true;
+			}
+		}
+
+		Debug.Log("Inventory Full. Cannot Add Item.");
+		return false;
+	}
+
+	public void AddRemainingItems(MaterialItem remainingItem)
+	{
+		foreach (var slot in itemSlots)
+		{
+			if (!slot.HasItem()) // 빈 슬롯 찾기
+			{
+				slot.AddItem(remainingItem);
+				return;
+			}
+		}
+		Debug.Log("Inventory Full. Cannot Add Remaining Item.");
 	}
 
 

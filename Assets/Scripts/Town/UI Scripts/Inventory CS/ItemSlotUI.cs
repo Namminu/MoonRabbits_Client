@@ -60,33 +60,56 @@ public class ItemSlotUI
 		}
 	}
 
-    /// <summary>
-    /// Add Item to Slot Method
-    /// </summary>
-    public void AddItem(MaterialItem insertItem)
-    {
-        if (insertItem == null) return;
+	/// <summary>
+	/// Add Item to Slot Method
+	/// </summary>
+	public void AddItem(MaterialItem insertItem)
+	{
+		if (insertItem == null) return;
 
-        /* 이미 존재하는 아이템일 경우 병합 */
-        if(item != null && item.Data.ItemId == insertItem.Data.ItemId)
-        {
-            item.CurItemStack += insertItem.CurItemStack;
-			text_ItemAmount.text = item.CurItemStack.ToString();
-            return;
+		int maxStackSize = 99;
+
+		/* 이미 존재하는 아이템일 경우 병합 */
+		if (item != null && item.Data.ItemId == insertItem.Data.ItemId)
+		{
+			int totalStack = item.CurItemStack + insertItem.CurItemStack;
+
+			if (totalStack <= maxStackSize)
+			{
+				item.CurItemStack = totalStack;
+				text_ItemAmount.text = item.CurItemStack.ToString();
+			}
+			else
+			{
+				// 최대 개수를 초과한 경우
+				item.CurItemStack = maxStackSize;
+				text_ItemAmount.text = maxStackSize.ToString();
+
+				int restStack = totalStack - maxStackSize;
+				MaterialItem overflowItem = new MaterialItem(insertItem.ItemData, restStack);
+
+				InventoryUI inventoryUI = FindObjectOfType<InventoryUI>();
+				if (inventoryUI != null)
+				{
+					inventoryUI.AddRemainingItems(overflowItem);
+				}
+			}
+			return;
 		}
 
-		/* 새 아이템 정보 업데이트 */
+		/* 슬롯이 비어 있을 경우 새 아이템 추가 */
 		item = insertItem;
-        itemImage.sprite = insertItem.ItemData.ItemIcon;
-        text_ItemAmount.text = insertItem.CurItemStack.ToString();
+		itemImage.sprite = insertItem.ItemData.ItemIcon;
+		text_ItemAmount.text = item.CurItemStack.ToString();
 
-        SetItemImageAlpha(1);
-    }
+		SetItemImageAlpha(1);
+	}
 
-    /// <summary>
-    /// Update Item Count Method, When Count Under/Equal 0, auto call ClearSlot()
-    /// </summary>
-    public int UpdateItemCount(int itemAmount)
+
+	/// <summary>
+	/// Update Item Count Method, When Count Under/Equal 0, auto call ClearSlot()
+	/// </summary>
+	public int UpdateItemCount(int itemAmount)
     {
         if (item == null) return -1;
 
@@ -167,8 +190,7 @@ public class ItemSlotUI
 
         if (HasItem() && item.Data.ItemId == draggedItem.Data.ItemId)
         {
-			item.CurItemStack += draggedItem.CurItemStack;
-			text_ItemAmount.text = item.CurItemStack.ToString();
+            AddItem(draggedItem);
 			DragSlot.instance.dragSlot.ClearSlot();
 		}  
         else ChangeSlot();
@@ -310,9 +332,8 @@ public class ItemSlotUI
         /* 같은 종류의 아이템일 경우 합침 */
         if(targetItem != null && targetItem.Data.ItemId == draggedItem.Data.ItemId)
         {
-            targetItem.CurItemStack += draggedItem.CurItemStack;
-            DragSlot.instance.dragSlot.ClearSlot();
-        }
+			AddItem(draggedItem);
+		}
         else /* 다른 종류의 아이템일 경우 교체 */
         {
 			MaterialItem tempItem = item;

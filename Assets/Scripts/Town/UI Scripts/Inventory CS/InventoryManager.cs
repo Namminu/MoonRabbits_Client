@@ -145,7 +145,21 @@ public class InventoryManager : MonoBehaviour
 
 
 	#region 인벤토리 클라 내부 로직
-	
+	public bool AddItemToInven(MaterialItem newItem)
+    {
+        if(inventoryUI == null)
+        {
+            Debug.LogError("Inven Manager : InventoryUI NULL Ref");
+            return false;
+        }
+        bool isItemAdd = inventoryUI.AddItem(newItem);
+        if(isItemAdd) return true;
+        else
+        {
+            Debug.LogError("Inven Manager : Item Add Failed");
+            return false;
+        }
+    }
     #endregion
 }
 
