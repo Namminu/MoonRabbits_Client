@@ -37,6 +37,11 @@ public class UIChat : MonoBehaviour
 
     private float baseChatItemWidth;
     private Player player;
+    public Player Player
+    {
+        get { return player; }
+        set { player = value; }
+    }
     private bool isOpen = true;
     public TMP_Dropdown chatType;
 
@@ -54,19 +59,19 @@ public class UIChat : MonoBehaviour
 
         baseChatItemWidth = txtChatItemBase.rectTransform.sizeDelta.x;
 
-        string currentScene = SceneManager.GetActiveScene().name;
-        switch (currentScene)
-        {
-            case "Town":
-                player = TownManager.Instance.MyPlayer;
-                break;
-            case "Sector1":
-                player = S1Manager.Instance.MyPlayer;
-                break;
-            case "Sector2":
-                player = S2Manager.Instance.MyPlayer;
-                break;
-        }
+        // string currentScene = SceneManager.GetActiveScene().name;
+        // switch (currentScene)
+        // {
+        //     case "Town":
+        //         player = TownManager.Instance.MyPlayer;
+        //         break;
+        //     case "Sector1":
+        //         player = S1Manager.Instance.MyPlayer;
+        //         break;
+        //     case "Sector2":
+        //         player = S2Manager.Instance.MyPlayer;
+        //         break;
+        // }
 
         btnSend.onClick.AddListener(SendMessage);
         btnToggle.onClick.AddListener(ToggleChatWindow);

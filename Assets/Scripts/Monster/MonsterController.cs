@@ -13,7 +13,8 @@ public class MonsterController : MonoBehaviour
     [SerializeField]
     private int id;
 
-    [SerializeField] private int sectorCode = 2;
+    [SerializeField]
+    private int sectorCode;
 
     private bool _isAttack = false;
 
@@ -128,8 +129,10 @@ public class MonsterController : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player") == false) return;
-        if (_isAttack) return;
+        if (other.CompareTag("Player") == false)
+            return;
+        if (_isAttack)
+            return;
         StartCoroutine(CoMonsterAttackCoolTime());
         Debug.Log("플레이어가 몬스터와 충돌하였다.");
         CapsuleCollider playerCollider = other.GetComponent<CapsuleCollider>();
@@ -141,12 +144,22 @@ public class MonsterController : MonoBehaviour
         collisionInfo.SectorCode = sectorCode;
         collisionInfo.MyType = 2;
         collisionInfo.MyId = id;
-        collisionInfo.MyPosition = new Vec3() { X = myPos.x, Y = myPos.y, Z = myPos.z };
+        collisionInfo.MyPosition = new Vec3()
+        {
+            X = myPos.x,
+            Y = myPos.y,
+            Z = myPos.z,
+        };
         collisionInfo.MyHeight = _collider.height;
         collisionInfo.MyRadius = _collider.radius;
         collisionInfo.TargetType = 1;
         collisionInfo.TargetId = targetId;
-        collisionInfo.TargetPosition = new Vec3() { X = targetPos.x, Y = targetPos.y, Z = targetPos.z };
+        collisionInfo.TargetPosition = new Vec3()
+        {
+            X = targetPos.x,
+            Y = targetPos.y,
+            Z = targetPos.z,
+        };
         collisionInfo.TargetHeight = playerCollider.height;
         collisionInfo.TargetRadius = playerCollider.radius;
         collisionPacket.CollisionInfo = collisionInfo;
@@ -175,8 +188,8 @@ public class MonsterController : MonoBehaviour
 
     public void SetCollision(CollisionPushInfo info)
     {
-
         var type = info.TargetType;
+        Debug.Log($"타겟 타입??! : {type}");
         switch (type)
         {
             //충돌한 자가 플레이어면
@@ -186,6 +199,5 @@ public class MonsterController : MonoBehaviour
             default:
                 break;
         }
-
     }
 }

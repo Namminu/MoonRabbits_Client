@@ -76,3 +76,5 @@ crashlytics-build.properties
 
 
 build_info
+Assets/StreamingAssets/build_info
+Assets/Scripts/ServerUtil/Packet/Protocol.cs
