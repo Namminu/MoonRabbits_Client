@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PreviewSystem : MonoBehaviour
@@ -33,6 +30,13 @@ public class PreviewSystem : MonoBehaviour
 		cellIndicator.SetActive(true);
 	}
 
+	internal void StartShowingRemovePreview()
+	{
+		cellIndicator.SetActive(true);
+		PrepareCursor(Vector2Int.one);
+		ApplyFeedBackToCursor(false);
+	}
+
 	private void PrepareCursor(Vector2Int size)
 	{
 		if(size.x > 0 || size.y > 0)
@@ -59,22 +63,34 @@ public class PreviewSystem : MonoBehaviour
 	public void StopShowingPreview()
 	{
 		cellIndicator.SetActive(false);
-		Destroy(previewObject);
+		if(previewObject != null)
+			Destroy(previewObject);
 	}
 
 	public void UpdatePosition(Vector3 position, bool validity)
 	{
-		MovePreview(position);
+        if (previewObject != null)
+        {
+			MovePreview(position);
+			ApplyFeedBackToPreview(validity);
+		}
+
 		MoveCursor(position);
-		ApplyFeedBack(validity);
+		ApplyFeedBackToCursor(validity);
 	}
 
-	private void ApplyFeedBack(bool validity)
+	private void ApplyFeedBackToPreview(bool validity)
 	{
 		Color color = validity ? Color.white : Color.red;
 		color.a = 0.5f;
-		cellIndicatorRenderer.material.color = color; 
 		previewMaterialInstance.color = color;
+	}
+
+	private void ApplyFeedBackToCursor(bool validity)
+	{
+		Color color = validity ? Color.white : Color.red;
+		color.a = 0.5f;
+		cellIndicatorRenderer.material.color = color;
 	}
 
 	private void MoveCursor(Vector3 position)
