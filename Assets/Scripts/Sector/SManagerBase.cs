@@ -59,7 +59,7 @@ public abstract class SManagerBase : MonoBehaviour
         // [2] 플레이어 프리펩 생성 및 정보 연동
         MyPlayer = SpawnPlayer(playerInfo);
         // [3] "내" 프리펩임 선언
-        MyPlayer.SetIsMine(true, playerInfo.CurrentSector);
+        MyPlayer.SetIsMine(true);
         // [4] 머리 위 닉네임 UI에 이름 박음
         MyPlayer.SetUI(UiPlayer);
         MyPlayer.SetNickname(playerInfo.Nickname);

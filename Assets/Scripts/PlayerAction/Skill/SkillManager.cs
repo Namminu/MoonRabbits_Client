@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Google.Protobuf.Protocol;
+using SRDebugger;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,9 +27,14 @@ public class SkillManager : MonoBehaviour
     }
 
     private bool isTrapReady = true;
+    public bool IsTrapReady
+    {
+        get => isTrapReady;
+        set { isTrapReady = value; }
+    }
     private const float coolTimeE = 5f;
-    private Queue<GameObject> traps = new();
-    private const int maxTraps = 2;
+    private List<GameObject> traps = new();
+    public List<GameObject> Traps => traps;
 
     public Action eventQ; // Q키 누르면 발동
     public Action eventE; // E키 누르면 발동
@@ -37,7 +44,7 @@ public class SkillManager : MonoBehaviour
     {
         player = GetComponentInParent<MyPlayer>();
         eventQ += ThrowGrenade;
-        eventE += () => StartCoroutine(nameof(SetTrap));
+        eventE += SetTrap;
         eventT += Recall;
     }
 
@@ -80,40 +87,64 @@ public class SkillManager : MonoBehaviour
         }
     }
 
-    IEnumerator SetTrap()
+    private void SetTrap()
     {
         if (isCasting || !isTrapReady)
-            yield break;
+            return;
+
+        int nearTraps = Physics
+            .OverlapSphere(player.transform.position, 1f, LayerMask.GetMask("Trap"))
+            .Count();
+
+        if (nearTraps > 0)
+        {
+            return;
+        }
 
         isCasting = true;
         isTrapReady = false;
 
-        NavMeshAgent navAgent = player.NavAgent;
-        navAgent.isStopped = true;
-        navAgent.destination = player.transform.position;
-
-        player.Anim.SetTrigger("SetTrap");
-
-        GameObject trap = Instantiate(
-            player.trap,
-            player.transform.position,
-            player.transform.rotation
-        );
-
-        traps.Enqueue(trap);
-
-        if (traps.Count > maxTraps)
+        var pkt = new C2SSetTrap
         {
-            GameObject oldTrap = traps.Dequeue();
-            Destroy(oldTrap);
-        }
+            TrapPos = new Vec3
+            {
+                X = Mathf.Round(player.transform.position.x * 10),
+                Y = 0,
+                Z = Mathf.Round(player.transform.position.z * 10),
+            },
+        };
 
-        yield return new WaitForSeconds(1f);
-        isCasting = false;
-        navAgent.isStopped = false;
+        GameManager.Network.Send(pkt);
 
-        yield return new WaitForSeconds(coolTimeE);
-        isTrapReady = true;
+        // 여기부터 패킷 받고
+
+        // NavMeshAgent navAgent = player.NavAgent;
+        // navAgent.isStopped = true;
+        // navAgent.destination = player.transform.position;
+
+        // player.Anim.SetTrigger("SetTrap");
+
+        // GameObject trap = Instantiate(
+        //     player.trap,
+        //     player.transform.position,
+        //     player.transform.rotation
+        // );
+
+        // traps.Enqueue(trap);
+
+        // if (traps.Count > maxTraps)
+        // {
+        //     // 여기도 서버로 remove 패킷
+        //     GameObject oldTrap = traps.Dequeue();
+        //     Destroy(oldTrap);
+        // }
+
+        // yield return new WaitForSeconds(1f);
+        // isCasting = false;
+        // navAgent.isStopped = false;
+
+        // yield return new WaitForSeconds(coolTimeE);
+        // isTrapReady = true;
     }
 
     private void Recall()

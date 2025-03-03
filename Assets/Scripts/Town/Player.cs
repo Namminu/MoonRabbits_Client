@@ -41,6 +41,8 @@ public class Player : MonoBehaviour
     public GameObject axe;
     public GameObject pickAxe;
     private Transform throwPoint;
+    private const int maxTraps = 2;
+
     private Dictionary<int, string> emotions = new();
     public bool IsStun = false;
     private Dictionary<int, GameObject> equips = new();
@@ -98,7 +100,7 @@ public class Player : MonoBehaviour
         this.level = level;
     }
 
-    public void SetIsMine(bool isMine, int currentSector)
+    public void SetIsMine(bool isMine)
     {
         IsMine = isMine;
 
@@ -291,7 +293,6 @@ public class Player : MonoBehaviour
     public void CastGrenade(Vec3 vel, float coolTime)
     {
         GameObject grenadeObj = Instantiate(grenade, throwPoint.position, Quaternion.identity);
-
         grenadeObj.GetComponent<SkillObj>().CasterId = PlayerId;
 
         Rigidbody rigid = grenadeObj.GetComponent<Rigidbody>();
@@ -300,16 +301,68 @@ public class Player : MonoBehaviour
 
         if (IsMine)
         {
-            StartCoroutine(RunCoolTime(coolTime));
+            StartCoroutine(RunCoolTime(coolTime, 0));
         }
     }
 
-    IEnumerator RunCoolTime(float coolTime)
+    public void CastTrap(Vec3 pos, float coolTime)
     {
+        animator.SetTrigger("SetTrap");
+
+        GameObject trapObj = Instantiate(
+            trap,
+            new Vector3(pos.X / 10f, 0, pos.Z / 10f),
+            transform.rotation
+        );
+        trapObj.GetComponent<SkillObj>().CasterId = PlayerId;
+
+        if (IsMine)
+        {
+            List<GameObject> myTraps = MPlayer.SkillManager.Traps;
+            myTraps.Add(trapObj);
+
+            if (myTraps.Count > maxTraps)
+            {
+                GameObject oldTrap = myTraps[0];
+                myTraps.Remove(oldTrap);
+
+                var pkt = new C2SRemoveTrap
+                {
+                    TrapInfo = new TrapInfo
+                    {
+                        CasterId = PlayerId,
+                        Pos = new Vec3
+                        {
+                            X = Mathf.Round(oldTrap.transform.position.x * 10f),
+                            Y = 0,
+                            Z = Mathf.Round(oldTrap.transform.position.z * 10f),
+                        },
+                    },
+                };
+
+                GameManager.Network.Send(pkt);
+            }
+
+            StartCoroutine(RunCoolTime(coolTime, 1));
+        }
+    }
+
+    IEnumerator RunCoolTime(float coolTime, int skillType)
+    {
+        yield return new WaitForSeconds(1f);
         MPlayer.SkillManager.IsCasting = false;
 
         yield return new WaitForSeconds(coolTime);
-        MPlayer.SkillManager.IsGrenadeReady = true;
+
+        switch (skillType)
+        {
+            case 0:
+                MPlayer.SkillManager.IsGrenadeReady = true;
+                break;
+            case 1:
+                MPlayer.SkillManager.IsTrapReady = true;
+                break;
+        }
     }
 
     public void Stun(float timer)

@@ -7,7 +7,6 @@ public class ResourceManager
     private Dictionary<string, Object> _resourceCache = new Dictionary<string, Object>();
     private Dictionary<string, Sprite> _spriteCache = new Dictionary<string, Sprite>();
 
-
     public void RegisterResource(string key, Object resource)
     {
         if (!_resourceCache.ContainsKey(key))
@@ -16,7 +15,8 @@ public class ResourceManager
         }
     }
 
-    public T Load<T>(string path) where T : Object
+    public T Load<T>(string path)
+        where T : Object
     {
         string key = path.Substring(path.LastIndexOf('/') + 1);
 
@@ -34,7 +34,8 @@ public class ResourceManager
         return resource;
     }
 
-    public void LoadAll<T>(string folderPath) where T : Object
+    public void LoadAll<T>(string folderPath)
+        where T : Object
     {
         T[] resources = Resources.LoadAll<T>(folderPath);
         foreach (var resource in resources)
@@ -43,6 +44,7 @@ public class ResourceManager
             RegisterResource(key, resource);
         }
     }
+
     public void LoadAllSprites(string folderPath)
     {
         Sprite[] sprites = Resources.LoadAll<Sprite>(folderPath);
@@ -51,6 +53,7 @@ public class ResourceManager
             _spriteCache[sprite.name] = sprite; // 스프라이트를 캐시에 저장
         }
     }
+
     public Sprite GetSprite(string spriteName)
     {
         _spriteCache.TryGetValue(spriteName, out Sprite sprite);

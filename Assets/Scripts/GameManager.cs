@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     [Header("Players")]
     private Dictionary<int, Dictionary<int, Player>> playerList = new();
     public Dictionary<int, Dictionary<int, Player>> PlayerList => playerList;
+    
     private Dictionary<int, Player> townPlayers = new();
     private Dictionary<int, Player> s1Players = new();
     private Dictionary<int, Player> s2Players = new();
@@ -126,10 +127,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void EnterAfterSceneAwake(PlayerInfo playerInfo)
+    public void EnterAfterSceneAwake(int targetSector, PlayerInfo playerInfo)
     {
         // SceneManagerEx.SetScene(sceneName[playerInfo.CurrentSector]);
-        StartCoroutine(EnterSector(playerInfo));
+        StartCoroutine(EnterSector(targetSector, playerInfo));
     }
 
     public void SpawnAfterSceneAwake(S2CSpawn pkt)
@@ -157,18 +158,18 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-    IEnumerator EnterSector(PlayerInfo playerInfo)
+    IEnumerator EnterSector(int targetSector, PlayerInfo playerInfo)
     {
         // [1] 이전 섹터의 플레이어리스트 비움
         playerList[CurrentSector].Clear();
         // [2] 이동할 섹터의 매니저 찾고, 씬 로드 기다림
-        StartCoroutine(SetSManager(playerInfo.CurrentSector));
+        StartCoroutine(SetSManager(targetSector));
         yield return new WaitUntil(() => sManager != null);
         // [3] 플레이어 오브젝트 생성 및 데이터 연동
         Player me = sManager.Enter(playerInfo);
         sManager.UiChat.Player = me;
         // [4] 현재 위치한 섹터 값 최신화
-        CurrentSector = playerInfo.CurrentSector;
+        CurrentSector = targetSector;
     }
 
     IEnumerator SpawnOthers(S2CSpawn pkt)
@@ -183,7 +184,7 @@ public class GameManager : MonoBehaviour
                 continue;
             // [2-2] 플레이어 오브젝트 생성 및 데이터 연동
             var player = sManager.SpawnPlayer(playerInfo);
-            player.SetIsMine(false, playerInfo.CurrentSector);
+            player.SetIsMine(false);
         }
     }
 

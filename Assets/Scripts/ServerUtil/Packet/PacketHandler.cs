@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using Google.Protobuf;
 using Google.Protobuf.Protocol;
 using ServerCore;
@@ -52,12 +53,12 @@ class PacketHandler
             return;
         Debug.Log($"S2CEnter 패킷 무사 도착 : {pkt}");
 
-        string targetSceneName = GameManager.Instance.SceneName[pkt.Player.CurrentSector];
+        string targetSceneName = GameManager.Instance.SceneName[pkt.TargetSector];
 
         if (targetSceneName != SceneManager.GetActiveScene().name)
             SceneManager.LoadScene(targetSceneName);
 
-        GameManager.Instance.EnterAfterSceneAwake(pkt.Player);
+        GameManager.Instance.EnterAfterSceneAwake(pkt.TargetSector, pkt.Player);
     }
 
     public static void S2CMoveSectorHandler(PacketSession session, IMessage packet)
@@ -67,11 +68,11 @@ class PacketHandler
         Debug.Log($"S2CMoveSector 패킷 무사 도착 : {pkt}");
     }
 
-    public static void S2CAnimationHandler(PacketSession session, IMessage packet)
+    public static void S2CEmoteHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CAnimation pkt)
+        if (packet is not S2CEmote pkt)
             return;
-        Debug.Log($"S2CAnimation 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CEmote 패킷 무사 도착 : {pkt}");
 
         var player = GameManager.Instance.GetPlayer(pkt.PlayerId);
         if (player != null)
@@ -373,6 +374,54 @@ class PacketHandler
         var player = GameManager.Instance.GetPlayer(pkt.PlayerId);
         if (player != null)
             player.CastGrenade(pkt.Velocity, pkt.CoolTime);
+    }
+
+    public static void S2CTrapsHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CTraps pkt)
+            return;
+        Debug.Log($"S2CTraps 패킷 무사 도착 : {pkt}");
+    }
+
+    public static void S2CSetTrapHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CSetTrap pkt)
+            return;
+        Debug.Log($"S2CSetTrap 패킷 무사 도착 : {pkt}");
+
+        var player = GameManager.Instance.GetPlayer(pkt.TrapInfo.CasterId);
+        if (player != null)
+            player.CastTrap(pkt.TrapInfo.Pos, pkt.CoolTime);
+    }
+
+    public static void S2CRemoveTrapHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CRemoveTrap pkt)
+            return;
+        Debug.Log($"S2CRemoveTrap  패킷 무사 도착 : {pkt}");
+
+        SkillObj[] traps = GameObject.FindObjectsOfType<SkillObj>();
+
+        foreach (SkillObj obj in traps)
+        {
+            if (obj.type != SkillObj.SkillType.trap)
+            {
+                continue;
+            }
+            else
+            {
+                foreach (TrapInfo trap in pkt.TrapInfos)
+                {
+                    if (
+                        obj.transform.position.x - trap.Pos.X / 10f <= 0.1
+                        && obj.transform.position.z - trap.Pos.Z / 10f <= 0.1
+                    )
+                    {
+                        obj.RemoveThis();
+                    }
+                }
+            }
+        }
     }
 
     public static void S2CStunHandler(PacketSession session, IMessage packet)

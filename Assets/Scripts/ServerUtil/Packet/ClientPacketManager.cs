@@ -39,8 +39,8 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CEnter, PacketHandler.S2CEnterHandler);
         _onRecv.Add((ushort)MsgId.S2CMoveSector, MakePacket<S2CMoveSector>);
         _handler.Add((ushort)MsgId.S2CMoveSector, PacketHandler.S2CMoveSectorHandler);
-        _onRecv.Add((ushort)MsgId.S2CAnimation, MakePacket<S2CAnimation>);
-        _handler.Add((ushort)MsgId.S2CAnimation, PacketHandler.S2CAnimationHandler);
+        _onRecv.Add((ushort)MsgId.S2CEmote, MakePacket<S2CEmote>);
+        _handler.Add((ushort)MsgId.S2CEmote, PacketHandler.S2CEmoteHandler);
         _onRecv.Add((ushort)MsgId.S2CChat, MakePacket<S2CChat>);
         _handler.Add((ushort)MsgId.S2CChat, PacketHandler.S2CChatHandler);
         _onRecv.Add((ushort)MsgId.S2CSpawn, MakePacket<S2CSpawn>);
@@ -98,6 +98,12 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CRecall, PacketHandler.S2CRecallHandler);
         _onRecv.Add((ushort)MsgId.S2CThrowGrenade, MakePacket<S2CThrowGrenade>);
         _handler.Add((ushort)MsgId.S2CThrowGrenade, PacketHandler.S2CThrowGrenadeHandler);
+        _onRecv.Add((ushort)MsgId.S2CTraps, MakePacket<S2CTraps>);
+        _handler.Add((ushort)MsgId.S2CTraps, PacketHandler.S2CTrapsHandler);
+        _onRecv.Add((ushort)MsgId.S2CSetTrap, MakePacket<S2CSetTrap>);
+        _handler.Add((ushort)MsgId.S2CSetTrap, PacketHandler.S2CSetTrapHandler);
+        _onRecv.Add((ushort)MsgId.S2CRemoveTrap, MakePacket<S2CRemoveTrap>);
+        _handler.Add((ushort)MsgId.S2CRemoveTrap, PacketHandler.S2CRemoveTrapHandler);
         _onRecv.Add((ushort)MsgId.S2CStun, MakePacket<S2CStun>);
         _handler.Add((ushort)MsgId.S2CStun, PacketHandler.S2CStunHandler);
         _onRecv.Add((ushort)MsgId.S2CEquipChange, MakePacket<S2CEquipChange>);

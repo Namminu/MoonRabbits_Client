@@ -10,13 +10,13 @@ using UnityEngine.Rendering;
 
 public class SkillObj : MonoBehaviour
 {
-    public enum ObjType
+    public enum SkillType
     {
         grenade,
         trap,
     }
 
-    public ObjType type;
+    public SkillType type;
 
     private int casterId;
     public int CasterId
@@ -43,31 +43,64 @@ public class SkillObj : MonoBehaviour
         trail = GetComponentInChildren<TrailRenderer>();
         effect = transform.Find("Effect").gameObject;
 
-        DestroyObj();
+        StartCoroutine(SetDestroyTimer());
     }
 
-    private void DestroyObj()
+    IEnumerator SetDestroyTimer()
     {
         switch (type)
         {
-            case ObjType.grenade:
+            case SkillType.grenade:
                 Destroy(gameObject, lifeTime);
                 break;
-            case ObjType.trap:
-                Destroy(gameObject, lifeTime * 4);
+            case SkillType.trap:
+                yield return new WaitForSeconds(lifeTime * 4);
+
+                if (casterId == GameManager.Instance.MPlayer.PlayerId)
+                {
+                    var pkt = new C2SRemoveTrap
+                    {
+                        TrapInfo = new TrapInfo
+                        {
+                            CasterId = casterId,
+                            Pos = new Vec3
+                            {
+                                X = Mathf.Round(transform.position.x * 10f),
+                                Y = 0,
+                                Z = Mathf.Round(transform.position.z * 10f),
+                            },
+                        },
+                    };
+
+                    GameManager.Network.Send(pkt);
+                }
                 break;
         }
     }
 
+    public void RemoveThis()
+    {
+        if (casterId == GameManager.Instance.MPlayer.PlayerId)
+        {
+            GameManager.Instance.MPlayer.MPlayer.SkillManager.Traps.Remove(gameObject);
+        }
+        Destroy(gameObject);
+    }
+
     void OnCollisionEnter(Collision collision)
     {
-        if (!isActive && type == ObjType.grenade && collision.gameObject.CompareTag("Ground"))
+        if (!isActive && type == SkillType.grenade && collision.gameObject.CompareTag("Ground"))
             StartCoroutine(nameof(Explode));
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!isActive && type == ObjType.trap && other.gameObject.CompareTag("Player"))
+        if (
+            !isActive
+            && type == SkillType.trap
+            && other.gameObject.CompareTag("Player")
+            && casterId != other.GetComponent<Player>().PlayerId
+        )
             StartCoroutine(ActivateTrap(other.gameObject));
     }
 
@@ -126,15 +159,42 @@ public class SkillObj : MonoBehaviour
 
     IEnumerator ActivateTrap(GameObject target)
     {
+        yield return null;
         isActive = true;
 
         var rune = transform.Find("Rune").gameObject;
         rune.SetActive(false);
         effect.SetActive(true);
 
-        target.GetComponent<TempPlayer>().Stun(stunTimer); // 나중에 player로 수정
+        Player targetPlayer = target.GetComponent<Player>();
 
-        yield return new WaitForSeconds(stunTimer);
-        Destroy(gameObject);
+        var stunPkt = new C2SStun { SkillType = (int)type };
+        stunPkt.PlayerIds.Add(targetPlayer.PlayerId);
+
+        GameManager.Network.Send(stunPkt);
+
+        yield return new WaitForSeconds(2f); // 스턴 패킷 기다려야해...
+        yield return new WaitUntil(() => !targetPlayer.IsStun);
+
+        var removePkt = new C2SRemoveTrap
+        {
+            TrapInfo = new TrapInfo
+            {
+                CasterId = casterId,
+                Pos = new Vec3
+                {
+                    X = Mathf.Round(transform.position.x * 10f),
+                    Y = 0,
+                    Z = Mathf.Round(transform.position.z * 10f),
+                },
+            },
+        };
+
+        GameManager.Network.Send(removePkt);
+
+        // target.GetComponent<Player>().Stun(stunTimer);
+
+        // yield return new WaitForSeconds(stunTimer);
+        // Destroy(gameObject);
     }
 }

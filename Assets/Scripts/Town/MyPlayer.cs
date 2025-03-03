@@ -123,14 +123,12 @@ public class MyPlayer : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
         {
-            int layerMask = 1 << LayerMask.NameToLayer("Ground");
-
             if (
                 Physics.Raycast(
                     Camera.main.ScreenPointToRay(Input.mousePosition),
                     out rayHit,
                     Mathf.Infinity,
-                    layerMask
+                    LayerMask.GetMask("Ground")
                 )
             )
             {
@@ -213,7 +211,7 @@ public class MyPlayer : MonoBehaviour
         int animKey = animHash[animIdx];
         agent.SetDestination(transform.position);
 
-        var animationPacket = new C2SAnimation { AnimCode = animKey };
+        var animationPacket = new C2SEmote { AnimCode = animKey };
         Debug.Log($"감정표현?? : {animationPacket}");
         GameManager.Network.Send(animationPacket);
     }
