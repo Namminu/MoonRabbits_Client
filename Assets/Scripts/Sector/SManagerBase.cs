@@ -57,6 +57,7 @@ public abstract class SManagerBase : MonoBehaviour
         // [1] UI 활성화
         ActivateUI();
         // [2] 플레이어 프리펩 생성 및 정보 연동
+        Debug.Log("여까지 오나여?? 섹터매니저 Enter 메서드");
         MyPlayer = SpawnPlayer(playerInfo);
         // [3] "내" 프리펩임 선언
         MyPlayer.SetIsMine(true);
@@ -89,6 +90,7 @@ public abstract class SManagerBase : MonoBehaviour
         player.SetLevel(playerInfo.Level);
         // [4] 이미 접속된 플레이어인지 확인
         var playerList = GameManager.Instance.PlayerList[SectorCode];
+        Debug.Log($"여까지 오나여?? 섹터매니저 SpawnPlayer 메서드 : {playerList}");
         if (playerList.TryGetValue(playerInfo.PlayerId, out var existingPlayer))
         {
             // [4 A] 중복 접속이면 기존 거 파괴하고 이번 꺼 덧씌움
