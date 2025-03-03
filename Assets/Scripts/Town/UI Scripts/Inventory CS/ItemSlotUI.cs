@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -63,7 +64,7 @@ public class ItemSlotUI
     /// <summary>
     /// Add Item to Slot Method
     /// </summary>
-    public void AddItem(MaterialItem insertItem)
+    public void AddItem(MaterialItem insertItem, bool sendUpdate = false)
     {
         if (insertItem == null) return;
         /* 아이템 정보 업데이트 */
@@ -72,6 +73,15 @@ public class ItemSlotUI
         text_ItemAmount.text = insertItem.CurItemStack.ToString();
 
         SetItemImageAlpha(1);
+
+        if (sendUpdate)
+        {
+            // 현재 슬롯의 인덱스(itemIndex)에 따라 인벤토리 매니저의 Dictionary 갱신
+            InventoryManager.instance.UpdateInventorySlot(itemIndex, insertItem);
+            // 전체 인벤토리 상태를 List로 가져온 후 서버로 전송
+            List<MaterialItem> currentInventory = InventoryManager.instance.GetCurrentInventoryList();
+            InventoryManager.instance.SendItemMove(currentInventory);
+        }
     }
 
     /// <summary>
@@ -243,12 +253,12 @@ public class ItemSlotUI
 		MaterialItem tempItem = item;
         int tempItenIndex = itemIndex;
 
-		AddItem(DragSlot.instance.dragSlot.item);
+		AddItem(DragSlot.instance.dragSlot.item, true);
         SetItemIndex(DragSlot.instance.dragSlot.GetItemIndex());
 
 		if (tempItem != null)
 		{
-			DragSlot.instance.dragSlot.AddItem(tempItem);
+			DragSlot.instance.dragSlot.AddItem(tempItem, true);
 			SetItemIndex(DragSlot.instance.dragSlot.SetItemIndex(tempItenIndex));
 		}
 		else

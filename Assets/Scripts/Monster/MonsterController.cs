@@ -16,6 +16,8 @@ public class MonsterController : MonoBehaviour
     [SerializeField]
     private int sectorCode;
 
+    private bool _isAttack = false;
+
     public int ID
     {
         get { return id; }
@@ -118,7 +120,14 @@ public class MonsterController : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    IEnumerator CoMonsterAttackCoolTime()
+    {
+        _isAttack = true;
+        yield return new WaitForSeconds(2f);
+        _isAttack = false;
+    }
+
+    void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player") == false)
             return;

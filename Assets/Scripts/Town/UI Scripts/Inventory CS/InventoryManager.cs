@@ -1,18 +1,31 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Google.Protobuf.Protocol;
 using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
-    public static InventoryManager instance { get; private set; } // 싱글톤 인스턴스
+    public static InventoryManager instance { get; private set; }  // 싱글톤 인스턴스
 
     // 인벤토리 슬롯 데이터. key: 슬롯 인덱스, value: MaterialItem
-    private Dictionary<int, MaterialItem> inventoryDictionary = new Dictionary<int, MaterialItem>();
+    private Dictionary<int, MaterialItem> inventoryDictionary  = new Dictionary<int, MaterialItem>();
 
     public Dictionary<int, MaterialItem> GetCurrentInventoryDictionary()
     {
         return inventoryDictionary;
+    }
+
+    public List<MaterialItem> GetCurrentInventoryList()
+    {
+        List<MaterialItem> list = new List<MaterialItem>();
+        foreach (var key in inventoryDictionary.Keys.OrderBy(k => k))
+        {
+            // 슬롯이 빈 경우는 null로 처리하거나, 필요한 기본값 처리 가능
+            list.Add(inventoryDictionary[key]);
+        }
+        return list;
     }
 
     // InventoryUI.cs에서 인벤토리 슬롯들을 관리하는 컴포넌트 (InventoryUI.cs 파일 참조; 내용 확인 불가한 경우 Inspector에 할당)
@@ -44,7 +57,7 @@ public class InventoryManager : MonoBehaviour
         foreach (var slot in pkt.Slots)
         {
             // 먼저 slot.itemId가 null인지 확인하여 빈 슬롯인 경우 처리
-            if (slot.ItemId == null)
+            if (slot == null)
             {
                 // 예: 빈 슬롯인 경우 특별히 처리를 하거나 그냥 건너뛰기
                 Debug.Log($"슬롯 {slot.SlotIdx}은 빈 슬롯입니다.");
@@ -52,9 +65,7 @@ public class InventoryManager : MonoBehaviour
             }
 
             // slot.ItemId가 null이 아닌 경우 MaterialItemData를 찾아 MaterialItem 생성
-            MaterialItemData itemData = ItemDataLoader.MaterialItemsList.Find(item =>
-                item.ItemId == slot.ItemId
-            );
+            MaterialItemData itemData = ItemDataLoader.MaterialItemsList.Find(item => item.ItemId == slot.ItemId);
 
             if (itemData != null)
             {
@@ -79,6 +90,26 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    public void UpdateInventorySlot(int slotIdx, MaterialItem newItem)
+    {
+        if (inventoryDictionary.ContainsKey(slotIdx))
+        {
+            // 이미 해당 슬롯에 데이터가 있다면 덮어씌웁니다.
+            inventoryDictionary[slotIdx] = newItem;
+        }
+        else
+        {
+            // 해당 슬롯이 없으면 새 항목으로 추가합니다.
+            inventoryDictionary.Add(slotIdx, newItem);
+        }
+
+        // (옵션) 인벤토리 UI를 갱신하려면 아래와 같이 InventoryUI에 RefreshInventory를 호출할 수 있습니다.
+        if (inventoryUI != null)
+        {
+            inventoryUI.RefreshInventory(inventoryDictionary);
+        }
+    }
+
     // ----------------------------
     // 인벤토리 관련 패킷 전송 함수들
     // ----------------------------
@@ -90,7 +121,11 @@ public class InventoryManager : MonoBehaviour
     /// <param name="itemId">아이템 아이디</param>
     public void SendItemObtained(int slotIdx, int itemId)
     {
-        C2SItemObtained packet = new C2SItemObtained { SlotIdx = slotIdx, ItemId = itemId };
+        C2SItemObtained packet = new C2SItemObtained
+        {
+            SlotIdx = slotIdx,
+            ItemId = itemId
+        };
         GameManager.Network.Send(packet);
     }
 
@@ -99,7 +134,11 @@ public class InventoryManager : MonoBehaviour
     /// </summary>
     public void SendItemDisassembly(int slotIdx, int itemId)
     {
-        C2SItemDisassembly packet = new C2SItemDisassembly { SlotIdx = slotIdx, ItemId = itemId };
+        C2SItemDisassembly packet = new C2SItemDisassembly
+        {
+            SlotIdx = slotIdx,
+            ItemId = itemId
+        };
         GameManager.Network.Send(packet);
     }
 
@@ -108,7 +147,11 @@ public class InventoryManager : MonoBehaviour
     /// </summary>
     public void SendItemDestroy(int slotIdx, int itemId)
     {
-        C2SItemDestroy packet = new C2SItemDestroy { SlotIdx = slotIdx, ItemId = itemId };
+        C2SItemDestroy packet = new C2SItemDestroy
+        {
+            SlotIdx = slotIdx,
+            ItemId = itemId
+        };
         GameManager.Network.Send(packet);
     }
 
@@ -126,10 +169,43 @@ public class InventoryManager : MonoBehaviour
             {
                 SlotIdx = materialItem.SlotIdx,
                 ItemId = materialItem.ItemData.ItemId,
-                Stack = materialItem.CurItemStack,
+                Stack = materialItem.CurItemStack
             };
             packet.Slots.Add(newSlot);
         }
+    GameManager.Network.Send(packet);
+    }
+
+    // 인벤토리 이동(변경) 패킷 전송 함수
+    public void SendItemMove(List<MaterialItem> slotsStatus)
+    {
+        C2SItemMove packet = new C2SItemMove();
+        foreach (var materialItem in slotsStatus)
+        {
+            // materialItem이 null인 경우 빈 슬롯 처리 (필요시 0 또는 다른 기본값으로 전송)
+            if (materialItem == null)
+            {
+                InventorySlot newSlot = new InventorySlot
+                {
+                    SlotIdx = -1, // 빈 슬롯인 경우, 별도 처리 필요하다면 슬롯번호 -1 등 처리
+                    ItemId = 0,
+                    Stack = 0
+                };
+                packet.Slots.Add(newSlot);
+            }
+            else
+            {
+                InventorySlot newSlot = new InventorySlot
+                {
+                    SlotIdx = materialItem.SlotIdx,
+                    ItemId = materialItem.ItemData.ItemId,
+                    Stack = materialItem.CurItemStack
+                };
+                packet.Slots.Add(newSlot);
+            }
+        }
         GameManager.Network.Send(packet);
     }
+
 }
+
