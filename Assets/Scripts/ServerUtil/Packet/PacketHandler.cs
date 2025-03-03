@@ -599,11 +599,4 @@ class PacketHandler
             return;
         Debug.Log($"S2CCraft 패킷 무사 도착 : {pkt}");
     }
-
-    public static void S2CPingHandler(PacketSession session, IMessage packet)
-    {
-        if (packet is not S2CPing pkt)
-            return;
-        Debug.Log($"S2CPing 패킷 무사 도착 : {pkt}");
-    }
 }
