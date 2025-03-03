@@ -66,8 +66,17 @@ public class ItemSlotUI
     public void AddItem(MaterialItem insertItem)
     {
         if (insertItem == null) return;
-        /* 아이템 정보 업데이트 */
-        item = insertItem;
+
+        /* 이미 존재하는 아이템일 경우 병합 */
+        if(item != null && item.Data.ItemId == insertItem.Data.ItemId)
+        {
+            item.CurItemStack += insertItem.CurItemStack;
+			text_ItemAmount.text = item.CurItemStack.ToString();
+            return;
+		}
+
+		/* 새 아이템 정보 업데이트 */
+		item = insertItem;
         itemImage.sprite = insertItem.ItemData.ItemIcon;
         text_ItemAmount.text = insertItem.CurItemStack.ToString();
 
@@ -151,15 +160,18 @@ public class ItemSlotUI
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (DragSlot.instance.dragSlot != null)
-            ChangeSlot();
+        if (DragSlot.instance.dragSlot == null) return;
 
-        if(DragSlot.instance.dragSlot != null && !HasItem())
+        MaterialItem draggedItem = DragSlot.instance.dragSlot.GetItem();
+        if (draggedItem == null) return;
+
+        if (HasItem() && item.Data.ItemId == draggedItem.Data.ItemId)
         {
-            AddItem(DragSlot.instance.dragSlot.GetItem());
-            DragSlot.instance.SetItemImageAlpha(0);
-			DragSlot.instance.dragSlot = null;
-		}
+			item.CurItemStack += draggedItem.CurItemStack;
+			text_ItemAmount.text = item.CurItemStack.ToString();
+			DragSlot.instance.dragSlot.ClearSlot();
+		}  
+        else ChangeSlot();
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -288,21 +300,38 @@ public class ItemSlotUI
 
 	private void ChangeSlot()
 	{
-		MaterialItem tempItem = item;
-        int tempItenIndex = itemIndex;
+        if (DragSlot.instance.dragSlot == null) return;
 
-		AddItem(DragSlot.instance.dragSlot.item);
-        SetItemIndex(DragSlot.instance.dragSlot.GetItemIndex());
+        MaterialItem draggedItem = DragSlot.instance.dragSlot.GetItem();
+        MaterialItem targetItem = item;
 
-		if (tempItem != null)
-		{
-			DragSlot.instance.dragSlot.AddItem(tempItem);
-			SetItemIndex(DragSlot.instance.dragSlot.SetItemIndex(tempItenIndex));
+        if (draggedItem == null) return;
+
+        /* 같은 종류의 아이템일 경우 합침 */
+        if(targetItem != null && targetItem.Data.ItemId == draggedItem.Data.ItemId)
+        {
+            targetItem.CurItemStack += draggedItem.CurItemStack;
+            DragSlot.instance.dragSlot.ClearSlot();
+        }
+        else /* 다른 종류의 아이템일 경우 교체 */
+        {
+			MaterialItem tempItem = item;
+			int tempItenIndex = itemIndex;
+
+			AddItem(DragSlot.instance.dragSlot.item);
+			SetItemIndex(DragSlot.instance.dragSlot.GetItemIndex());
+
+			if (tempItem != null)
+			{
+				DragSlot.instance.dragSlot.AddItem(tempItem);
+				SetItemIndex(DragSlot.instance.dragSlot.SetItemIndex(tempItenIndex));
+			}
+			else
+			{
+				DragSlot.instance.dragSlot.ClearSlot();
+			}
 		}
-		else
-		{
-			DragSlot.instance.dragSlot.ClearSlot();
-		}
+
 		Debug.Log($"Item Slot Change: {this.name} ({itemIndex}) ↔ {DragSlot.instance.dragSlot.name} ({DragSlot.instance.dragSlot.GetItemIndex()})");
 	}
 

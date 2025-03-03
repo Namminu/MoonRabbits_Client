@@ -140,7 +140,12 @@ public class InventoryManager : MonoBehaviour
             };
             packet.Slots.Add(newSlot);
         }
-    GameManager.Network.Send(packet);
+        GameManager.Network.Send(packet);
     }
+
+
+	#region 인벤토리 클라 내부 로직
+	
+    #endregion
 }
 

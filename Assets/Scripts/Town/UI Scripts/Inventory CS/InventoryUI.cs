@@ -16,17 +16,10 @@ public class InventoryUI : MonoBehaviour
 
     private void Awake()
     {
-        /* contentArea ���� �κ��丮 ���Ե��� List : itemSlots �� �Ҵ� */
         if (contentArea != null)
             itemSlots = new List<ItemSlotUI>(contentArea.GetComponentsInChildren<ItemSlotUI>());
 
-
-        /* ���Ե鿡 �ε��� �ѹ� �ο� ���� */
 		AssignSlotIndex();
-
-        // DB���� �κ��丮 ���� �޾ƿ��� ����..?
-		// AddItem(DB���� �޾ƿ� ����)?
-
 	}
 
     private class ItemSortComparer : IComparer<Item>
@@ -67,7 +60,6 @@ public class InventoryUI : MonoBehaviour
 
 	public int SortItemList()
 	{
-		Debug.Log("Item Sort Start");
 		try
 		{
 			if (itemSlots == null || itemSlots.Count == 0)
@@ -76,21 +68,48 @@ public class InventoryUI : MonoBehaviour
 				return -1;
 			}
 
-            List<MaterialItem> itemList = itemSlots.Where(slot => slot.HasItem()).Select(slot => slot.GetItem()).ToList();
-            itemList.Sort(_sortComparer.Compare);
+			/* 인벤토리 내 아이템 탐색 */
+			List<MaterialItem> itemList = itemSlots.Where(slot => slot.HasItem()).Select(slot => slot.GetItem()).ToList();
 
-            int index = 0;
-            foreach(var item in itemList)
-            {
-                itemSlots[index].AddItem(item);
-                index++;
-            }
+			/* 같은 아이템 합치기 */
+			Dictionary<int, int> itemStackCount = new();
+			Dictionary<int, MaterialItemData> itemDataMap = new();
 
-            for(int i = index; i<itemSlots.Count; i++)
-            {
-                itemSlots[i].ClearSlot();
-            }
+			foreach (var item in itemList)
+			{
+				int itemId = item.Data.ItemId;
+				if (itemStackCount.ContainsKey(itemId))
+				{
+					itemStackCount[itemId] += item.CurItemStack; // 아이템 개수 합산
+				}
+				else
+				{
+					itemStackCount[itemId] = item.CurItemStack;
+					itemDataMap[itemId] = (MaterialItemData)item.Data; // 아이템 데이터 저장
+				}
+			}
 
+			/* 병합된 아이템 리스트 생성 */
+			List<MaterialItem> mergedItemList = itemStackCount
+				.Select(kvp => new MaterialItem(itemDataMap[kvp.Key], kvp.Value))
+				.ToList();
+
+			/* 정렬 */
+			mergedItemList.Sort(_sortComparer.Compare);
+
+			/* 기존 슬롯 초기화 */
+			foreach (var slot in itemSlots)
+			{
+				slot.ClearSlot(); // 기존 아이템을 먼저 지움
+			}
+
+			/* 정렬된 아이템을 첫 번째 슬롯부터 할당 */
+			int index = 0;
+			foreach (var item in mergedItemList)
+			{
+				itemSlots[index].AddItem(item); 
+				index++;
+			}
 			return 0;
 		}
 		catch (Exception ex)
@@ -100,13 +119,14 @@ public class InventoryUI : MonoBehaviour
 		}
 	}
 
-    /// <summary>
-    /// InventoryManager���� �Ѱܹ��� inventoryDictionary�� �������� UI�� �����մϴ�.
-    /// �� ItemSlotUI�� ���� ��ȣ(SlotIndex)�� ���� �ش� ������ itemId�� stack�� ������Ʈ�ϰų�,
-    /// �����Ͱ� ���� ������ Ŭ�����մϴ�.
-    /// </summary>
-    /// <param name="inventoryDictionary">Ű�� ���� �ε���, ���� InventorySlotData�� ��ųʸ�</param>
-    public void RefreshInventory(Dictionary<int, MaterialItem> inventoryItems)
+
+	/// <summary>
+	/// InventoryManager���� �Ѱܹ��� inventoryDictionary�� �������� UI�� �����մϴ�.
+	/// �� ItemSlotUI�� ���� ��ȣ(SlotIndex)�� ���� �ش� ������ itemId�� stack�� ������Ʈ�ϰų�,
+	/// �����Ͱ� ���� ������ Ŭ�����մϴ�.
+	/// </summary>
+	/// <param name="inventoryDictionary">Ű�� ���� �ε���, ���� InventorySlotData�� ��ųʸ�</param>
+	public void RefreshInventory(Dictionary<int, MaterialItem> inventoryItems)
     {
         foreach (var slotUI in itemSlots)
         {
