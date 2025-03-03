@@ -160,6 +160,17 @@ public class TownManager : MonoBehaviour
             playerList.Add(playerInfo.PlayerId, player);
         }
 
+        var tr = new TransformInfo
+        {
+            PosX = validatedSpawnPos.x,
+            PosY = validatedSpawnPos.y,
+            PosZ = validatedSpawnPos.z,
+            Rot = 0
+        };
+
+        var initialLocationPacket = new C2SPlayerLocation { Transform = tr };
+        GameManager.Network.Send(initialLocationPacket);
+
         return player;
     }
 

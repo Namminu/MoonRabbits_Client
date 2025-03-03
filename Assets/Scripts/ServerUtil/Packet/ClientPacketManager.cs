@@ -110,6 +110,8 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CInvestPoint, PacketHandler.S2CInvestPointHandler);
         _onRecv.Add((ushort)MsgId.S2CInventoryUpdate, MakePacket<S2CInventoryUpdate>);
         _handler.Add((ushort)MsgId.S2CInventoryUpdate, PacketHandler.S2CInventoryUpdate);
+        _onRecv.Add((ushort)MsgId.S2CPing, MakePacket<S2CPing>);
+        _handler.Add((ushort)MsgId.S2CPing, PacketHandler.S2CPingHandler);
         Debug.Log("핸들러 등록 완료");
     }
 

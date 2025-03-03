@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +40,16 @@ class PacketHandler
         if (packet is not S2CCreateCharacter pkt)
             return;
         Debug.Log($"S2CCreateCharacter 패킷 무사 도착 : {pkt}");
+    }
+
+    public static void S2CPingHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CPing pkt)
+            return;
+        Debug.Log($"S2CPing 패킷 무사 도착 : {pkt}");
+
+        var pongPacket = new C2SPong { Timestamp = pkt.Timestamp };
+        GameManager.Network.Send(pongPacket);
     }
     #endregion
 
@@ -225,7 +235,7 @@ class PacketHandler
     {
         if (packet is not S2CPlayerLocation pkt)
             return;
-        // Debug.Log($"S2CPlayerLocation 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CPlayerLocation 패킷 무사 도착 : {pkt}");
 
         TransformInfo transform = pkt.Transform;
         Vector3 position = new Vector3(transform.PosX, transform.PosY, transform.PosZ);
