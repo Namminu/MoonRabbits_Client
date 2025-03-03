@@ -56,21 +56,16 @@ public class InventoryManager : MonoBehaviour
 
         foreach (var slot in pkt.Slots)
         {
-            // 먼저 slot.itemId가 null인지 확인하여 빈 슬롯인 경우 처리
-            if (slot == null)
-            {
-                // 예: 빈 슬롯인 경우 특별히 처리를 하거나 그냥 건너뛰기
-                Debug.Log($"슬롯 {slot.SlotIdx}은 빈 슬롯입니다.");
+            if (slot == null || slot.ItemId == 0) // 빈 슬롯 처리
                 continue;
-            }
 
-            // slot.ItemId가 null이 아닌 경우 MaterialItemData를 찾아 MaterialItem 생성
-            MaterialItemData itemData = ItemDataLoader.MaterialItemsList.Find(item => item.ItemId == slot.ItemId);
-
+            MaterialItemData itemData = ItemDataLoader.MaterialItemsList
+                .Find(item => item.ItemId == slot.ItemId);
             if (itemData != null)
             {
                 MaterialItem materialItem = new MaterialItem(itemData, slot.Stack);
-                inventoryDictionary.Add(slot.SlotIdx, materialItem);
+                // 같은 키가 있을 경우 값을 업데이트함으로써 예외 발생을 방지
+                inventoryDictionary[slot.SlotIdx] = materialItem;
             }
             else
             {
@@ -80,13 +75,10 @@ public class InventoryManager : MonoBehaviour
 
         Debug.Log("S2CInventoryUpdate 패킷 처리 완료: " + pkt);
 
+        // UI 갱신 호출 (서버 전송 없이 초기화만 수행)
         if (inventoryUI != null)
         {
             inventoryUI.RefreshInventory(inventoryDictionary);
-        }
-        else
-        {
-            Debug.LogWarning("InventoryUI 참조가 없음");
         }
     }
 
@@ -180,36 +172,29 @@ public class InventoryManager : MonoBehaviour
     public void SendItemMove(List<MaterialItem> slotsStatus)
     {
         C2SItemMove packet = new C2SItemMove();
-        foreach (var materialItem in slotsStatus)
+
+        // 인벤토리의 모든 25슬롯을 0부터 24까지 순서대로 전송
+        // 각 슬롯에는 해당 인덱스의 MaterialItem이 존재하면 아이템 정보를, 없으면 빈 슬롯(아이템 0, 스택 0) 정보 삽입
+        for (int i = 0; i < 25; i++)
         {
-            // materialItem이 null인 경우 빈 슬롯 처리 (필요시 0 또는 다른 기본값으로 전송)
-            if (materialItem == null)
+            // 슬롯 리스트에서 현재 인덱스와 일치하는 MaterialItem 검색 (없으면 null)
+            MaterialItem materialItem = slotsStatus.FirstOrDefault(item => item != null && item.SlotIdx == i);
+            InventorySlot newSlot = new InventorySlot
             {
-                InventorySlot newSlot = new InventorySlot
-                {
-                    SlotIdx = -1, // 빈 슬롯인 경우, 별도 처리 필요하다면 슬롯번호 -1 등 처리
-                    ItemId = 0,
-                    Stack = 0
-                };
-                packet.Slots.Add(newSlot);
-            }
-            else
-            {
-                InventorySlot newSlot = new InventorySlot
-                {
-                    SlotIdx = materialItem.SlotIdx,
-                    ItemId = materialItem.ItemData.ItemId,
-                    Stack = materialItem.CurItemStack
-                };
-                packet.Slots.Add(newSlot);
-            }
+                SlotIdx = i,
+                ItemId = materialItem != null ? materialItem.ItemData.ItemId : 0,
+                Stack = materialItem != null ? materialItem.CurItemStack : 0
+            };
+
+            packet.Slots.Add(newSlot);
         }
+
         GameManager.Network.Send(packet);
     }
 
 
-	#region 인벤토리 클라 내부 로직
-	public bool AddItemToInven(MaterialItem newItem)
+    #region 인벤토리 클라 내부 로직
+    public bool AddItemToInven(MaterialItem newItem)
     {
         if(inventoryUI == null)
         {
