@@ -1,3 +1,4 @@
+using Google.Protobuf.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,47 +66,63 @@ public class InventoryUI : MonoBehaviour
         return goldAmount;
     }
 
-	public int SortItemList()
-	{
-		Debug.Log("Item Sort Start");
-		try
-		{
-			if (itemSlots == null || itemSlots.Count == 0)
-			{
-				Debug.Log("Item Slots List NULL");
-				return -1;
-			}
+    public int SortItemList()
+    {
+        Debug.Log("Item Sort Start");
+        try
+        {
+            if (itemSlots == null || itemSlots.Count == 0)
+            {
+                Debug.Log("Item Slots List NULL");
+                return -1;
+            }
 
-            List<MaterialItem> itemList = itemSlots.Where(slot => slot.HasItem()).Select(slot => slot.GetItem()).ToList();
+            // 1. 슬롯에 존재하는 MaterialItem들을 가져와 정렬합니다.
+            List<MaterialItem> itemList = itemSlots
+                .Where(slot => slot.HasItem())
+                .Select(slot => slot.GetItem())
+                .ToList();
             itemList.Sort(_sortComparer.Compare);
 
+            // 2. 정렬된 아이템들을 순서대로 슬롯에 배치하고 슬롯 인덱스도 갱신합니다.
             int index = 0;
-            foreach(var item in itemList)
+            foreach (var item in itemList)
             {
                 itemSlots[index].AddItem(item);
+                itemSlots[index].SetItemIndex(index);  // 슬롯 인덱스 재할당 (필요한 경우)
                 index++;
             }
 
-            for(int i = index; i<itemSlots.Count; i++)
+            // 3. 남은 슬롯은 초기화합니다.
+            for (int i = index; i < itemSlots.Count; i++)
             {
                 itemSlots[i].ClearSlot();
             }
 
-			return 0;
-		}
-		catch (Exception ex)
-		{
-			Debug.LogError("Sort Item Method Error: " + ex);
-			return -1;
-		}
-	}
+            // 4. 정렬된 리스트를 InventoryManager의 SendInventorySort를 통해 서버에 전송합니다.
+            if (InventoryManager.instance != null)
+            {
+                InventoryManager.instance.SendInventorySort(itemList);
+            }
+            else
+            {
+                Debug.LogWarning("InventoryManager instance is null. Cannot send sorted inventory.");
+            }
+
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Sort Item Method Error: " + ex);
+            return -1;
+        }
+    }
 
     /// <summary>
-    /// InventoryManager���� �Ѱܹ��� inventoryDictionary�� �������� UI�� �����մϴ�.
-    /// �� ItemSlotUI�� ���� ��ȣ(SlotIndex)�� ���� �ش� ������ itemId�� stack�� ������Ʈ�ϰų�,
-    /// �����Ͱ� ���� ������ Ŭ�����մϴ�.
+    /// InventoryManager에서 전달받은 인벤토리 데이터를 기반으로 UI 슬롯을 갱신합니다.
+    /// inventoryItems는 각 슬롯 번호에 매핑된 MaterialItem 인스턴스를 포함합니다.
     /// </summary>
-    /// <param name="inventoryDictionary">Ű�� ���� �ε���, ���� InventorySlotData�� ��ųʸ�</param>
+    /// <param name="inventoryItems">키: 슬롯 번호, 값: MaterialItem 인스턴스</param>
     public void RefreshInventory(Dictionary<int, MaterialItem> inventoryItems)
     {
         foreach (var slotUI in itemSlots)
@@ -113,7 +130,7 @@ public class InventoryUI : MonoBehaviour
             int slotIndex = slotUI.GetItemIndex();
             if (inventoryItems.TryGetValue(slotIndex, out MaterialItem materialItem))
             {
-                // MaterialItem�� �����ϸ� UpdateSlot ���ο��� ItemData�� Ȱ���Ͽ� ������ ID, ������ ���� �����մϴ�.
+                // MaterialItem을 전달하면 UpdateSlot 내부에서 ItemData를 활용하여 아이템 ID, 아이콘 등을 갱신합니다.
                 slotUI.AddItem(materialItem);
             }
             else
