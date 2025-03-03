@@ -32,12 +32,15 @@ public class PartyMemberUI : MonoBehaviour
 
     public void UpdateUI()
     {
-        // 기존 UI 삭제
-        foreach (GameObject memberUI in memberUIs)
+        // 기존 UI가 존재할 때만 삭제
+        if (memberUIs != null && memberUIs.Count > 0)
         {
-            Destroy(memberUI);
+            foreach (GameObject memberUI in memberUIs)
+            {
+                Destroy(memberUI);
+            }
+            memberUIs.Clear();
         }
-        memberUIs.Clear();
 
         // `Party.cs`에서 멤버 리스트 가져오기
         List<MemberCardInfo> members = Party.instance.members;
@@ -57,79 +60,31 @@ public class PartyMemberUI : MonoBehaviour
             axe = newMember.transform.Find("MemberImage/WorkingOn/Axe").GetComponent<Image>();
             pickaxe = newMember.transform.Find("MemberImage/WorkingOn/Pickaxe").GetComponent<Image>();
 
-            switch (member.CurrentSector)
+            Player player = GameManager.Instance.GetPlayer(member.Id);
+            if (player == null)
             {
-                case 100:
-                    newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{TownManager.Instance.GetPlayer(member.Id).level}";
-                    Player townPlayer = TownManager.Instance.GetPlayer(member.Id);
-
-                    if (townPlayer.ActiveEquipObj == townPlayer.axe)
-                    {
-                        hand.gameObject.SetActive(false);
-                        axe.gameObject.SetActive(true);
-                        pickaxe.gameObject.SetActive(false);
-                    }
-                    else if (townPlayer.ActiveEquipObj == townPlayer.pickAxe)
-                    {
-                        hand.gameObject.SetActive(false);
-                        axe.gameObject.SetActive(false);
-                        pickaxe.gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        hand.gameObject.SetActive(true);
-                        axe.gameObject.SetActive(false);
-                        pickaxe.gameObject.SetActive(false);
-                    }
-
-                    break;
-                case 101:
-                    newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{S1Manager.Instance.GetPlayer(member.Id).level}";
-                    Player S1Player = S1Manager.Instance.GetPlayer(member.Id);
-                    if (S1Player.ActiveEquipObj == S1Player.axe)
-                    {
-                        hand.gameObject.SetActive(false);
-                        axe.gameObject.SetActive(true);
-                        pickaxe.gameObject.SetActive(false);
-                    }
-                    else if (S1Player.ActiveEquipObj == S1Player.pickAxe)
-                    {
-                        hand.gameObject.SetActive(false);
-                        axe.gameObject.SetActive(false);
-                        pickaxe.gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        hand.gameObject.SetActive(true);
-                        axe.gameObject.SetActive(false);
-                        pickaxe.gameObject.SetActive(false);
-                    }
-                    break;
-                case 102:
-                    newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{S2Manager.Instance.GetPlayer(member.Id).level}";
-                    Player S2Player = S2Manager.Instance.GetPlayer(member.Id);
-                    if (S2Player.ActiveEquipObj == S2Player.axe)
-                    {
-                        hand.gameObject.SetActive(false);
-                        axe.gameObject.SetActive(true);
-                        pickaxe.gameObject.SetActive(false);
-                    }
-                    else if (S2Player.ActiveEquipObj == S2Player.pickAxe)
-                    {
-                        hand.gameObject.SetActive(false);
-                        axe.gameObject.SetActive(false);
-                        pickaxe.gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        hand.gameObject.SetActive(true);
-                        axe.gameObject.SetActive(false);
-                        pickaxe.gameObject.SetActive(false);
-                    }
-                    break;
+                Debug.Log("플레이어를 못찾았수다!!");
             }
+            newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{player.level}";
 
-
+            if (player.ActiveEquipObj == player.axe)
+            {
+                hand.gameObject.SetActive(false);
+                axe.gameObject.SetActive(true);
+                pickaxe.gameObject.SetActive(false);
+            }
+            else if (player.ActiveEquipObj == player.pickAxe)
+            {
+                hand.gameObject.SetActive(false);
+                axe.gameObject.SetActive(false);
+                pickaxe.gameObject.SetActive(true);
+            }
+            else
+            {
+                hand.gameObject.SetActive(true);
+                axe.gameObject.SetActive(false);
+                pickaxe.gameObject.SetActive(false);
+            }
 
             // 생성된 멤버 UI 저장
             memberUIs.Add(newMember);

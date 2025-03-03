@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     [Header("Players")]
     private Dictionary<int, Dictionary<int, Player>> playerList = new();
     public Dictionary<int, Dictionary<int, Player>> PlayerList => playerList;
-    
+
     private Dictionary<int, Player> townPlayers = new();
     private Dictionary<int, Player> s1Players = new();
     private Dictionary<int, Player> s2Players = new();
@@ -164,7 +164,7 @@ public class GameManager : MonoBehaviour
     IEnumerator EnterSector(int targetSector, PlayerInfo playerInfo)
     {
         // [1] 이전 섹터의 플레이어리스트 비움
-        playerList[CurrentSector].Clear();
+        // playerList[CurrentSector].Clear();
         // [2] 이동할 섹터의 매니저 찾고, 씬 로드 기다림
         StartCoroutine(SetSManager(targetSector));
         yield return new WaitUntil(() => sManager != null);
@@ -173,6 +173,8 @@ public class GameManager : MonoBehaviour
         sManager.UiChat.Player = me;
         // [4] 현재 위치한 섹터 값 최신화
         CurrentSector = targetSector;
+        // [5] 파티원 정보 UI 업데이트
+        PartyMemberUI.instance.UpdateUI();
     }
 
     IEnumerator SpawnOthers(S2CSpawn pkt)
