@@ -56,9 +56,13 @@ class PacketHandler
         string targetSceneName = GameManager.Instance.SceneName[pkt.TargetSector];
 
         if (targetSceneName != SceneManager.GetActiveScene().name)
-            SceneManager.LoadScene(targetSceneName);
-
-        GameManager.Instance.EnterAfterSceneAwake(pkt.TargetSector, pkt.Player);
+        {
+            SceneManagerEx.SetScene(targetSceneName, pkt.Player);
+        }
+        else
+        {
+            GameManager.Instance.EnterAfterSceneAwake(pkt.TargetSector, pkt.Player);
+        }
     }
 
     public static void S2CMoveSectorHandler(PacketSession session, IMessage packet)
