@@ -1,55 +1,89 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ResourceManager
 {
-    public T Load<T>(string path) where T : Object
-    {
-        if (typeof(T) == typeof(GameObject))
-        {
-            string name = path;
-            int index = name.LastIndexOf('/');
-            if (index >= 0)
-                name = name.Substring(index + 1);
+    private static ResourceManager _instance;
+    public static ResourceManager Instance => _instance ??= new ResourceManager();
 
-            GameObject go = Managers.Pool.GetOriginal(name);
-            if (go != null)
-                return go as T;
+    private readonly Dictionary<string, Dictionary<string, Object>> _resourceCache = new Dictionary<string, Dictionary<string, Object>>();
+
+    private ResourceManager() { }
+
+    public void RegisterResource<T>(string type, string key, T resource) where T : Object
+    {
+        if (!_resourceCache.TryGetValue(type, out var resourceDict))
+        {
+            resourceDict = new Dictionary<string, Object>();
+            _resourceCache[type] = resourceDict;
         }
 
-        return Resources.Load<T>(path);
+        if (!resourceDict.ContainsKey(key))
+        {
+            resourceDict[key] = resource;
+        }
     }
 
-    public GameObject Instantiate(string path, Transform parent = null)
+    public T GetResource<T>(string type, string name) where T : Object
     {
-        GameObject original = Load<GameObject>($"Prefabs/{path}");
-        if (original == null)
+        if (_resourceCache.TryGetValue(type, out var resourceDict) && resourceDict.TryGetValue(name, out var cachedResource))
         {
-            Debug.Log($"Failed to load prefab : {path}");
-            return null;
+            return cachedResource as T;
         }
 
-        if (original.GetComponent<Poolable>() != null)
-            return Managers.Pool.Pop(original, parent).gameObject;
+        Debug.LogWarning($"Resource not found: {name} in type: {type}");
+        return null;
+    }
 
-        GameObject go = Object.Instantiate(original, parent);
-        go.name = original.name;
-        return go;
+    public void LoadAll<T>(string folderPath) where T : Object
+    {
+        string folderName = folderPath.Substring(folderPath.LastIndexOf('/') + 1);
+
+        if (!_resourceCache.ContainsKey(folderName))
+        {
+            _resourceCache[folderName] = new Dictionary<string, Object>();
+        }
+
+        foreach (var resource in Resources.LoadAll<T>(folderPath))
+        {
+            RegisterResource(folderName, resource.name, resource);
+        }
+    }
+
+    public T Instantiate<T>(string type, string name, Vector3 position, Quaternion rotation = default, Transform parent = null) where T : MonoBehaviour
+    {
+        if (_resourceCache.TryGetValue(type, out var resourceDict) && resourceDict.TryGetValue(name, out var cachedResource))
+        {
+            if (cachedResource is GameObject gameObject)
+            {
+                GameObject instance = Object.Instantiate(gameObject, position, rotation, parent);
+                return instance.GetComponent<T>() ?? instance.AddComponent<T>();
+            }
+        }
+
+        Debug.LogWarning($"Resource not found: {name} in type: {type}");
+        return null;
+    }
+
+    public GameObject Instantiate(string type, string name, Vector3 position, Quaternion rotation = default, Transform parent = null)
+    {
+        if (_resourceCache.TryGetValue(type, out var resourceDict) && resourceDict.TryGetValue(name, out var cachedResource))
+        {
+            if (cachedResource is GameObject gameObject)
+            {
+                return Object.Instantiate(gameObject, position, rotation, parent);
+            }
+        }
+
+        Debug.LogWarning($"Resource not found: {name} in type: {type}");
+        return null;
     }
 
     public void Destroy(GameObject go)
     {
-        if (go == null)
-            return;
-
-        Poolable poolable = go.GetComponent<Poolable>();
-        if (poolable != null)
+        if (go != null)
         {
-            Managers.Pool.Push(poolable);
-            return;
+            Object.Destroy(go);
         }
-
-        Object.Destroy(go);
     }
 }

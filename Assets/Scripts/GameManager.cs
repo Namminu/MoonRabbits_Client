@@ -1,10 +1,7 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using Google.Protobuf.Protocol;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -31,7 +28,14 @@ public class GameManager : MonoBehaviour
 
             network = new NetworkManager();
 
+            SoundManager.Instance.Play(4, Define.Sound.Bgm);
+
+            SceneManagerEx.SetTransition();
+
             DontDestroyOnLoad(gameObject);
+
+            EffectManager.Instance.CreatePersistentEffect("Confetti", new Vector3(-3, 14, 134), Quaternion.identity);
+
         }
         else
         {

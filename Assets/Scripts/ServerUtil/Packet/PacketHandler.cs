@@ -17,6 +17,7 @@ class PacketHandler
             return;
         Debug.Log($"S2CRegister 패킷 무사 도착 : {pkt}");
         EventManager.Trigger("DisplayMessage", pkt.Msg);
+
     }
 
     public static void S2CLoginHandler(PacketSession session, IMessage packet)
@@ -24,6 +25,8 @@ class PacketHandler
         if (packet is not S2CLogin pkt)
             return;
         Debug.Log($"S2CLogin 패킷 무사 도착 : {pkt}");
+
+        SoundManager.Instance.Play(0, Define.Sound.Bgm);
 
         if (!pkt.IsSuccess)
         {
@@ -65,7 +68,8 @@ class PacketHandler
             case 100:
                 if (SceneManager.GetActiveScene().name != "Town")
                 {
-                    SceneManager.LoadScene("Town");
+                    //SceneManager.LoadScene("Town");
+                    SceneManagerEx.SetScene("Town");
                     GameManager.Instance.WaitForSceneAwake("Town", pkt.Player);
                 }
                 else
@@ -77,11 +81,11 @@ class PacketHandler
                 ASectorManager.Instance.Spawn(pkt.Player);
                 break;
             case 101:
-                SceneManager.LoadScene("Sector1");
+                SceneManagerEx.SetScene("Sector1");
                 GameManager.Instance.WaitForSceneAwake("Sector1", pkt.Player);
                 break;
             case 102:
-                SceneManager.LoadScene("Sector2");
+                SceneManagerEx.SetScene("Sector2");
                 GameManager.Instance.WaitForSceneAwake("Sector2", pkt.Player);
                 break;
         }
