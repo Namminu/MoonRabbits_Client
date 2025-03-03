@@ -59,7 +59,7 @@ public class ASectorManager : MonoBehaviour
         Vector3 spawnPos = CalculateSpawnPosition(playerInfo.Transform);
 
         MyPlayer = CreatePlayer(playerInfo, spawnPos);
-        MyPlayer.SetIsMine(true, playerInfo.CurrentSector);
+        MyPlayer.SetIsMine(true);
         // MyPlayer.SetNickname(playerInfo.Nickname);
         // MyPlayer.SetStatInfo(playerInfo.StatInfo);
     }

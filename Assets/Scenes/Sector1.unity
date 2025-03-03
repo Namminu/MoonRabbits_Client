@@ -2279,6 +2279,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1725368653}
     m_Modifications:
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: id
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: sectorCode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: monsterArea
+      value: 
+      objectReference: {fileID: 584575310}
     - target: {fileID: 3206856972369708563, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
       propertyPath: m_Name
@@ -2598,6 +2613,11 @@ PrefabInstance:
     - target: {fileID: 1882186920434430024, guid: ba32852701fc4e94c8038110937921ac,
         type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1935561345901497539, guid: ba32852701fc4e94c8038110937921ac,
+        type: 3}
+      propertyPath: m_IsKinematic
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2432935926044314329, guid: ba32852701fc4e94c8038110937921ac,
@@ -4980,6 +5000,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1725368653}
     m_Modifications:
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: id
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: sectorCode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: monsterArea
+      value: 
+      objectReference: {fileID: 584575310}
     - target: {fileID: 3206856972369708563, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
       propertyPath: m_Name
@@ -5140,8 +5175,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f52060201e136c4ca621614bc6c68ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnArea: {fileID: 0}
-  despawnArea: {fileID: 0}
+  spawnArea: {fileID: 1007800317}
+  despawnArea: {fileID: 1591254737}
   eSystem: {fileID: 3309536583649361184}
   uiChat: {fileID: 1410755364}
   uiPlayer: {fileID: 602788997}
@@ -6600,7 +6635,7 @@ PrefabInstance:
     - target: {fileID: 7355503834785665723, guid: 77f270d809976974b82114e8f5d4f457,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6637,6 +6672,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1725368653}
     m_Modifications:
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: id
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: sectorCode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: monsterArea
+      value: 
+      objectReference: {fileID: 424663309}
     - target: {fileID: 3206856972369708563, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
       propertyPath: m_Name
@@ -7580,7 +7630,7 @@ MonoBehaviour:
   m_IsGlobal: 1
   priority: 0
   blendDistance: 0
-  weight: 0.2
+  weight: 0.4
   sharedProfile: {fileID: 11400000, guid: 9be9af7b83b13344da456a6f70fd408b, type: 2}
 --- !u!4 &688654399
 Transform:
@@ -8915,7 +8965,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 841692045}
-  m_Enabled: 0
+  m_Enabled: 1
 --- !u!20 &841692049
 Camera:
   m_ObjectHideFlags: 0
@@ -11136,6 +11186,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1725368653}
     m_Modifications:
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: id
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: sectorCode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: monsterArea
+      value: 
+      objectReference: {fileID: 45622683}
     - target: {fileID: 3206856972369708563, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
       propertyPath: m_Name
@@ -13515,6 +13580,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1725368653}
     m_Modifications:
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: id
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: sectorCode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: monsterArea
+      value: 
+      objectReference: {fileID: 1951582543}
     - target: {fileID: 3206856972369708563, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
       propertyPath: m_Name
@@ -13694,6 +13774,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1725368653}
     m_Modifications:
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: id
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: sectorCode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: monsterArea
+      value: 
+      objectReference: {fileID: 424663309}
     - target: {fileID: 3206856972369708563, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
       propertyPath: m_Name
@@ -16073,6 +16168,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1725368653}
     m_Modifications:
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: id
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: sectorCode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: monsterArea
+      value: 
+      objectReference: {fileID: 45622683}
     - target: {fileID: 3206856972369708563, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
       propertyPath: m_Name
@@ -21667,13 +21777,13 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1405914399}
-  - {fileID: 1197892179}
-  - {fileID: 164167347}
-  - {fileID: 1920259179}
   - {fileID: 1018499450}
   - {fileID: 604855717}
+  - {fileID: 1197892179}
+  - {fileID: 164167347}
   - {fileID: 429673334}
   - {fileID: 1189154249}
+  - {fileID: 1920259179}
   m_Father: {fileID: 442787115}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1743394154
@@ -23211,6 +23321,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1725368653}
     m_Modifications:
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: id
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: sectorCode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908509490669447830, guid: 7668c87dcd01ded4e84265f811a5323e,
+        type: 3}
+      propertyPath: monsterArea
+      value: 
+      objectReference: {fileID: 1951582543}
     - target: {fileID: 3206856972369708563, guid: 7668c87dcd01ded4e84265f811a5323e,
         type: 3}
       propertyPath: m_Name
