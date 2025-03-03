@@ -63,6 +63,9 @@ public class GameManager : MonoBehaviour
             CurrentSector = 100;
 
             DontDestroyOnLoad(gameObject);
+
+            EffectManager.Instance.CreatePersistentEffect("Confetti", new Vector3(-3, 14, 134), Quaternion.identity);
+
         }
         else
         {

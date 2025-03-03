@@ -1,132 +1,76 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class UIManager
+public class UIManager : MonoBehaviour
 {
- //    int _order = 10;
- //
- //    Stack<UI_Popup> _popupStack = new Stack<UI_Popup>();
- //    UI_Scene _sceneUI = null;
- //
- //    public GameObject Root
- //    {
- //        get
- //        {
-	// 		GameObject root = GameObject.Find("@UI_Root");
-	// 		if (root == null)
-	// 			root = new GameObject { name = "@UI_Root" };
- //            return root;
-	// 	}
- //    }
- //
- //    public void SetCanvas(GameObject go, bool sort = true)
- //    {
- //        Canvas canvas = Util.GetOrAddComponent<Canvas>(go);
- //        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
- //        canvas.overrideSorting = true;
- //
- //        if (sort)
- //        {
- //            canvas.sortingOrder = _order;
- //            _order++;
- //        }
- //        else
- //        {
- //            canvas.sortingOrder = 0;
- //        }
- //    }
- //
-	// public T MakeWorldSpaceUI<T>(Transform parent = null, string name = null) where T : UI_Base
-	// {
-	// 	if (string.IsNullOrEmpty(name))
-	// 		name = typeof(T).Name;
- //
-	// 	GameObject go = Managers.Resource.Instantiate($"UI/WorldSpace/{name}");
-	// 	if (parent != null)
-	// 		go.transform.SetParent(parent);
- //
- //        Canvas canvas = go.GetOrAddComponent<Canvas>();
- //        canvas.renderMode = RenderMode.WorldSpace;
- //        canvas.worldCamera = Camera.main;
- //
-	// 	return Util.GetOrAddComponent<T>(go);
-	// }
- //
-	// public T MakeSubItem<T>(Transform parent = null, string name = null) where T : UI_Base
-	// {
-	// 	if (string.IsNullOrEmpty(name))
-	// 		name = typeof(T).Name;
- //
-	// 	GameObject go = Managers.Resource.Instantiate($"UI/SubItem/{name}");
-	// 	if (parent != null)
-	// 		go.transform.SetParent(parent);
- //
-	// 	return Util.GetOrAddComponent<T>(go);
-	// }
- //
-	// public T ShowSceneUI<T>(string name = null) where T : UI_Scene
-	// {
-	// 	if (string.IsNullOrEmpty(name))
-	// 		name = typeof(T).Name;
- //
-	// 	GameObject go = Managers.Resource.Instantiate($"UI/Scene/{name}");
-	// 	T sceneUI = Util.GetOrAddComponent<T>(go);
- //        _sceneUI = sceneUI;
- //
-	// 	go.transform.SetParent(Root.transform);
- //
-	// 	return sceneUI;
-	// }
- //
-	// public T ShowPopupUI<T>(string name = null) where T : UI_Popup
- //    {
- //        if (string.IsNullOrEmpty(name))
- //            name = typeof(T).Name;
- //
- //        GameObject go = Managers.Resource.Instantiate($"UI/Popup/{name}");
- //        T popup = Util.GetOrAddComponent<T>(go);
- //        _popupStack.Push(popup);
- //
- //        go.transform.SetParent(Root.transform);
- //
-	// 	return popup;
- //    }
- //
- //    public void ClosePopupUI(UI_Popup popup)
- //    {
-	// 	if (_popupStack.Count == 0)
-	// 		return;
- //
- //        if (_popupStack.Peek() != popup)
- //        {
- //            Debug.Log("Close Popup Failed!");
- //            return;
- //        }
- //
- //        ClosePopupUI();
- //    }
- //
- //    public void ClosePopupUI()
- //    {
- //        if (_popupStack.Count == 0)
- //            return;
- //
- //        UI_Popup popup = _popupStack.Pop();
- //        Managers.Resource.Destroy(popup.gameObject);
- //        popup = null;
- //        _order--;
- //    }
- //
- //    public void CloseAllPopupUI()
- //    {
- //        while (_popupStack.Count > 0)
- //            ClosePopupUI();
- //    }
- //
- //    public void Clear()
- //    {
- //        CloseAllPopupUI();
- //        _sceneUI = null;
- //    }
+	private static UIManager _instance;
+
+	public static UIManager Instance
+	{
+		get
+		{
+			if (_instance == null)
+			{
+				// UIManager가 없을 경우 새로운 게임 오브젝트를 생성
+				GameObject uiManagerObject = new GameObject("UIManager");
+				_instance = uiManagerObject.AddComponent<UIManager>();
+				DontDestroyOnLoad(uiManagerObject); // 씬이 변경되어도 파괴되지 않도록 설정
+				_instance.LoadUIPrefabs(); // UI 프리팹 로드
+			}
+			return _instance;
+		}
+	}
+
+	private Dictionary<string, GameObject> _uiPrefabs = new Dictionary<string, GameObject>();
+	private Dictionary<string, GameObject> _uiInstances = new Dictionary<string, GameObject>();
+
+	private void LoadUIPrefabs()
+	{
+		// Resources 폴더에서 모든 UI 프리팹 로드
+		GameObject[] uiPrefabs = Resources.LoadAll<GameObject>("Prefabs/UI");
+		foreach (var prefab in uiPrefabs)
+		{
+			_uiPrefabs[prefab.name] = prefab; // 이름을 키로 하여 등록
+		}
+	}
+
+	// UI 인스턴스화
+	public GameObject ShowUI(string uiName, Transform parent = null)
+	{
+		if (_uiPrefabs.TryGetValue(uiName, out GameObject prefab))
+		{
+			GameObject uiInstance = Object.Instantiate(prefab, parent);
+			_uiInstances[uiName] = uiInstance; // 인스턴스 관리
+			return uiInstance;
+		}
+		else
+		{
+			Debug.LogError($"UI Prefab Missing! {uiName}");
+			return null;
+		}
+	}
+
+	// UI 숨기기
+	public void HideUI(string uiName)
+	{
+		if (_uiInstances.TryGetValue(uiName, out GameObject uiInstance))
+		{
+			Object.Destroy(uiInstance);
+			_uiInstances.Remove(uiName); // 인스턴스 관리에서 제거
+		}
+		else
+		{
+			Debug.LogError($"UI Instance Missing! {uiName}");
+		}
+	}
+
+	// 모든 UI 숨기기
+	public void HideAllUI()
+	{
+		foreach (var kvp in _uiInstances)
+		{
+			Object.Destroy(kvp.Value);
+		}
+		_uiInstances.Clear();
+	}
 }
