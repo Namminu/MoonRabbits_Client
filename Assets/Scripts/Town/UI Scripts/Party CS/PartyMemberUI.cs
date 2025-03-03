@@ -12,6 +12,11 @@ public class PartyMemberUI : MonoBehaviour
     public GameObject memberPrefab; // MemberInfo 프리팹
     private List<GameObject> memberUIs = new List<GameObject>();
 
+    public Image hand;
+    public Image axe;
+    public Image pickaxe;
+
+
     private void Awake()
     {
         if (instance == null)
@@ -48,13 +53,79 @@ public class PartyMemberUI : MonoBehaviour
             GameObject newMember = Instantiate(memberPrefab, memberContainer);
             newMember.transform.Find("Nickname").GetComponent<TMP_Text>().text = member.Nickname;
 
+            hand = newMember.transform.Find("MemberImage/WorkingOn/Hand").GetComponent<Image>();
+            axe = newMember.transform.Find("MemberImage/WorkingOn/Axe").GetComponent<Image>();
+            pickaxe = newMember.transform.Find("MemberImage/WorkingOn/Pickaxe").GetComponent<Image>();
+
             switch (member.CurrentSector)
             {
-                case 1:
+                case 100:
                     newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{TownManager.Instance.GetPlayer(member.Id).level}";
+                    Player townPlayer = TownManager.Instance.GetPlayer(member.Id);
+
+                    if (townPlayer.ActiveEquipObj == townPlayer.axe)
+                    {
+                        hand.gameObject.SetActive(false);
+                        axe.gameObject.SetActive(true);
+                        pickaxe.gameObject.SetActive(false);
+                    }
+                    else if (townPlayer.ActiveEquipObj == townPlayer.pickAxe)
+                    {
+                        hand.gameObject.SetActive(false);
+                        axe.gameObject.SetActive(false);
+                        pickaxe.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        hand.gameObject.SetActive(true);
+                        axe.gameObject.SetActive(false);
+                        pickaxe.gameObject.SetActive(false);
+                    }
+
                     break;
-                case 2:
-                    newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{ASectorManager.Instance.GetPlayerAvatarById(member.Id).level}";
+                case 101:
+                    newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{S1Manager.Instance.GetPlayer(member.Id).level}";
+                    Player S1Player = S1Manager.Instance.GetPlayer(member.Id);
+                    if (S1Player.ActiveEquipObj == S1Player.axe)
+                    {
+                        hand.gameObject.SetActive(false);
+                        axe.gameObject.SetActive(true);
+                        pickaxe.gameObject.SetActive(false);
+                    }
+                    else if (S1Player.ActiveEquipObj == S1Player.pickAxe)
+                    {
+                        hand.gameObject.SetActive(false);
+                        axe.gameObject.SetActive(false);
+                        pickaxe.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        hand.gameObject.SetActive(true);
+                        axe.gameObject.SetActive(false);
+                        pickaxe.gameObject.SetActive(false);
+                    }
+                    break;
+                case 102:
+                    newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{S2Manager.Instance.GetPlayer(member.Id).level}";
+                    Player S2Player = S2Manager.Instance.GetPlayer(member.Id);
+                    if (S2Player.ActiveEquipObj == S2Player.axe)
+                    {
+                        hand.gameObject.SetActive(false);
+                        axe.gameObject.SetActive(true);
+                        pickaxe.gameObject.SetActive(false);
+                    }
+                    else if (S2Player.ActiveEquipObj == S2Player.pickAxe)
+                    {
+                        hand.gameObject.SetActive(false);
+                        axe.gameObject.SetActive(false);
+                        pickaxe.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        hand.gameObject.SetActive(true);
+                        axe.gameObject.SetActive(false);
+                        pickaxe.gameObject.SetActive(false);
+                    }
                     break;
             }
 

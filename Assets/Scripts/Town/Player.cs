@@ -340,6 +340,7 @@ public class Player : MonoBehaviour
 
         ActiveEquipObj = equips[nextEquip];
         ActiveEquipObj.SetActive(true);
+        PartyMemberUI.instance.UpdateUI();
 
         if (IsMine)
         {
