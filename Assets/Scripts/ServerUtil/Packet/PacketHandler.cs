@@ -155,6 +155,13 @@ class PacketHandler
             return;
         Debug.Log($"S2CPlayerRunning 패킷 무사 도착 : {pkt}");
     }
+
+    public static void S2CPortalHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CPortal pkt)
+            return;
+        Debug.Log($"S2CPortal 패킷 무사 도착 : {pkt}");
+    }
     #endregion
 
     public static void S2CUpdateRankingHandler(PacketSession session, IMessage packet)
@@ -567,13 +574,26 @@ class PacketHandler
 
     #region Item & Inventory
 
-    public static void S2CInventoryUpdate(PacketSession session, IMessage packet)
+    public static void S2CInventoryUpdateHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CInventoryUpdate pkt)
             return;
         Debug.Log($"S2CInventoryUpdate 패킷 무사 도착 : {pkt}");
         InventoryManager.instance.UpdateInventoryData(pkt);
     }
-
     #endregion
+
+    public static void S2CCraftHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CCraft pkt)
+            return;
+        Debug.Log($"S2CCraft 패킷 무사 도착 : {pkt}");
+    }
+
+    public static void S2CPingHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CPing pkt)
+            return;
+        Debug.Log($"S2CPing 패킷 무사 도착 : {pkt}");
+    }
 }

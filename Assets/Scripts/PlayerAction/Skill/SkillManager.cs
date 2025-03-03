@@ -115,36 +115,6 @@ public class SkillManager : MonoBehaviour
         };
 
         GameManager.Network.Send(pkt);
-
-        // 여기부터 패킷 받고
-
-        // NavMeshAgent navAgent = player.NavAgent;
-        // navAgent.isStopped = true;
-        // navAgent.destination = player.transform.position;
-
-        // player.Anim.SetTrigger("SetTrap");
-
-        // GameObject trap = Instantiate(
-        //     player.trap,
-        //     player.transform.position,
-        //     player.transform.rotation
-        // );
-
-        // traps.Enqueue(trap);
-
-        // if (traps.Count > maxTraps)
-        // {
-        //     // 여기도 서버로 remove 패킷
-        //     GameObject oldTrap = traps.Dequeue();
-        //     Destroy(oldTrap);
-        // }
-
-        // yield return new WaitForSeconds(1f);
-        // isCasting = false;
-        // navAgent.isStopped = false;
-
-        // yield return new WaitForSeconds(coolTimeE);
-        // isTrapReady = true;
     }
 
     private void Recall()

@@ -53,10 +53,16 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CPlayerLocation, PacketHandler.S2CPlayerLocationHandler);
         _onRecv.Add((ushort)MsgId.S2CPlayerRunning, MakePacket<S2CPlayerRunning>);
         _handler.Add((ushort)MsgId.S2CPlayerRunning, PacketHandler.S2CPlayerRunningHandler);
+        _onRecv.Add((ushort)MsgId.S2CPortal, MakePacket<S2CPortal>);
+        _handler.Add((ushort)MsgId.S2CPortal, PacketHandler.S2CPortalHandler);
         _onRecv.Add((ushort)MsgId.S2CUpdateRanking, MakePacket<S2CUpdateRanking>);
         _handler.Add((ushort)MsgId.S2CUpdateRanking, PacketHandler.S2CUpdateRankingHandler);
         _onRecv.Add((ushort)MsgId.S2CCollision, MakePacket<S2CCollision>);
         _handler.Add((ushort)MsgId.S2CCollision, PacketHandler.S2CCollisionHandler);
+
+        _onRecv.Add((ushort)MsgId.S2CInventoryUpdate, MakePacket<S2CInventoryUpdate>);
+        _handler.Add((ushort)MsgId.S2CInventoryUpdate, PacketHandler.S2CInventoryUpdateHandler);
+
         _onRecv.Add((ushort)MsgId.S2CCreateParty, MakePacket<S2CCreateParty>);
         _handler.Add((ushort)MsgId.S2CCreateParty, PacketHandler.S2CCreatePartyHandler);
         _onRecv.Add((ushort)MsgId.S2CInviteParty, MakePacket<S2CInviteParty>);
@@ -81,6 +87,7 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CDetectedPlayer, PacketHandler.S2CDetectedPlayerHandler);
         _onRecv.Add((ushort)MsgId.S2CMissingPlayer, MakePacket<S2CMissingPlayer>);
         _handler.Add((ushort)MsgId.S2CMissingPlayer, PacketHandler.S2CMissingPlayerHandler);
+
         _onRecv.Add((ushort)MsgId.S2CResourcesList, MakePacket<S2CResourcesList>);
         _handler.Add((ushort)MsgId.S2CResourcesList, PacketHandler.S2CResourceListHandler);
         _onRecv.Add((ushort)MsgId.S2CUpdateDurability, MakePacket<S2CUpdateDurability>);
@@ -114,8 +121,12 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CLevelUp, PacketHandler.S2CLevelUpHandler);
         _onRecv.Add((ushort)MsgId.S2CInvestPoint, MakePacket<S2CInvestPoint>);
         _handler.Add((ushort)MsgId.S2CInvestPoint, PacketHandler.S2CInvestPointHandler);
-        _onRecv.Add((ushort)MsgId.S2CInventoryUpdate, MakePacket<S2CInventoryUpdate>);
-        _handler.Add((ushort)MsgId.S2CInventoryUpdate, PacketHandler.S2CInventoryUpdate);
+
+        _onRecv.Add((ushort)MsgId.S2CCraft, MakePacket<S2CCraft>);
+        _handler.Add((ushort)MsgId.S2CCraft, PacketHandler.S2CCraftHandler);
+        _onRecv.Add((ushort)MsgId.S2CPing, MakePacket<S2CPing>);
+        _handler.Add((ushort)MsgId.S2CPing, PacketHandler.S2CPingHandler);
+
         Debug.Log("핸들러 등록 완료");
     }
 
