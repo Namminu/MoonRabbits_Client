@@ -3,6 +3,7 @@ using Google.Protobuf.Protocol;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Diagnostics;
 
 public class UILogIn : MonoBehaviour
 {
@@ -31,6 +32,10 @@ public class UILogIn : MonoBehaviour
     private string useremail;
     private string userpw;
     private string userpwc;
+    [SerializeField] private Button btn_NaverLogin;
+    private string clientId = "네이버 클라이언트 ID";
+    private string redirectUri = "네이버 개발자 센터에서 설정한 리디렉션 URI";
+    private string state = new System.Random().Next().ToString();
 
     // Start is called before the first frame update
     void Awake()
@@ -147,5 +152,12 @@ public class UILogIn : MonoBehaviour
             (List<Google.Protobuf.Protocol.OwnedCharacter> charsInfo) => CheckHasChar(charsInfo)
         );
         EventManager.Unsubscribe("DisplayMessage", (string msg) => DisplayMessage(msg));
+    }
+
+    public void OnNaverLoginButtonClick()
+    {
+        string url =  $"https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id={clientId}&redirect_uri={redirectUri}&state={state}";;
+
+        Process.Start(url);
     }
 }
