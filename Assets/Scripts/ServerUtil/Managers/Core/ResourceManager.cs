@@ -35,7 +35,8 @@ public class ResourceManager
         return null;
     }
 
-    public void LoadAll<T>(string folderPath) where T : Object
+    public void LoadAll<T>(string folderPath)
+        where T : Object
     {
         string folderName = folderPath.Substring(folderPath.LastIndexOf('/') + 1);
 

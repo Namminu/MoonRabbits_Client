@@ -5,7 +5,8 @@
 
     public static void SetTransition()
     {
-        if (_isTransition) return;
+        if (_isTransition)
+            return;
 
         _isTransition = true;
 

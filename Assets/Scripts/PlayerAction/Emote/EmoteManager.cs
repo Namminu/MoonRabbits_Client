@@ -26,21 +26,21 @@ public class EmoteManager : MonoBehaviour
     public void EmoteHappy()
     {
         player.NavAgent.SetDestination(player.transform.position);
-        var animPkt = new C2SAnimation { AnimCode = animKeys[0] };
+        var animPkt = new C2SEmote { AnimCode = animKeys[0] };
         GameManager.Network.Send(animPkt);
     }
 
     public void EmoteSad()
     {
         player.NavAgent.SetDestination(player.transform.position);
-        var animPkt = new C2SAnimation { AnimCode = animKeys[1] };
+        var animPkt = new C2SEmote { AnimCode = animKeys[1] };
         GameManager.Network.Send(animPkt);
     }
 
     public void EmoteGreeting()
     {
         player.NavAgent.SetDestination(player.transform.position);
-        var animPkt = new C2SAnimation { AnimCode = animKeys[2] };
+        var animPkt = new C2SEmote { AnimCode = animKeys[2] };
         GameManager.Network.Send(animPkt);
     }
 }

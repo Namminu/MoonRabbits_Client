@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class InventoryManager : MonoBehaviour
 {
-    public static InventoryManager instance { get; private set; }  // 싱글톤 인스턴스
+    public static InventoryManager instance { get; private set; } // 싱글톤 인스턴스
 
     // 인벤토리 슬롯 데이터. key: 슬롯 인덱스, value: MaterialItem
-    private Dictionary<int, MaterialItem> inventoryDictionary  = new Dictionary<int, MaterialItem>();
+    private Dictionary<int, MaterialItem> inventoryDictionary = new Dictionary<int, MaterialItem>();
 
     public Dictionary<int, MaterialItem> GetCurrentInventoryDictionary()
     {
@@ -52,7 +52,9 @@ public class InventoryManager : MonoBehaviour
             }
 
             // slot.ItemId가 null이 아닌 경우 MaterialItemData를 찾아 MaterialItem 생성
-            MaterialItemData itemData = ItemDataLoader.MaterialItemsList.Find(item => item.ItemId == slot.ItemId);
+            MaterialItemData itemData = ItemDataLoader.MaterialItemsList.Find(item =>
+                item.ItemId == slot.ItemId
+            );
 
             if (itemData != null)
             {
@@ -88,11 +90,7 @@ public class InventoryManager : MonoBehaviour
     /// <param name="itemId">아이템 아이디</param>
     public void SendItemObtained(int slotIdx, int itemId)
     {
-        C2SItemObtained packet = new C2SItemObtained
-        {
-            SlotIdx = slotIdx,
-            ItemId = itemId
-        };
+        C2SItemObtained packet = new C2SItemObtained { SlotIdx = slotIdx, ItemId = itemId };
         GameManager.Network.Send(packet);
     }
 
@@ -101,11 +99,7 @@ public class InventoryManager : MonoBehaviour
     /// </summary>
     public void SendItemDisassembly(int slotIdx, int itemId)
     {
-        C2SItemDisassembly packet = new C2SItemDisassembly
-        {
-            SlotIdx = slotIdx,
-            ItemId = itemId
-        };
+        C2SItemDisassembly packet = new C2SItemDisassembly { SlotIdx = slotIdx, ItemId = itemId };
         GameManager.Network.Send(packet);
     }
 
@@ -114,11 +108,7 @@ public class InventoryManager : MonoBehaviour
     /// </summary>
     public void SendItemDestroy(int slotIdx, int itemId)
     {
-        C2SItemDestroy packet = new C2SItemDestroy
-        {
-            SlotIdx = slotIdx,
-            ItemId = itemId
-        };
+        C2SItemDestroy packet = new C2SItemDestroy { SlotIdx = slotIdx, ItemId = itemId };
         GameManager.Network.Send(packet);
     }
 
@@ -136,11 +126,10 @@ public class InventoryManager : MonoBehaviour
             {
                 SlotIdx = materialItem.SlotIdx,
                 ItemId = materialItem.ItemData.ItemId,
-                Stack = materialItem.CurItemStack
+                Stack = materialItem.CurItemStack,
             };
             packet.Slots.Add(newSlot);
         }
-    GameManager.Network.Send(packet);
+        GameManager.Network.Send(packet);
     }
 }
-
