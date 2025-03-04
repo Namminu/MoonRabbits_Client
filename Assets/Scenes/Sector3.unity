@@ -2852,6 +2852,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3739909603267033202, guid: 46954eb707364a744ab7fc7a00083e47,
         type: 3}
+      propertyPath: id
+      value: 50002
+      objectReference: {fileID: 0}
+    - target: {fileID: 3739909603267033202, guid: 46954eb707364a744ab7fc7a00083e47,
+        type: 3}
       propertyPath: sectorCode
       value: 103
       objectReference: {fileID: 0}
@@ -5079,6 +5084,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Portal
+      objectReference: {fileID: 0}
+    - target: {fileID: 3739909603267033202, guid: 46954eb707364a744ab7fc7a00083e47,
+        type: 3}
+      propertyPath: id
+      value: 50003
       objectReference: {fileID: 0}
     - target: {fileID: 3739909603267033202, guid: 46954eb707364a744ab7fc7a00083e47,
         type: 3}

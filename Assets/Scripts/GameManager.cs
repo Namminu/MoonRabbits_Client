@@ -164,7 +164,7 @@ public class GameManager : MonoBehaviour
     IEnumerator EnterSector(int targetSector, PlayerInfo playerInfo)
     {
         // [1] 이전 섹터의 플레이어리스트 비움
-        // playerList[CurrentSector].Clear();
+        playerList[CurrentSector].Clear();
         // [2] 이동할 섹터의 매니저 찾고, 씬 로드 기다림
         StartCoroutine(SetSManager(targetSector));
         yield return new WaitUntil(() => sManager != null);
@@ -173,6 +173,20 @@ public class GameManager : MonoBehaviour
         sManager.UiChat.Player = me;
         // [4] 현재 위치한 섹터 값 최신화
         CurrentSector = targetSector;
+        // [5] Esystem 최신화
+        if (targetSector == 101)
+        {
+            MyPlayer.instance.eSystem = S1Manager.Instance.ESystem;
+        }
+        else if (targetSector == 102)
+        {
+            MyPlayer.instance.eSystem = S2Manager.Instance.ESystem;
+        }
+        else if (targetSector == 103)
+        {
+            MyPlayer.instance.eSystem = S3Manager.Instance.ESystem;
+        }
+
     }
 
     IEnumerator SpawnOthers(S2CSpawn pkt)

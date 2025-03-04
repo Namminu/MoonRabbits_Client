@@ -6,6 +6,7 @@ public class Portal : MonoBehaviour
 {
     [SerializeField]
     private int sectorCode;
+    public int id;
 
     [SerializeField]
     private Transform connectedPortal;

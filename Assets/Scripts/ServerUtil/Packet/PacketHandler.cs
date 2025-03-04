@@ -181,6 +181,10 @@ class PacketHandler
         if (packet is not S2CPortal pkt)
             return;
         Debug.Log($"S2CPortal 패킷 무사 도착 : {pkt}");
+
+        Vector3 portalPos = new Vector3(pkt.OutPortalLocation.X, pkt.OutPortalLocation.Y, pkt.OutPortalLocation.Z);
+
+        MyPlayer.instance.InteractManager.UsePortal();
     }
     #endregion
 
