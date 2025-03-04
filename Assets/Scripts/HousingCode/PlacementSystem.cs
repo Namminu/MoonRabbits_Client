@@ -15,7 +15,7 @@ public class PlacementSystem : MonoBehaviour
 	[SerializeField] private GameObject gridVisualization;
 
 	[Tooltip("테스트용 멤버. 추후 HSItem Json 로드 후 변경 필요")]
-	[SerializeField] private ObjectDataBaseSo db;
+	// [SerializeField] private ObjectDataBaseSo db;
 
 	private void Start()
 	{
@@ -38,7 +38,7 @@ public class PlacementSystem : MonoBehaviour
 		StopPlacement();
 
 		//selectedObjectItemId = ItemDataLoader.HousingItemsList.FindIndex(data => data.ItemId == itemId);
-		selectedObjectItemId = db.objectDatas.FindIndex(data => data.ID == itemId);
+		// selectedObjectItemId = db.objectDatas.FindIndex(data => data.ID == itemId);
 
 		if (selectedObjectItemId < 0)
 		{
@@ -59,8 +59,8 @@ public class PlacementSystem : MonoBehaviour
 		Vector3Int gridPosition = grid.WorldToCell(mousePosition);
 
 		//GameObject newObject = Instantiate(ItemDataLoader.HousingItemsList[selectedObjectItemId].ItemPrefab);
-		GameObject newObject = Instantiate(db.objectDatas[selectedObjectItemId].Prefab);
-		newObject.transform.position = grid.CellToWorld(gridPosition);
+		// GameObject newObject = Instantiate(db.objectDatas[selectedObjectItemId].Prefab);
+		// newObject.transform.position = grid.CellToWorld(gridPosition);
 	}
 
 	private void StopPlacement()
