@@ -178,6 +178,20 @@ public class GameManager : MonoBehaviour
         sManager.UiChat.Player = me;
         // [4] 현재 위치한 섹터 값 최신화
         CurrentSector = targetSector;
+        // [5] Esystem 최신화
+        if (targetSector == 101)
+        {
+            MyPlayer.instance.eSystem = S1Manager.Instance.ESystem;
+        }
+        else if (targetSector == 102)
+        {
+            MyPlayer.instance.eSystem = S2Manager.Instance.ESystem;
+        }
+        else if (targetSector == 103)
+        {
+            MyPlayer.instance.eSystem = S3Manager.Instance.ESystem;
+        }
+
     }
 
     IEnumerator SpawnOthers(S2CSpawn pkt)
@@ -194,6 +208,7 @@ public class GameManager : MonoBehaviour
             var player = sManager.SpawnPlayer(playerInfo);
             player.SetIsMine(false);
         }
+
     }
 
     private void LoadJson()

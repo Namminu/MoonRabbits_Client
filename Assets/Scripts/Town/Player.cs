@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Google.Protobuf.Protocol;
+using Unity.Mathematics;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.AI;
@@ -16,6 +17,8 @@ public class Player : MonoBehaviour
     public float SmoothMoveSpeed = 10f; // 위치 보간 속도
     public float SmoothRotateSpeed = 10f; // 회전 보간 속도
     public float TeleportDistanceThreshold = 0.5f; // 순간 이동 거리 임계값
+
+
 
     public Avatar Avatar { get; private set; }
     public MyPlayer MPlayer { get; private set; }
@@ -207,8 +210,9 @@ public class Player : MonoBehaviour
     {
         if (goalRot != Quaternion.identity)
         {
-            float t = Mathf.Clamp(Time.deltaTime * SmoothRotateSpeed, 0, 0.3f);
-            transform.rotation = Quaternion.Lerp(transform.rotation, goalRot, t);
+            float t = Mathf.Clamp(Time.deltaTime * SmoothRotateSpeed, 0, 0.5f); // 보간 범위 조정
+            // transform.rotation = Quaternion.Lerp(transform.rotation, goalRot, t);
+            transform.rotation = goalRot;
         }
     }
 
@@ -394,6 +398,7 @@ public class Player : MonoBehaviour
 
         ActiveEquipObj = equips[nextEquip];
         ActiveEquipObj.SetActive(true);
+        PartyMemberUI.instance.UpdateUI();
 
         if (IsMine)
         {
