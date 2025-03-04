@@ -9,11 +9,12 @@ public class S1Manager : SManagerBase
     private static S1Manager _instance;
     public static S1Manager Instance => _instance;
 
-    void Awake()
+    protected override void Awake()
     {
         if (_instance == null)
         {
             _instance = this;
+            base.Awake();
             SectorCode = 101;
         }
         else

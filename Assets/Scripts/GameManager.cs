@@ -82,7 +82,6 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        sManager = TownManager.Instance;
         LoadJson();
     }
 
@@ -104,7 +103,10 @@ public class GameManager : MonoBehaviour
     IEnumerator SetSManager(int sectorCode)
     {
         if (sectorCode == CurrentSector)
+        {
+            sManager = TownManager.Instance;
             yield break;
+        }
 
         switch (sectorCode)
         {
@@ -167,16 +169,20 @@ public class GameManager : MonoBehaviour
     IEnumerator EnterSector(int targetSector, PlayerInfo playerInfo)
     {
         // [1] 이전 섹터의 플레이어리스트 비움
-        playerList[CurrentSector].Clear();
+        // playerList[CurrentSector].Clear();
         // [2] 이동할 섹터의 매니저 찾고, 씬 로드 기다림
         StartCoroutine(SetSManager(targetSector));
         yield return new WaitUntil(() => sManager != null);
         // [3] 플레이어 오브젝트 생성 및 데이터 연동
-        Debug.Log("여까지 오나여?? 게임매니저 EnterSector 메서드");
         Player me = sManager.Enter(playerInfo);
         sManager.UiChat.Player = me;
         // [4] 현재 위치한 섹터 값 최신화
         CurrentSector = targetSector;
+        Debug.Log($"---- 엔터 시점 확인!!! ----");
+        Debug.Log(
+            $"!!! 타운 {townPlayers.Count}명 / 섹터1 {s1Players.Count}명 / 섹터2 {s2Players.Count}명 / 섹터3 {s3Players.Count}명 !!!"
+        );
+        Debug.Log($"!!! 플레이어 잘 들어갔남? {GetPlayer(playerInfo.PlayerId) != null}");
     }
 
     IEnumerator SpawnOthers(S2CSpawn pkt)
@@ -193,6 +199,10 @@ public class GameManager : MonoBehaviour
             var player = sManager.SpawnPlayer(playerInfo);
             player.SetIsMine(false);
         }
+        Debug.Log($"---- 스폰 시점 확인!!! ----");
+        Debug.Log(
+            $"!!! 타운 {townPlayers.Count}명 / 섹터1 {s1Players.Count}명 / 섹터2 {s2Players.Count}명 / 섹터3 {s3Players.Count}명 !!!"
+        );
     }
 
     private void LoadJson()

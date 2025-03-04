@@ -22,12 +22,17 @@ public class InventoryManager : MonoBehaviour
     private void Awake()
     {
         // 이미 인스턴스가 존재하면 중복 생성 방지
-        if (instance != null)
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
         {
             Destroy(gameObject);
             return;
         }
-        instance = this;
+
         // 필요한 초기화 코드 추가 가능
     }
 

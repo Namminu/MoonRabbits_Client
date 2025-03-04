@@ -1045,7 +1045,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &6244792737484904461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1088,7 +1088,7 @@ MonoBehaviour:
   partyCardPrefab: {fileID: 701649303420913404, guid: f549779bc54e72b4f8bb0febb3827fab,
     type: 3}
   createPartyButton: {fileID: 3455177511117889158}
-  invitePartyButton: {fileID: 0}
+  invitePartyButton: {fileID: 6208024215530580534}
   checkPartyListButton: {fileID: 3188899704035731648}
   joinPartyButton: {fileID: 3188899704035731648}
   closeButton: {fileID: 3082842154373276989}
@@ -5042,7 +5042,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &7952946657681573791
 MonoBehaviour:
   m_ObjectHideFlags: 0

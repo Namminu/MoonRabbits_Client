@@ -55,6 +55,13 @@ class PacketHandler
 
         string targetSceneName = GameManager.Instance.SceneName[pkt.TargetSector];
 
+        if (targetSceneName != SceneManager.GetActiveScene().name)
+        {
+            SceneManager.LoadScene(targetSceneName);
+        }
+
+        GameManager.Instance.EnterAfterSceneAwake(pkt.TargetSector, pkt.Player);
+
         // if (targetSceneName != SceneManager.GetActiveScene().name)
         // {
         //     SceneManagerEx.SetScene(targetSceneName, pkt.Player);
@@ -63,12 +70,6 @@ class PacketHandler
         // {
         //     GameManager.Instance.EnterAfterSceneAwake(pkt.TargetSector, pkt.Player);
         // }
-        if (targetSceneName != SceneManager.GetActiveScene().name)
-        {
-            SceneManager.LoadScene(targetSceneName);
-        }
-
-        GameManager.Instance.EnterAfterSceneAwake(pkt.TargetSector, pkt.Player);
     }
 
     public static void S2CMoveSectorHandler(PacketSession session, IMessage packet)
@@ -105,6 +106,9 @@ class PacketHandler
         }
         else
         {
+            Debug.Log($"누가 null인감 겜매니저 : {GameManager.Instance == null}");
+            Debug.Log($"누가 null인감 에스매니저: {GameManager.Instance.SManager == null}");
+            Debug.Log($"누가 null인감 유아이챗: {GameManager.Instance.SManager.UiChat == null}");
             GameManager.Instance.SManager.UiChat.PushMessage(
                 "System",
                 pkt.ChatMsg,

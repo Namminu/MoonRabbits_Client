@@ -10,11 +10,12 @@ public class S3Manager : SManagerBase
     private static S3Manager _instance;
     public static S3Manager Instance => _instance;
 
-    void Awake()
+    protected override void Awake()
     {
         if (_instance == null)
         {
             _instance = this;
+            base.Awake();
             SectorCode = 103;
         }
         else
