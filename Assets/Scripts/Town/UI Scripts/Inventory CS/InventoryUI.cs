@@ -286,6 +286,7 @@ public class InventoryUI : MonoBehaviour
         if (InventoryManager.instance != null)
         {
             RefreshInventory(InventoryManager.instance.GetCurrentInventoryDictionary());
+            transform.gameObject.SetActive(false);
         }
     }
 
