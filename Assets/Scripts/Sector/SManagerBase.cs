@@ -64,7 +64,7 @@ public abstract class SManagerBase : MonoBehaviour
         MyPlayer.SetUI(UiPlayer);
         MyPlayer.SetNickname(playerInfo.Nickname);
         MyPlayer.SetStatInfo(playerInfo.StatInfo);
-        PartyMemberUI.instance.UpdateUI();
+
         // [5] "내" 플레이어 오브젝트 반환
         return MyPlayer;
     }
@@ -101,6 +101,9 @@ public abstract class SManagerBase : MonoBehaviour
             // [4 B] 정상 접속이면 플레이어 리스트에 추가
             players.Add(playerInfo.PlayerId, player);
         }
+
+        PartyMemberUI.instance.UpdateUI();
+
         // [5] 생성된 플레이어 오브젝트 반환
         return player;
     }

@@ -173,8 +173,6 @@ public class GameManager : MonoBehaviour
         sManager.UiChat.Player = me;
         // [4] 현재 위치한 섹터 값 최신화
         CurrentSector = targetSector;
-        // [5] 파티원 정보 UI 업데이트
-        PartyMemberUI.instance.UpdateUI();
     }
 
     IEnumerator SpawnOthers(S2CSpawn pkt)
@@ -191,6 +189,7 @@ public class GameManager : MonoBehaviour
             var player = sManager.SpawnPlayer(playerInfo);
             player.SetIsMine(false);
         }
+
     }
 
     private void LoadJson()

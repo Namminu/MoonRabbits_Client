@@ -49,7 +49,7 @@ class PacketHandler
     {
         if (packet is not S2CPing pkt)
             return;
-        Debug.Log($"S2CPing 패킷 무사 도착 : {pkt}");
+        // Debug.Log($"S2CPing 패킷 무사 도착 : {pkt}");
 
         var pongPacket = new C2SPong { Timestamp = pkt.Timestamp };
         GameManager.Network.Send(pongPacket);
@@ -65,8 +65,18 @@ class PacketHandler
 
         string targetSceneName = GameManager.Instance.SceneName[pkt.TargetSector];
 
+        // if (targetSceneName != SceneManager.GetActiveScene().name)
+        // {
+        //     SceneManagerEx.SetScene(targetSceneName, pkt.Player);
+        // }
+        // else
+        // {
+        //     GameManager.Instance.EnterAfterSceneAwake(pkt.TargetSector, pkt.Player);
+        // }
         if (targetSceneName != SceneManager.GetActiveScene().name)
+        {
             SceneManager.LoadScene(targetSceneName);
+        }
 
         GameManager.Instance.EnterAfterSceneAwake(pkt.TargetSector, pkt.Player);
     }
@@ -148,7 +158,7 @@ class PacketHandler
     {
         if (packet is not S2CPlayerLocation pkt)
             return;
-        Debug.Log($"S2CPlayerLocation 패킷 무사 도착 : {pkt}");
+        // Debug.Log($"S2CPlayerLocation 패킷 무사 도착 : {pkt}");
 
         Vector3 position = new(pkt.Transform.PosX, pkt.Transform.PosY, pkt.Transform.PosZ);
         Quaternion rotation = Quaternion.Euler(0, pkt.Transform.Rot, 0);
