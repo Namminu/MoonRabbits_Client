@@ -5,11 +5,10 @@ using static UnityEditor.Progress;
 
 public class PlacementState : IBuildingState
 {
-	private int selectedObjectItemId = -1;
+	private int selectedObjectIndex = -1;
 	int ID;
 	Grid grid;
 	PreviewSystem previewSystem;
-	ObjectDataBaseSo db;
 	GridData floorData;
 	GridData furnitureData;
 	ObjectPlacer objectPlacer;
@@ -17,7 +16,6 @@ public class PlacementState : IBuildingState
 	public PlacementState(int iD,
 					   Grid grid,
 					   PreviewSystem previewSystem,
-					   ObjectDataBaseSo db,
 					   GridData floorData,
 					   GridData furnitureData,
 					   ObjectPlacer objectPlacer)
@@ -25,18 +23,16 @@ public class PlacementState : IBuildingState
 		ID = iD;
 		this.grid = grid;
 		this.previewSystem = previewSystem;
-		this.db = db;
 		this.floorData = floorData;
 		this.furnitureData = furnitureData;
 		this.objectPlacer = objectPlacer;
 
-		//selectedObjectItemId = ItemDataLoader.HousingItemsList.FindIndex(data => data.ItemId == ID);
-		selectedObjectItemId = db.objectDatas.FindIndex(data => data.ID == ID);
-		if (selectedObjectItemId > -1)
+		selectedObjectIndex = ItemDataLoader.HousingItemsList.FindIndex(data => data.ItemId == ID);
+		if (selectedObjectIndex > -1)
 		{
 			previewSystem.StartShowingPlacementPreview(
-				db.objectDatas[selectedObjectItemId].Prefab,
-				db.objectDatas[selectedObjectItemId].Size);
+				ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemPrefab,
+				ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize);
 		}
 		else throw new System.Exception($"No Object with ID {iD}");
 	}
@@ -48,16 +44,23 @@ public class PlacementState : IBuildingState
 
 	public void OnAction(Vector3Int gridPosition)
 	{
-		bool placementValidity = CheckPlacementValidity(gridPosition, selectedObjectItemId);
+		bool placementValidity = CheckPlacementValidity(gridPosition, selectedObjectIndex);
+		Debug.Log(placementValidity);
 		if (placementValidity == false) return;
 
-		int index = objectPlacer.PlaceObject(db.objectDatas[selectedObjectItemId].Prefab, grid.CellToWorld(gridPosition));
+		int index = objectPlacer.PlaceObject(ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemPrefab, 
+			grid.CellToWorld(gridPosition));
 
-		GridData selectedData = db.objectDatas[selectedObjectItemId].ID == 0 ?
+		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ?
 			floorData : furnitureData;
+
+		Debug.Log($"[DEBUG] OnAction - 선택된 GridData 객체 해시코드: {selectedData.GetHashCode()}");
+		Debug.Log($"[DEBUG] OnAction - furnitureData 객체 해시코드: {furnitureData.GetHashCode()}");
+		Debug.Log($"[DEBUG] HousingItemsList[{selectedObjectIndex}].GridData 객체 해시코드: {ItemDataLoader.HousingItemsList[selectedObjectIndex].GetHashCode()}");
+
 		selectedData.AddObjectAt(gridPosition,
-			db.objectDatas[selectedObjectItemId].Size,
-			db.objectDatas[selectedObjectItemId].ID,
+			ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize,
+			ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId,
 			index);
 
 		previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), false);
@@ -65,15 +68,17 @@ public class PlacementState : IBuildingState
 
 	private bool CheckPlacementValidity(Vector3Int gridPosition, int selectedObjectItemId)
 	{
-		GridData selectedData = db.objectDatas[selectedObjectItemId].ID == 0 ?
+		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ?
 			floorData : furnitureData;
 
-		return selectedData.CanPlaceObjectAt(gridPosition, db.objectDatas[selectedObjectItemId].Size);
+		Debug.Log($"[DEBUG] furnitureData placedObjects 개수: {furnitureData.placedObjects.Count}");
+
+		return selectedData.CanPlaceObjectAt(gridPosition, ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize);
 	}
 
 	public void UpdateState(Vector3Int gridPosition)
 	{
-		bool placementValidity = CheckPlacementValidity(gridPosition, selectedObjectItemId);
+		bool placementValidity = CheckPlacementValidity(gridPosition, selectedObjectIndex);
 
 		previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), placementValidity);
 	}

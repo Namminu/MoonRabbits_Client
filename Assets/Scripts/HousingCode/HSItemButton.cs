@@ -26,10 +26,8 @@ public class HSItemButton : MonoBehaviour
 
 		if (thisBtn.onClick == null) Debug.Log("onclick null error");
 
-		//thisBtn.onClick.RemoveAllListeners();
+		thisBtn.onClick.RemoveAllListeners();
 		thisBtn.onClick.AddListener(OnClickButtonEvent);
-
-		Debug.Log($"[DEBUG] 버튼 이벤트 등록 확인 - 현재 이벤트 개수: {thisBtn.onClick.GetPersistentEventCount()}");
 	}
 	#endregion
 

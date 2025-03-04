@@ -10,9 +10,6 @@ public class PlacementSystem : MonoBehaviour
 
 	[SerializeField] private GameObject gridVisualization;
 
-	[Tooltip("테스트용 멤버. 추후 HSItem Json 로드 후 변경 필요")]
-	[SerializeField] private ObjectDataBaseSo db;
-
 	private GridData floorData, furnitureData;
 
 	[SerializeField] private ObjectPlacer objectPlacer;
@@ -49,7 +46,7 @@ public class PlacementSystem : MonoBehaviour
 		StopPlacement();
 		gridVisualization.SetActive(true);
 
-		buildingState = new PlacementState(itemId, grid, preview, db, floorData, furnitureData, objectPlacer);
+		buildingState = new PlacementState(itemId, grid, preview, floorData, furnitureData, objectPlacer);
 		inputManager.OnClicked += PlaceStructure;
 		inputManager.OnExit += StopPlacement;
 	}
@@ -73,14 +70,6 @@ public class PlacementSystem : MonoBehaviour
 
 		buildingState.OnAction(gridPosition);
 	}
-
-	//private bool CheckPlacementValidity(Vector3Int gridPosition, int selectedObjectItemId)
-	//{
-	//	GridData selectedData = db.objectDatas[selectedObjectItemId].ID == 0 ? 
-	//		floorData : furnitureData;
-
-	//	return selectedData.CanPlaceObjectAt(gridPosition, db.objectDatas[selectedObjectItemId].Size);
-	//}
 
 	private void StopPlacement()
 	{
