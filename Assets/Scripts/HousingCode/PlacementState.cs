@@ -30,7 +30,7 @@ public class PlacementState : IBuildingState
 		this.furnitureData = furnitureData;
 		this.objectPlacer = objectPlacer;
 
-		/* selectedObjectItemId = ItemDataLoader.HousingItemsList.FindIndex(data => data.ItemId == itemId); */
+		//selectedObjectItemId = ItemDataLoader.HousingItemsList.FindIndex(data => data.ItemId == ID);
 		selectedObjectItemId = db.objectDatas.FindIndex(data => data.ID == ID);
 		if (selectedObjectItemId > -1)
 		{

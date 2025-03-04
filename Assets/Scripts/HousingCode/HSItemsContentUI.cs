@@ -18,16 +18,16 @@ public class HSItemsContentUI : MonoBehaviour
 	#region Private Method
 	private int CreateItemIconButton()
 	{
-		foreach(var hsItem in ItemDataLoader.HousingItemsList)
+		foreach (var hsItem in ItemDataLoader.HousingItemsList)
 		{
 			GameObject newHSItem = Instantiate(HSItemPrefab, this.transform);
 			HSItems.Add(newHSItem);
-			if(HSItemPrefab.TryGetComponent<HSItemButton>(out var itemBtnCode))
+			if (newHSItem.TryGetComponent<HSItemButton>(out var itemBtnCode))
 			{
 				itemBtnCode.InitializeButton(hsItem.ItemIcon, hsItem.ItemId);
 			}
 		}
-		return -1;
+		return HSItems.Count;
 	}
 	#endregion
 }

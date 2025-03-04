@@ -8,14 +8,14 @@ using UnityEngine.UI;
 public class HSItemButton : MonoBehaviour
 {
 	[SerializeField] private Image hsItemIcon;
-	[SerializeField] private Button thisBtn;
+	[SerializeField] public Button thisBtn;
 
 	private PlacementSystem placementSystem;
 	private int myItemId; 
 
 	private void Awake()
 	{
-		placementSystem = GameObject.Find("PlacementSystem").GetComponent<PlacementSystem>();	
+		placementSystem = GameObject.Find("PlacementSystem").GetComponent<PlacementSystem>();
 	}
 
 	#region Public Method
@@ -23,6 +23,8 @@ public class HSItemButton : MonoBehaviour
 	{
 		hsItemIcon.sprite = newSprite;
 		myItemId = itemId;
+
+		if (thisBtn.onClick == null) Debug.Log("onclick null error");
 
 		//thisBtn.onClick.RemoveAllListeners();
 		thisBtn.onClick.AddListener(OnClickButtonEvent);
@@ -34,14 +36,12 @@ public class HSItemButton : MonoBehaviour
 	#region Private Method
 	private void OnClickButtonEvent()
 	{
-		Debug.Log("오브젝트 생성할 차례" + myItemId);
 		if (placementSystem == null)
 		{
 			Debug.Log("placementSystem Not Found");
 			return;
 		}
 		placementSystem.StartPlacement(myItemId);
-
 	}
 	#endregion
 }
