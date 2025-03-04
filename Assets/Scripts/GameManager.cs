@@ -136,7 +136,6 @@ public class GameManager : MonoBehaviour
 
     public void EnterAfterSceneAwake(int targetSector, PlayerInfo playerInfo)
     {
-       
         StartCoroutine(EnterSector(targetSector, playerInfo));
     }
 

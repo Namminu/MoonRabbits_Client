@@ -55,14 +55,20 @@ class PacketHandler
 
         string targetSceneName = GameManager.Instance.SceneName[pkt.TargetSector];
 
+        // if (targetSceneName != SceneManager.GetActiveScene().name)
+        // {
+        //     SceneManagerEx.SetScene(targetSceneName, pkt.Player);
+        // }
+        // else
+        // {
+        //     GameManager.Instance.EnterAfterSceneAwake(pkt.TargetSector, pkt.Player);
+        // }
         if (targetSceneName != SceneManager.GetActiveScene().name)
         {
-            SceneManagerEx.SetScene(targetSceneName, pkt.Player);
+            SceneManager.LoadScene(targetSceneName);
         }
-        else
-        {
-            GameManager.Instance.EnterAfterSceneAwake(pkt.TargetSector, pkt.Player);
-        }
+
+        GameManager.Instance.EnterAfterSceneAwake(pkt.TargetSector, pkt.Player);
     }
 
     public static void S2CMoveSectorHandler(PacketSession session, IMessage packet)
