@@ -39,7 +39,7 @@ public class Party : MonoBehaviour
     members.Clear();
     foreach (var member in partyData.Members)
     {
-      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, IsMine = member.IsMine });
+      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, CurrentSector = member.CurrentSector, IsMine = member.IsMine });
     }
 
     // UI 업데이트 요청 (PartyUI에서 처리)
@@ -57,7 +57,7 @@ public class Party : MonoBehaviour
     members.Clear();
     foreach (var member in partyData.Members)
     {
-      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, IsMine = member.IsMine });
+      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, CurrentSector = member.CurrentSector, IsMine = member.IsMine });
     }
 
     // UI 업데이트 요청 (PartyUI에서 처리)
@@ -75,7 +75,7 @@ public class Party : MonoBehaviour
     members.Clear();
     foreach (var member in partyData.Members)
     {
-      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, IsMine = member.IsMine });
+      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, CurrentSector = member.CurrentSector, IsMine = member.IsMine });
     }
 
     // UI 업데이트 요청 (PartyUI에서 처리)
@@ -93,7 +93,7 @@ public class Party : MonoBehaviour
     members.Clear();
     foreach (var member in partyData.Members)
     {
-      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, IsMine = member.IsMine });
+      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, CurrentSector = member.CurrentSector, IsMine = member.IsMine });
     }
 
     // UI 업데이트 요청 (PartyUI에서 처리)
@@ -111,7 +111,7 @@ public class Party : MonoBehaviour
     members.Clear();
     foreach (var member in partyData.Members)
     {
-      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, IsMine = member.IsMine });
+      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, CurrentSector = member.CurrentSector, IsMine = member.IsMine });
     }
 
     // UI 업데이트 요청 (PartyUI에서 처리)

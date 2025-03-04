@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Google.Protobuf.Protocol;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -65,8 +66,11 @@ public class GameManager : MonoBehaviour
 
             DontDestroyOnLoad(gameObject);
 
-            EffectManager.Instance.CreatePersistentEffect("Confetti", new Vector3(-3, 14, 134), Quaternion.identity);
-
+            EffectManager.Instance.CreatePersistentEffect(
+                "Confetti",
+                new Vector3(-3, 14, 134),
+                Quaternion.identity
+            );
         }
         else
         {
@@ -133,7 +137,7 @@ public class GameManager : MonoBehaviour
 
     public void EnterAfterSceneAwake(int targetSector, PlayerInfo playerInfo)
     {
-        // SceneManagerEx.SetScene(sceneName[playerInfo.CurrentSector]);
+       
         StartCoroutine(EnterSector(targetSector, playerInfo));
     }
 
@@ -170,10 +174,25 @@ public class GameManager : MonoBehaviour
         StartCoroutine(SetSManager(targetSector));
         yield return new WaitUntil(() => sManager != null);
         // [3] 플레이어 오브젝트 생성 및 데이터 연동
+        Debug.Log("여까지 오나여?? 게임매니저 EnterSector 메서드");
         Player me = sManager.Enter(playerInfo);
         sManager.UiChat.Player = me;
         // [4] 현재 위치한 섹터 값 최신화
         CurrentSector = targetSector;
+        // [5] Esystem 최신화
+        if (targetSector == 101)
+        {
+            MyPlayer.instance.eSystem = S1Manager.Instance.ESystem;
+        }
+        else if (targetSector == 102)
+        {
+            MyPlayer.instance.eSystem = S2Manager.Instance.ESystem;
+        }
+        else if (targetSector == 103)
+        {
+            MyPlayer.instance.eSystem = S3Manager.Instance.ESystem;
+        }
+
     }
 
     IEnumerator SpawnOthers(S2CSpawn pkt)
@@ -190,6 +209,7 @@ public class GameManager : MonoBehaviour
             var player = sManager.SpawnPlayer(playerInfo);
             player.SetIsMine(false);
         }
+
     }
 
     private void LoadJson()

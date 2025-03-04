@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +44,16 @@ class PacketHandler
             return;
         Debug.Log($"S2CCreateCharacter 패킷 무사 도착 : {pkt}");
     }
+
+    public static void S2CPingHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CPing pkt)
+            return;
+        // Debug.Log($"S2CPing 패킷 무사 도착 : {pkt}");
+
+        var pongPacket = new C2SPong { Timestamp = pkt.Timestamp };
+        GameManager.Network.Send(pongPacket);
+    }
     #endregion
 
     #region Enter & Leave
@@ -55,8 +65,18 @@ class PacketHandler
 
         string targetSceneName = GameManager.Instance.SceneName[pkt.TargetSector];
 
+        // if (targetSceneName != SceneManager.GetActiveScene().name)
+        // {
+        //     SceneManagerEx.SetScene(targetSceneName, pkt.Player);
+        // }
+        // else
+        // {
+        //     GameManager.Instance.EnterAfterSceneAwake(pkt.TargetSector, pkt.Player);
+        // }
         if (targetSceneName != SceneManager.GetActiveScene().name)
+        {
             SceneManager.LoadScene(targetSceneName);
+        }
 
         GameManager.Instance.EnterAfterSceneAwake(pkt.TargetSector, pkt.Player);
     }
@@ -161,6 +181,10 @@ class PacketHandler
         if (packet is not S2CPortal pkt)
             return;
         Debug.Log($"S2CPortal 패킷 무사 도착 : {pkt}");
+
+        Vector3 portalPos = new Vector3(pkt.OutPortalLocation.X, pkt.OutPortalLocation.Y, pkt.OutPortalLocation.Z);
+
+        MyPlayer.instance.InteractManager.UsePortal();
     }
     #endregion
 
@@ -588,12 +612,5 @@ class PacketHandler
         if (packet is not S2CCraft pkt)
             return;
         Debug.Log($"S2CCraft 패킷 무사 도착 : {pkt}");
-    }
-
-    public static void S2CPingHandler(PacketSession session, IMessage packet)
-    {
-        if (packet is not S2CPing pkt)
-            return;
-        Debug.Log($"S2CPing 패킷 무사 도착 : {pkt}");
     }
 }
