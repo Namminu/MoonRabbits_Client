@@ -29,8 +29,6 @@ public class MyPlayer : MonoBehaviour
     public Vector3 TargetPos => targetPosition;
     private Vector3 lastTargetPosition;
     private readonly List<int> animHash = new List<int>();
-    private int frameCount = 0;
-    private const int targetFrames = 10; // 10 프레임마다 실행
 
     /* 감정표현 관련 */
     public bool isEmoting;
@@ -81,7 +79,7 @@ public class MyPlayer : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(ExecuteEvery10Frames());
+        StartCoroutine(ExecuteEvery0_1Seconds());
     }
 
     void Update()
@@ -93,6 +91,8 @@ public class MyPlayer : MonoBehaviour
         Recall();
         EquipChange();
         Interact();
+
+        CheckMove();
     }
 
     private void InitializeCamera()
@@ -147,19 +147,15 @@ public class MyPlayer : MonoBehaviour
         equipChangeInput = Input.GetKeyDown(KeyCode.R);
     }
 
-    IEnumerator ExecuteEvery10Frames()
+    IEnumerator ExecuteEvery0_1Seconds()
     {
         while (true)
         {
-            yield return null;
-            frameCount++;
-
-            CheckMove();
+            yield return new WaitForSeconds(0.1f); // 0.1초마다 실행
 
             // 마지막으로 전송했던 좌표(lastTargetPosition)와 달라졌을 때에만 실행
-            if (frameCount >= targetFrames && targetPosition != lastTargetPosition)
+            if (targetPosition != lastTargetPosition)
             {
-                frameCount = 0;
                 MoveAndSendMovePacket();
             }
         }
@@ -219,7 +215,7 @@ public class MyPlayer : MonoBehaviour
     private void CheckMove()
     {
         float distanceMoved = Vector3.Distance(lastPos, transform.position);
-        // animator.SetFloat(Constants.TownPlayerMove, distanceMoved * 100);
+        anim.SetFloat(Constants.TownPlayerMove, distanceMoved * 100);
 
         if (distanceMoved > 0.01f)
         {

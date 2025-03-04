@@ -69,7 +69,7 @@ public static class ItemDataLoader
             newItem.ItemDescription = item.item_description;
             newItem.ItemType = (ItemTypes)item.item_type;
             newItem.ItemIcon = GetSpriteByItemId(item.item_id);
-            newItem.ItemMaxStack = 99;
+            newItem.ItemMaxStack = 9999;
 
             MaterialItemsList.Add(newItem);
         }

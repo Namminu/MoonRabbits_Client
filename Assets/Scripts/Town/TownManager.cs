@@ -17,6 +17,9 @@ public class TownManager : SManagerBase
     [SerializeField]
     private TMP_Text txtServer;
 
+    [SerializeField]
+    private InventoryUI inventoryUI;
+
     private void Awake()
     {
         if (_instance == null)
@@ -77,5 +80,6 @@ public class TownManager : SManagerBase
         base.ActivateUI();
         uiStart.gameObject.SetActive(false);
         uiAnimation.gameObject.SetActive(true);
+        inventoryUI.gameObject.SetActive(true);
     }
 }
