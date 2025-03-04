@@ -5,6 +5,8 @@ using Google.Protobuf.Protocol;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -80,6 +82,12 @@ public class SceneTransition : MonoBehaviour
             listenerComponent = mainCam.gameObject.AddComponent<AudioListener>();
         }
         listenerComponent.enabled = true; // 메인 카메라의 리스너 활성화
+
+        var isLowSpec = GameManager.Instance.IsLowSpecMode;
+        var volum = FindObjectOfType<Volume>();
+        if (volum) volum.gameObject.SetActive(isLowSpec);
+        UniversalAdditionalCameraData uac = Camera.main.GetComponent<UniversalAdditionalCameraData>();
+        uac.renderPostProcessing = isLowSpec;
     }
 
     private void SetSound()

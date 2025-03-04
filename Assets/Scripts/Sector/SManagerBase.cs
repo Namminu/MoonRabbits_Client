@@ -69,6 +69,7 @@ public abstract class SManagerBase : MonoBehaviour
         MyPlayer.SetUI(UiPlayer);
         MyPlayer.SetNickname(playerInfo.Nickname);
         MyPlayer.SetStatInfo(playerInfo.StatInfo);
+
         // [5] "내" 플레이어 오브젝트 반환
         return MyPlayer;
     }
@@ -93,11 +94,11 @@ public abstract class SManagerBase : MonoBehaviour
         player.SetNickname(playerInfo.Nickname);
         player.SetLevel(playerInfo.Level);
         // [4] 이미 접속된 플레이어인지 확인
-        var playerList = GameManager.Instance.PlayerList[SectorCode];
-        if (playerList.TryGetValue(playerInfo.PlayerId, out var existingPlayer))
+        var players = GameManager.Instance.PlayerList[SectorCode];
+        if (players.TryGetValue(playerInfo.PlayerId, out var existingPlayer))
         {
             // [4 A] 중복 접속이면 기존 거 파괴하고 이번 꺼 덧씌움
-            playerList[playerInfo.PlayerId] = player;
+            players[playerInfo.PlayerId] = player;
             if (existingPlayer != null)
             {
                 Destroy(existingPlayer.gameObject);
@@ -106,8 +107,11 @@ public abstract class SManagerBase : MonoBehaviour
         else
         {
             // [4 B] 정상 접속이면 플레이어 리스트에 추가
-            playerList.Add(playerInfo.PlayerId, player);
+            players.Add(playerInfo.PlayerId, player);
         }
+
+        PartyMemberUI.instance.UpdateUI();
+
         // [5] 생성된 플레이어 오브젝트 반환
         return player;
     }

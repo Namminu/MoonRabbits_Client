@@ -50,7 +50,8 @@ public class InteractManager : MonoBehaviour
         }
         else if (targetPortal != null)
         {
-            UsePortal();
+            var portalPacket = new C2SPortal { InPortalId = targetPortal.id };
+            GameManager.Network.Send(portalPacket);
         }
     }
 
@@ -106,7 +107,7 @@ public class InteractManager : MonoBehaviour
         player.NavAgent.isStopped = false;
     }
 
-    private void UsePortal()
+    public void UsePortal()
     {
         if (isInteracting)
             return;
