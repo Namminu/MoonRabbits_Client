@@ -15,17 +15,16 @@ public class GameManager : MonoBehaviour
     private bool _isLowSpecMode;
     public bool IsLowSpecMode
     {
-        get
-        {
-            return _isLowSpecMode;
-        }
+        get { return _isLowSpecMode; }
         set
         {
             _isLowSpecMode = value;
             var isLowSpec = GameManager.Instance.IsLowSpecMode;
             var volum = FindObjectOfType<Volume>();
-            if (volum) volum.gameObject.SetActive(isLowSpec);
-            UniversalAdditionalCameraData uac = Camera.main.GetComponent<UniversalAdditionalCameraData>();
+            if (volum)
+                volum.gameObject.SetActive(isLowSpec);
+            UniversalAdditionalCameraData uac =
+                Camera.main.GetComponent<UniversalAdditionalCameraData>();
             uac.renderPostProcessing = isLowSpec;
             if (isLowSpec)
             {
@@ -186,6 +185,22 @@ public class GameManager : MonoBehaviour
             if (sector.TryGetValue(playerId, out var player))
             {
                 return player;
+            }
+        }
+
+        return null;
+    }
+
+    public Player GetPlayer(string nickname)
+    {
+        foreach (Dictionary<int, Player> sector in playerList.Values)
+        {
+            foreach (Player player in sector.Values)
+            {
+                if (player.nickname == nickname)
+                {
+                    return player;
+                }
             }
         }
 
