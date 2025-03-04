@@ -1,17 +1,42 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Google.Protobuf.Protocol;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class GameManager : MonoBehaviour
 {
     [Header("Managers")]
     private static GameManager _instance = null;
     public static GameManager Instance => _instance;
+
+    private bool _isLowSpecMode;
+    public bool IsLowSpecMode
+    {
+        get
+        {
+            return _isLowSpecMode;
+        }
+        set
+        {
+            _isLowSpecMode = value;
+            var isLowSpec = GameManager.Instance.IsLowSpecMode;
+            var volum = FindObjectOfType<Volume>();
+            if (volum) volum.gameObject.SetActive(isLowSpec);
+            UniversalAdditionalCameraData uac = Camera.main.GetComponent<UniversalAdditionalCameraData>();
+            uac.renderPostProcessing = isLowSpec;
+            if (isLowSpec)
+            {
+                QualitySettings.SetQualityLevel(0, true); // 0은 Low, 1은 Medium, 2는 High, 3은 Very High
+            }
+            else
+            {
+                QualitySettings.SetQualityLevel(3, true); // 0은 Low, 1은 Medium, 2는 High, 3은 Very High
+            }
+        }
+    }
 
     private NetworkManager network;
     public static NetworkManager Network => _instance.network;
@@ -65,11 +90,12 @@ public class GameManager : MonoBehaviour
 
             DontDestroyOnLoad(gameObject);
 
-            EffectManager.Instance.CreatePersistentEffect(
-                "Confetti",
-                new Vector3(-3, 14, 134),
-                Quaternion.identity
-            );
+            if (!IsLowSpecMode)
+                EffectManager.Instance.CreatePersistentEffect(
+                    "Confetti",
+                    new Vector3(-3, 14, 134),
+                    Quaternion.identity
+                );
         }
         else
         {
@@ -136,7 +162,7 @@ public class GameManager : MonoBehaviour
 
     public void EnterAfterSceneAwake(int targetSector, PlayerInfo playerInfo)
     {
-       
+
         StartCoroutine(EnterSector(targetSector, playerInfo));
     }
 
