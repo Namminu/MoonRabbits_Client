@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     [Header("Players")]
     private Dictionary<int, Dictionary<int, Player>> playerList = new();
     public Dictionary<int, Dictionary<int, Player>> PlayerList => playerList;
-    
+
     private Dictionary<int, Player> townPlayers = new();
     private Dictionary<int, Player> s1Players = new();
     private Dictionary<int, Player> s2Players = new();
@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Utils")]
     public JsonContainer<Resource> resourceContainer;
+    public JsonContainer<Recipe> recipeContainer;
     private readonly Dictionary<int, string> sceneName = new()
     {
         { 100, "Town" },
@@ -72,6 +73,7 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
+        LoadJson();
         //SoundManager.Instance.Play(19, Define.Sound.Bgm);
         await ItemDataLoader.GenerateAllItems();
     }
@@ -79,7 +81,6 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         sManager = TownManager.Instance;
-        LoadJson();
     }
 
     private void Update()
@@ -236,6 +237,24 @@ public class GameManager : MonoBehaviour
         )
         {
             Debug.LogError("resouce JSON 파싱 실패: 데이터가 없습니다.");
+            return;
+        }
+
+        // Recipe JSON 파일 로드
+        string recipeJsonFile = "recipe.json";
+        string recipeFilePath = Path.Combine(Application.streamingAssetsPath, recipeJsonFile);
+
+        if (!File.Exists(filePath))
+        {
+            Debug.LogError($"{recipeJsonFile} 파일을 찾을 수 없습니다: {recipeFilePath}");
+            return;
+        }
+
+        recipeContainer = loader.ReadJsonFile<JsonContainer<Recipe>>(recipeFilePath);
+
+        if (recipeContainer == null || recipeContainer.data == null || recipeContainer.data.Count == 0)
+        {
+            Debug.LogError($"{recipeJsonFile} 파싱 실패: 데이터가 없습니다.");
             return;
         }
     }
