@@ -223,16 +223,47 @@ public class ItemSlotUI
     {
         if (DragSlot.instance.dragSlot == null) return;
 
+        // 드래그 중인 아이템 가져오기
         MaterialItem draggedItem = DragSlot.instance.dragSlot.GetItem();
         if (draggedItem == null) return;
 
+        // 현재 슬롯(대상)의 아이템 가져오기
         if (HasItem() && item.Data.ItemId == draggedItem.Data.ItemId)
         {
+            // 같은 아이템일 경우 병합 처리
             AddItem(draggedItem);
-			DragSlot.instance.dragSlot.ClearSlot();
-		}  
-        else ChangeSlot();
+
+            // 드래그 중인 슬롯(원본)을 명확히 비움
+            DragSlot.instance.dragSlot.ClearSlot();
+        }
+        else
+        {
+            // 다른 아이템일 경우 교체 처리
+            ChangeSlot();
+        }
+
+        // 상태 변경 후 서버로 전송
+        InventoryUI invUI = FindObjectOfType<InventoryUI>();
+        if (invUI != null)
+        {
+            invUI.OnInventoryStateChanged();
+        }
     }
+
+    /*  public void OnDrop(PointerEventData eventData)
+      {
+          if (DragSlot.instance.dragSlot == null) return;
+
+          MaterialItem draggedItem = DragSlot.instance.dragSlot.GetItem();
+          if (draggedItem == null) return;
+
+          if (HasItem() && item.Data.ItemId == draggedItem.Data.ItemId)
+          {
+              AddItem(draggedItem);
+              DragSlot.instance.dragSlot.ClearSlot();
+          }  
+          else ChangeSlot();
+      }*/
 
     public void OnPointerClick(PointerEventData eventData)
     {
