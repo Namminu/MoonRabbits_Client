@@ -57,7 +57,6 @@ public class PlacementState : IBuildingState
 			ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize,
 			ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId,
 			index);
-		Debug.Log($"ItemName : {ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemName}");
 
 		previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), false);
 	}
