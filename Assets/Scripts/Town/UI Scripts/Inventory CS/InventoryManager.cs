@@ -38,7 +38,10 @@ public class InventoryManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            if(gameObject != null)
+            {
+                DontDestroyOnLoad(gameObject);
+            }
         }
         else
         {
