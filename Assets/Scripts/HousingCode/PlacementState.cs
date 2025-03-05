@@ -45,7 +45,6 @@ public class PlacementState : IBuildingState
 	public void OnAction(Vector3Int gridPosition)
 	{
 		bool placementValidity = CheckPlacementValidity(gridPosition, selectedObjectIndex);
-		Debug.Log(placementValidity);
 		if (placementValidity == false) return;
 
 		int index = objectPlacer.PlaceObject(ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemPrefab, 
@@ -54,14 +53,11 @@ public class PlacementState : IBuildingState
 		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ?
 			floorData : furnitureData;
 
-		Debug.Log($"[DEBUG] OnAction - 선택된 GridData 객체 해시코드: {selectedData.GetHashCode()}");
-		Debug.Log($"[DEBUG] OnAction - furnitureData 객체 해시코드: {furnitureData.GetHashCode()}");
-		Debug.Log($"[DEBUG] HousingItemsList[{selectedObjectIndex}].GridData 객체 해시코드: {ItemDataLoader.HousingItemsList[selectedObjectIndex].GetHashCode()}");
-
 		selectedData.AddObjectAt(gridPosition,
 			ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize,
 			ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId,
 			index);
+		Debug.Log($"ItemName : {ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemName}");
 
 		previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), false);
 	}
@@ -70,8 +66,6 @@ public class PlacementState : IBuildingState
 	{
 		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ?
 			floorData : furnitureData;
-
-		Debug.Log($"[DEBUG] furnitureData placedObjects 개수: {furnitureData.placedObjects.Count}");
 
 		return selectedData.CanPlaceObjectAt(gridPosition, ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize);
 	}
