@@ -6,6 +6,7 @@ using DG.Tweening;
 using Google.Protobuf;
 using Google.Protobuf.Protocol;
 using ServerCore;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -115,9 +116,6 @@ class PacketHandler
         }
         else
         {
-            Debug.Log($"누가 null인감 겜매니저 : {GameManager.Instance == null}");
-            Debug.Log($"누가 null인감 에스매니저: {GameManager.Instance.SManager == null}");
-            Debug.Log($"누가 null인감 유아이챗: {GameManager.Instance.SManager.UiChat == null}");
             GameManager.Instance.SManager.UiChat.PushMessage(
                 "System",
                 pkt.ChatMsg,
@@ -133,7 +131,7 @@ class PacketHandler
             return;
         Debug.Log($"S2CPlayerSpawn 패킷 무사 도착 : {pkt}");
 
-        GameManager.Instance.SpawnAfterSceneAwake(pkt);
+        GameManager.Instance.SpawnAfterEnter(pkt);
     }
 
     public static void S2CDespawnHandler(PacketSession session, IMessage packet)
@@ -165,7 +163,7 @@ class PacketHandler
 
         Vector3 position = new(pkt.Transform.PosX, pkt.Transform.PosY, pkt.Transform.PosZ);
         Quaternion rotation = Quaternion.Euler(0, pkt.Transform.Rot, 0);
-        bool isValidTransform = pkt.IsValidTransform; // 이거 안 쓰나여?
+        // bool isValidTransform = pkt.IsValidTransform; // 이거 안 쓰나여?
 
         var player = GameManager.Instance.GetPlayer(pkt.PlayerId);
         if (player != null)
@@ -185,7 +183,11 @@ class PacketHandler
             return;
         Debug.Log($"S2CPortal 패킷 무사 도착 : {pkt}");
 
-        Vector3 portalPos = new Vector3(pkt.OutPortalLocation.X, pkt.OutPortalLocation.Y, pkt.OutPortalLocation.Z);
+        // Vector3 portalPos = new Vector3(
+        //     pkt.OutPortalLocation.X,
+        //     pkt.OutPortalLocation.Y,
+        //     pkt.OutPortalLocation.Z
+        // );
 
         MyPlayer.instance.InteractManager.UsePortal();
     }
@@ -278,7 +280,6 @@ class PacketHandler
 
     public static void S2CCheckPartyListHandler(PacketSession session, IMessage packet)
     {
-        Debug.Log($"!!!! 패킷 !! : {packet}");
         if (packet is not S2CCheckPartyList pkt)
         {
             Debug.Log("S2CCheckPartyList 패킷의 상태가 이상하다.");
@@ -415,6 +416,8 @@ class PacketHandler
         if (packet is not S2CTraps pkt)
             return;
         Debug.Log($"S2CTraps 패킷 무사 도착 : {pkt}");
+
+        GameManager.Instance.SetTrapsAfterEnter(pkt);
     }
 
     public static void S2CSetTrapHandler(PacketSession session, IMessage packet)
@@ -447,11 +450,12 @@ class PacketHandler
                 foreach (TrapInfo trap in pkt.TrapInfos)
                 {
                     if (
-                        obj.transform.position.x - trap.Pos.X / 10f <= 0.1
-                        && obj.transform.position.z - trap.Pos.Z / 10f <= 0.1
+                        !obj.IsActive
+                        && obj.transform.position.x - trap.Pos.X / 10f <= 0.05f
+                        && obj.transform.position.z - trap.Pos.Z / 10f <= 0.05f
                     )
                     {
-                        obj.RemoveThis();
+                        obj.RemoveThis(); // 여기는 Monobehaviour가 아니라서 직접 Destroy 불가
                     }
                 }
             }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Google.Protobuf.Protocol;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -42,6 +43,8 @@ public class GameManager : MonoBehaviour
 
     private SManagerBase sManager;
     public SManagerBase SManager => sManager;
+
+    private bool isReadySManager = false;
 
     [Header("Me")]
     public string UserName;
@@ -166,9 +169,14 @@ public class GameManager : MonoBehaviour
         StartCoroutine(EnterSector(targetSector, playerInfo));
     }
 
-    public void SpawnAfterSceneAwake(S2CSpawn pkt)
+    public void SpawnAfterEnter(S2CSpawn pkt)
     {
         StartCoroutine(SpawnOthers(pkt));
+    }
+
+    public void SetTrapsAfterEnter(S2CTraps pkt)
+    {
+        StartCoroutine(SetTrap(pkt.Traps.ToList()));
     }
 
     private void OnApplicationQuit()
@@ -209,27 +217,21 @@ public class GameManager : MonoBehaviour
 
     IEnumerator EnterSector(int targetSector, PlayerInfo playerInfo)
     {
-        // [1] 이전 섹터의 플레이어리스트 비움
-        // playerList[CurrentSector].Clear();
-        // [2] 이동할 섹터의 매니저 찾고, 씬 로드 기다림
+        // [1] 이동할 섹터의 매니저 찾고, 씬 로드 기다림
         StartCoroutine(SetSManager(targetSector));
         yield return new WaitUntil(() => sManager != null);
-        // [3] 플레이어 오브젝트 생성 및 데이터 연동
+        isReadySManager = true;
+        // [2] 플레이어 오브젝트 생성 및 데이터 연동
         Player me = sManager.Enter(playerInfo);
         sManager.UiChat.Player = me;
-        // [4] 현재 위치한 섹터 값 최신화
+        // [3] 현재 위치한 섹터 값 최신화
         CurrentSector = targetSector;
-        Debug.Log($"---- 엔터 시점 확인!!! ----");
-        Debug.Log(
-            $"!!! 타운 {townPlayers.Count}명 / 섹터1 {s1Players.Count}명 / 섹터2 {s2Players.Count}명 / 섹터3 {s3Players.Count}명 !!!"
-        );
-        Debug.Log($"!!! 플레이어 잘 들어갔남? {GetPlayer(playerInfo.PlayerId) != null}");
     }
 
     IEnumerator SpawnOthers(S2CSpawn pkt)
     {
-        // [1] 스폰시킬 섹터의 매니저 찾고, 씬 로드 기다림
-        yield return new WaitUntil(() => sManager != null);
+        // [1] 섹터 매니저 변경 기다림
+        yield return new WaitUntil(() => CurrentSector == sManager.SectorCode);
         // [2] 플레이어 스폰 반복
         foreach (PlayerInfo playerInfo in pkt.Players)
         {
@@ -240,10 +242,16 @@ public class GameManager : MonoBehaviour
             var player = sManager.SpawnPlayer(playerInfo);
             player.SetIsMine(false);
         }
-        Debug.Log($"---- 스폰 시점 확인!!! ----");
-        Debug.Log(
-            $"!!! 타운 {townPlayers.Count}명 / 섹터1 {s1Players.Count}명 / 섹터2 {s2Players.Count}명 / 섹터3 {s3Players.Count}명 !!!"
-        );
+    }
+
+    IEnumerator SetTrap(List<TrapInfo> traps)
+    {
+        // [1] 섹터 매니저 변경 기다림
+        yield return new WaitUntil(() => isReadySManager);
+        // [2] 바뀐 섹터에 덫들 설치
+        sManager.SetTraps(traps);
+        // [3] 다시 이동하기 위해 false로 만듦
+        isReadySManager = false;
     }
 
     private void LoadJson()

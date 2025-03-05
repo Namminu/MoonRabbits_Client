@@ -107,11 +107,9 @@ public class MyPlayer : MonoBehaviour
         while (eSystem == null)
         {
             eSystem = GameManager.Instance.SManager.ESystem;
-            Debug.Log("!!! 이벤트 시스템 찾는 중");
             yield return new WaitForSeconds(1f);
         }
         yield return new WaitUntil(() => eSystem != null);
-        Debug.Log("!!! 이벤트 시스템 찾음");
         isReadyESystem = true;
     }
 

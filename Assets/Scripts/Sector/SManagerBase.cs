@@ -33,7 +33,9 @@ public abstract class SManagerBase : MonoBehaviour
     private UIPlayer uiPlayer;
     public UIPlayer UiPlayer => uiPlayer;
 
-    private Dictionary<int, Player> playerList = new();
+    [SerializeField]
+    private SkillObj trap;
+
     private readonly Dictionary<int, string> prefabPaths = new();
     public Player MyPlayer { get; private set; }
 
@@ -41,6 +43,7 @@ public abstract class SManagerBase : MonoBehaviour
     {
         uiChat = CanvasManager.Instance.uIChat;
         uiPlayer = CanvasManager.Instance.uIPlayer;
+        trap = Resources.Load<SkillObj>("Prefabs/Weapon/ThrowObj/Trap");
     }
 
     protected void SetPrefabPath()
@@ -86,10 +89,16 @@ public abstract class SManagerBase : MonoBehaviour
         }
         // [2] Resources 폴더에서 플레이어 프리펩 로드
         Player playerPrefab = Resources.Load<Player>(prefabPath);
-
+        // [3] 스폰 위치 설정 (최초 입장이면 스폰 위치, 아니라면 전달받은 위치 정보)
+        Vector3 spawnPos =
+            playerInfo.Transform.PosX == 0
+            && playerInfo.Transform.PosY == 0
+            && playerInfo.Transform.PosZ == 0
+                ? spawnArea.position
+                : new Vector3(playerInfo.Transform.PosX, 0, playerInfo.Transform.PosZ);
         // [3] 프리펩 생성 및 정보 연동
-        var player = Instantiate(playerPrefab, spawnArea.position, Quaternion.identity);
-        player.Move(spawnArea.position, Quaternion.identity);
+        var player = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
+        player.Move(spawnPos, Quaternion.identity);
         player.SetPlayerId(playerInfo.PlayerId);
         player.SetNickname(playerInfo.Nickname);
         player.SetLevel(playerInfo.Level);
@@ -133,9 +142,26 @@ public abstract class SManagerBase : MonoBehaviour
         players.Remove(playerId);
     }
 
-    public Player GetPlayer(int playerId)
+    public void SetTraps(List<TrapInfo> traps)
     {
-        bool isExist = playerList.TryGetValue(playerId, out var player);
-        return isExist ? player : null;
+        if (trap == null)
+        {
+            Debug.Log("Trap Prefab을 찾지 못했습니다");
+            return;
+        }
+
+        foreach (TrapInfo trapInfo in traps)
+        {
+            var trapObj = Instantiate(
+                trap,
+                new Vector3(trapInfo.Pos.X / 10f, 0, trapInfo.Pos.Z / 10f),
+                Quaternion.identity
+            );
+
+            SkillObj skillObj = trapObj.GetComponent<SkillObj>();
+            skillObj.CasterId = trapInfo.CasterId;
+
+            skillObj.SetTrapColor();
+        }
     }
 }

@@ -4732,6 +4732,7 @@ MonoBehaviour:
   eSystem: {fileID: 1252058444}
   uiChat: {fileID: 0}
   uiPlayer: {fileID: 0}
+  trap: {fileID: 3247187282469108057, guid: 692c5615becf9374399780ae2d5f16e5, type: 3}
 --- !u!1001 &447813992
 PrefabInstance:
   m_ObjectHideFlags: 0

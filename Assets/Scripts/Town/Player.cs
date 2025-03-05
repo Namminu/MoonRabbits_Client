@@ -297,15 +297,16 @@ public class Player : MonoBehaviour
     public void CastGrenade(Vec3 vel, float coolTime)
     {
         GameObject grenadeObj = Instantiate(grenade, throwPoint.position, Quaternion.identity);
-        grenadeObj.GetComponent<SkillObj>().CasterId = PlayerId;
-
+         SkillObj skillObj = grenadeObj.GetComponent<SkillObj>();
+        skillObj.CasterId = PlayerId;
+        
         Rigidbody rigid = grenadeObj.GetComponent<Rigidbody>();
         rigid.velocity = new Vector3(vel.X, vel.Y, vel.Z);
         rigid.AddTorque(Vector3.back, ForceMode.Impulse);
 
         if (IsMine)
         {
-            StartCoroutine(RunCoolTime(coolTime, 0));
+            StartCoroutine(RunCoolTime(coolTime, (int)skillObj.type));
         }
     }
 
@@ -318,40 +319,17 @@ public class Player : MonoBehaviour
             new Vector3(pos.X / 10f, 0, pos.Z / 10f),
             transform.rotation
         );
-        trapObj.GetComponent<SkillObj>().CasterId = PlayerId;
+
+        SkillObj skillObj = trapObj.GetComponent<SkillObj>();
+        skillObj.CasterId = PlayerId;
 
         if (IsMine)
         {
-            List<GameObject> myTraps = MPlayer.SkillManager.Traps;
-            myTraps.Add(trapObj);
-
-            if (myTraps.Count > maxTraps)
-            {
-                GameObject oldTrap = myTraps[0];
-                myTraps.Remove(oldTrap);
-
-                var pkt = new C2SRemoveTrap
-                {
-                    TrapInfo = new TrapInfo
-                    {
-                        CasterId = PlayerId,
-                        Pos = new Vec3
-                        {
-                            X = Mathf.Round(oldTrap.transform.position.x * 10f),
-                            Y = 0,
-                            Z = Mathf.Round(oldTrap.transform.position.z * 10f),
-                        },
-                    },
-                };
-
-                GameManager.Network.Send(pkt);
-            }
-
-            StartCoroutine(RunCoolTime(coolTime, 1));
+            StartCoroutine(RunCoolTime(coolTime, (int)skillObj.type));
         }
     }
 
-    IEnumerator RunCoolTime(float coolTime, int skillType)
+    IEnumerator RunCoolTime(float coolTime,int skillType)
     {
         yield return new WaitForSeconds(1f);
         MPlayer.SkillManager.IsCasting = false;
@@ -360,10 +338,10 @@ public class Player : MonoBehaviour
 
         switch (skillType)
         {
-            case 0:
+            case 1:
                 MPlayer.SkillManager.IsGrenadeReady = true;
                 break;
-            case 1:
+            case 2:
                 MPlayer.SkillManager.IsTrapReady = true;
                 break;
         }
