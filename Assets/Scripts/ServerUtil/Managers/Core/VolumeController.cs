@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,6 +6,10 @@ public class VolumeController : MonoBehaviour
 {
   public Slider bgmSlider;
   public Slider effectSlider;
+
+  public Toggle lowSpecMode;
+
+
 
   private void Awake()
   {
@@ -20,5 +25,15 @@ public class VolumeController : MonoBehaviour
     // 슬라이더 변경 시 볼륨 조절
     bgmSlider.onValueChanged.AddListener((value) => SoundManager.Instance.SetVolume(value, Define.Sound.Bgm));
     effectSlider.onValueChanged.AddListener((value) => SoundManager.Instance.SetVolume(value, Define.Sound.Effect));
+
+    lowSpecMode.onValueChanged.AddListener((value) =>
+    {
+      GameManager.Instance.IsLowSpecMode = value;
+      PlayerPrefs.SetString($"LowSpecMode", value.ToString());
+    });
+    GameManager.Instance.IsLowSpecMode = Boolean.Parse(PlayerPrefs.GetString($"LowSpecMode"));
+    lowSpecMode.isOn = GameManager.Instance.IsLowSpecMode;
+
+
   }
 }
