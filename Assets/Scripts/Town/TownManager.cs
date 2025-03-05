@@ -17,14 +17,12 @@ public class TownManager : SManagerBase
     [SerializeField]
     private TMP_Text txtServer;
 
-    [SerializeField]
-    private InventoryUI inventoryUI;
-
-    private void Awake()
+    protected override void Awake()
     {
         if (_instance == null)
         {
             _instance = this;
+            base.Awake();
             SectorCode = 100;
         }
         else
@@ -58,8 +56,7 @@ public class TownManager : SManagerBase
     {
         GameManager.Instance.UserName = userName;
         GameManager.Instance.ClassCode = classCode;
-        if (!UiChat.gameObject.activeSelf)
-            UiChat.gameObject.SetActive(true);
+        ActivateUI();
         Connected();
     }
 
@@ -77,9 +74,7 @@ public class TownManager : SManagerBase
 
     protected override void ActivateUI()
     {
-        base.ActivateUI();
         uiStart.gameObject.SetActive(false);
-        uiAnimation.gameObject.SetActive(true);
-        inventoryUI.gameObject.SetActive(true);
+        base.ActivateUI();
     }
 }

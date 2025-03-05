@@ -10,11 +10,12 @@ public class S2Manager : SManagerBase
     private static S2Manager _instance;
     public static S2Manager Instance => _instance;
 
-    void Awake()
+    protected override void Awake()
     {
         if (_instance == null)
         {
             _instance = this;
+            base.Awake();
             SectorCode = 102;
         }
         else
