@@ -58,7 +58,7 @@ public class MoveCameraInHouse : MonoBehaviour
 		float scrollInput = Input.GetAxis("Mouse ScrollWheel");
 		if (scrollInput != 0)
 		{
-			targetPosition.y += -scrollInput * zoomSpeed;
+			targetPosition += scrollInput * zoomSpeed * transform.forward;
 		}
 	}
 

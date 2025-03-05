@@ -21,34 +21,6 @@ public class GridData
 		}
 	}
 
-	//public void AddObjectAt(Vector3Int gridPosition, Vector2Int objectSize, int ID, int placedObjectIndex)
-	//{
-	//	Debug.Log($"[DEBUG] placedObjects 개수 (추가 전): {placedObjects.Count}");
-
-	//	List<Vector3Int> positionToOccupy = CalculatePosition(gridPosition, objectSize);
-	//	Debug.Log($"gridPosition : {gridPosition}, objectSize : {objectSize}, Calc : {CalculatePosition(gridPosition, objectSize)}");
-	//	PlacementData data = new PlacementData(positionToOccupy, ID, placedObjectIndex);
-
-	//	foreach (var pos in positionToOccupy)
-	//	{
-	//		Debug.Log("Foreach Loop");
-	//		if (placedObjects.ContainsKey(pos))
-	//		{
-	//			throw new Exception($"Dictionary already contains this cell position {pos}");
-	//		}
-	//		else
-	//		{
-	//			Debug.Log($"[DEBUG] 새로운 위치 추가: {pos}");
-	//			placedObjects[pos] = data;
-	//		}
-	//		//placedObjects[pos] = data;
-	//	}
-
-	//	Debug.Log($"[DEBUG] placedObjects 업데이트 완료! 현재 개수: {placedObjects.Count}");
-	//}
-
-
-
 	private List<Vector3Int> CalculatePosition(Vector3Int gridPosition, Vector2Int objectSize)
 	{
 		List<Vector3Int> returnVal = new();
