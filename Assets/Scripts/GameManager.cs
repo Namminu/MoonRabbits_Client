@@ -264,7 +264,7 @@ public class GameManager : MonoBehaviour
         string recipeJsonFile = "recipe.json";
         string recipeFilePath = Path.Combine(Application.streamingAssetsPath, recipeJsonFile);
 
-        if (!File.Exists(filePath))
+        if (!File.Exists(recipeFilePath))
         {
             Debug.LogError($"{recipeJsonFile} 파일을 찾을 수 없습니다: {recipeFilePath}");
             return;
