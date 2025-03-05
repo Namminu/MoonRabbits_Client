@@ -61,7 +61,7 @@ public class MonsterController : MonoBehaviour
         transform.position = Vector3.Lerp(
             transform.position,
             _targetPosition,
-            Time.deltaTime * 10f
+            Time.deltaTime * 5f
         );
         Vector3 direction = _targetPosition - transform.position;
         direction.y = 0;
