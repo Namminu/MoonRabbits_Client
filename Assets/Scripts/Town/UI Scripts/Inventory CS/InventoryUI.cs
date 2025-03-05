@@ -12,7 +12,7 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private TMP_Text goldText;
     private int goldAmount;
 
-    [SerializeField] [ReadOnly] private List<ItemSlotUI> itemSlots;
+    [SerializeField][ReadOnly] private List<ItemSlotUI> itemSlots;
     private bool hasInitialized = false;
 
     private void Awake()
@@ -22,8 +22,8 @@ public class InventoryUI : MonoBehaviour
         if (contentArea != null)
             itemSlots = new List<ItemSlotUI>(contentArea.GetComponentsInChildren<ItemSlotUI>());
 
-		AssignSlotIndex();
-	}
+        AssignSlotIndex();
+    }
 
     /// <summary>
     /// 현재 인벤토리 상태를 수집해 서버로 전송하는 메서드
@@ -92,7 +92,7 @@ public class InventoryUI : MonoBehaviour
 
     private void AssignSlotIndex()
     {
-        for(int i = 0; i<itemSlots.Count; i++)
+        for (int i = 0; i < itemSlots.Count; i++)
         {
             itemSlots[i].SetItemIndex(i);
         }
@@ -246,17 +246,17 @@ public class InventoryUI : MonoBehaviour
     }
 
     public void AddRemainingItems(MaterialItem remainingItem)
-	{
-		foreach (var slot in itemSlots)
-		{
-			if (!slot.HasItem()) // 빈 슬롯 찾기
-			{
-				slot.AddItem(remainingItem);
-				return;
-			}
-		}
-		Debug.Log("Inventory Full. Cannot Add Remaining Item.");
-	}
+    {
+        foreach (var slot in itemSlots)
+        {
+            if (!slot.HasItem()) // 빈 슬롯 찾기
+            {
+                slot.AddItem(remainingItem);
+                return;
+            }
+        }
+        Debug.Log("Inventory Full. Cannot Add Remaining Item.");
+    }
 
     public void RefreshInventory(Dictionary<int, MaterialItem> inventoryItems)
     {
@@ -293,12 +293,12 @@ public class InventoryUI : MonoBehaviour
     #region
     public ItemSlotUI GetItemSlotByIndex(int index)
     {
-        if(index < 0 || index > itemSlots.Count)
+        if (index < 0 || index > itemSlots.Count)
         {
             Debug.Log("Index Out of Range : ItemSlots" + index);
             return null;
         }
         return itemSlots[index];
     }
-	#endregion
+    #endregion
 }
