@@ -26,9 +26,4 @@ public class S3Manager : SManagerBase
 
         SetPrefabPath(); // 플레이어 프리펩 찾아갈 경로 미리 설정
     }
-
-    protected override void ActivateUI()
-    {
-        UiChat.gameObject.SetActive(true);
-    }
 }

@@ -18,8 +18,6 @@ public class Player : MonoBehaviour
     public float SmoothRotateSpeed = 10f; // 회전 보간 속도
     public float TeleportDistanceThreshold = 0.5f; // 순간 이동 거리 임계값
 
-
-
     public Avatar Avatar { get; private set; }
     public MyPlayer MPlayer { get; private set; }
 
@@ -118,19 +116,7 @@ public class Player : MonoBehaviour
         }
 
         uiChat = GameManager.Instance.SManager.UiChat;
-        // switch (currentSector)
-        // {
-        //     case 100:
-        //         uiChat = TownManager.Instance.UiChat;
-        //         break;
-        //     case 101:
-        //         uiChat = S1Manager.Instance.UiChat;
-        //         break;
-        //     case 102:
-        //         uiChat = S2Manager.Instance.UiChat;
-        //         break;
-        // }
-
+        uiPlayer = GameManager.Instance.SManager.UiPlayer;
         isInitialized = true;
     }
 
@@ -178,8 +164,14 @@ public class Player : MonoBehaviour
         {
             SmoothMoveAndRotate();
         }
+    }
 
-        CheckMove();
+    private void LateUpdate()
+    {
+        if (!IsMine)
+        {
+            CheckMove();
+        }
     }
 
     private void SmoothMoveAndRotate()
@@ -297,9 +289,9 @@ public class Player : MonoBehaviour
     public void CastGrenade(Vec3 vel, float coolTime)
     {
         GameObject grenadeObj = Instantiate(grenade, throwPoint.position, Quaternion.identity);
-         SkillObj skillObj = grenadeObj.GetComponent<SkillObj>();
+        SkillObj skillObj = grenadeObj.GetComponent<SkillObj>();
         skillObj.CasterId = PlayerId;
-        
+
         Rigidbody rigid = grenadeObj.GetComponent<Rigidbody>();
         rigid.velocity = new Vector3(vel.X, vel.Y, vel.Z);
         rigid.AddTorque(Vector3.back, ForceMode.Impulse);
@@ -325,11 +317,13 @@ public class Player : MonoBehaviour
 
         if (IsMine)
         {
+            MPlayer.NavAgent.SetDestination(transform.position);
+            MPlayer.NavAgent.velocity = Vector3.zero;
             StartCoroutine(RunCoolTime(coolTime, (int)skillObj.type));
         }
     }
 
-    IEnumerator RunCoolTime(float coolTime,int skillType)
+    IEnumerator RunCoolTime(float coolTime, int skillType)
     {
         yield return new WaitForSeconds(1f);
         MPlayer.SkillManager.IsCasting = false;
@@ -388,7 +382,7 @@ public class Player : MonoBehaviour
     private void CheckMove()
     {
         float dist = Vector3.Distance(lastPos, transform.position);
-        animator.SetFloat(Constants.TownPlayerMove, dist * 100);
+        animator.SetFloat("Move", dist * 10);
         lastPos = transform.position;
     }
 

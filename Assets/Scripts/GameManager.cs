@@ -44,13 +44,11 @@ public class GameManager : MonoBehaviour
     private SManagerBase sManager;
     public SManagerBase SManager => sManager;
 
-    private bool isReadySManager = false;
-
     [Header("Me")]
-    public string UserName;
-    public Player MPlayer;
+    public string NickName;
     public int ClassCode;
     public int CurrentSector;
+    public Player MPlayer;
 
     [Header("Players")]
     private Dictionary<int, Dictionary<int, Player>> playerList = new();
@@ -132,6 +130,7 @@ public class GameManager : MonoBehaviour
     {
         if (sectorCode == CurrentSector)
         {
+            yield return new WaitUntil(() => TownManager.Instance != null);
             sManager = TownManager.Instance;
             yield break;
         }
@@ -164,19 +163,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void EnterAfterSceneAwake(int targetSector, PlayerInfo playerInfo)
+    public void EnterAfterSceneAwake(List<PlayerInfo> playerInfos)
     {
-        StartCoroutine(EnterSector(targetSector, playerInfo));
+        StartCoroutine(EnterTown(playerInfos));
     }
 
-    public void SpawnAfterEnter(S2CSpawn pkt)
+    public void EnterAfterSceneAwake(
+        int targetSector,
+        List<PlayerInfo> playerInfos,
+        List<TrapInfo> trapInfos
+    )
     {
-        StartCoroutine(SpawnOthers(pkt));
-    }
-
-    public void SetTrapsAfterEnter(S2CTraps pkt)
-    {
-        StartCoroutine(SetTrap(pkt.Traps.ToList()));
+        StartCoroutine(EnterSector(targetSector, playerInfos, trapInfos));
     }
 
     private void OnApplicationQuit()
@@ -190,12 +188,11 @@ public class GameManager : MonoBehaviour
     {
         foreach (Dictionary<int, Player> sector in playerList.Values)
         {
-            if (sector.TryGetValue(playerId, out var player))
+            if (sector.TryGetValue(playerId, out Player player))
             {
                 return player;
             }
         }
-
         return null;
     }
 
@@ -215,43 +212,51 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-    IEnumerator EnterSector(int targetSector, PlayerInfo playerInfo)
+    IEnumerator EnterTown(List<PlayerInfo> playerInfos)
+    {
+        // [1] 마을 섹터의 매니저 찾고, Awake 기다림
+        StartCoroutine(SetSManager(100));
+        yield return new WaitUntil(() => sManager != null);
+        // [2] 마을에 있는 플레이어들 생성하고, 닉네임을 통해 내 플레이어면 마킹
+        sManager.Enter(playerInfos);
+    }
+
+    IEnumerator EnterSector(
+        int targetSector,
+        List<PlayerInfo> playerInfos,
+        List<TrapInfo> trapInfos
+    )
     {
         // [1] 이동할 섹터의 매니저 찾고, 씬 로드 기다림
         StartCoroutine(SetSManager(targetSector));
         yield return new WaitUntil(() => sManager != null);
-        isReadySManager = true;
-        // [2] 플레이어 오브젝트 생성 및 데이터 연동
-        Player me = sManager.Enter(playerInfo);
-        sManager.UiChat.Player = me;
+        // [2] 해당 섹터에 있는 플레이어들 생성하고, 닉네임을 통해 내 플레이어면 마킹
+        sManager.Enter(playerInfos);
+        // [3] 설치된 덫이 하나라도 있으면 동기화
+        if (trapInfos.Count >= 1)
+        {
+            sManager.SetTraps(trapInfos);
+        }
         // [3] 현재 위치한 섹터 값 최신화
         CurrentSector = targetSector;
     }
 
-    IEnumerator SpawnOthers(S2CSpawn pkt)
+    public void DespawnPlayer(int playerId)
     {
-        // [1] 섹터 매니저 변경 기다림
-        yield return new WaitUntil(() => CurrentSector == sManager.SectorCode);
-        // [2] 플레이어 스폰 반복
-        foreach (PlayerInfo playerInfo in pkt.Players)
+        // [1] 전체 플레이어 리스트 순회
+        foreach (Dictionary<int, Player> sector in playerList.Values)
         {
-            // [2-1] 플레이어 정보 중 내 정보는 패스
-            if (playerInfo.PlayerId == MPlayer.PlayerId)
-                continue;
-            // [2-2] 플레이어 오브젝트 생성 및 데이터 연동
-            var player = sManager.SpawnPlayer(playerInfo);
-            player.SetIsMine(false);
+            if (sector.TryGetValue(playerId, out Player player))
+            {
+                // [2] 플레이어 목록에서 제거
+                sector.Remove(playerId);
+                // [3] 해당 플레이어 오브젝트 확인후 파괴
+                if (player != null && !player.IsMine)
+                {
+                    Destroy(player.gameObject);
+                }
+            }
         }
-    }
-
-    IEnumerator SetTrap(List<TrapInfo> traps)
-    {
-        // [1] 섹터 매니저 변경 기다림
-        yield return new WaitUntil(() => isReadySManager);
-        // [2] 바뀐 섹터에 덫들 설치
-        sManager.SetTraps(traps);
-        // [3] 다시 이동하기 위해 false로 만듦
-        isReadySManager = false;
     }
 
     private void LoadJson()

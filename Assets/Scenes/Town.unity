@@ -30003,6 +30003,7 @@ MonoBehaviour:
   eSystem: {fileID: 1984624949}
   uiChat: {fileID: 0}
   uiPlayer: {fileID: 0}
+  trap: {fileID: 0}
   uiStart: {fileID: 1952650458}
   uiAnimation: {fileID: 0}
   txtServer: {fileID: 199268653}

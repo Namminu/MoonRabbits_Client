@@ -43,7 +43,10 @@ public class SkillObj : MonoBehaviour
         trail = GetComponentInChildren<TrailRenderer>();
         effect = transform.Find("Effect").gameObject;
 
-        SetTrapColor();
+        if (type == SkillType.trap)
+        {
+            SetTrapColor();
+        }
 
         StartCoroutine(SetDestroyTimer());
     }

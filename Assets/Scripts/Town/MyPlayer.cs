@@ -79,12 +79,12 @@ public class MyPlayer : MonoBehaviour
         emoteManager = GetComponent<EmoteManager>();
     }
 
-    void Start()
+    private void Start()
     {
         StartCoroutine(ExecuteEvery0_1Seconds());
     }
 
-    void Update()
+    private void Update()
     {
         HandleInput();
         Emote();
@@ -93,7 +93,10 @@ public class MyPlayer : MonoBehaviour
         Recall();
         EquipChange();
         Interact();
+    }
 
+    private void LateUpdate()
+    {
         CheckMove();
     }
 
@@ -223,7 +226,7 @@ public class MyPlayer : MonoBehaviour
     private void CheckMove()
     {
         float distanceMoved = Vector3.Distance(lastPos, transform.position);
-        anim.SetFloat(Constants.TownPlayerMove, distanceMoved * 100);
+        anim.SetFloat("Move", distanceMoved * 10);
 
         if (distanceMoved > 0.01f)
         {
