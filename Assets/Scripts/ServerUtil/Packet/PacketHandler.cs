@@ -604,7 +604,7 @@ class PacketHandler
             return;
         Debug.Log($"S2CInventoryUpdate 패킷 무사 도착 : {pkt}");
         InventoryManager.instance.UpdateInventoryData(pkt);
-    }
+    }//getInventorySlotByItemId
     #endregion
 
     public static void S2CCraftHandler(PacketSession session, IMessage packet)
@@ -612,5 +612,12 @@ class PacketHandler
         if (packet is not S2CCraft pkt)
             return;
         Debug.Log($"S2CCraft 패킷 무사 도착 : {pkt}");
+    }
+
+    public static void S2CGetInventorySlotByItemIdHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CGetInventorySlotByItemId pkt) return;
+        Debug.Log($"S2CGetInventorySlotByItemId 패킷 무사 도착 : {pkt}");
+        UICraft.instance.GetInventorySlotByItemId(pkt);
     }
 }

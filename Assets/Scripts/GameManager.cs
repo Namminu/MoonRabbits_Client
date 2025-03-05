@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Google.Protobuf.Protocol;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
@@ -11,7 +14,7 @@ public class GameManager : MonoBehaviour
     [Header("Managers")]
     private static GameManager _instance = null;
     public static GameManager Instance => _instance;
-
+    
     private bool _isLowSpecMode;
     public bool IsLowSpecMode
     {
@@ -63,6 +66,7 @@ public class GameManager : MonoBehaviour
     [Header("Utils")]
     public JsonContainer<Resource> resourceContainer;
     public JsonContainer<Recipe> recipeContainer;
+    public JsonContainer<ItemJson> materialItemContainer;
     private readonly Dictionary<int, string> sceneName = new()
     {
         { 100, "Town" },
@@ -92,11 +96,11 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
 
             if (!IsLowSpecMode)
-                EffectManager.Instance.CreatePersistentEffect(
-                    "Confetti",
-                    new Vector3(-3, 14, 134),
-                    Quaternion.identity
-                );
+            EffectManager.Instance.CreatePersistentEffect(
+                "Confetti",
+                new Vector3(-3, 14, 134),
+                Quaternion.identity
+            );
         }
         else
         {
@@ -163,7 +167,7 @@ public class GameManager : MonoBehaviour
 
     public void EnterAfterSceneAwake(int targetSector, PlayerInfo playerInfo)
     {
-
+       
         StartCoroutine(EnterSector(targetSector, playerInfo));
     }
 
@@ -244,7 +248,6 @@ public class GameManager : MonoBehaviour
 
         // 단일 JSON 파일 로드
         string questFilePath = Path.Combine(Application.streamingAssetsPath, "Quest.json");
-        string filePath = Path.Combine(Application.streamingAssetsPath, "material_item_data.json");
 
         if (!File.Exists(questFilePath))
         {
@@ -286,22 +289,37 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // Recipe JSON 파일 로드
-        string recipeJsonFile = "recipe.json";
-        string recipeFilePath = Path.Combine(Application.streamingAssetsPath, recipeJsonFile);
-
-        if (!File.Exists(recipeFilePath))
+        // recipe.json, materialItem.json 파일 로드
+        string[] jsonFiles = { "recipe.json", "material_item_data.json" };
+        
+        foreach(string jsonFile in jsonFiles)
         {
-            Debug.LogError($"{recipeJsonFile} 파일을 찾을 수 없습니다: {recipeFilePath}");
-            return;
-        }
+            string filePath = Path.Combine(Application.streamingAssetsPath, jsonFile);
 
-        recipeContainer = loader.ReadJsonFile<JsonContainer<Recipe>>(recipeFilePath);
+            if(!File.Exists(filePath))
+            {
+                Debug.LogError($"{jsonFile} 파일을 찾을 수 없습니다: {filePath}");
+                continue;
+            }
 
-        if (recipeContainer == null || recipeContainer.data == null || recipeContainer.data.Count == 0)
-        {
-            Debug.LogError($"{recipeJsonFile} 파싱 실패: 데이터가 없습니다.");
-            return;
+            if(jsonFile == "recipe.json")
+            {
+                recipeContainer = loader.ReadJsonFile<JsonContainer<Recipe>>(filePath);
+                if (recipeContainer == null || recipeContainer.data == null || recipeContainer.data.Count == 0)
+                {
+                    Debug.LogError($"{jsonFile} 파싱 실패: 데이터가 없습니다.");
+                    continue;
+                }
+            }
+            if(jsonFile == "material_item_data.json")
+            {
+                materialItemContainer = loader.ReadJsonFile<JsonContainer<ItemJson>>(filePath);
+                if (materialItemContainer == null || materialItemContainer.data == null || materialItemContainer.data.Count == 0)
+                {
+                    Debug.LogError($"{jsonFile} 파싱 실패: 데이터가 없습니다.");
+                    continue;
+                }
+            }
         }
     }
 }
