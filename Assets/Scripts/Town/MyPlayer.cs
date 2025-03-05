@@ -19,6 +19,7 @@ public class MyPlayer : MonoBehaviour
     }
     private RaycastHit rayHit;
     public EventSystem eSystem;
+    private bool isReadyESystem = false;
     private Animator anim;
     public Animator Anim
     {
@@ -60,7 +61,8 @@ public class MyPlayer : MonoBehaviour
         instance = this;
 
         player = GetComponent<Player>();
-        eSystem = TownManager.Instance.ESystem;
+        StartCoroutine(nameof(WaitForESystem));
+
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
 
@@ -98,11 +100,19 @@ public class MyPlayer : MonoBehaviour
     private void InitializeCamera()
     {
         Camera.main.gameObject.GetComponent<QuarterView>().target = transform;
+    }
 
-        // var freeLook = TownManager.Instance.FreeLook;
-        // freeLook.Follow = transform;
-        // freeLook.LookAt = transform;
-        // freeLook.gameObject.SetActive(true);
+    IEnumerator WaitForESystem()
+    {
+        while (eSystem == null)
+        {
+            eSystem = GameManager.Instance.SManager.ESystem;
+            Debug.Log("!!! 이벤트 시스템 찾는 중");
+            yield return new WaitForSeconds(1f);
+        }
+        yield return new WaitUntil(() => eSystem != null);
+        Debug.Log("!!! 이벤트 시스템 찾음");
+        isReadyESystem = true;
     }
 
     private void LoadAnimationHashes()
@@ -118,7 +128,7 @@ public class MyPlayer : MonoBehaviour
     // 충돌한 위치로 NavMeshAgent를 이동시킴 (agent.SetDestination(rayHit.point);
     private void HandleInput()
     {
-        if (player.IsStun)
+        if (player.IsStun || !isReadyESystem)
             return;
 
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
@@ -199,18 +209,18 @@ public class MyPlayer : MonoBehaviour
         GameManager.Network.Send(locationPacket);
     }
 
-    public void ExecuteAnimation(int animIdx)
-    {
-        if (animIdx < 0 || animIdx >= animHash.Count)
-            return;
+    // public void ExecuteAnimation(int animIdx)
+    // {
+    //     if (animIdx < 0 || animIdx >= animHash.Count)
+    //         return;
 
-        int animKey = animHash[animIdx];
-        agent.SetDestination(transform.position);
+    //     int animKey = animHash[animIdx];
+    //     agent.SetDestination(transform.position);
 
-        var animationPacket = new C2SEmote { AnimCode = animKey };
-        Debug.Log($"감정표현?? : {animationPacket}");
-        GameManager.Network.Send(animationPacket);
-    }
+    //     var animationPacket = new C2SEmote { AnimCode = animKey };
+    //     Debug.Log($"감정표현?? : {animationPacket}");
+    //     GameManager.Network.Send(animationPacket);
+    // }
 
     private void CheckMove()
     {

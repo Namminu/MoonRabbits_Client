@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -115,6 +115,9 @@ class PacketHandler
         }
         else
         {
+            Debug.Log($"누가 null인감 겜매니저 : {GameManager.Instance == null}");
+            Debug.Log($"누가 null인감 에스매니저: {GameManager.Instance.SManager == null}");
+            Debug.Log($"누가 null인감 유아이챗: {GameManager.Instance.SManager.UiChat == null}");
             GameManager.Instance.SManager.UiChat.PushMessage(
                 "System",
                 pkt.ChatMsg,
