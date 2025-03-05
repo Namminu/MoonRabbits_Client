@@ -52,40 +52,28 @@ public class UIPlayer : MonoBehaviour
 
     public void OnClickAddExp()
     {
-        var addExpPacket = new C2SAddExp
-        {
-            Count = 9,
-        };
+        var addExpPacket = new C2SAddExp { Count = 9 };
         GameManager.Network.Send(addExpPacket);
     }
 
     void OnClickStaminaUp()
     {
         Debug.Log("스테미나 올림");
-        var pkt = new C2SInvestPoint
-        {
-            StatCode = 1,
-        };
+        var pkt = new C2SInvestPoint { StatCode = 1 };
         GameManager.Network.Send(pkt);
     }
 
     public void OnClickPickSpeedUp()
     {
         Debug.Log("채집속도 올림");
-        var pkt = new C2SInvestPoint
-        {
-            StatCode = 2,
-        };
+        var pkt = new C2SInvestPoint { StatCode = 2 };
         GameManager.Network.Send(pkt);
     }
 
     void OnClickMoveSpeedUp()
     {
         Debug.Log("이동속도 올림");
-        var pkt = new C2SInvestPoint
-        {
-            StatCode = 3,
-        };
+        var pkt = new C2SInvestPoint { StatCode = 3 };
         GameManager.Network.Send(pkt);
     }
 
@@ -102,15 +90,25 @@ public class UIPlayer : MonoBehaviour
         {
             Debug.Log(APButtons.transform.position);
             Debug.Log(APFrame.transform.position);
-            Vector3 goalPos_APButtons = APButtons.transform.position + new Vector3(0, -APButtonsOffsetY, 0);
+            Vector3 goalPos_APButtons =
+                APButtons.transform.position + new Vector3(0, -APButtonsOffsetY, 0);
             Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(APTextOffsetX, 0, 0);
             Debug.Log(goalPos_APButtons);
             Debug.Log(goalPos_APFrame);
             // 처음부터 위치 이동시키면 이상한 위치로 이동돼서 코루틴으로 이동시킴
             // APButtons.transform.position = goalPos_APButtons;
             // APFrame.transform.position = goalPos_APFrame;
-            StartCoroutine(SmoothChangeObjectPosition(APButtons, APButtons.transform.position, goalPos_APButtons, 1));
-            StartCoroutine(SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1));
+            StartCoroutine(
+                SmoothChangeObjectPosition(
+                    APButtons,
+                    APButtons.transform.position,
+                    goalPos_APButtons,
+                    1
+                )
+            );
+            StartCoroutine(
+                SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1)
+            );
         }
     }
 
@@ -129,39 +127,68 @@ public class UIPlayer : MonoBehaviour
     {
         APText.text = ap.ToString();
     }
+
     public void SetStamina(int cur_stamina, int stamina, bool hasAP)
     {
         staminaText.text = stamina.ToString();
         staminaSlider.maxValue = stamina;
         staminaSlider.value = cur_stamina;
-        if (!hasAP) DeActiveAP();
+        if (!hasAP)
+            DeActiveAP();
     }
 
     public void SetPickSpeed(int pickSpeed, bool hasAP)
     {
         pickSpeedText.text = pickSpeed.ToString();
-        if (!hasAP) DeActiveAP();
+        if (!hasAP)
+            DeActiveAP();
     }
 
     public void SetMoveSpeed(int moveSpeed, bool hasAP)
     {
         moveSpeedText.text = moveSpeed.ToString();
-        if (!hasAP) DeActiveAP();
+        if (!hasAP)
+            DeActiveAP();
     }
 
-    public void LevelUp(int newLevel, int newTargetExp, int updatedExp, int abilityPoint, int updatedAbilityPoint)
+    public void LevelUp(
+        int newLevel,
+        int newTargetExp,
+        int updatedExp,
+        int abilityPoint,
+        int updatedAbilityPoint
+    )
     {
-        StartCoroutine(LevelUpSequence(newLevel, newTargetExp, updatedExp, abilityPoint, updatedAbilityPoint));
+        StartCoroutine(
+            LevelUpSequence(newLevel, newTargetExp, updatedExp, abilityPoint, updatedAbilityPoint)
+        );
     }
+
     public void DeActiveAP()
     {
-        Vector3 goalPos_APButtons = APButtons.transform.position + new Vector3(0, APButtonsOffsetY, 0);
+        Vector3 goalPos_APButtons =
+            APButtons.transform.position + new Vector3(0, APButtonsOffsetY, 0);
         Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(-APTextOffsetX, 0, 0);
-        StartCoroutine(SmoothChangeObjectPosition(APButtons, APButtons.transform.position, goalPos_APButtons, 1));
-        StartCoroutine(SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1));
+        StartCoroutine(
+            SmoothChangeObjectPosition(
+                APButtons,
+                APButtons.transform.position,
+                goalPos_APButtons,
+                1
+            )
+        );
+        StartCoroutine(
+            SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1)
+        );
     }
 
-    private IEnumerator LevelUpSequence(int newLevel, int newTargetExp, int updatedExp, int abilityPoint, int updatedAbilityPoint)
+    private IEnumerator LevelUpSequence(
+        int newLevel,
+        int newTargetExp,
+        int updatedExp,
+        int abilityPoint,
+        int updatedAbilityPoint
+    )
     {
         // 경험치바 끝까지 증가
         yield return StartCoroutine(SmoothChangeSliderValue(expSlider, expSlider.value, 1f, 1f));
@@ -176,10 +203,20 @@ public class UIPlayer : MonoBehaviour
         if (abilityPoint == 0)
         {
             Debug.Log("+버튼 코루틴");
-            Vector3 goalPos_APButtons = APButtons.transform.position + new Vector3(0, -APButtonsOffsetY, 0);
+            Vector3 goalPos_APButtons =
+                APButtons.transform.position + new Vector3(0, -APButtonsOffsetY, 0);
             Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(APTextOffsetX, 0, 0);
-            StartCoroutine(SmoothChangeObjectPosition(APButtons, APButtons.transform.position, goalPos_APButtons, 1f));
-            StartCoroutine(SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1f));
+            StartCoroutine(
+                SmoothChangeObjectPosition(
+                    APButtons,
+                    APButtons.transform.position,
+                    goalPos_APButtons,
+                    1f
+                )
+            );
+            StartCoroutine(
+                SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1f)
+            );
         }
         APText.text = updatedAbilityPoint.ToString();
 
@@ -188,18 +225,33 @@ public class UIPlayer : MonoBehaviour
         StartCoroutine(SmoothChangeSliderValue(expSlider, 0f, targetValue, 1f));
     }
 
-    private IEnumerator SmoothChangeObjectPosition(GameObject gameObject, Vector3 startPos, Vector3 targetPos, float duration)
+    private IEnumerator SmoothChangeObjectPosition(
+        GameObject gameObject,
+        Vector3 startPos,
+        Vector3 targetPos,
+        float duration
+    )
     {
         float elapsedTime = 0f;
         while (elapsedTime < duration)
         {
-            gameObject.transform.position = Vector3.Lerp(startPos, targetPos, elapsedTime / duration);
+            gameObject.transform.position = Vector3.Lerp(
+                startPos,
+                targetPos,
+                elapsedTime / duration
+            );
             elapsedTime += Time.deltaTime;
             yield return null;
         }
         gameObject.transform.position = targetPos;
     }
-    private IEnumerator SmoothChangeSliderValue(Slider slider, float startValue, float targetValue, float duration)
+
+    private IEnumerator SmoothChangeSliderValue(
+        Slider slider,
+        float startValue,
+        float targetValue,
+        float duration
+    )
     {
         float elapsedTime = 0f;
         float maxValue = slider.maxValue;
@@ -247,6 +299,12 @@ public class UIPlayer : MonoBehaviour
             Destroy(heart);
         }
         hearts.Clear();
+
+        foreach (GameObject heartBg in heartBgs)
+        {
+            Destroy(heartBg);
+        }
+        heartBgs.Clear();
 
         for (int i = 0; i < hp; i++)
         {
@@ -307,6 +365,7 @@ public class UIPlayer : MonoBehaviour
             hearts[i] = heart;
         }
     }
+
     public void QSkillCool(float cooltime)
     {
         StartCoroutine(CoolTimeFunc(cooltime, cooltime, qSkillMask));
