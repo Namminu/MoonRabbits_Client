@@ -45,7 +45,6 @@ public class VolumeController : MonoBehaviour
             }
         );
 
-        Debug.Log($"이거 뭔데요??? : {PlayerPrefs.GetString($"LowSpecMode")}");
         GameManager.Instance.IsLowSpecMode = Boolean.Parse(PlayerPrefs.GetString($"LowSpecMode"));
         lowSpecMode.isOn = GameManager.Instance.IsLowSpecMode;
     }

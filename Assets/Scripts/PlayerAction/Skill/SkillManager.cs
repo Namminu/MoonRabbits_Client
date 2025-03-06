@@ -32,9 +32,6 @@ public class SkillManager : MonoBehaviour
         get => isTrapReady;
         set { isTrapReady = value; }
     }
-    private const float coolTimeE = 5f;
-    private List<GameObject> traps = new();
-    public List<GameObject> Traps => traps;
 
     public Action eventQ; // Q키 누르면 발동
     public Action eventE; // E키 누르면 발동

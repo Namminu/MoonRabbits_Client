@@ -1,7 +1,7 @@
-using Google.Protobuf.Protocol;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Google.Protobuf.Protocol;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -28,10 +28,10 @@ public class ResourceController : MonoBehaviour
     public int Durability
     {
         get => durability;
-        set 
+        set
         {
-            if(value < 1)
-               {
+            if (value < 1)
+            {
                 isAvailable = false;
                 ChangeIcon(isAvailable);
             }
@@ -47,7 +47,7 @@ public class ResourceController : MonoBehaviour
     public int Angle
     {
         get => angle;
-        set => angle=value;
+        set => angle = value;
     }
     private const int maxDurability = 5;
     private int difficulty;
@@ -60,16 +60,16 @@ public class ResourceController : MonoBehaviour
     public long Starttime
     {
         get => starttime;
-        set => starttime = value; 
+        set => starttime = value;
     }
 
-    private void Update()
-    {
-        if (isAvailable && Input.GetKeyDown(KeyCode.E))
-        {
-            Debug.Log(this.durability.ToString() + this.difficulty.ToString());
-        }
-    }
+    // private void Update()
+    // {
+    //     if (isAvailable && Input.GetKeyDown(KeyCode.E))
+    //     {
+    //         Debug.Log(this.durability.ToString() + this.difficulty.ToString());
+    //     }
+    // }
 
     public void DecreaseDurability(int cnt)
     {
@@ -141,6 +141,7 @@ public class ResourceController : MonoBehaviour
         Debug.Log("내구도 업데이트");
         this.durability = duability;
     }
+
     public void ResourcesGatheringStart(int angle, int difficulty)
     {
         Debug.Log("스킬체크 시작");
@@ -148,6 +149,7 @@ public class ResourceController : MonoBehaviour
         this.Difficulty = difficulty;
         this.Starttime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
     }
+
     public void ResourcesGatheringSkillCheck(int durability)
     {
         if (this.durability > durability)

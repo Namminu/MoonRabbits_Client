@@ -40,7 +40,7 @@ public class TownManager : SManagerBase
         {
             uiStart.gameObject.SetActive(true);
         }
-        else if (GameManager.Instance.UserName == null)
+        else if (GameManager.Instance.NickName == null)
         {
             Connected();
         }
@@ -54,19 +54,17 @@ public class TownManager : SManagerBase
 
     public void GameStart(string userName, int classCode)
     {
-        GameManager.Instance.UserName = userName;
+        GameManager.Instance.NickName = userName;
         GameManager.Instance.ClassCode = classCode;
-        ActivateUI();
         Connected();
     }
 
     public void Connected()
     {
-        var enterPacket = new C2SEnter
+        var enterPacket = new C2SEnterTown
         {
-            Nickname = GameManager.Instance.UserName,
+            Nickname = GameManager.Instance.NickName,
             ClassCode = GameManager.Instance.ClassCode,
-            TargetSector = SectorCode,
         };
 
         GameManager.Network.Send(enterPacket);

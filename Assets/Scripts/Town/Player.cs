@@ -18,8 +18,6 @@ public class Player : MonoBehaviour
     public float SmoothRotateSpeed = 10f; // 회전 보간 속도
     public float TeleportDistanceThreshold = 0.5f; // 순간 이동 거리 임계값
 
-
-
     public Avatar Avatar { get; private set; }
     public MyPlayer MPlayer { get; private set; }
 
@@ -118,19 +116,7 @@ public class Player : MonoBehaviour
         }
 
         uiChat = GameManager.Instance.SManager.UiChat;
-        // switch (currentSector)
-        // {
-        //     case 100:
-        //         uiChat = TownManager.Instance.UiChat;
-        //         break;
-        //     case 101:
-        //         uiChat = S1Manager.Instance.UiChat;
-        //         break;
-        //     case 102:
-        //         uiChat = S2Manager.Instance.UiChat;
-        //         break;
-        // }
-
+        uiPlayer = GameManager.Instance.SManager.UiPlayer;
         isInitialized = true;
     }
 
@@ -178,8 +164,14 @@ public class Player : MonoBehaviour
         {
             SmoothMoveAndRotate();
         }
+    }
 
-        CheckMove();
+    private void LateUpdate()
+    {
+        if (!IsMine)
+        {
+            CheckMove();
+        }
     }
 
     private void SmoothMoveAndRotate()
@@ -297,7 +289,8 @@ public class Player : MonoBehaviour
     public void CastGrenade(Vec3 vel, float coolTime)
     {
         GameObject grenadeObj = Instantiate(grenade, throwPoint.position, Quaternion.identity);
-        grenadeObj.GetComponent<SkillObj>().CasterId = PlayerId;
+        SkillObj skillObj = grenadeObj.GetComponent<SkillObj>();
+        skillObj.CasterId = PlayerId;
 
         Rigidbody rigid = grenadeObj.GetComponent<Rigidbody>();
         rigid.velocity = new Vector3(vel.X, vel.Y, vel.Z);
@@ -305,7 +298,7 @@ public class Player : MonoBehaviour
 
         if (IsMine)
         {
-            StartCoroutine(RunCoolTime(coolTime, 0));
+            StartCoroutine(RunCoolTime(coolTime, (int)skillObj.type));
         }
     }
 
@@ -318,36 +311,15 @@ public class Player : MonoBehaviour
             new Vector3(pos.X / 10f, 0, pos.Z / 10f),
             transform.rotation
         );
-        trapObj.GetComponent<SkillObj>().CasterId = PlayerId;
+
+        SkillObj skillObj = trapObj.GetComponent<SkillObj>();
+        skillObj.CasterId = PlayerId;
 
         if (IsMine)
         {
-            List<GameObject> myTraps = MPlayer.SkillManager.Traps;
-            myTraps.Add(trapObj);
-
-            if (myTraps.Count > maxTraps)
-            {
-                GameObject oldTrap = myTraps[0];
-                myTraps.Remove(oldTrap);
-
-                var pkt = new C2SRemoveTrap
-                {
-                    TrapInfo = new TrapInfo
-                    {
-                        CasterId = PlayerId,
-                        Pos = new Vec3
-                        {
-                            X = Mathf.Round(oldTrap.transform.position.x * 10f),
-                            Y = 0,
-                            Z = Mathf.Round(oldTrap.transform.position.z * 10f),
-                        },
-                    },
-                };
-
-                GameManager.Network.Send(pkt);
-            }
-
-            StartCoroutine(RunCoolTime(coolTime, 1));
+            MPlayer.NavAgent.SetDestination(transform.position);
+            MPlayer.NavAgent.velocity = Vector3.zero;
+            StartCoroutine(RunCoolTime(coolTime, (int)skillObj.type));
         }
     }
 
@@ -360,10 +332,10 @@ public class Player : MonoBehaviour
 
         switch (skillType)
         {
-            case 0:
+            case 1:
                 MPlayer.SkillManager.IsGrenadeReady = true;
                 break;
-            case 1:
+            case 2:
                 MPlayer.SkillManager.IsTrapReady = true;
                 break;
         }
@@ -410,7 +382,7 @@ public class Player : MonoBehaviour
     private void CheckMove()
     {
         float dist = Vector3.Distance(lastPos, transform.position);
-        animator.SetFloat(Constants.TownPlayerMove, dist * 100);
+        animator.SetFloat("Move", dist * 10);
         lastPos = transform.position;
     }
 

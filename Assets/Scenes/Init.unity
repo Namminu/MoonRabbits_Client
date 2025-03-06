@@ -13298,10 +13298,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c1564e8c5d846f49a6506cbf666f63b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UserName: 
-  MPlayer: {fileID: 0}
+  NickName: 
   ClassCode: 0
   CurrentSector: 0
+  MPlayer: {fileID: 0}
   resourceContainer:
     name: 
     version: 
@@ -14455,6 +14455,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SkillUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 6860434633225937222, guid: c39dd4d86b7e1024bb5d3ef398e77b91,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7268130220684144012, guid: c39dd4d86b7e1024bb5d3ef398e77b91,
         type: 3}
