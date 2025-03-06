@@ -60,6 +60,7 @@ public class MyPlayer : MonoBehaviour
     private bool uiCraftInput;
     private bool uiPartyInput;
     private bool uiMenuInput;
+    private bool uiInventoryInput;
     private LineRenderer _lineRenderer;
     private Camera _cam;
     private float zoomSpeed = 20f;
@@ -200,6 +201,7 @@ public class MyPlayer : MonoBehaviour
         uiCraftInput = Input.GetKeyDown(KeyCode.C);
         uiPartyInput = Input.GetKeyDown(KeyCode.P);
         uiMenuInput = Input.GetKeyDown(KeyCode.Escape);
+        uiInventoryInput = Input.GetKeyDown(KeyCode.I);
     }
 
     IEnumerator ExecuteEvery0_1Seconds()
@@ -359,16 +361,16 @@ public class MyPlayer : MonoBehaviour
         if(uiCraftInput)
         {
             // C 키입력
-            UICraft uiCraft = CanvasManager.Instance.uiCraft;
-            uiCraft.gameObject.SetActive(!uiCraft.gameObject.activeSelf);
-            uiCraft.gameObject.transform.SetAsLastSibling();
+            GameObject uiCraft = CanvasManager.Instance.uiCraft.gameObject;
+            uiCraft.SetActive(!uiCraft.activeSelf);
+            uiCraft.transform.SetAsLastSibling();
         }
         if(uiPartyInput)
         {
             // P 키입력
-            PartyUI partyUi = CanvasManager.Instance.partyUI;
-            partyUi.gameObject.SetActive(!partyUi.gameObject.activeSelf);
-            partyUi.gameObject.transform.SetAsLastSibling();
+            GameObject partyUi = CanvasManager.Instance.partyUI.gameObject;
+            partyUi.SetActive(!partyUi.activeSelf);
+            partyUi.transform.SetAsLastSibling();
         }
         if(uiMenuInput)
         {
@@ -376,6 +378,13 @@ public class MyPlayer : MonoBehaviour
             GameObject uiMenu = CanvasManager.Instance.uiMenu;
             uiMenu.SetActive(!uiMenu.activeSelf);
             uiMenu.transform.SetAsLastSibling();
+        }
+        if(uiInventoryInput)
+        {
+            // I 키입력
+            GameObject inventoryUI = CanvasManager.Instance.inventoryUI.gameObject;
+            inventoryUI.SetActive(!inventoryUI.activeSelf);
+            inventoryUI.transform.SetAsLastSibling();
         }
     }
 }
