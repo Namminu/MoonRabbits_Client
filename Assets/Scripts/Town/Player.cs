@@ -14,9 +14,9 @@ public class Player : MonoBehaviour
     private UIPlayer uiPlayer;
 
     [Header("Movement Settings")]
-    public float SmoothMoveSpeed = 10f; // 위치 보간 속도
-    public float SmoothRotateSpeed = 10f; // 회전 보간 속도
-    public float TeleportDistanceThreshold = 0.5f; // 순간 이동 거리 임계값
+    public float SmoothMoveSpeed = 15f; // 위치 보간 속도
+    public float SmoothRotateSpeed = 15f; // 회전 보간 속도
+    public float TeleportDistanceThreshold = 1f; // 순간 이동 거리 임계값
 
     public Avatar Avatar { get; private set; }
     public MyPlayer MPlayer { get; private set; }
