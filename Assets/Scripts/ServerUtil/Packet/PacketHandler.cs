@@ -194,8 +194,21 @@ class PacketHandler
     public static void S2CUpdateRankingHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CUpdateRanking pkt)
-            return;
-        Debug.Log($"S2CUpdateRanking 패킷 무사 도착 : {pkt}");
+        return;
+    
+    Debug.Log($"S2CUpdateRanking 패킷 무사 도착 : {pkt}");
+    
+    // 현재 씬에서 UIRanking 컴포넌트를 찾은 후, 해당 인스턴스의 UpdateRanking 호출
+    UIRanking uiRanking = UnityEngine.Object.FindObjectOfType<UIRanking>();
+    if (uiRanking != null)
+    {
+        uiRanking.UpdateRanking(pkt);
+    }
+    else
+    {
+        Debug.LogError("UIRanking 인스턴스를 찾을 수 없습니다.");
+    }
+        
     }
 
     #region Collision

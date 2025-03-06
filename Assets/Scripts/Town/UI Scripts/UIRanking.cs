@@ -1,38 +1,47 @@
 using Google.Protobuf.Protocol;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class UIRanking : MonoBehaviour
 {
-    // public Transform rankingListParent;
-    // public GameObject rankingItemPrefab;
+    // UI 요소 연결
+    public Transform rankSheet; // Content Area > RankSheet
+    public GameObject rankItemPrefab; // RankSheet의 개별 랭킹 항목 프리팹
+    public Button allButton; // Down Area > ALL 버튼
+    public Button top10Button; // Down Area > TOP10 버튼
 
-    // 서버에서 랭킹 패킷을 받았을 때 호출되는 콜백 함수
+    private void Start()
+    {
+        // 버튼 클릭 이벤트 등록
+        allButton.onClick.AddListener(() => SendRankingListPacket("ALL"));
+        top10Button.onClick.AddListener(() => SendRankingListPacket("TOP"));
+    }
+
+    // 서버에서 받은 랭킹 데이터를 처리하고 UI를 업데이트
     public void UpdateRanking(S2CUpdateRanking rankData)
     {
         if (rankData.Status == "success")
         {
-            // 랭킹 정보를 UI에 반영합니다.
+            // 기존 UI 초기화
+            foreach (Transform child in rankSheet)
+            {
+                Destroy(child.gameObject);
+            }
+
+            // 새로운 데이터를 기반으로 UI 생성
             foreach (var playerRank in rankData.Data.RankingList_)
             {
-                UpdateRankUI(playerRank.Rank, playerRank.Nickname, playerRank.Exp);
+                GameObject item = Instantiate(rankItemPrefab, rankSheet);
+                item.transform.Find("RankingNumber").GetComponentInChildren<TextMeshProUGUI>().text = playerRank.Rank.ToString();
+                item.transform.Find("NickName").GetComponentInChildren<TextMeshProUGUI>().text = playerRank.Nickname;
+                item.transform.Find("Exp").GetComponentInChildren<TextMeshProUGUI>().text = playerRank.Exp.ToString();
             }
-            // 필요 시 타임스탬프 등 다른 정보도 업데이트
-            // e.g., timestampText.text = rankData.Data.Timestamp;
         }
         else
         {
             Debug.LogError("랭킹 데이터를 가져오는 데 실패했습니다.");
         }
-    }
-
-    // 개별 랭킹 항목을 UI에 업데이트하는 함수 (UI용 로직 직접 구현)
-    private void UpdateRankUI(int rank, string nickname, int exp)
-    {
-        // 예시: Prefab을 인스턴스화하여 자식으로 추가하고 텍스트 컴포넌트를 업데이트
-        // GameObject item = Instantiate(rankingItemPrefab, rankingListParent);
-        // item.transform.Find("RankText").GetComponent<Text>().text = rank.ToString();
-        // item.transform.Find("NicknameText").GetComponent<Text>().text = nickname;
-        // item.transform.Find("ExpText").GetComponent<Text>().text = exp.ToString();
     }
 
     #region 패킷 전송 함수
