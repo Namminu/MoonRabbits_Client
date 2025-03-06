@@ -25,7 +25,6 @@ public class MonsterController : MonoBehaviour
 
     private Animator anim;
 
-
     private void Start()
     {
         anim = GetComponent<Animator>();
@@ -35,12 +34,7 @@ public class MonsterController : MonoBehaviour
 
     private void Update()
     {
-
-        transform.position = Vector3.Lerp(
-            transform.position,
-            _targetPosition,
-            Time.deltaTime * 5f
-        );
+        transform.position = Vector3.Lerp(transform.position, _targetPosition, Time.deltaTime * 5f);
         Vector3 direction = _targetPosition - transform.position;
         direction.y = 0;
         Quaternion targetRotation = Quaternion.LookRotation(direction);
@@ -50,8 +44,6 @@ public class MonsterController : MonoBehaviour
             Time.deltaTime * 150
         );
     }
-
-
 
     IEnumerator CoMonsterAttackCoolTime()
     {
@@ -111,15 +103,12 @@ public class MonsterController : MonoBehaviour
         Invoke(nameof(StunOut), timer);
     }
 
-    private void StunOut()
-    {
-
-    }
+    private void StunOut() { }
 
     public void SetCollision(CollisionPushInfo info)
     {
         var type = info.TargetType;
-        Debug.Log($"타겟 타입??! : {type}");
+        // Debug.Log($"타겟 타입??! : {type}");
         switch (type)
         {
             //충돌한 자가 플레이어면

@@ -1,7 +1,7 @@
-using Google.Protobuf.Protocol;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Google.Protobuf.Protocol;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -65,13 +65,13 @@ public class ResourceController : MonoBehaviour
         set => starttime = value;
     }
 
-    private void Update()
-    {
-        if (isAvailable && Input.GetKeyDown(KeyCode.E))
-        {
-            Debug.Log(this.durability.ToString() + this.difficulty.ToString());
-        }
-    }
+    // private void Update()
+    // {
+    //     if (isAvailable && Input.GetKeyDown(KeyCode.E))
+    //     {
+    //         Debug.Log(this.durability.ToString() + this.difficulty.ToString());
+    //     }
+    // }
 
     public void DecreaseDurability(int cnt)
     {
@@ -146,6 +146,7 @@ public class ResourceController : MonoBehaviour
         this.Starttime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
         UISkillCheck.Instance.StartSkillCheck(this.idx, angle, difficulty);
     }
+
     public void ResourcesGatheringSkillCheck(int durability)
     {
         UISkillCheck.Instance.ResourcesGatheringSkillCheck(durability);
