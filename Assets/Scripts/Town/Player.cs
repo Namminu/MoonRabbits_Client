@@ -42,7 +42,6 @@ public class Player : MonoBehaviour
     public GameObject axe;
     public GameObject pickAxe;
     private Transform throwPoint;
-    private const int maxTraps = 2;
 
     private Dictionary<int, string> emotions = new();
     public bool IsStun = false;
@@ -70,6 +69,25 @@ public class Player : MonoBehaviour
 
         SetAnimTrigger();
         SetEquipObj();
+    }
+
+    private void Update()
+    {
+        if (!isInitialized)
+            return;
+
+        if (!IsMine)
+        {
+            SmoothMoveAndRotate();
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (!IsMine)
+        {
+            CheckMove();
+        }
     }
 
     private void SetAnimTrigger()
@@ -155,25 +173,6 @@ public class Player : MonoBehaviour
         //체력을 깎는다.
     }
 
-    private void Update()
-    {
-        if (!isInitialized)
-            return;
-
-        if (!IsMine)
-        {
-            SmoothMoveAndRotate();
-        }
-    }
-
-    private void LateUpdate()
-    {
-        if (!IsMine)
-        {
-            CheckMove();
-        }
-    }
-
     private void SmoothMoveAndRotate()
     {
         MoveSmoothly();
@@ -257,19 +256,15 @@ public class Player : MonoBehaviour
 
         while (castingTime < recallTimer)
         {
-            if (Vector3.Distance(startPos, transform.position) > 0.2 || IsStun)
-            {
-                effect.SetActive(false);
-
-                if (IsMine)
-                {
-                    MPlayer.SkillManager.IsCasting = false;
-                }
-
+            if (CancelRecall(startPos, effect))
                 yield break;
-            }
 
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.5f);
+
+            if (CancelRecall(startPos, effect))
+                yield break;
+
+            yield return new WaitForSeconds(0.5f);
             Debug.Log($"귀환까지 남은 시간 : {recallTimer - castingTime}초");
             castingTime += 1;
         }
@@ -283,6 +278,25 @@ public class Player : MonoBehaviour
 
             var pkt = new C2SMoveSector { TargetSector = 100 };
             GameManager.Network.Send(pkt);
+        }
+    }
+
+    private bool CancelRecall(Vector3 startPos, GameObject effect)
+    {
+        if (Vector3.Distance(startPos, transform.position) > 0.5f || IsStun)
+        {
+            effect.SetActive(false);
+
+            if (IsMine)
+            {
+                MPlayer.SkillManager.IsCasting = false;
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 

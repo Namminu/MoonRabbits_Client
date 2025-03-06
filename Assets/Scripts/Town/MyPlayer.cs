@@ -52,6 +52,8 @@ public class MyPlayer : MonoBehaviour
     public int currentEquip = 0;
 
     private bool equipChangeInput;
+    private bool inventoryInput;
+    private bool partyInput;
     private bool interactInput;
     private InteractManager interactManager;
     public InteractManager InteractManager => interactManager;
@@ -94,6 +96,7 @@ public class MyPlayer : MonoBehaviour
     private void Update()
     {
         HandleInput();
+        ControlUI();
         Emote();
         ThrowGrenade();
         SetTrap();
@@ -192,6 +195,8 @@ public class MyPlayer : MonoBehaviour
         recallInput = Input.GetKeyDown(KeyCode.T);
         interactInput = Input.GetKeyDown(KeyCode.F);
         equipChangeInput = Input.GetKeyDown(KeyCode.R);
+        inventoryInput = Input.GetKeyDown(KeyCode.I);
+        partyInput = Input.GetKeyDown(KeyCode.P);
     }
 
     IEnumerator ExecuteEvery0_1Seconds()
@@ -299,12 +304,12 @@ public class MyPlayer : MonoBehaviour
         {
             skillManager.eventQ.Invoke();
 
-            float coolTime = 5;
+            // float coolTime = 5;
 
-            if (SceneManager.GetActiveScene().name == "Sector1")
-                S1Manager.Instance.UiPlayer.QSkillCool(coolTime);
-            else if (SceneManager.GetActiveScene().name == "Sector2")
-                S2Manager.Instance.UiPlayer.WSkillCool(coolTime);
+            // if (SceneManager.GetActiveScene().name == "Sector1")
+            //     S1Manager.Instance.UiPlayer.QSkillCool(coolTime);
+            // else if (SceneManager.GetActiveScene().name == "Sector2")
+            //     S2Manager.Instance.UiPlayer.WSkillCool(coolTime);
         }
     }
 
@@ -330,6 +335,14 @@ public class MyPlayer : MonoBehaviour
     {
         if (interactInput)
             interactManager.eventF.Invoke();
+    }
+
+    private void ControlUI()
+    {
+        if (inventoryInput)
+            interactManager.eventI.Invoke();
+        else if (partyInput)
+            interactManager.eventP.Invoke();
     }
 
     public void Stun(float timer)
