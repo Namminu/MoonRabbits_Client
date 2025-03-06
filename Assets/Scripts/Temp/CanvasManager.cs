@@ -14,6 +14,7 @@ public class CanvasManager : MonoBehaviour
     public UIChat uIChat;
     public UIBattlePopup uIBattlePopup;
     public InventoryUI inventoryUI;
+    public UIEnter uIEnter;
 
     public Player player;
 
@@ -35,6 +36,7 @@ public class CanvasManager : MonoBehaviour
         uIChat = GetComponentInChildren<UIChat>();
         uIBattlePopup = GetComponentInChildren<UIBattlePopup>();
         inventoryUI = GetComponentInChildren<InventoryUI>();
+        uIEnter = GetComponentInChildren<UIEnter>();
     }
 
     private void Start()
@@ -44,6 +46,7 @@ public class CanvasManager : MonoBehaviour
         uIChat.gameObject.SetActive(false);
         uIBattlePopup.gameObject.SetActive(false);
         inventoryUI.gameObject.SetActive(false);
+        uIEnter.gameObject.SetActive(false);
 
         if (player == null)
         {
@@ -60,6 +63,7 @@ public class CanvasManager : MonoBehaviour
                 && uIChat != null
                 && uIBattlePopup != null
                 && inventoryUI != null
+                && uIEnter != null
         );
 
         SceneManager.LoadScene("Town");

@@ -12,6 +12,9 @@ public class InteractManager : MonoBehaviour
     private ResourceController targetResource = null;
 
     [SerializeField]
+    private Gate targetGate = null;
+
+    [SerializeField]
     private Portal targetPortal = null;
     private const int portalTimer = 5;
     private bool isPortalReady = true;
@@ -47,6 +50,15 @@ public class InteractManager : MonoBehaviour
         if (targetResource != null)
         {
             GatherResource();
+        }
+        else if (targetGate != null)
+        {
+            UIEnter UI = CanvasManager.Instance.uIEnter;
+            if (!UI.gameObject.activeSelf)
+            {
+                UI.gameObject.SetActive(true);
+                UI.IdentifyGate(targetGate);
+            }
         }
         else if (targetPortal != null)
         {
@@ -151,6 +163,10 @@ public class InteractManager : MonoBehaviour
         {
             targetResource = other.GetComponent<ResourceController>();
         }
+        else if (targetGate == null && other.gameObject.CompareTag("Gate"))
+        {
+            targetGate = other.GetComponent<Gate>();
+        }
         else if (targetPortal == null && other.gameObject.CompareTag("Portal"))
         {
             targetPortal = other.GetComponent<Portal>();
@@ -162,6 +178,10 @@ public class InteractManager : MonoBehaviour
         if (targetResource != null && other.gameObject.CompareTag("Resource"))
         {
             targetResource = null;
+        }
+        else if (targetGate != null && other.gameObject.CompareTag("Gate"))
+        {
+            targetGate = null;
         }
         else if (targetPortal != null & other.gameObject.CompareTag("Portal"))
         {
