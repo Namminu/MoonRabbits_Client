@@ -35,8 +35,8 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CLogin, PacketHandler.S2CLoginHandler);
         _onRecv.Add((ushort)MsgId.S2CCreateCharacter, MakePacket<S2CCreateCharacter>);
         _handler.Add((ushort)MsgId.S2CCreateCharacter, PacketHandler.S2CCreateCharacterHandler);
-        _onRecv.Add((ushort)MsgId.S2CEnter, MakePacket<S2CEnter>);
-        _handler.Add((ushort)MsgId.S2CEnter, PacketHandler.S2CEnterHandler);
+        _onRecv.Add((ushort)MsgId.S2CEnterTown, MakePacket<S2CEnterTown>);
+        _handler.Add((ushort)MsgId.S2CEnterTown, PacketHandler.S2CEnterTownHandler);
         _onRecv.Add((ushort)MsgId.S2CMoveSector, MakePacket<S2CMoveSector>);
         _handler.Add((ushort)MsgId.S2CMoveSector, PacketHandler.S2CMoveSectorHandler);
         _onRecv.Add((ushort)MsgId.S2CEmote, MakePacket<S2CEmote>);
@@ -44,7 +44,7 @@ class PacketManager
         _onRecv.Add((ushort)MsgId.S2CChat, MakePacket<S2CChat>);
         _handler.Add((ushort)MsgId.S2CChat, PacketHandler.S2CChatHandler);
         _onRecv.Add((ushort)MsgId.S2CSpawn, MakePacket<S2CSpawn>);
-        _handler.Add((ushort)MsgId.S2CSpawn, PacketHandler.S2CPlayerSpawnHandler);
+        _handler.Add((ushort)MsgId.S2CSpawn, PacketHandler.S2CSpawnHandler);
         _onRecv.Add((ushort)MsgId.S2CDespawn, MakePacket<S2CDespawn>);
         _handler.Add((ushort)MsgId.S2CDespawn, PacketHandler.S2CDespawnHandler);
         _onRecv.Add((ushort)MsgId.S2CPlayerMove, MakePacket<S2CPlayerMove>);

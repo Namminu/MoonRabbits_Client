@@ -86,12 +86,12 @@ public class MyPlayer : MonoBehaviour
         emoteManager = GetComponent<EmoteManager>();
     }
 
-    void Start()
+    private void Start()
     {
         StartCoroutine(ExecuteEvery0_1Seconds());
     }
 
-    void Update()
+    private void Update()
     {
         HandleInput();
         Emote();
@@ -100,10 +100,15 @@ public class MyPlayer : MonoBehaviour
         Recall();
         EquipChange();
         Interact();
+    }
+
+    private void LateUpdate()
+    {
         CheckMove();
         PathFinding();
         ScreenScrollZoom();
     }
+
     void PathFinding()
     {
         if (agent.pathPending)
@@ -141,11 +146,9 @@ public class MyPlayer : MonoBehaviour
         while (eSystem == null)
         {
             eSystem = GameManager.Instance.SManager.ESystem;
-            Debug.Log("!!! 이벤트 시스템 찾는 중");
             yield return new WaitForSeconds(1f);
         }
         yield return new WaitUntil(() => eSystem != null);
-        Debug.Log("!!! 이벤트 시스템 찾음");
         isReadyESystem = true;
     }
 
@@ -189,8 +192,6 @@ public class MyPlayer : MonoBehaviour
         recallInput = Input.GetKeyDown(KeyCode.T);
         interactInput = Input.GetKeyDown(KeyCode.F);
         equipChangeInput = Input.GetKeyDown(KeyCode.R);
-
-
     }
 
     IEnumerator ExecuteEvery0_1Seconds()
@@ -261,7 +262,7 @@ public class MyPlayer : MonoBehaviour
     private void CheckMove()
     {
         float distanceMoved = Vector3.Distance(lastPos, transform.position);
-        anim.SetFloat(Constants.TownPlayerMove, distanceMoved * 100);
+        anim.SetFloat("Move", distanceMoved * 10);
 
         if (distanceMoved > 0.01f)
         {

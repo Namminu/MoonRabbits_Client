@@ -12,8 +12,8 @@ public class SkillObj : MonoBehaviour
 {
     public enum SkillType
     {
-        grenade,
-        trap,
+        grenade = 1,
+        trap = 2,
     }
 
     public SkillType type;
@@ -32,9 +32,9 @@ public class SkillObj : MonoBehaviour
 
     private const float lifeTime = 5f;
     private const float explosionRange = 5f;
-    private const float stunTimer = 5f;
 
     private bool isActive = false;
+    public bool IsActive => isActive;
 
     void Start()
     {
@@ -43,7 +43,22 @@ public class SkillObj : MonoBehaviour
         trail = GetComponentInChildren<TrailRenderer>();
         effect = transform.Find("Effect").gameObject;
 
+        if (type == SkillType.trap)
+        {
+            SetTrapColor();
+        }
+
         StartCoroutine(SetDestroyTimer());
+    }
+
+    public void SetTrapColor()
+    {
+        if (casterId == GameManager.Instance.MPlayer.PlayerId)
+        {
+            GetComponentInChildren<Light>().color = new Color(0.5f, 1.0f, 0.5f);
+            // GetComponentInChildren<Light>().color = Color.green;
+            // GetComponentInChildren<Light>().color = new Color32(144, 238, 144, 255);
+        }
     }
 
     IEnumerator SetDestroyTimer()
@@ -80,10 +95,6 @@ public class SkillObj : MonoBehaviour
 
     public void RemoveThis()
     {
-        if (casterId == GameManager.Instance.MPlayer.PlayerId)
-        {
-            GameManager.Instance.MPlayer.MPlayer.SkillManager.Traps.Remove(gameObject);
-        }
         Destroy(gameObject);
     }
 
@@ -173,7 +184,9 @@ public class SkillObj : MonoBehaviour
 
         GameManager.Network.Send(stunPkt);
 
-        yield return new WaitForSeconds(2f); // 스턴 패킷 기다려야해...
+        yield return new WaitForSeconds(2f); // 스턴 패킷 답장 기다려야해...
+        isActive = false;
+
         yield return new WaitUntil(() => !targetPlayer.IsStun);
 
         var removePkt = new C2SRemoveTrap
@@ -191,10 +204,5 @@ public class SkillObj : MonoBehaviour
         };
 
         GameManager.Network.Send(removePkt);
-
-        // target.GetComponent<Player>().Stun(stunTimer);
-
-        // yield return new WaitForSeconds(stunTimer);
-        // Destroy(gameObject);
     }
 }
