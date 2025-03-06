@@ -607,7 +607,7 @@ class PacketHandler
             return;
         Debug.Log($"S2CInventoryUpdate 패킷 무사 도착 : {pkt}");
         InventoryManager.instance.UpdateInventoryData(pkt);
-    }//getInventorySlotByItemId
+    }
     #endregion
 
     public static void S2CCraftHandler(PacketSession session, IMessage packet)
@@ -615,12 +615,15 @@ class PacketHandler
         if (packet is not S2CCraft pkt)
             return;
         Debug.Log($"S2CCraft 패킷 무사 도착 : {pkt}");
+        Debug.LogWarning($"서버가 인벤토리 슬롯{pkt.Slot}번에 아이템{pkt.CraftedItemId}를 {pkt.Count}개 추가하래");
+
+        CanvasManager.Instance.uiCraft.CraftResult(pkt);
     }
 
     public static void S2CGetInventorySlotByItemIdHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CGetInventorySlotByItemId pkt) return;
         Debug.Log($"S2CGetInventorySlotByItemId 패킷 무사 도착 : {pkt}");
-        UICraft.instance.GetInventorySlotByItemId(pkt);
+        CanvasManager.Instance.uiCraft.GetInventorySlotByItemId(pkt);
     }
 }

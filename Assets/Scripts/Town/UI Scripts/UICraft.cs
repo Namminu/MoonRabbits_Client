@@ -16,14 +16,13 @@ public class UICraft : MonoBehaviour
 
     public GameObject scrollViewContent;
     public GameObject recipeBtnPrefab;
-    private Dictionary<int, GameObject> recipeBtns = new Dictionary<int, GameObject>();
 
-    public GameObject uiDetail;
+    public GameObject detailFrame;
     public Button btnFold;
     public TextMeshProUGUI titleText;
     public TextMeshProUGUI materialText;
     public Button btnCraft;
-    private int craftCount = 0;
+    private int craftCount = 1;
     public TextMeshProUGUI craftCountText;
     public Button btnIncrease;
     public Button btnDecrease;
@@ -31,6 +30,16 @@ public class UICraft : MonoBehaviour
     private Recipe selectedRecipe;
     private Dictionary<int, int> itemSlotById = new Dictionary<int, int>();
     private Dictionary<int, int> itemStackById = new Dictionary<int, int>();
+    private bool canCraft;
+    public Button btnAddWood;
+    public Button btnClose;
+    public GameObject uiCraftPanel;
+    public GameObject progressFrame;
+    public TextMeshProUGUI progressTitle;
+    public Slider progressBar;
+    public TextMeshProUGUI successText;
+    public Button confirmButton;
+    public GameObject disableMask;
 
     private void Awake()
     {
@@ -43,25 +52,33 @@ public class UICraft : MonoBehaviour
         btnFold.onClick.AddListener(OnFoldBtnClick);
         btnIncrease.onClick.AddListener(OnIncreaseBtnClick);
         btnDecrease.onClick.AddListener(OnDecreaseBtnClick);
-        if (GameManager.Instance.recipeContainer == null)
+        btnCraft.onClick.AddListener(OnCraftBtnClick);
+        btnAddWood.onClick.AddListener(OnAddWoodClick);
+        btnClose.onClick.AddListener(OnCloseBtnClick);
+        confirmButton.onClick.AddListener(OnConfirmButtonClick);
+    }
+
+    public void InitUiCraft()
+    {
+        ClearUiCraft();
+        InitDetailRecipe();
+        if (GameManager.Instance.recipeContainer.data == null)
         {
             Debug.Log("레시피 로드 안 됨");
             return;
-        }
-        ;
+        };
 
+        // 스크롤 공간의 높이 설정
+        float totalHeight = 65 * GameManager.Instance.recipeContainer.data.Count + 100;
+        scrollViewContent.GetComponent<RectTransform>().sizeDelta = new Vector2(scrollViewContent.GetComponent<RectTransform>().sizeDelta.x, totalHeight);
+        
         foreach (Recipe recipe in GameManager.Instance.recipeContainer.data)
         {
             GameObject newRecipeBtn = Instantiate(recipeBtnPrefab, scrollViewContent.transform);
-            if (newRecipeBtn == null)
-            {
-                Debug.LogError("레시피 버튼 인스턴스화 실패");
-                continue;
-            }
             TextMeshProUGUI recipeBtnText = newRecipeBtn.GetComponentInChildren<TextMeshProUGUI>();
-            if (recipeBtnText == null)
+            if (newRecipeBtn == null || recipeBtnText == null)
             {
-                Debug.LogError("레시피 버튼 프리팹에 TextMeshProUGUI 컴퓨넌트 없음");
+                Debug.LogError("레시피 버튼 생성 및 제목 할당 오류");
                 continue;
             }
 
@@ -78,7 +95,15 @@ public class UICraft : MonoBehaviour
 
             Recipe r = recipe;
             newRecipeBtn.GetComponent<Button>().onClick.AddListener(() => OnRecipeBtnClick(r));
-            recipeBtns.Add(recipe.recipe_id, newRecipeBtn);
+        }
+    }
+
+    private void ClearUiCraft()
+    {
+        for(int i = scrollViewContent.transform.childCount -1; i >= 0; i--)
+        {
+            Transform child = scrollViewContent.transform.GetChild(i);
+            Destroy(child.gameObject);
         }
     }
 
@@ -88,31 +113,30 @@ public class UICraft : MonoBehaviour
 
         int recipeId = recipe.recipe_id;
         Debug.Log($"클릭된 레시피ID:{recipeId}");
-
-        initDetailRecipe();
+        InitDetailRecipe();
         GetInventorySlotByItemId();
-        //ShowDetailRecipe(recipe);
     }
 
-    private void initDetailRecipe()
+    private void InitDetailRecipe()
     {
         titleText.text = "";
         materialText.text = "";
-        craftCount = 0;
-        craftCountText.text = "0개";
+        craftCount = 1;
+        craftCountText.text = "1개";
     }
 
     private void ShowDetailRecipe(Recipe recipe)
     {
-        if (!uiDetail.activeSelf) uiDetail.SetActive(true);
-
+        if (progressFrame.activeSelf) progressFrame.SetActive(false);
+        if (!detailFrame.activeSelf) detailFrame.SetActive(true);
+        
         // 제목
         string title = recipe.craft_item_name;   //item.json에서 아이템 이름 읽어야함
         titleText.text = title;
 
         // 재료 목록
         StringBuilder materialSb = new StringBuilder();
-        bool canCraft = true;
+        canCraft = true;
         foreach (var material in recipe.material_items)
         {
             int materialItemId = material.item_id;
@@ -130,12 +154,15 @@ public class UICraft : MonoBehaviour
                 material.name = itemName;
             }
             string name = material.name;
-            int inventoryStack = itemStackById[materialItemId];
-            // 인벤토리에서 itemId가 materialItemId인 인벤토리의 stack
-            materialSb.Append($"{name} : {craftCount * count}/{inventoryStack} 개\n");
 
+            if(!itemStackById.TryGetValue(materialItemId, out int stack))
+            {
+                stack = 0;
+            }
+            materialSb.Append($"{name} : {stack}/{craftCount * count} 개\n");
+            
             // 재료 부족
-            if (craftCount * count > 0) canCraft = false;
+            if (craftCount * count > stack) canCraft = false;
         }
         alarmText.text = canCraft ? "" : "재료가 부족합니다";
         materialText.text = materialSb.ToString();
@@ -146,31 +173,35 @@ public class UICraft : MonoBehaviour
 
     public void OnFoldBtnClick()
     {
-        initDetailRecipe();
-        uiDetail.SetActive(false);
+        //InitDetailRecipe();
+        detailFrame.SetActive(false);
     }
 
     public void OnCraftBtnClick()
     {
-        Debug.Log("제작 구현중");
+        if(true) {
+            Debug.LogWarning("제작 버튼!");
+            var pkt = new C2SCraft{
+                RecipeId = selectedRecipe.recipe_id,
+                Count = craftCount
+            };
+            GameManager.Network.Send(pkt);
+        }else {
+            Debug.LogWarning("제작 불가");
+        }
     }
 
     public void OnDecreaseBtnClick()
     {
-
-        // #FIX 아래는 서버에서 응답이 오면 실행하자
-        if (craftCount > 0) craftCount--;
+        if (craftCount <= 1) return; 
+        craftCount--;
         GetInventorySlotByItemId();
-        //ShowDetailRecipe(selectedRecipe);
     }
 
     public void OnIncreaseBtnClick()
     {
         craftCount++;
         GetInventorySlotByItemId();
-        // 패킷 갔다오면 인벤토리에 재료아이템을 가지고 있는지, 몇 개인지 알려줌
-
-        // #FIX 아래는 서버에서 응답이 오면 실행하자
     }
 
     private void GetInventorySlotByItemId()
@@ -190,8 +221,93 @@ public class UICraft : MonoBehaviour
         foreach(var slot in pkt.Slots)
         {
             itemSlotById[slot.ItemId] = slot.SlotIdx;
-            itemStackById[slot.ItemId] = slot.ItemId;
+            itemStackById[slot.ItemId] = slot.Stack;
         }
         ShowDetailRecipe(selectedRecipe);
+    }
+
+    public void OnAddWoodClick()
+    {
+        Debug.LogWarning("아이템 획득 간다");
+        var pkt = new C2SItemObtained{
+            ItemId = 20001,
+            SlotIdx = 1
+        };
+        GameManager.Network.Send(pkt);
+    }
+
+    private void OnCloseBtnClick()
+    {
+        //InitDetailRecipe();
+        CanvasManager.Instance.uiCraft.gameObject.SetActive(false);
+    }
+
+    private void OnConfirmButtonClick()
+    {
+        progressFrame.SetActive(false);
+    }
+
+    public void CraftResult(S2CCraft pkt)
+    {
+        List<ItemJson> data = GameManager.Instance.materialItemContainer.data;
+        ItemJson resultItem = data.Find(d => d.item_id == pkt.CraftedItemId);
+
+        int craftedCount = 0;   // 현재 제작 개수를 저장할 변수
+
+        detailFrame.SetActive(false); // 제작설명서 끄기
+        confirmButton.gameObject.SetActive(false);
+        progressFrame.SetActive(true); // 제작진행창 띄우기
+        progressTitle.text = $"{resultItem.item_name}";
+        successText.text = $"{craftedCount}/{pkt.Count}개 제작 완료"; // 하나 제작 완료될때마다 갱신
+        disableMask.SetActive(true); // 제작하는동안 제작종류선택UI 클릭못하게 막는용도
+        
+        // progressBar 코루틴 실행
+        StartCoroutine(DoCraft(pkt.Count, () => {
+            // 모두 완료시 확인버튼 띄우기, 마스크 제거하기
+            confirmButton.gameObject.SetActive(true);
+            disableMask.SetActive(false);
+            
+            GameManager.Instance.SManager.UiChat.PushMessage(
+                    "System",
+                    $"{resultItem.item_name} {pkt.Count}개 제작에 성공하였습니다.",
+                    "System",
+                    true
+                );
+        }));
+    }
+
+    private IEnumerator DoCraft(int count, System.Action onComplete)
+    {
+        int craftedCount = 0;
+
+        for(int i=0; i<count; i++){
+            yield return StartCoroutine(UpdateProgressBar(3f, ()=>
+            {
+                craftedCount++;
+                successText.text = $"{craftedCount}/{count}개 제작 완료";
+            }));
+
+            if(i < count -1)
+            {
+                yield return new WaitForSeconds(0.5f);
+            }
+        }
+
+        onComplete?.Invoke();
+    }
+
+    private IEnumerator UpdateProgressBar(float duration, System.Action onProgressComplete)
+    {
+        float elapsed = 0f;
+
+        while(elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            progressBar.maxValue = duration;
+            progressBar.value = elapsed;
+            yield return null;
+        }
+
+        onProgressComplete?.Invoke();
     }
 }

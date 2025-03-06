@@ -56,6 +56,11 @@ public class MyPlayer : MonoBehaviour
     private InteractManager interactManager;
     public InteractManager InteractManager => interactManager;
 
+    
+    private bool uiCraftInput;
+    private bool uiPartyInput;
+    private bool uiMenuInput;
+
     void Awake()
     {
         instance = this;
@@ -93,6 +98,7 @@ public class MyPlayer : MonoBehaviour
         Recall();
         EquipChange();
         Interact();
+        UIInput();
 
         CheckMove();
     }
@@ -155,6 +161,9 @@ public class MyPlayer : MonoBehaviour
         recallInput = Input.GetKeyDown(KeyCode.T);
         interactInput = Input.GetKeyDown(KeyCode.F);
         equipChangeInput = Input.GetKeyDown(KeyCode.R);
+        uiCraftInput = Input.GetKeyDown(KeyCode.C);
+        uiPartyInput = Input.GetKeyDown(KeyCode.P);
+        uiMenuInput = Input.GetKeyDown(KeyCode.Escape);
     }
 
     IEnumerator ExecuteEvery0_1Seconds()
@@ -308,5 +317,29 @@ public class MyPlayer : MonoBehaviour
     {
         transform.Find("StunEffect").gameObject.SetActive(false);
         NavAgent.isStopped = false;
+    }
+    
+    private void UIInput(){
+        if(uiCraftInput)
+        {
+            // C 키입력
+            UICraft uiCraft = CanvasManager.Instance.uiCraft;
+            uiCraft.gameObject.SetActive(!uiCraft.gameObject.activeSelf);
+            uiCraft.gameObject.transform.SetAsLastSibling();
+        }
+        if(uiPartyInput)
+        {
+            // P 키입력
+            PartyUI partyUi = CanvasManager.Instance.partyUI;
+            partyUi.gameObject.SetActive(!partyUi.gameObject.activeSelf);
+            partyUi.gameObject.transform.SetAsLastSibling();
+        }
+        if(uiMenuInput)
+        {
+            // ESC 키입력
+            GameObject uiMenu = CanvasManager.Instance.uiMenu;
+            uiMenu.SetActive(!uiMenu.activeSelf);
+            uiMenu.transform.SetAsLastSibling();
+        }
     }
 }
