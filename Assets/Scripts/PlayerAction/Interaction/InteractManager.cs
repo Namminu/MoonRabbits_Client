@@ -22,16 +22,12 @@ public class InteractManager : MonoBehaviour
 
     public Action eventF; // F키 누르면 발동
     public Action eventR; // R키 누르면 발동
-    public Action eventI; // I키 누르면 발동
-    public Action eventP; // P키 누르면 발동
 
     private void Start()
     {
         player = GetComponentInParent<MyPlayer>();
         eventF += Interact;
         eventR += ChangeEquip;
-        eventI += OnOffInvenUI;
-        eventP += OnOffPartyUI;
     }
 
     private void ChangeEquip()
@@ -147,32 +143,6 @@ public class InteractManager : MonoBehaviour
         }
         yield return new WaitForSeconds(0.5f);
         isPortalReady = true;
-    }
-
-    private void OnOffInvenUI()
-    {
-        GameObject UI = CanvasManager.Instance.inventoryUI.gameObject;
-        if (UI.activeSelf)
-        {
-            UI.SetActive(false);
-        }
-        else
-        {
-            UI.SetActive(true);
-        }
-    }
-
-    private void OnOffPartyUI()
-    {
-        GameObject UI = CanvasManager.Instance.partyUI.partyWindow.gameObject;
-        if (UI.activeSelf)
-        {
-            UI.SetActive(false);
-        }
-        else
-        {
-            UI.SetActive(true);
-        }
     }
 
     private void OnTriggerStay(Collider other)
