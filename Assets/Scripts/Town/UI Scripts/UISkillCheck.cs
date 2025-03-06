@@ -111,6 +111,7 @@ public class UISkillCheck : MonoBehaviour
     {
         if (durability <= 0)
         {
+            EndSkillCheck();
             //즉시 종료
         }
     }
