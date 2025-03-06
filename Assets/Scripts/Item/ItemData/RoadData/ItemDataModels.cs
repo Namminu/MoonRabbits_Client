@@ -23,6 +23,7 @@ public class HousingItemJsonData : ItemJsonData
 {
 	public string item_prefab;
 	public int[] item_gridSize;
+	public int item_dataType;
 }
 
 [Serializable]

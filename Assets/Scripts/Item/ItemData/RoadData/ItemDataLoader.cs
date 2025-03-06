@@ -87,6 +87,7 @@ public static class ItemDataLoader
             newItem.ItemType = (ItemTypes)item.item_type;
             newItem.ItemIcon = GetSpriteByItemId(item.item_id);
             newItem.ItemPrefab = GetPrefabByName(item.item_prefab);
+            newItem.ItemDataType = (ItemDataTypes)item.item_dataType;
 			if (item.item_gridSize != null && item.item_gridSize.Length == 2)
 			{
 				newItem.ItemGridSize = new Vector2Int(item.item_gridSize[0], item.item_gridSize[1]);
