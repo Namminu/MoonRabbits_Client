@@ -8,9 +8,6 @@ using UnityEngine.AI;
 public class MonsterController : MonoBehaviour
 {
     [SerializeField]
-    private float speed;
-
-    [SerializeField]
     private int id;
 
     [SerializeField]
@@ -22,34 +19,15 @@ public class MonsterController : MonoBehaviour
     {
         get { return id; }
     }
-
-    [SerializeField]
-    private Transform monsterArea;
-    private const float maxDistance = 34f;
     private CapsuleCollider _collider;
-
-    [SerializeField]
-    private Transform target;
-    public Transform Target
-    {
-        get { return target; }
-        set { target = value; }
-    }
 
     private Vector3 _targetPosition;
 
-    private Rigidbody rigid;
-
     private Animator anim;
 
-    private NavMeshAgent agent;
-    public NavMeshAgent NavAgent => agent;
-
-    private Coroutine coDefaultMove;
 
     private void Start()
     {
-        rigid = GetComponent<Rigidbody>();
         anim = GetComponent<Animator>();
         _collider = GetComponent<CapsuleCollider>();
         MonsterManager.Instance.AddMonster(this);
@@ -57,12 +35,11 @@ public class MonsterController : MonoBehaviour
 
     private void Update()
     {
-        Chase();
 
         transform.position = Vector3.Lerp(
             transform.position,
             _targetPosition,
-            Time.deltaTime * 10f
+            Time.deltaTime * 5f
         );
         Vector3 direction = _targetPosition - transform.position;
         direction.y = 0;
@@ -72,55 +49,9 @@ public class MonsterController : MonoBehaviour
             targetRotation,
             Time.deltaTime * 150
         );
-
-        agent.destination = _targetPosition;
     }
 
-    private void FixedUpdate()
-    {
-        ControlLocation();
-    }
 
-    private void Chase() // 타겟 추적하는 함수
-    {
-        if (target != null)
-        {
-            agent.destination = target.position;
-        }
-        else
-        {
-            if (coDefaultMove == null && target == null)
-            {
-                coDefaultMove = StartCoroutine(DefaultMove());
-            }
-        }
-    }
-
-    private void ControlLocation() // 담당 구역 이탈 시 복귀하는 함수
-    {
-        float distance = Vector3.Distance(transform.position, monsterArea.position);
-        if (distance >= maxDistance)
-        {
-            target = null;
-            agent.destination = monsterArea.position;
-        }
-    }
-
-    IEnumerator DefaultMove() // 평상 시 이동
-    {
-        while (true)
-        {
-            if (target != null)
-            {
-                coDefaultMove = null;
-                yield break;
-            }
-            yield return new WaitForSeconds(3f);
-            float x = Random.Range(-34, 34) + monsterArea.position.x;
-            float z = Random.Range(-34, 34) + monsterArea.position.z;
-            agent.destination = new Vector3(x, 0, z);
-        }
-    }
 
     IEnumerator CoMonsterAttackCoolTime()
     {
@@ -177,15 +108,12 @@ public class MonsterController : MonoBehaviour
     public void Stun(float timer)
     {
         Debug.Log($"걸린 녀석 : {ID}");
-        NavAgent.velocity = Vector3.zero;
-        NavAgent.ResetPath();
-        NavAgent.isStopped = true;
         Invoke(nameof(StunOut), timer);
     }
 
     private void StunOut()
     {
-        NavAgent.isStopped = false;
+
     }
 
     public void SetCollision(CollisionPushInfo info)
