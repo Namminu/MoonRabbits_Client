@@ -63,7 +63,7 @@ public class CaptureScreen : MonoBehaviour
 
         /* Save Data to Local Path */
         byte[] bytes = screenshot.EncodeToPNG();
-        string filename = $"ProjectMR_Screenshot_{System.DateTime.Now:yyyy-MM-dd_HH-mm-ss}.png";
+        string filename = $"ProjectMR_Screenshot_{System.DateTime.Now:yyyy-MM-dd_HH-mm-ss}.png"; 
         string fullPath = Path.Combine(screenPath, filename);
         File.WriteAllBytes(fullPath, bytes);
 
