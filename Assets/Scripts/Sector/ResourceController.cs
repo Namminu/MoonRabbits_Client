@@ -19,6 +19,7 @@ public class ResourceController : MonoBehaviour
         set => isAvailable = value;
     }
 
+
     public int idx = 100;
 
     public int resourceId; // 1이면 나무, 2면 바위 (도끼와 곡괭이 enum 및 index와 맞춰져있음다)
@@ -29,10 +30,10 @@ public class ResourceController : MonoBehaviour
     public int Durability
     {
         get => durability;
-        set 
+        set
         {
-            if(value < 1)
-               {
+            if (value < 1)
+            {
                 isAvailable = false;
                 ChangeIcon(isAvailable);
             }
@@ -48,7 +49,7 @@ public class ResourceController : MonoBehaviour
     public int Angle
     {
         get => angle;
-        set => angle=value;
+        set => angle = value;
     }
     private const int maxDurability = 5;
     private int difficulty;
@@ -61,7 +62,7 @@ public class ResourceController : MonoBehaviour
     public long Starttime
     {
         get => starttime;
-        set => starttime = value; 
+        set => starttime = value;
     }
 
     private void Update()
@@ -137,29 +138,16 @@ public class ResourceController : MonoBehaviour
         }
     }
 
-    public void ResourcesUpdateDurability(int duability)
-    {
-        Debug.Log("내구도 업데이트");
-        this.durability = duability;
-    }
     public void ResourcesGatheringStart(int angle, int difficulty)
     {
         Debug.Log("스킬체크 시작");
         this.angle = angle;
         this.Difficulty = difficulty;
         this.Starttime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+        UISkillCheck.Instance.StartSkillCheck(this.idx, angle, difficulty);
     }
     public void ResourcesGatheringSkillCheck(int durability)
     {
-        if (this.durability > durability)
-        {
-            Debug.Log("스킬체크 성공");
-            //성공
-        }
-        else
-        {
-            Debug.Log("스킬체크 실패");
-            //실패
-        }
+
     }
 }

@@ -120,6 +120,7 @@ public class MyPlayer : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
         {
+            interactManager.GatherOut(false);
             int layerMask = 1 << LayerMask.NameToLayer("Ground");
 
             if (
