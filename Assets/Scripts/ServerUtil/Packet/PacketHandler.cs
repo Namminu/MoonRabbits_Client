@@ -208,7 +208,7 @@ class PacketHandler
 
         if (info.HasCollision == false)
         {
-            Debug.LogError("해당 충돌은 거짓 판명이 나왔다.");
+            Debug.Log("해당 충돌은 거짓 판명이 나왔다.");
             return;
         }
         switch (info.MyType)
