@@ -57,28 +57,28 @@ public class MonsterController : MonoBehaviour
 
     private void Update()
     {
-        //Chase();
+        Chase();
 
-        // transform.position = Vector3.Lerp(
-        //     transform.position,
-        //     _targetPosition,
-        //     Time.deltaTime * 10f
-        // );
-        // Vector3 direction = _targetPosition - transform.position;
-        // direction.y = 0;
-        // Quaternion targetRotation = Quaternion.LookRotation(direction);
-        // transform.rotation = Quaternion.Slerp(
-        //     transform.rotation,
-        //     targetRotation,
-        //     Time.deltaTime * 150
-        // );
+        transform.position = Vector3.Lerp(
+            transform.position,
+            _targetPosition,
+            Time.deltaTime * 10f
+        );
+        Vector3 direction = _targetPosition - transform.position;
+        direction.y = 0;
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Slerp(
+            transform.rotation,
+            targetRotation,
+            Time.deltaTime * 150
+        );
 
-        //agent.destination = _targetPosition;
+        agent.destination = _targetPosition;
     }
 
     private void FixedUpdate()
     {
-        //ControlLocation();
+        ControlLocation();
     }
 
     private void Chase() // 타겟 추적하는 함수
