@@ -191,7 +191,7 @@ public class MonsterController : MonoBehaviour
     public void SetCollision(CollisionPushInfo info)
     {
         var type = info.TargetType;
-        Debug.Log($"타겟 타입??! : {type}");
+        // Debug.Log($"타겟 타입??! : {type}");
         switch (type)
         {
             //충돌한 자가 플레이어면

@@ -33,14 +33,17 @@ public abstract class SManagerBase : MonoBehaviour
     private UIPlayer uiPlayer;
     public UIPlayer UiPlayer => uiPlayer;
 
-    private Dictionary<int, Player> playerList = new();
+    [SerializeField]
+    private SkillObj trap;
+
     private readonly Dictionary<int, string> prefabPaths = new();
-    public Player MyPlayer { get; private set; }
+    public Player MPlayer { get; private set; }
 
     protected virtual void Awake()
     {
         uiChat = CanvasManager.Instance.uIChat;
         uiPlayer = CanvasManager.Instance.uIPlayer;
+        trap = Resources.Load<SkillObj>("Prefabs/Weapon/ThrowObj/Trap");
     }
 
     protected void SetPrefabPath()
@@ -57,21 +60,27 @@ public abstract class SManagerBase : MonoBehaviour
         CanvasManager.Instance.ActivateUI();
     }
 
-    public Player Enter(PlayerInfo playerInfo)
+    public void Enter(List<PlayerInfo> players)
     {
         // [1] UI 활성화
         ActivateUI();
-        // [2] 플레이어 프리펩 생성 및 정보 연동
-        MyPlayer = SpawnPlayer(playerInfo);
-        // [3] "내" 프리펩임 선언
-        MyPlayer.SetIsMine(true);
-        // [4] 머리 위 닉네임 UI에 이름 박음
-        MyPlayer.SetUI(UiPlayer);
-        MyPlayer.SetNickname(playerInfo.Nickname);
-        MyPlayer.SetStatInfo(playerInfo.StatInfo);
+        // [2] 받은 플레이어 정보들 순회하며 내꺼는 마킹
+        foreach (PlayerInfo playerInfo in players)
+        {
+            var player = SpawnPlayer(playerInfo);
 
-        // [5] "내" 플레이어 오브젝트 반환
-        return MyPlayer;
+            if (playerInfo.Nickname == GameManager.Instance.NickName)
+            {
+                player.SetIsMine(true);
+                MPlayer = player;
+                MPlayer.SetStatInfo(playerInfo.StatInfo);
+                uiChat.Player = MPlayer;
+            }
+            else
+            {
+                player.SetIsMine(false);
+            }
+        }
     }
 
     public Player SpawnPlayer(PlayerInfo playerInfo)
@@ -81,20 +90,30 @@ public abstract class SManagerBase : MonoBehaviour
         if (!hasPrefab)
         {
             Debug.Log($"플레이어 프리펩을 찾지 못 했습니다 : {prefabPath}");
-            // 서버로 실패 패킷?
             return null;
         }
+
         // [2] Resources 폴더에서 플레이어 프리펩 로드
         Player playerPrefab = Resources.Load<Player>(prefabPath);
 
+        // [3] 스폰 위치 설정 (최초 입장이면 스폰 위치, 아니라면 전달받은 위치 정보)
+        Vector3 spawnPos =
+            playerInfo.Transform.PosX == 0
+            && playerInfo.Transform.PosY == 0
+            && playerInfo.Transform.PosZ == 0
+                ? spawnArea.position
+                : new Vector3(playerInfo.Transform.PosX, 0, playerInfo.Transform.PosZ);
+
         // [3] 프리펩 생성 및 정보 연동
-        var player = Instantiate(playerPrefab, spawnArea.position, Quaternion.identity);
-        player.Move(spawnArea.position, Quaternion.identity);
+        var player = Instantiate(playerPrefab, spawnPos, Quaternion.identity);
+        player.Move(spawnPos, Quaternion.identity);
         player.SetPlayerId(playerInfo.PlayerId);
         player.SetNickname(playerInfo.Nickname);
         player.SetLevel(playerInfo.Level);
+
         // [4] 이미 접속된 플레이어인지 확인
         var players = GameManager.Instance.PlayerList[SectorCode];
+
         if (players.TryGetValue(playerInfo.PlayerId, out var existingPlayer))
         {
             // [4 A] 중복 접속이면 기존 거 파괴하고 이번 꺼 덧씌움
@@ -116,26 +135,26 @@ public abstract class SManagerBase : MonoBehaviour
         return player;
     }
 
-    public void DespawnPlayer(int playerId)
+    public void SetTraps(List<TrapInfo> traps)
     {
-        // [1] 존재하는 플레이어인지 확인
-        var players = GameManager.Instance.PlayerList[SectorCode];
-        if (!players.TryGetValue(playerId, out var player))
+        if (trap == null)
         {
+            Debug.Log("Trap Prefab을 찾지 못했습니다");
             return;
         }
-        // [2] 해당 플레이어 오브젝트 확인후 파괴
-        if (player != null && player.gameObject != null)
-        {
-            Destroy(player.gameObject);
-        }
-        // [3] 플레이어 목록에서 제거
-        players.Remove(playerId);
-    }
 
-    public Player GetPlayer(int playerId)
-    {
-        bool isExist = playerList.TryGetValue(playerId, out var player);
-        return isExist ? player : null;
+        foreach (TrapInfo trapInfo in traps)
+        {
+            var trapObj = Instantiate(
+                trap,
+                new Vector3(trapInfo.Pos.X / 10f, 0, trapInfo.Pos.Z / 10f),
+                Quaternion.identity
+            );
+
+            SkillObj skillObj = trapObj.GetComponent<SkillObj>();
+            skillObj.CasterId = trapInfo.CasterId;
+
+            skillObj.SetTrapColor();
+        }
     }
 }
