@@ -32,12 +32,8 @@ public static class ItemDataLoader
             return;
         }
 
-        MaterialItemJsonWrapper mtItemWrapper = JsonUtility.FromJson<MaterialItemJsonWrapper>(
-            mtJsonText
-        );
-        HousingItemJsonWrapper hsItemWrapper = JsonUtility.FromJson<HousingItemJsonWrapper>(
-            hsJsonText
-        );
+        MaterialItemJsonWrapper mtItemWrapper = JsonUtility.FromJson<MaterialItemJsonWrapper>(mtJsonText);
+        HousingItemJsonWrapper hsItemWrapper = JsonUtility.FromJson<HousingItemJsonWrapper>(hsJsonText);
 
         if (
             mtItemWrapper == null
@@ -91,9 +87,18 @@ public static class ItemDataLoader
             newItem.ItemType = (ItemTypes)item.item_type;
             newItem.ItemIcon = GetSpriteByItemId(item.item_id);
             newItem.ItemPrefab = GetPrefabByName(item.item_prefab);
-            newItem.ItemGridSize = item.item_gridsize;
+            newItem.ItemDataType = (ItemDataTypes)item.item_dataType;
+			if (item.item_gridSize != null && item.item_gridSize.Length == 2)
+			{
+				newItem.ItemGridSize = new Vector2Int(item.item_gridSize[0], item.item_gridSize[1]);
+			}
+			else
+			{
+				newItem.ItemGridSize = Vector2Int.zero; // 기본값 처리
+				Debug.LogError($"{newItem.ItemName} : Wrong item_gridSize Value: {item.item_gridSize}");
+			}
 
-            HousingItemsList.Add(newItem);
+			HousingItemsList.Add(newItem);
         }
         Debug.Log("하우징 아이템 생성 갯수 : " + HousingItemsList.Count);
     }
