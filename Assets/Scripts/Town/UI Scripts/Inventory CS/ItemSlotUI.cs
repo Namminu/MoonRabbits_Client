@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -43,6 +45,8 @@ public class ItemSlotUI
     [SerializeField] private MaterialItemData TestItemData;
     [SerializeField] private int testItemCount;
 
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -63,15 +67,81 @@ public class ItemSlotUI
     /// <summary>
     /// Add Item to Slot Method
     /// </summary>
-    public void AddItem(MaterialItem insertItem)
+    public void AddItem(MaterialItem insertItem, bool skipTransmit = false)
     {
-        if (insertItem == null) return;
-        /* 아이템 정보 업데이트 */
+        if (insertItem == null)
+            return;
+
+        int maxStackSize = 9999; // 최대 스택 크기
+
+        // 이미 슬롯에 같은 아이템이 존재하면 병합 처리
+        if (item != null && item.Data.ItemId == insertItem.Data.ItemId)
+        {
+            int totalStack = item.CurItemStack + insertItem.CurItemStack;
+            if (totalStack <= maxStackSize)
+            {
+                // 병합하여 수량 업데이트
+                item.CurItemStack = totalStack;
+                text_ItemAmount.text = item.CurItemStack.ToString();
+            }
+            else
+            {
+                // 최대 스택 초과 처리
+                item.CurItemStack = maxStackSize;
+                text_ItemAmount.text = maxStackSize.ToString();
+                int restStack = totalStack - maxStackSize;
+                MaterialItem overflowItem = new MaterialItem(insertItem.ItemData, restStack);
+
+                InventoryUI inventoryUI = FindObjectOfType<InventoryUI>();
+                if (inventoryUI != null)
+                {
+                    inventoryUI.AddRemainingItems(overflowItem);
+                }
+            }
+
+            // 병합 후 상태 전송 (초기화 시에는 생략)
+            if (!skipTransmit)
+            {
+                InventoryUI updatedUI = FindObjectOfType<InventoryUI>();
+                if (updatedUI != null)
+                {
+                    updatedUI.OnInventoryStateChanged();
+                }
+            }
+            return;
+        }
+
+        // 슬롯이 비어 있을 경우 새 아이템 할당
         item = insertItem;
         itemImage.sprite = insertItem.ItemData.ItemIcon;
-        text_ItemAmount.text = insertItem.CurItemStack.ToString();
-
+        text_ItemAmount.text = item.CurItemStack.ToString();
         SetItemImageAlpha(1);
+
+        // 아이템 추가 후 상태 전송 (초기화 시에는 생략)
+        if (!skipTransmit)
+        {
+            InventoryUI invUI = FindObjectOfType<InventoryUI>();
+            if (invUI != null)
+            {
+                invUI.OnInventoryStateChanged();
+            }
+        }
+    }
+
+    public void SetItemDirectly(MaterialItem newMaterialItem)
+    {
+        // 초기화 시 슬롯 데이터를 직접 설정
+        item = newMaterialItem;
+        if (item != null)
+        {
+            itemImage.sprite = item.ItemData.ItemIcon;
+            text_ItemAmount.text = item.CurItemStack.ToString();
+            SetItemImageAlpha(1);
+        }
+        else
+        {
+            ClearSlot();
+        }
     }
 
     /// <summary>
@@ -123,8 +193,10 @@ public class ItemSlotUI
         if (item == null)
             return;
 
-        // Image copy process when dragging starts from an item slot
-        DragSlot.instance.dragSlot = this;
+		if (eventData.button == PointerEventData.InputButton.Right) return;
+
+		// Image copy process when dragging starts from an item slot
+		DragSlot.instance.dragSlot = this;
         DragSlot.instance.DragSetImage(itemImage);
         DragSlot.instance.transform.position = eventData.position;
     }
@@ -149,42 +221,97 @@ public class ItemSlotUI
 
     public void OnDrop(PointerEventData eventData)
     {
-        if (DragSlot.instance.dragSlot != null)
+        if (DragSlot.instance.dragSlot == null) return;
+
+        // 드래그 중인 아이템 가져오기
+        MaterialItem draggedItem = DragSlot.instance.dragSlot.GetItem();
+        if (draggedItem == null) return;
+
+        // 현재 슬롯(대상)의 아이템 가져오기
+        if (HasItem() && item.Data.ItemId == draggedItem.Data.ItemId)
+        {
+            // 같은 아이템일 경우 병합 처리
+            AddItem(draggedItem);
+
+            // 드래그 중인 슬롯(원본)을 명확히 비움
+            DragSlot.instance.dragSlot.ClearSlot();
+        }
+        else
+        {
+            // 다른 아이템일 경우 교체 처리
             ChangeSlot();
+        }
+
+        // 상태 변경 후 서버로 전송
+        InventoryUI invUI = FindObjectOfType<InventoryUI>();
+        if (invUI != null)
+        {
+            invUI.OnInventoryStateChanged();
+        }
     }
+
+    /*  public void OnDrop(PointerEventData eventData)
+      {
+          if (DragSlot.instance.dragSlot == null) return;
+
+          MaterialItem draggedItem = DragSlot.instance.dragSlot.GetItem();
+          if (draggedItem == null) return;
+
+          if (HasItem() && item.Data.ItemId == draggedItem.Data.ItemId)
+          {
+              AddItem(draggedItem);
+              DragSlot.instance.dragSlot.ClearSlot();
+          }  
+          else ChangeSlot();
+      }*/
 
     public void OnPointerClick(PointerEventData eventData)
     {
         if (item == null) return;
-
-        if (eventData.button == PointerEventData.InputButton.Right)
+		
+        #region Right Mouse Click
+		if (eventData.button == PointerEventData.InputButton.Right)
         {
-            DecomUI = GameObject.Find("UIDecomItem");
-            if (DecomUI == null) return;
+			DecomUI = GameObject.Find("UIDecomItem");
 
-            if (isInven && DecomUI.activeSelf) /* 인벤토리에서 우클릭 시  */
+            if (DecomUI != null && DecomUI.activeSelf) /* 분해창이 활성화 되어 있을 시 */
             {
-                Debug.Log("Right Click On Inventory Slot");
-                ItemSlotUI emptySlot = FindEmptySlot(false);
-                if (emptySlot != null)
+                if (isInven) /* 인벤토리에서 우클릭 시  */
                 {
-                    emptySlot.AddItem(item);
-                    emptySlot.originSlot = this;
-                    ClearSlot();
+                    Debug.Log("Right Click On Inventory Slot");
+                    ItemSlotUI emptySlot = FindEmptySlot(false);
+                    if (emptySlot != null)
+                    {
+                        emptySlot.AddItem(item, true);
+                        emptySlot.originSlot = this;
+                        ClearSlot();
+                    }
+                    else return;
                 }
-                else return;
+                else if (!isInven) /* 분해창에서 우클릭 시 */
+                {
+                    Debug.Log("Right Click On Decom Slot");
+                    ReturnToOriginSlot();
+                }
             }
-            else if (!isInven) /* 분해창에서 우클릭 시 */
-            {
-                Debug.Log("Right Click On Decom Slot");
-                ReturnToOriginSlot();
-			}
-        }
-    }
-    #endregion
+            else if(DecomUI == null || !DecomUI.activeSelf) /* 분해창 비활성화 때 우클릭 시 아이템 분리 */
+			{
+				SeperatingItem(); 
+			} 
+		}
+		#endregion
 
-    #region Getter n Setter
-    public MaterialItem GetItem()
+		#region Left Mouse Click
+		if (eventData.button == PointerEventData.InputButton.Left)
+        {
+
+        }
+		#endregion
+	}
+	#endregion
+
+	#region Getter n Setter
+	public MaterialItem GetItem()
     {
         return item;
     }
@@ -216,7 +343,31 @@ public class ItemSlotUI
 
 	#region Local Method
 
-	// 아이템 등록 시 이미지 객체의 투명도 조절을 위한 메서드
+	/// <summary>
+	/// Seperate Cur Slot Item Count Method 
+	/// </summary>
+	/// <returns>seperated item count, If the number of items is odd, a smaller value is returned</returns>
+	private int SeperatingItem()
+    {
+        if (item.CurItemStack <= 1) return -1;
+
+        Debug.Log("Seperate Item Method");
+        int seperateLeftCount = item.CurItemStack / 2;
+        item.CurItemStack -= seperateLeftCount;
+		text_ItemAmount.text = item.CurItemStack.ToString();
+
+		MaterialItem tempItem = new MaterialItem(item.ItemData, seperateLeftCount);
+        DragSlot.instance.dragSlot = this;
+
+        DragSlot.instance.DragSetImage(itemImage);
+        DragSlot.instance.SetItemImageAlpha(1);
+
+        DragSlot.instance.dragSlot.AddItem(tempItem);
+
+		return seperateLeftCount;
+    }
+
+	/* 아이템 등록 시 이미지 객체의 투명도 조절을 위한 메서드 */
 	private void SetItemImageAlpha(float alpha)
 	{
 		Color newColor = itemImage.color;
@@ -238,27 +389,96 @@ public class ItemSlotUI
 		selectedSlotToDestroy = null;
 	}
 
-	private void ChangeSlot()
+    private void ChangeSlot()
+    {
+        if (DragSlot.instance.dragSlot == null)
+            return;
+
+        // 드래그 중인 슬롯(원본)에서 아이템을 가져옴
+        MaterialItem draggedItem = DragSlot.instance.dragSlot.GetItem();
+        if (draggedItem == null)
+            return;
+
+        // 현재 슬롯(대상)의 아이템을 임시 변수에 보관
+        MaterialItem targetItem = this.item;
+
+        // 원본 슬롯은 미리 클리어하여 중복 표시를 방지
+        DragSlot.instance.dragSlot.ClearSlot();
+
+        // 대상 슬롯에 드래그한 아이템을 할당 및 UI 갱신
+        SetItem(draggedItem);
+
+        // 대상 슬롯에 기존에 아이템이 있었다면 원본 슬롯으로 이동(또는 빈 슬롯으로 남김)
+        if (targetItem != null)
+        {
+            // 원본(드래그 중인) 슬롯에 이전 대상 아이템을 설정합니다.
+            // 만약 교체가 아닌 단순 이동이라면 이 부분을 생략하고 원본을 그냥 비워두면 됩니다.
+            DragSlot.instance.dragSlot.SetItem(targetItem);
+        }
+
+        Debug.Log($"Item Slot Swap 완료: {this.name} ↔ {DragSlot.instance.dragSlot.name}");
+    }
+
+    // SetItem 메서드: 슬롯에 아이템을 할당하고 UI를 갱신하는 헬퍼 함수
+    public void SetItem(MaterialItem newItem)
+    {
+        item = newItem;
+        if (item != null)
+        {
+            itemImage.sprite = item.ItemData.ItemIcon;
+            text_ItemAmount.text = item.CurItemStack.ToString();
+            SetItemImageAlpha(1);
+        }
+        else
+        {
+            ClearSlot();
+        }
+
+        // 상태 변경 후 기본적으로 InventoryUI에 변경을 알림
+        InventoryUI invUI = FindObjectOfType<InventoryUI>();
+        if (invUI != null)
+        {
+            invUI.OnInventoryStateChanged();
+        }
+    }
+
+    /*private void ChangeSlot()
 	{
-		MaterialItem tempItem = item;
-        int tempItenIndex = itemIndex;
+        if (DragSlot.instance.dragSlot == null) return;
 
-		AddItem(DragSlot.instance.dragSlot.item);
-        SetItemIndex(DragSlot.instance.dragSlot.GetItemIndex());
+        MaterialItem draggedItem = DragSlot.instance.dragSlot.GetItem();
+        MaterialItem targetItem = item;
 
-		if (tempItem != null)
-		{
-			DragSlot.instance.dragSlot.AddItem(tempItem);
-			SetItemIndex(DragSlot.instance.dragSlot.SetItemIndex(tempItenIndex));
+        if (draggedItem == null) return;
+
+        *//* 같은 종류의 아이템일 경우 합침 *//*
+        if(targetItem != null && targetItem.Data.ItemId == draggedItem.Data.ItemId)
+        {
+			AddItem(draggedItem);
 		}
-		else
-		{
-			DragSlot.instance.dragSlot.ClearSlot();
+        else *//* 다른 종류의 아이템일 경우 교체 *//*
+        {
+			MaterialItem tempItem = item;
+			int tempItenIndex = itemIndex;
+
+			AddItem(DragSlot.instance.dragSlot.item);
+			SetItemIndex(DragSlot.instance.dragSlot.GetItemIndex());
+
+			if (tempItem != null)
+			{
+				DragSlot.instance.dragSlot.AddItem(tempItem);
+				SetItemIndex(DragSlot.instance.dragSlot.SetItemIndex(tempItenIndex));
+			}
+			else
+			{
+				DragSlot.instance.dragSlot.ClearSlot();
+			}
 		}
+
 		Debug.Log($"Item Slot Change: {this.name} ({itemIndex}) ↔ {DragSlot.instance.dragSlot.name} ({DragSlot.instance.dragSlot.GetItemIndex()})");
-	}
+	}*/
 
-	private void UpdateTooltipUI()
+    private void UpdateTooltipUI()
 	{
 		tooltipUI.SetItemDesc(item.ItemData);
 		tooltipUI.SetTooltipUIPos(rectTransform);

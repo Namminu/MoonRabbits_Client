@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class MyPlayer : MonoBehaviour
 {
-    public Player P;
+    private Player player;
 
     [SerializeField]
     public static MyPlayer instance { get; private set; }
@@ -19,6 +19,7 @@ public class MyPlayer : MonoBehaviour
     }
     private RaycastHit rayHit;
     public EventSystem eSystem;
+    private bool isReadyESystem = false;
     private Animator anim;
     public Animator Anim
     {
@@ -29,8 +30,6 @@ public class MyPlayer : MonoBehaviour
     public Vector3 TargetPos => targetPosition;
     private Vector3 lastTargetPosition;
     private readonly List<int> animHash = new List<int>();
-    private int frameCount = 0;
-    private const int targetFrames = 10; // 10 프레임마다 실행
 
     /* 감정표현 관련 */
     public bool isEmoting;
@@ -57,13 +56,21 @@ public class MyPlayer : MonoBehaviour
     private InteractManager interactManager;
     public InteractManager InteractManager => interactManager;
 
+    private LineRenderer _lineRenderer;
+    private Camera _cam;
+    private float zoomSpeed = 20f;
+    private float minFOV = 20f;
+    private float maxFOV = 120f;
+
     void Awake()
     {
         instance = this;
 
-        P = GetComponent<Player>();
-        eSystem = TownManager.Instance.E_System;
+        player = GetComponent<Player>();
+        StartCoroutine(nameof(WaitForESystem));
+
         agent = GetComponent<NavMeshAgent>();
+        _lineRenderer = GetComponent<LineRenderer>();
         anim = GetComponent<Animator>();
 
         grenade = GetComponentInParent<Player>().grenade;
@@ -81,7 +88,7 @@ public class MyPlayer : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(ExecuteEvery10Frames());
+        StartCoroutine(ExecuteEvery0_1Seconds());
     }
 
     void Update()
@@ -93,16 +100,53 @@ public class MyPlayer : MonoBehaviour
         Recall();
         EquipChange();
         Interact();
+        CheckMove();
+        PathFinding();
+        ScreenScrollZoom();
+    }
+    void PathFinding()
+    {
+        if (agent.pathPending)
+            return;
+
+        var corners = agent.path.corners;
+        _lineRenderer.positionCount = corners.Length;
+
+        _lineRenderer.SetPositions(corners);
+    }
+
+    void ScreenScrollZoom()
+    {
+        float scrollData = Input.GetAxis("Mouse ScrollWheel"); // 마우스 휠 입력
+
+        if (_cam == null)
+            _cam = Camera.main;
+
+        // 줌 조정
+        // 줌 조정
+        if (scrollData != 0f)
+        {
+            _cam.fieldOfView -= scrollData * zoomSpeed; // FOV 조정
+            _cam.fieldOfView = Mathf.Clamp(_cam.fieldOfView, minFOV, maxFOV); // 최소 및 최대 FOV 제한
+        }
     }
 
     private void InitializeCamera()
     {
         Camera.main.gameObject.GetComponent<QuarterView>().target = transform;
+    }
 
-        // var freeLook = TownManager.Instance.FreeLook;
-        // freeLook.Follow = transform;
-        // freeLook.LookAt = transform;
-        // freeLook.gameObject.SetActive(true);
+    IEnumerator WaitForESystem()
+    {
+        while (eSystem == null)
+        {
+            eSystem = GameManager.Instance.SManager.ESystem;
+            Debug.Log("!!! 이벤트 시스템 찾는 중");
+            yield return new WaitForSeconds(1f);
+        }
+        yield return new WaitUntil(() => eSystem != null);
+        Debug.Log("!!! 이벤트 시스템 찾음");
+        isReadyESystem = true;
     }
 
     private void LoadAnimationHashes()
@@ -118,17 +162,19 @@ public class MyPlayer : MonoBehaviour
     // 충돌한 위치로 NavMeshAgent를 이동시킴 (agent.SetDestination(rayHit.point);
     private void HandleInput()
     {
+        if (player.IsStun || !isReadyESystem)
+            return;
+
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
         {
             interactManager.GatherOut(false);
-            int layerMask = 1 << LayerMask.NameToLayer("Ground");
 
             if (
                 Physics.Raycast(
                     Camera.main.ScreenPointToRay(Input.mousePosition),
                     out rayHit,
                     Mathf.Infinity,
-                    layerMask
+                    LayerMask.GetMask("Ground")
                 )
             )
             {
@@ -145,21 +191,19 @@ public class MyPlayer : MonoBehaviour
         recallInput = Input.GetKeyDown(KeyCode.T);
         interactInput = Input.GetKeyDown(KeyCode.F);
         equipChangeInput = Input.GetKeyDown(KeyCode.R);
+
+
     }
 
-    IEnumerator ExecuteEvery10Frames()
+    IEnumerator ExecuteEvery0_1Seconds()
     {
         while (true)
         {
-            yield return null;
-            frameCount++;
-
-            CheckMove();
+            yield return new WaitForSeconds(0.1f); // 0.1초마다 실행
 
             // 마지막으로 전송했던 좌표(lastTargetPosition)와 달라졌을 때에만 실행
-            if (frameCount >= targetFrames && targetPosition != lastTargetPosition)
+            if (targetPosition != lastTargetPosition)
             {
-                frameCount = 0;
                 MoveAndSendMovePacket();
             }
         }
@@ -167,7 +211,7 @@ public class MyPlayer : MonoBehaviour
 
     private void MoveAndSendMovePacket()
     {
-        if (P.IsStun)
+        if (player.IsStun)
             return;
 
         // 플레이어 이동시키기
@@ -203,23 +247,23 @@ public class MyPlayer : MonoBehaviour
         GameManager.Network.Send(locationPacket);
     }
 
-    public void ExecuteAnimation(int animIdx)
-    {
-        if (animIdx < 0 || animIdx >= animHash.Count)
-            return;
+    // public void ExecuteAnimation(int animIdx)
+    // {
+    //     if (animIdx < 0 || animIdx >= animHash.Count)
+    //         return;
 
-        int animKey = animHash[animIdx];
-        agent.SetDestination(transform.position);
+    //     int animKey = animHash[animIdx];
+    //     agent.SetDestination(transform.position);
 
-        var animationPacket = new C2SAnimation { AnimCode = animKey };
-        Debug.Log($"감정표현?? : {animationPacket}");
-        GameManager.Network.Send(animationPacket);
-    }
+    //     var animationPacket = new C2SEmote { AnimCode = animKey };
+    //     Debug.Log($"감정표현?? : {animationPacket}");
+    //     GameManager.Network.Send(animationPacket);
+    // }
 
     private void CheckMove()
     {
         float distanceMoved = Vector3.Distance(lastPos, transform.position);
-        // animator.SetFloat(Constants.TownPlayerMove, distanceMoved * 100);
+        anim.SetFloat(Constants.TownPlayerMove, distanceMoved * 100);
 
         if (distanceMoved > 0.01f)
         {
@@ -230,7 +274,7 @@ public class MyPlayer : MonoBehaviour
 
     private void Emote()
     {
-        if (!P.IsStun && !isEmoting)
+        if (!isEmoting)
         {
             if (happyInput)
             {
@@ -252,40 +296,40 @@ public class MyPlayer : MonoBehaviour
 
     private void ThrowGrenade()
     {
-        if (grenadeInput && !P.IsStun)
+        if (grenadeInput && GameManager.Instance.CurrentSector != 100)
         {
             skillManager.eventQ.Invoke();
 
-            float cooltime = 5;
+            float coolTime = 5;
 
             if (SceneManager.GetActiveScene().name == "Sector1")
-                S1Manager.Instance.UiPlayer.QSkillCool(cooltime);
+                S1Manager.Instance.UiPlayer.QSkillCool(coolTime);
             else if (SceneManager.GetActiveScene().name == "Sector2")
-                S2Manager.Instance.UiPlayer.WSkillCool(cooltime);
+                S2Manager.Instance.UiPlayer.WSkillCool(coolTime);
         }
     }
 
     private void SetTrap()
     {
-        if (trapInput && !P.IsStun)
+        if (trapInput && GameManager.Instance.CurrentSector != 100)
             skillManager.eventE.Invoke();
     }
 
     private void Recall()
     {
-        if (recallInput && !P.IsStun)
+        if (recallInput && GameManager.Instance.CurrentSector != 100)
             skillManager.eventT.Invoke();
     }
 
     private void EquipChange()
     {
-        if (equipChangeInput && !P.IsStun)
+        if (equipChangeInput && GameManager.Instance.CurrentSector != 100)
             interactManager.eventR.Invoke();
     }
 
     private void Interact()
     {
-        if (interactInput && !P.IsStun)
+        if (interactInput)
             interactManager.eventF.Invoke();
     }
 

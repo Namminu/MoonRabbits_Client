@@ -1,8 +1,12 @@
 using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
+using Google.Protobuf.Protocol;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -10,16 +14,37 @@ public class SceneTransition : MonoBehaviour
 {
     private bool _isPersisting = false; // 씬 전환 시 오브젝트를 유지할지 여부
 
-    [SerializeField] private RectTransform topShutter;  // 위쪽 셔터 패널
-    [SerializeField] private RectTransform bottomShutter; // 아래쪽 셔터 패널
+    [SerializeField]
+    private RectTransform topShutter; // 위쪽 셔터 패널
 
-    [SerializeField] private CanvasGroup cg; // 캔버스 그룹
-    [SerializeField] private Image image; // 씬 전환 이미지
-    [SerializeField] private Slider progressBar; // 프로그래스 바
-    [SerializeField] private TextMeshProUGUI tmp; // 씬 이름 표시 텍스트
+    [SerializeField]
+    private RectTransform bottomShutter; // 아래쪽 셔터 패널
+
+    [SerializeField]
+    private CanvasGroup cg; // 캔버스 그룹
+
+    [SerializeField]
+    private Image image; // 씬 전환 이미지
+
+    [SerializeField]
+    private Slider progressBar; // 프로그래스 바
+
+    [SerializeField]
+    private TextMeshProUGUI tmp; // 씬 이름 표시 텍스트
 
     private const string DefaultSceneName = "Sector1"; // 기본 씬 이름
-    [SerializeField] private string sceneName = DefaultSceneName; // 현재 씬 이름
+
+    [SerializeField]
+    private string sceneName = DefaultSceneName; // 현재 씬 이름
+    private PlayerInfo playerInfo;
+    private Dictionary<string, int> sceneCode = new()
+    {
+        { "Town", 100 },
+        { "Sector1", 101 },
+        { "Sector2", 102 },
+        { "Sector3", 103 },
+        { "Sector4", 104 },
+    };
 
     private void OnEnable()
     {
@@ -47,7 +72,8 @@ public class SceneTransition : MonoBehaviour
 
         // 메인 카메라 찾기
         Camera mainCam = Camera.main;
-        if (mainCam == null) return; // 메인 카메라가 없으면 종료
+        if (mainCam == null)
+            return; // 메인 카메라가 없으면 종료
 
         // 메인 카메라에 AudioListener가 없으면 추가
         var listenerComponent = mainCam.GetComponent<AudioListener>();
@@ -56,6 +82,12 @@ public class SceneTransition : MonoBehaviour
             listenerComponent = mainCam.gameObject.AddComponent<AudioListener>();
         }
         listenerComponent.enabled = true; // 메인 카메라의 리스너 활성화
+
+        var isLowSpec = GameManager.Instance.IsLowSpecMode;
+        var volum = FindObjectOfType<Volume>();
+        if (volum) volum.gameObject.SetActive(isLowSpec);
+        UniversalAdditionalCameraData uac = Camera.main.GetComponent<UniversalAdditionalCameraData>();
+        uac.renderPostProcessing = isLowSpec;
     }
 
     private void SetSound()
@@ -76,9 +108,11 @@ public class SceneTransition : MonoBehaviour
         }
     }
 
-    public void SetScene(string sceneName)
+    public void SetScene(string sceneName, PlayerInfo playerInfo)
     {
-        this.sceneName = sceneName; // 씬 이름 설정
+        this.sceneName = sceneName;
+        this.playerInfo = playerInfo;
+        // 씬 이름 설정
         gameObject.SetActive(true); // 씬 전환 UI 활성화
     }
 
@@ -98,6 +132,7 @@ public class SceneTransition : MonoBehaviour
         yield return CloseShutters(); // 셔터 닫기
         yield return FadeIn(); // 페이드 인
         yield return LoadSceneAsync(); // 씬 비동기 로드
+        GameManager.Instance.EnterAfterSceneAwake(sceneCode[sceneName], playerInfo);
         ApplyRenderSettings(); // 렌더 설정 적용
         yield return FadeOut(); // 페이드 아웃
         yield return OpenShutters(); // 셔터 열기

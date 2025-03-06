@@ -9,14 +9,13 @@ public class S1Manager : SManagerBase
     private static S1Manager _instance;
     public static S1Manager Instance => _instance;
 
-    private int sectorCode = 101;
-    public int SectorCode => sectorCode;
-
-    void Awake()
+    protected override void Awake()
     {
         if (_instance == null)
         {
             _instance = this;
+            base.Awake();
+            SectorCode = 101;
         }
         else
         {
@@ -25,5 +24,10 @@ public class S1Manager : SManagerBase
         }
 
         SetPrefabPath(); // 플레이어 프리펩 찾아갈 경로 미리 설정
+    }
+
+    protected override void ActivateUI()
+    {
+        UiChat.gameObject.SetActive(true);
     }
 }

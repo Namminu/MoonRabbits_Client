@@ -1,7 +1,6 @@
-using Google.Protobuf.Protocol;
 using System;
 using System.Collections;
-using TMPro;
+using Google.Protobuf.Protocol;
 using UnityEngine;
 
 public class InteractManager : MonoBehaviour
@@ -51,7 +50,8 @@ public class InteractManager : MonoBehaviour
         }
         else if (targetPortal != null)
         {
-            UsePortal();
+            var portalPacket = new C2SPortal { InPortalId = targetPortal.id };
+            GameManager.Network.Send(portalPacket);
         }
     }
 
@@ -73,6 +73,8 @@ public class InteractManager : MonoBehaviour
         {
             isInteracting = true;
 
+            // player.NavAgent.isStopped = true;
+            player.NavAgent.ResetPath();
             player.NavAgent.destination = player.transform.position;
             player.NavAgent.velocity = Vector3.zero;
 
@@ -83,7 +85,6 @@ public class InteractManager : MonoBehaviour
             player.transform.rotation = Quaternion.LookRotation(direction);
 
             player.Anim.SetTrigger(anims[player.currentEquip]);
-
 
             GameManager.Network.Send(new C2SGatheringStart { PlacedId = targetResource.idx });
 
@@ -110,7 +111,7 @@ public class InteractManager : MonoBehaviour
         UISkillCheck.Instance.EndSkillCheck();
     }
 
-    private void UsePortal()
+    public void UsePortal()
     {
         if (isInteracting)
             return;
