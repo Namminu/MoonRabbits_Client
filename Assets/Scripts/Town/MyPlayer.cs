@@ -60,6 +60,11 @@ public class MyPlayer : MonoBehaviour
     private bool uiCraftInput;
     private bool uiPartyInput;
     private bool uiMenuInput;
+    private LineRenderer _lineRenderer;
+    private Camera _cam;
+    private float zoomSpeed = 20f;
+    private float minFOV = 20f;
+    private float maxFOV = 120f;
 
     void Awake()
     {
@@ -69,6 +74,7 @@ public class MyPlayer : MonoBehaviour
         StartCoroutine(nameof(WaitForESystem));
 
         agent = GetComponent<NavMeshAgent>();
+        _lineRenderer = GetComponent<LineRenderer>();
         anim = GetComponent<Animator>();
 
         grenade = GetComponentInParent<Player>().grenade;
@@ -84,12 +90,12 @@ public class MyPlayer : MonoBehaviour
         emoteManager = GetComponent<EmoteManager>();
     }
 
-    void Start()
+    private void Start()
     {
         StartCoroutine(ExecuteEvery0_1Seconds());
     }
 
-    void Update()
+    private void Update()
     {
         HandleInput();
         Emote();
@@ -99,8 +105,40 @@ public class MyPlayer : MonoBehaviour
         EquipChange();
         Interact();
         UIInput();
+    }
 
+    private void LateUpdate()
+    {
         CheckMove();
+        PathFinding();
+        ScreenScrollZoom();
+    }
+
+    void PathFinding()
+    {
+        if (agent.pathPending)
+            return;
+
+        var corners = agent.path.corners;
+        _lineRenderer.positionCount = corners.Length;
+
+        _lineRenderer.SetPositions(corners);
+    }
+
+    void ScreenScrollZoom()
+    {
+        float scrollData = Input.GetAxis("Mouse ScrollWheel"); // 마우스 휠 입력
+
+        if (_cam == null)
+            _cam = Camera.main;
+
+        // 줌 조정
+        // 줌 조정
+        if (scrollData != 0f)
+        {
+            _cam.fieldOfView -= scrollData * zoomSpeed; // FOV 조정
+            _cam.fieldOfView = Mathf.Clamp(_cam.fieldOfView, minFOV, maxFOV); // 최소 및 최대 FOV 제한
+        }
     }
 
     private void InitializeCamera()
@@ -113,11 +151,9 @@ public class MyPlayer : MonoBehaviour
         while (eSystem == null)
         {
             eSystem = GameManager.Instance.SManager.ESystem;
-            Debug.Log("!!! 이벤트 시스템 찾는 중");
             yield return new WaitForSeconds(1f);
         }
         yield return new WaitUntil(() => eSystem != null);
-        Debug.Log("!!! 이벤트 시스템 찾음");
         isReadyESystem = true;
     }
 
@@ -234,7 +270,7 @@ public class MyPlayer : MonoBehaviour
     private void CheckMove()
     {
         float distanceMoved = Vector3.Distance(lastPos, transform.position);
-        anim.SetFloat(Constants.TownPlayerMove, distanceMoved * 100);
+        anim.SetFloat("Move", distanceMoved * 10);
 
         if (distanceMoved > 0.01f)
         {

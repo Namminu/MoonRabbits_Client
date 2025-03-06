@@ -85,8 +85,10 @@ public class SceneTransition : MonoBehaviour
 
         var isLowSpec = GameManager.Instance.IsLowSpecMode;
         var volum = FindObjectOfType<Volume>();
-        if (volum) volum.gameObject.SetActive(isLowSpec);
-        UniversalAdditionalCameraData uac = Camera.main.GetComponent<UniversalAdditionalCameraData>();
+        if (volum)
+            volum.gameObject.SetActive(isLowSpec);
+        UniversalAdditionalCameraData uac =
+            Camera.main.GetComponent<UniversalAdditionalCameraData>();
         uac.renderPostProcessing = isLowSpec;
     }
 
@@ -132,7 +134,6 @@ public class SceneTransition : MonoBehaviour
         yield return CloseShutters(); // 셔터 닫기
         yield return FadeIn(); // 페이드 인
         yield return LoadSceneAsync(); // 씬 비동기 로드
-        GameManager.Instance.EnterAfterSceneAwake(sceneCode[sceneName], playerInfo);
         ApplyRenderSettings(); // 렌더 설정 적용
         yield return FadeOut(); // 페이드 아웃
         yield return OpenShutters(); // 셔터 열기

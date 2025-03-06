@@ -47,10 +47,10 @@ public class GameManager : MonoBehaviour
     public SManagerBase SManager => sManager;
 
     [Header("Me")]
-    public string UserName;
-    public Player MPlayer;
+    public string NickName;
     public int ClassCode;
     public int CurrentSector;
+    public Player MPlayer;
 
     [Header("Players")]
     private Dictionary<int, Dictionary<int, Player>> playerList = new();
@@ -135,6 +135,7 @@ public class GameManager : MonoBehaviour
     {
         if (sectorCode == CurrentSector)
         {
+            yield return new WaitUntil(() => TownManager.Instance != null);
             sManager = TownManager.Instance;
             yield break;
         }
@@ -167,14 +168,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void EnterAfterSceneAwake(int targetSector, PlayerInfo playerInfo)
+    public void EnterAfterSceneAwake(List<PlayerInfo> playerInfos)
     {
-        StartCoroutine(EnterSector(targetSector, playerInfo));
+        StartCoroutine(EnterTown(playerInfos));
     }
 
-    public void SpawnAfterSceneAwake(S2CSpawn pkt)
+    public void EnterAfterSceneAwake(
+        int targetSector,
+        List<PlayerInfo> playerInfos,
+        List<TrapInfo> trapInfos
+    )
     {
-        StartCoroutine(SpawnOthers(pkt));
+        StartCoroutine(EnterSector(targetSector, playerInfos, trapInfos));
     }
 
     private void OnApplicationQuit()
@@ -188,12 +193,11 @@ public class GameManager : MonoBehaviour
     {
         foreach (Dictionary<int, Player> sector in playerList.Values)
         {
-            if (sector.TryGetValue(playerId, out var player))
+            if (sector.TryGetValue(playerId, out Player player))
             {
                 return player;
             }
         }
-
         return null;
     }
 
@@ -213,43 +217,51 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-    IEnumerator EnterSector(int targetSector, PlayerInfo playerInfo)
+    IEnumerator EnterTown(List<PlayerInfo> playerInfos)
     {
-        // [1] 이전 섹터의 플레이어리스트 비움
-        // playerList[CurrentSector].Clear();
-        // [2] 이동할 섹터의 매니저 찾고, 씬 로드 기다림
-        StartCoroutine(SetSManager(targetSector));
+        // [1] 마을 섹터의 매니저 찾고, Awake 기다림
+        StartCoroutine(SetSManager(100));
         yield return new WaitUntil(() => sManager != null);
-        // [3] 플레이어 오브젝트 생성 및 데이터 연동
-        Player me = sManager.Enter(playerInfo);
-        sManager.UiChat.Player = me;
-        // [4] 현재 위치한 섹터 값 최신화
-        CurrentSector = targetSector;
-        Debug.Log($"---- 엔터 시점 확인!!! ----");
-        Debug.Log(
-            $"!!! 타운 {townPlayers.Count}명 / 섹터1 {s1Players.Count}명 / 섹터2 {s2Players.Count}명 / 섹터3 {s3Players.Count}명 !!!"
-        );
-        Debug.Log($"!!! 플레이어 잘 들어갔남? {GetPlayer(playerInfo.PlayerId) != null}");
+        // [2] 마을에 있는 플레이어들 생성하고, 닉네임을 통해 내 플레이어면 마킹
+        sManager.Enter(playerInfos);
     }
 
-    IEnumerator SpawnOthers(S2CSpawn pkt)
+    IEnumerator EnterSector(
+        int targetSector,
+        List<PlayerInfo> playerInfos,
+        List<TrapInfo> trapInfos
+    )
     {
-        // [1] 스폰시킬 섹터의 매니저 찾고, 씬 로드 기다림
+        // [1] 이동할 섹터의 매니저 찾고, 씬 로드 기다림
+        StartCoroutine(SetSManager(targetSector));
         yield return new WaitUntil(() => sManager != null);
-        // [2] 플레이어 스폰 반복
-        foreach (PlayerInfo playerInfo in pkt.Players)
+        // [2] 해당 섹터에 있는 플레이어들 생성하고, 닉네임을 통해 내 플레이어면 마킹
+        sManager.Enter(playerInfos);
+        // [3] 설치된 덫이 하나라도 있으면 동기화
+        if (trapInfos.Count >= 1)
         {
-            // [2-1] 플레이어 정보 중 내 정보는 패스
-            if (playerInfo.PlayerId == MPlayer.PlayerId)
-                continue;
-            // [2-2] 플레이어 오브젝트 생성 및 데이터 연동
-            var player = sManager.SpawnPlayer(playerInfo);
-            player.SetIsMine(false);
+            sManager.SetTraps(trapInfos);
         }
-        Debug.Log($"---- 스폰 시점 확인!!! ----");
-        Debug.Log(
-            $"!!! 타운 {townPlayers.Count}명 / 섹터1 {s1Players.Count}명 / 섹터2 {s2Players.Count}명 / 섹터3 {s3Players.Count}명 !!!"
-        );
+        // [3] 현재 위치한 섹터 값 최신화
+        CurrentSector = targetSector;
+    }
+
+    public void DespawnPlayer(int playerId)
+    {
+        // [1] 전체 플레이어 리스트 순회
+        foreach (Dictionary<int, Player> sector in playerList.Values)
+        {
+            if (sector.TryGetValue(playerId, out Player player))
+            {
+                // [2] 플레이어 목록에서 제거
+                sector.Remove(playerId);
+                // [3] 해당 플레이어 오브젝트 확인후 파괴
+                if (player != null && !player.IsMine)
+                {
+                    Destroy(player.gameObject);
+                }
+            }
+        }
     }
 
     private void LoadJson()
