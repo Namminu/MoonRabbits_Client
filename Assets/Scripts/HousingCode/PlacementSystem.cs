@@ -44,6 +44,15 @@ public class PlacementSystem : MonoBehaviour
 	public void StartPlacement(int itemId) 
 	{
 		StopPlacement();
+
+		//selectedObjectItemId = ItemDataLoader.HousingItemsList.FindIndex(data => data.ItemId == itemId);
+		// selectedObjectItemId = db.objectDatas.FindIndex(data => data.ID == itemId);
+
+		if (selectedObjectItemId < 0)
+		{
+			Debug.LogError($"No Id found in Housing Item List {itemId}");
+			return;
+		}
 		gridVisualization.SetActive(true);
 
 		buildingState = new PlacementState(itemId, grid, preview, floorData, furnitureData, objectPlacer);

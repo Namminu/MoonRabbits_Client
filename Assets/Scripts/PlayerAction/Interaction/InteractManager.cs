@@ -50,7 +50,8 @@ public class InteractManager : MonoBehaviour
         }
         else if (targetPortal != null)
         {
-            UsePortal();
+            var portalPacket = new C2SPortal { InPortalId = targetPortal.id };
+            GameManager.Network.Send(portalPacket);
         }
     }
 
@@ -69,8 +70,10 @@ public class InteractManager : MonoBehaviour
         {
             isInteracting = true;
 
-            player.NavAgent.isStopped = true;
+            // player.NavAgent.isStopped = true;
+            player.NavAgent.ResetPath();
             player.NavAgent.destination = player.transform.position;
+            player.NavAgent.velocity = Vector3.zero;
 
             Vector3 direction = (
                 targetResource.transform.position - player.transform.position
@@ -103,10 +106,10 @@ public class InteractManager : MonoBehaviour
     {
         //targetResource.DecreaseDurability(1); // 숫자 만큼 감소시킴 나중에 능력치만큼 적용?
         isInteracting = false;
-        player.NavAgent.isStopped = false;
+        // player.NavAgent.isStopped = false;
     }
 
-    private void UsePortal()
+    public void UsePortal()
     {
         if (isInteracting)
             return;

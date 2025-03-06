@@ -12,12 +12,17 @@ public class PartyMemberUI : MonoBehaviour
     public GameObject memberPrefab; // MemberInfo 프리팹
     private List<GameObject> memberUIs = new List<GameObject>();
 
+    public Image hand;
+    public Image axe;
+    public Image pickaxe;
+
+
     private void Awake()
     {
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -27,12 +32,18 @@ public class PartyMemberUI : MonoBehaviour
 
     public void UpdateUI()
     {
-        // 기존 UI 삭제
+
         foreach (GameObject memberUI in memberUIs)
         {
             Destroy(memberUI);
         }
         memberUIs.Clear();
+
+        foreach (Transform memberInfo in memberContainer)
+        {
+            Destroy(memberInfo.gameObject);
+        }
+
 
         // `Party.cs`에서 멤버 리스트 가져오기
         List<MemberCardInfo> members = Party.instance.members;
@@ -40,25 +51,45 @@ public class PartyMemberUI : MonoBehaviour
         // 새로운 멤버 UI 동적 생성
         foreach (var member in members)
         {
-            // 자기 자신이면 return
-            // if (member.IsMine)
-            //   return;
-            Debug.Log("멤버 UI 생성");
+            Debug.Log($"멤버 UI 생성 : {member}");
 
             GameObject newMember = Instantiate(memberPrefab, memberContainer);
             newMember.transform.Find("Nickname").GetComponent<TMP_Text>().text = member.Nickname;
 
-            switch (member.CurrentSector)
+            hand = newMember.transform.Find("MemberImage/WorkingOn/Hand").GetComponent<Image>();
+            axe = newMember.transform.Find("MemberImage/WorkingOn/Axe").GetComponent<Image>();
+            pickaxe = newMember.transform.Find("MemberImage/WorkingOn/Pickaxe").GetComponent<Image>();
+
+            Player player = GameManager.Instance.GetPlayer(member.Id);
+            if (player == null)
             {
-                case 1:
-                    newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{TownManager.Instance.GetPlayer(member.Id).level}";
-                    break;
-                case 2:
-                    newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{ASectorManager.Instance.GetPlayerAvatarById(member.Id).level}";
-                    break;
+                foreach (GameObject memberUI in memberUIs)
+                {
+                    Destroy(memberUI);
+                }
+                memberUIs.Clear();
+                return;
             }
+            newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{player.level}";
 
-
+            if (player.ActiveEquipObj == player.axe)
+            {
+                hand.gameObject.SetActive(false);
+                axe.gameObject.SetActive(true);
+                pickaxe.gameObject.SetActive(false);
+            }
+            else if (player.ActiveEquipObj == player.pickAxe)
+            {
+                hand.gameObject.SetActive(false);
+                axe.gameObject.SetActive(false);
+                pickaxe.gameObject.SetActive(true);
+            }
+            else
+            {
+                hand.gameObject.SetActive(true);
+                axe.gameObject.SetActive(false);
+                pickaxe.gameObject.SetActive(false);
+            }
 
             // 생성된 멤버 UI 저장
             memberUIs.Add(newMember);
