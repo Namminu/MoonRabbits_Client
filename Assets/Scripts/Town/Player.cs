@@ -413,7 +413,7 @@ public class Player : MonoBehaviour
     public void SetStatInfo(StatInfo statInfo)
     {
         maxHp = 3;
-        curHp = 3;
+        curHp = statInfo.Hp;
         level = statInfo.Level;
         exp = statInfo.Exp;
         targetExp = statInfo.TargetExp;
@@ -429,7 +429,7 @@ public class Player : MonoBehaviour
                 Debug.LogError("uiPlayer is null. 먼저 세팅돼야함");
             uiPlayer.SetStatInfo(statInfo);
             uiPlayer.SetNickname(nickname);
-            uiPlayer.InitHp(3);
+            uiPlayer.InitHp(curHp);
         }
     }
 
