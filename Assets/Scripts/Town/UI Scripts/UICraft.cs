@@ -121,7 +121,6 @@ public class UICraft : MonoBehaviour
         selectedRecipe = recipe;
 
         int recipeId = recipe.recipe_id;
-        Debug.Log($"클릭된 레시피ID:{recipeId}");
         InitDetailRecipe();
         GetInventorySlotByItemId();
     }
@@ -233,7 +232,6 @@ public class UICraft : MonoBehaviour
 
     public void OnAddWoodClick()
     {
-        Debug.LogWarning("아이템 획득 간다");
         var pkt = new C2SItemObtained{
             ItemId = 20001,
             SlotIdx = 1

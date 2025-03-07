@@ -8,14 +8,14 @@ using UnityEngine.UI;
 public class CraftManager : MonoBehaviour
 {
     public UICraft uiCraft;
-    public Queue<int> craftQueue = new Queue<int>();
-    public bool isCrafting = false;
-    public int targetCount;
-    public int currentCount;
-    public float duration;
-    public float elapsed;
-    public string craftStr;
-    MaterialItemData targetItem;
+    private Queue<int> craftQueue = new Queue<int>();
+    private bool isCrafting = false;
+    private int targetCount;
+    private int currentCount;
+    private float duration;
+    private float elapsed;
+    private string craftStr;
+    private MaterialItemData targetItem;
 
     // Start is called before the first frame update
     void Start()
@@ -68,6 +68,13 @@ public class CraftManager : MonoBehaviour
         if (pkt.IsSuccess == false)
         {
             Debug.LogError("제작 시작 실패:" + pkt.Msg);
+
+            GameManager.Instance.SManager.UiChat.PushMessage(
+                    "System",
+                    $"[제작 실패]{pkt.Msg}",
+                    "System",
+                    true
+                );
             return;
         }
 
