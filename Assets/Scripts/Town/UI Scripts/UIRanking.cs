@@ -11,11 +11,18 @@ public class UIRanking : MonoBehaviour
     public Button allButton; // Down Area > ALL 버튼
     public Button top10Button; // Down Area > TOP10 버튼
 
+    [SerializeField]
+    private Button btn_Close;
+
+    [SerializeField]
+    private GameObject rankingUI;
+
     private void Start()
     {
         // 버튼 클릭 이벤트 등록
         allButton.onClick.AddListener(() => SendRankingListPacket("ALL"));
         top10Button.onClick.AddListener(() => SendRankingListPacket("TOP"));
+        btn_Close.onClick.AddListener(CloseInvenUI);
     }
 
     // 서버에서 받은 랭킹 데이터를 처리하고 UI를 업데이트
@@ -42,6 +49,11 @@ public class UIRanking : MonoBehaviour
         {
             Debug.LogError("랭킹 데이터를 가져오는 데 실패했습니다.");
         }
+    }
+
+    void CloseInvenUI()
+    {
+        if (rankingUI != null) rankingUI.SetActive(false);
     }
 
     #region 패킷 전송 함수

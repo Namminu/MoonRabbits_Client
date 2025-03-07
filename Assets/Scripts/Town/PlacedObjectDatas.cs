@@ -6,7 +6,7 @@ using UnityEngine;
 public class PlacedObjectDatas
 {
 	public int ItemId;
-	public Vector3Int ItemPosition;
+	public Vector3Int ItemPosition;	
 	public int DataType;
 
 	public PlacedObjectDatas(int itemId, Vector3Int itemPosition, int dataType)
