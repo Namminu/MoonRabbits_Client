@@ -74,6 +74,7 @@ public class ResourcesManager : MonoBehaviour
                 var resourceController = resources[resource.ResourceIdx - 1].GetComponent<ResourceController>();
                 resourceController.idx = resource.ResourceIdx;
                 resourceController.resourceId = resourceType;
+                resourceController.Durability = resource.Durability;
             }
         }
     }
