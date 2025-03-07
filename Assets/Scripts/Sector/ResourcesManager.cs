@@ -80,8 +80,10 @@ public class ResourcesManager : MonoBehaviour
     public void ResourcesUpdateDurability(S2CUpdateDurability pkt)
     {
         Debug.Log("자원 id" + pkt.PlacedId);
+        Debug.Log("자원 durability" + pkt.Durability);
         var resourceController = resources[pkt.PlacedId - 1].GetComponent<ResourceController>();
         resourceController.Durability = pkt.Durability;
+        
         if (pkt.Durability <= 0 && UISkillCheck.Instance.TargetResource == pkt.PlacedId) UISkillCheck.Instance.EndSkillCheck();
     }
     public void ResourcesGatheringStart(S2CGatheringStart pkt)

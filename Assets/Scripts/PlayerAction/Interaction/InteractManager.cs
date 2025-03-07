@@ -16,6 +16,7 @@ public class InteractManager : MonoBehaviour
     private const int portalTimer = 5;
     private bool isPortalReady = true;
     private bool isInteracting = false;
+    public bool IsInteracting { get { return isInteracting; } set { isInteracting = value; } }
     public bool isEquipChanging = false;
 
     private string[] anims = { "none", "Axe", "PickAxe" };
@@ -84,7 +85,7 @@ public class InteractManager : MonoBehaviour
             direction.y = 0;
             player.transform.rotation = Quaternion.LookRotation(direction);
 
-            player.Anim.SetTrigger(anims[player.currentEquip]);
+            //player.Anim.SetTrigger(anims[player.currentEquip]);
 
             GameManager.Network.Send(new C2SGatheringStart { PlacedId = targetResource.idx });
 

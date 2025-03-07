@@ -67,7 +67,7 @@ public class UISkillCheck : MonoBehaviour
         this.whiteCircle.color = Color.white;
         this.targetResource = placedId;
         this.angle = angle;
-        this.whiteCircle.transform.rotation = Quaternion.Euler(0, 0, this.angle + 60/difficulty);
+        this.whiteCircle.transform.rotation = Quaternion.Euler(0, 0, this.angle + 60 / difficulty);
         this.difficulty = difficulty;
         this.whiteCircle.fillAmount = 1f / (float)difficulty / 6f;
         this.isEnabled = true;
@@ -83,7 +83,9 @@ public class UISkillCheck : MonoBehaviour
         this.isSuccess = false;
         this.isFailed = false;
         this.whiteCircle.color = Color.white;
-        MyPlayer.instance.Anim.SetTrigger("Exit");
+        MyPlayer.instance.InteractManager.IsInteracting = false;
+        GameManager.Network.Send(new C2SGatheringAnimationEnd { });
+
     }
     public void SkillCheck()
     {
@@ -98,7 +100,6 @@ public class UISkillCheck : MonoBehaviour
         if (skillCheckAngle > this.angle && skillCheckAngle < (this.angle + 60 / this.difficulty))
         {
             this.isSuccess = true;
-            this.whiteCircle.color = Color.blue;
         }
         else
         {
@@ -117,6 +118,7 @@ public class UISkillCheck : MonoBehaviour
     }
     public void ResourcesGatheringSkillCheck(int durability)
     {
+        this.whiteCircle.color = Color.blue;
         this.isSuccess = true;
         if (durability <= 0)
         {
