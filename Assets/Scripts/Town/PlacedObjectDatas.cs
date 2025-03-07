@@ -6,13 +6,26 @@ using UnityEngine;
 public class PlacedObjectDatas
 {
 	public int ItemId;
-	public Vector3Int ItemPosition;
+	public ObjectTransInfo ItemTransInfo;
 	public int DataType;
 
-	public PlacedObjectDatas(int itemId, Vector3Int itemPosition, int dataType)
+	public PlacedObjectDatas(int itemId, ObjectTransInfo itemTransInfo, int dataType)
 	{
 		ItemId = itemId;
-		ItemPosition = itemPosition;
+		ItemTransInfo = itemTransInfo;
 		DataType = dataType;
+	}
+}
+
+[System.Serializable]
+public class ObjectTransInfo
+{
+	public Vector3Int ItemPosition;
+	public float ItemYRotation;
+
+	public ObjectTransInfo(Vector3Int itemPosition, float itemYRotation)
+	{
+		ItemPosition = itemPosition;
+		ItemYRotation = itemYRotation;
 	}
 }

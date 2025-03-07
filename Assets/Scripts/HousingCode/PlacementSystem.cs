@@ -34,6 +34,8 @@ public class PlacementSystem : MonoBehaviour
 		Vector3 mousePosition = inputManager.GetSelectedMapPosition();
 		Vector3Int gridPosition = grid.WorldToCell(mousePosition);
 
+		RotateObject();
+
 		if(lastDetectedPosition != gridPosition)
 		{
 			buildingState.UpdateState(gridPosition);
@@ -45,14 +47,6 @@ public class PlacementSystem : MonoBehaviour
 	{
 		StopPlacement();
 
-		//selectedObjectItemId = ItemDataLoader.HousingItemsList.FindIndex(data => data.ItemId == itemId);
-		// selectedObjectItemId = db.objectDatas.FindIndex(data => data.ID == itemId);
-
-		//if (selectedObjectItemId < 0)
-		//{
-		//	Debug.LogError($"No Id found in Housing Item List {itemId}");
-		//	return;
-		//}
 		gridVisualization.SetActive(true);
 
 		buildingState = new PlacementState(itemId, grid, preview, floorData, furnitureData, objectPlacer);
@@ -94,4 +88,19 @@ public class PlacementSystem : MonoBehaviour
 
 	public GridData GetFloorData() => floorData;
 	public GridData GetFurnitureData() => furnitureData;
+
+	private void RotateObject()
+	{
+		if(buildingState is PlacementState placementState)
+		{
+			if (Input.GetKeyUp(KeyCode.Q))
+			{
+				placementState.RotatePreview(90);
+			}
+			else if (Input.GetKeyUp(KeyCode.E))
+			{
+				placementState.RotatePreview(-90);
+			}
+		}
+	}
 }

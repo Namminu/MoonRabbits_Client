@@ -19,7 +19,6 @@ public class HouseManager : MonoBehaviour
 
     public List<PlacedObjectDatas> placedObjects = new();
 
-
     // Start is called before the first frame update
     void Awake()
     {
@@ -35,6 +34,22 @@ public class HouseManager : MonoBehaviour
         if (saveDelay == 0) saveDelay = 30f;
 
         StartCoroutine(AutoSaveRoutine());
+
+		/* Temp Test Code */
+		List<PlacedObjectDatas> testServerData = new List<PlacedObjectDatas>
+	    {
+		    new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(-1, 0, 0), 0), 1),
+		    new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(-1, 0, -1), 0), 1),
+		    new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(-1, 0, -2), 0), 1),
+		    new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(0, 0, -1), 90), 1),
+		    new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(1, 0, -1), 180), 1),
+		    new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(2, 0, -1), 270), 1),
+		    new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(0, 0, -2), 270), 1), 
+		    new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(1, 0, -2), 180), 1),
+		    new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(2, 0, -2), 90), 1),
+	    };
+		StartLoadingPlacedObjectData(testServerData); 
+
 	}
 
 	/// <summary>
@@ -60,7 +75,7 @@ public class HouseManager : MonoBehaviour
             PlacementData data = obj.Value;
 
             PlacedObjectDatas objectData = new PlacedObjectDatas(
-                data.ID, position, dataType);
+                data.ID, new ObjectTransInfo(position, data.RotationY), dataType);
 
 			placedObjects.Add(objectData);
 		}
@@ -69,24 +84,38 @@ public class HouseManager : MonoBehaviour
 	/// <summary>
 	/// Install objects based on data received from the server
 	/// </summary>
-	public void LoadPlacedObjects(List<PlacedObjectDatas> serverData)
+	private IEnumerator LoadPlacedObjects(List<PlacedObjectDatas> serverData)
     {
+        /* Wait for FloorData&FurnitureData Instance Created */
+        yield return new WaitUntil(() => 
+            placementSystem.GetFloorData() != null && 
+            placementSystem.GetFurnitureData() != null);
+
 		GridData floorData = placementSystem.GetFloorData();
         GridData furnitureData = placementSystem.GetFurnitureData();
 
         foreach(var obj in serverData)
         {
             GridData selectedData = obj.DataType == 0 ? floorData : furnitureData;
-			int index = objectPlacer.PlaceObject(
-				ItemDataLoader.HousingItemsList.Find(x => x.ItemId == obj.ItemId).ItemPrefab,
-				grid.CellToWorld(obj.ItemPosition)
+            int index = objectPlacer.PlaceObject(
+                ItemDataLoader.HousingItemsList.Find(
+                x => x.ItemId == obj.ItemId).ItemPrefab,
+                grid.CellToWorld(obj.ItemTransInfo.ItemPosition) + new Vector3(0.5f, 0f, 0.5f),
+                Quaternion.Euler(0, obj.ItemTransInfo.ItemYRotation, 0)
 			);
             Vector2Int objGridSize = ItemDataLoader.HousingItemsList.Find(x => x.ItemId == obj.ItemId).ItemGridSize;
 
-			selectedData.AddObjectAt(obj.ItemPosition, objGridSize, obj.ItemId, index);
+			selectedData.AddObjectAt(obj.ItemTransInfo.ItemPosition, objGridSize,
+                obj.ItemId, index, obj.ItemTransInfo.ItemYRotation);
 		}
+
+        SavePlacedObjects();
 	}
 
+    public void StartLoadingPlacedObjectData(List<PlacedObjectDatas> serverData)
+    {
+        StartCoroutine(LoadPlacedObjects(serverData));
+	}
 
     private IEnumerator AutoSaveRoutine()
     {

@@ -45,10 +45,22 @@ public class PlacementState : IBuildingState
 	public void OnAction(Vector3Int gridPosition)
 	{
 		bool placementValidity = CheckPlacementValidity(gridPosition, selectedObjectIndex);
-		if (placementValidity == false) return;
+		if (!placementValidity) return;
 
-		int index = objectPlacer.PlaceObject(ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemPrefab, 
-			grid.CellToWorld(gridPosition));
+		float rotationY = previewSystem.GetCurrentRotation().eulerAngles.y;
+
+		//  오브젝트 크기 가져오기 (gridSize 사용)
+		Vector2Int gridSize = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize;
+
+		//  회전 보정을 위해 중심을 기준으로 위치 조정
+		Vector3 pivotOffset = new Vector3(gridSize.x * 0.5f, 0, gridSize.y * 0.5f);
+		Vector3 adjustedPosition = grid.CellToWorld(gridPosition) + pivotOffset;
+
+		int index = objectPlacer.PlaceObject(
+			ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemPrefab,
+			adjustedPosition, //  위치 보정 적용
+			Quaternion.Euler(0, rotationY, 0) //  회전값 적용
+		);
 
 		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ?
 			floorData : furnitureData;
@@ -56,10 +68,13 @@ public class PlacementState : IBuildingState
 		selectedData.AddObjectAt(gridPosition,
 			ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize,
 			ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId,
-			index);
+			index,
+			rotationY //  회전값 저장
+		);
 
 		previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), false);
 	}
+
 
 	private bool CheckPlacementValidity(Vector3Int gridPosition, int selectedObjectItemId)
 	{
@@ -67,6 +82,11 @@ public class PlacementState : IBuildingState
 			floorData : furnitureData;
 
 		return selectedData.CanPlaceObjectAt(gridPosition, ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize);
+	}
+
+	public void RotatePreview(int angle)
+	{
+		previewSystem.RotatePreview(angle);
 	}
 
 	public void UpdateState(Vector3Int gridPosition)
