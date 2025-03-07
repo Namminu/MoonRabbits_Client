@@ -12,6 +12,10 @@ public class PartyMemberUI : MonoBehaviour
     public GameObject memberPrefab; // MemberInfo 프리팹
     private List<GameObject> memberUIs = new List<GameObject>();
 
+    [SerializeField]
+    private GameObject[] hearts;
+
+
     public Image hand;
     public Image axe;
     public Image pickaxe;
@@ -70,8 +74,29 @@ public class PartyMemberUI : MonoBehaviour
                 memberUIs.Clear();
                 return;
             }
+
+            // 레벨 업데이트
             newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{player.level}";
 
+            // 체력 업데이트
+            // 하트 찾아서 배열에 넣어주기
+            hearts = new GameObject[3];
+
+            hearts[0] = newMember.transform.Find("Heart1").gameObject;
+            hearts[1] = newMember.transform.Find("Heart2").gameObject;
+            hearts[2] = newMember.transform.Find("Heart3").gameObject;
+
+            foreach (var heart in hearts)
+            {
+                heart.SetActive(false);
+            }
+
+            for (int i = 0; i < player.GetHp(); i++)
+            {
+                hearts[i].SetActive(true);
+            }
+
+            // 사용 중인 도구 업데이트
             if (player.ActiveEquipObj == player.axe)
             {
                 hand.gameObject.SetActive(false);

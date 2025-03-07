@@ -59,8 +59,6 @@ public class Player : MonoBehaviour
     private int pickSpeed;
     private int moveSpeed;
     private int abilityPoint;
-    private int cur_hp;
-    private int hp;
 
     private void Start()
     {
@@ -103,6 +101,11 @@ public class Player : MonoBehaviour
     public void SetLevel(int level)
     {
         this.level = level;
+    }
+
+    public int GetHp()
+    {
+        return this.curHp;
     }
 
     public void SetIsMine(bool isMine)
@@ -243,9 +246,9 @@ public class Player : MonoBehaviour
     public void Emote(int animCode)
     {
         Debug.Log(emotions[animCode]);
-        if(animCode < 100)
+        if (animCode < 100)
         {
-            if(animCode == 10)
+            if (animCode == 10)
             {
                 animator?.SetBool(emotions[11], false);
                 animator?.SetBool(emotions[12], false);
