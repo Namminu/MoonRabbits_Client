@@ -60,6 +60,16 @@ public class Player : MonoBehaviour
     private int moveSpeed;
     private int abilityPoint;
 
+    //불멸의 시간이 다가왔다.
+    private float startImotalTime = 5f;
+    private float ImotalTime = 1f;
+    private bool isImotal = false;
+    public bool GetIsImotal
+    {
+        get { return isImotal; }
+    }
+
+
     private void Start()
     {
         Avatar = GetComponent<Avatar>();
@@ -68,6 +78,8 @@ public class Player : MonoBehaviour
 
         SetAnimTrigger();
         SetEquipObj();
+
+        StartCoroutine(CoImotalTime(startImotalTime));
     }
 
     private void SetAnimTrigger()
@@ -540,11 +552,18 @@ public class Player : MonoBehaviour
     {
         curHp -= damage;
         ResourceManager.Instance.Instantiate("Effects", "FX_Shoot", transform.position);
+        isImotal = true;
+        StartCoroutine(CoImotalTime(ImotalTime));
 
         if (IsMine)
         {
             uiPlayer.InitHp(curHp);
         }
-        PartyMemberUI.instance.UpdateUI();
+    }
+
+    IEnumerator CoImotalTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+        isImotal = false;
     }
 }
