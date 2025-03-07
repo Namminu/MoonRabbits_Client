@@ -384,6 +384,34 @@ class PacketHandler
     #endregion
 
     #region PlayerAction
+    public static void S2COpenChestHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2COpenChest pkt)
+            return;
+        Debug.Log($"S2COpenChest 패킷 무사 도착 : {pkt}");
+
+        var player = GameManager.Instance.GetPlayer(pkt.PlayerId);
+        if (player != null)
+        {
+            player.StartOpenChest(pkt.OpenTimer);
+        }
+    }
+
+    public static void S2CRegenChestHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CRegenChest pkt)
+            return;
+        Debug.Log($"S2CRegenChest 패킷 무사 도착 : {pkt}");
+
+        if (pkt.SectorCode == GameManager.Instance.CurrentSector) {
+            GameObject chest = GameManager.Instance.SManager.Chest.gameObject;
+            
+            if (chest != null && !chest.activeSelf) {
+            chest.SetActive(true);
+        }
+        }
+    }
+
     public static void S2CRecallHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CRecall pkt)

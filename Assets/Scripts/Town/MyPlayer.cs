@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class MyPlayer : MonoBehaviour
 {
-    private Player player;
+    public Player player;
 
     [SerializeField]
     public static MyPlayer instance { get; private set; }

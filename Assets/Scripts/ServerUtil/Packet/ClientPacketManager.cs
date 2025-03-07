@@ -101,6 +101,11 @@ class PacketManager
         );
         _onRecv.Add((ushort)MsgId.S2CGatheringDone, MakePacket<S2CGatheringDone>);
         _handler.Add((ushort)MsgId.S2CGatheringDone, PacketHandler.S2CGatheringDoneHandler);
+
+        _onRecv.Add((ushort)MsgId.S2COpenChest, MakePacket<S2COpenChest>);
+        _handler.Add((ushort)MsgId.S2COpenChest, PacketHandler.S2COpenChestHandler);
+        _onRecv.Add((ushort)MsgId.S2CRegenChest, MakePacket<S2CRegenChest>);
+        _handler.Add((ushort)MsgId.S2CRegenChest, PacketHandler.S2CRegenChestHandler);
         _onRecv.Add((ushort)MsgId.S2CRecall, MakePacket<S2CRecall>);
         _handler.Add((ushort)MsgId.S2CRecall, PacketHandler.S2CRecallHandler);
         _onRecv.Add((ushort)MsgId.S2CThrowGrenade, MakePacket<S2CThrowGrenade>);

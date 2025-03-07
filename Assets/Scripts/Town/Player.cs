@@ -240,6 +240,70 @@ public class Player : MonoBehaviour
         animator?.SetTrigger(emotions[animCode]);
     }
 
+    public void StartOpenChest(int openTimer)
+    {
+        StartCoroutine(TryOpen(openTimer));
+    }
+
+    IEnumerator TryOpen(int openTimer)
+    {
+        animator.SetTrigger("OpenChest");
+        // 진행도 유아이 액티브?
+        Vector3 startPos = transform.position;
+
+        int openWaiting = 0;
+
+        while (openWaiting < openTimer)
+        {
+            if (CancelOpen(startPos))
+                yield break;
+
+            yield return new WaitForSeconds(0.5f);
+
+            if (CancelOpen(startPos))
+                yield break;
+
+            yield return new WaitForSeconds(0.5f);
+            Debug.Log($"상자 오픈까지 남은 시간 : {openTimer - openWaiting}초");
+            openWaiting += 1;
+        }
+
+        yield return new WaitForSeconds(0.5f);
+
+        GameObject chest = GameManager.Instance.SManager.Chest.gameObject;
+        if (chest != null && chest.activeSelf)
+        {
+            chest.SetActive(false);
+        }
+
+        if (IsMine)
+        {
+            MPlayer.SkillManager.IsCasting = false;
+            MPlayer.InteractManager.IsInteracting = false;
+
+            var pkt = new C2SGetTreasure { };
+            GameManager.Network.Send(pkt);
+        }
+    }
+
+    private bool CancelOpen(Vector3 startPos)
+    {
+        if (Vector3.Distance(startPos, transform.position) > 0.5f || IsStun)
+        {
+            if (IsMine)
+            {
+                MPlayer.SkillManager.IsCasting = false;
+                MPlayer.InteractManager.IsInteracting = false;
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public void CastRecall(int recallTimer)
     {
         StartCoroutine(TryRecall(recallTimer));
