@@ -169,6 +169,8 @@ public class MyPlayer : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
         {
+            interactManager.GatherOut(false);
+
             if (
                 Physics.Raycast(
                     Camera.main.ScreenPointToRay(Input.mousePosition),

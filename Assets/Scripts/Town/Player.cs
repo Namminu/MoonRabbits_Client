@@ -77,6 +77,10 @@ public class Player : MonoBehaviour
         emotions[111] = "Happy";
         emotions[222] = "Sad";
         emotions[333] = "Greeting";
+        emotions[10] = "Exit";
+        emotions[11] = "PickAxe";
+        emotions[12] = "Axe";
+
     }
 
     private void SetEquipObj()
@@ -238,7 +242,23 @@ public class Player : MonoBehaviour
 
     public void Emote(int animCode)
     {
-        animator?.SetTrigger(emotions[animCode]);
+        Debug.Log(emotions[animCode]);
+        if(animCode < 100)
+        {
+            if(animCode == 10)
+            {
+                animator?.SetBool(emotions[11], false);
+                animator?.SetBool(emotions[12], false);
+            }
+            else
+            {
+                animator?.SetBool(emotions[animCode], true);
+            }
+        }
+        else
+        {
+            animator?.SetTrigger(emotions[animCode]);
+        }
     }
 
     public void CastRecall(int recallTimer)
