@@ -107,7 +107,6 @@ public class MyPlayer : MonoBehaviour
         Interact();
         UIInput();
     }
-
     private void LateUpdate()
     {
         CheckMove();

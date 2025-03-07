@@ -14,9 +14,9 @@ public class Player : MonoBehaviour
     private UIPlayer uiPlayer;
 
     [Header("Movement Settings")]
-    public float SmoothMoveSpeed = 10f; // 위치 보간 속도
-    public float SmoothRotateSpeed = 10f; // 회전 보간 속도
-    public float TeleportDistanceThreshold = 0.5f; // 순간 이동 거리 임계값
+    public float SmoothMoveSpeed = 15f; // 위치 보간 속도
+    public float SmoothRotateSpeed = 15f; // 회전 보간 속도
+    public float TeleportDistanceThreshold = 1f; // 순간 이동 거리 임계값
 
     public Avatar Avatar { get; private set; }
     public MyPlayer MPlayer { get; private set; }
@@ -59,8 +59,16 @@ public class Player : MonoBehaviour
     private int pickSpeed;
     private int moveSpeed;
     private int abilityPoint;
-    private int cur_hp;
-    private int hp;
+
+    //불멸의 시간이 다가왔다.
+    private float startImotalTime = 5f;
+    private float ImotalTime = 1f;
+    private bool isImotal = false;
+    public bool GetIsImotal
+    {
+        get { return isImotal; }
+    }
+
 
     private void Start()
     {
@@ -70,6 +78,8 @@ public class Player : MonoBehaviour
 
         SetAnimTrigger();
         SetEquipObj();
+
+        StartCoroutine(CoImotalTime(startImotalTime));
     }
 
     private void SetAnimTrigger()
@@ -103,6 +113,16 @@ public class Player : MonoBehaviour
     public void SetLevel(int level)
     {
         this.level = level;
+    }
+
+    public int GetHp()
+    {
+        return this.curHp;
+    }
+
+    public int SetHp(int num)
+    {
+        return this.curHp = num;
     }
 
     public void SetIsMine(bool isMine)
@@ -243,9 +263,9 @@ public class Player : MonoBehaviour
     public void Emote(int animCode)
     {
         Debug.Log(emotions[animCode]);
-        if(animCode < 100)
+        if (animCode < 100)
         {
-            if(animCode == 10)
+            if (animCode == 10)
             {
                 animator?.SetBool(emotions[11], false);
                 animator?.SetBool(emotions[12], false);
@@ -366,6 +386,8 @@ public class Player : MonoBehaviour
         transform.Find("StunEffect").gameObject.SetActive(true);
         IsStun = true;
 
+        PlayerManager.playerSaveData[PlayerId].IsStun = true;
+
         if (IsMine)
         {
             MPlayer.NavAgent.ResetPath();
@@ -379,6 +401,7 @@ public class Player : MonoBehaviour
     {
         transform.Find("StunEffect").gameObject.SetActive(false);
         IsStun = false;
+        PlayerManager.playerSaveData[PlayerId].IsStun = false;
     }
 
     public void ChangeEquip(int nextEquip)
@@ -390,13 +413,15 @@ public class Player : MonoBehaviour
 
         ActiveEquipObj = equips[nextEquip];
         ActiveEquipObj.SetActive(true);
-        PartyMemberUI.instance.UpdateUI();
 
         if (IsMine)
         {
             MPlayer.currentEquip = nextEquip;
+            PlayerManager.playerSaveData[PlayerId].CurrentEquip = nextEquip;
             MPlayer.InteractManager.isEquipChanging = false;
         }
+
+        PartyMemberUI.instance.UpdateUI();
     }
 
     private void CheckMove()
@@ -410,7 +435,7 @@ public class Player : MonoBehaviour
     public void SetStatInfo(StatInfo statInfo)
     {
         maxHp = 3;
-        curHp = 3;
+        curHp = statInfo.Hp;
         level = statInfo.Level;
         exp = statInfo.Exp;
         targetExp = statInfo.TargetExp;
@@ -426,7 +451,7 @@ public class Player : MonoBehaviour
                 Debug.LogError("uiPlayer is null. 먼저 세팅돼야함");
             uiPlayer.SetStatInfo(statInfo);
             uiPlayer.SetNickname(nickname);
-            uiPlayer.InitHp(3);
+            uiPlayer.InitHp(curHp);
         }
     }
 
@@ -499,6 +524,10 @@ public class Player : MonoBehaviour
         targetExp = newTargetExp;
         exp = updatedExp;
 
+        PlayerManager.playerSaveData[PlayerId].Level = level;
+        PlayerManager.playerSaveData[PlayerId].TargetExp = targetExp;
+        PlayerManager.playerSaveData[PlayerId].Exp = exp;
+
         Debug.Log($"레벨업 응답 실행 {level}/ap{abilityPoint}/{exp}/{targetExp} isMine?{IsMine}");
         if (IsMine)
             uiPlayer.LevelUp(
@@ -531,5 +560,29 @@ public class Player : MonoBehaviour
     {
         this.uiPlayer = uiPlayer;
         this.uiPlayer.gameObject.SetActive(true);
+    }
+
+    public void Damaged(int damage)
+    {
+        curHp -= damage;
+        ResourceManager.Instance.Instantiate("Effects", "FX_Shoot", transform.position);
+        PlayerManager.playerSaveData[PlayerId].CurHp -= damage;
+        isImotal = true;
+        PlayerManager.playerSaveData[PlayerId].IsImotal = true;
+        StartCoroutine(CoImotalTime(ImotalTime));
+
+        if (IsMine)
+        {
+            uiPlayer.InitHp(curHp);
+        }
+
+        PartyMemberUI.instance.UpdateUI();
+    }
+
+    IEnumerator CoImotalTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+        isImotal = false;
+        // PlayerManager.playerSaveData[PlayerId].IsImotal = false;
     }
 }

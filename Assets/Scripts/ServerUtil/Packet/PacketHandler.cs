@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,6 +81,8 @@ class PacketHandler
             pkt.Players.ToList(),
             pkt.Traps.ToList()
         );
+
+        PartyMemberUI.instance.UpdateUI();
     }
 
     public static void S2CEmoteHandler(PacketSession session, IMessage packet)
@@ -308,6 +310,15 @@ class PacketHandler
             return;
         Debug.Log($"S2CRejectInvite 패킷 무사 도착 : {pkt}");
     }
+
+    public static void S2CUpdatePartyHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CUpdateParty pkt)
+            return;
+        Debug.Log($"S2CUpdateParty 패킷 무사 도착 : {pkt}");
+        Party.instance.UpdatePartyData(pkt);
+    }
+
     #endregion
 
     #region Sector

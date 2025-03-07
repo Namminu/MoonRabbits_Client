@@ -58,6 +58,8 @@ public class MonsterController : MonoBehaviour
             return;
         if (_isAttack)
             return;
+        var player = other.GetComponent<Player>();
+        if (player.GetIsImotal) return;
         StartCoroutine(CoMonsterAttackCoolTime());
         Debug.Log("플레이어가 몬스터와 충돌하였다.");
         CapsuleCollider playerCollider = other.GetComponent<CapsuleCollider>();
@@ -65,7 +67,7 @@ public class MonsterController : MonoBehaviour
         var collisionInfo = new CollisionInfo();
         var myPos = transform.position;
         var targetPos = playerCollider.transform.position;
-        var targetId = playerCollider.GetComponent<Player>().PlayerId;
+        var targetId = player.PlayerId;
         collisionInfo.SectorCode = sectorCode;
         collisionInfo.MyType = 2;
         collisionInfo.MyId = id;
@@ -108,12 +110,15 @@ public class MonsterController : MonoBehaviour
     public void SetCollision(CollisionPushInfo info)
     {
         var type = info.TargetType;
-        // Debug.Log($"타겟 타입??! : {type}");
+        if (info.HasCollision == false) return;
         switch (type)
         {
             //충돌한 자가 플레이어면
             case 1:
                 anim.SetTrigger("Attack");
+                var player = GameManager.Instance.GetPlayer(info.TargetId);
+                if (player != null)
+                    player.Damaged(1);
                 break;
             default:
                 break;
