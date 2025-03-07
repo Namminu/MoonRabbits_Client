@@ -87,8 +87,8 @@ public class Running : MonoBehaviour
     private void MovePlayer()
     {
 
-        Vector3 movement = new Vector3(moveHorizontal, 0, moveVertical) * speed * Time.deltaTime;
-        transform.Translate(movement, Space.World);
+        /*Vector3 movement = new Vector3(moveHorizontal, 0, moveVertical) * speed * Time.deltaTime;
+        transform.Translate(movement, Space.World);*/
     }
 
     private void UpdateStaminaUI()

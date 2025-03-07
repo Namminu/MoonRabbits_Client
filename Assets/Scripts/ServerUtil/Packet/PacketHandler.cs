@@ -570,7 +570,7 @@ class PacketHandler
     }
     #endregion
 
-    #region Item & Inventory
+    #region Item & Inventory & Crafting
 
     public static void S2CInventoryUpdateHandler(PacketSession session, IMessage packet)
     {
@@ -579,8 +579,6 @@ class PacketHandler
         Debug.Log($"S2CInventoryUpdate 패킷 무사 도착 : {pkt}");
         InventoryManager.instance.UpdateInventoryData(pkt);
     }
-    #endregion
-
     public static void S2CCraftStartHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CCraftStart pkt)
@@ -621,6 +619,13 @@ class PacketHandler
         if (packet is not S2CHousingLoad pkt)
             return;
         Debug.Log($"S2CHousingLoad 패킷 무사 도착 : {pkt}");
+    }
+
+    public static void S2CFurnitureCraftHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CFurnitureCraft pkt)
+            return;
+        Debug.Log($"S2CFurnitureCraft 패킷 무사 도착 : {pkt}");
     }
 
     # endregion

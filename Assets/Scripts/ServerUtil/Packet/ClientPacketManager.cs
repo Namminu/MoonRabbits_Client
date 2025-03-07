@@ -67,6 +67,8 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CHousingSave, PacketHandler.S2CHousingSaveHandler);
         _onRecv.Add((ushort)MsgId.S2CHousingLoad, MakePacket<S2CHousingLoad>);
         _handler.Add((ushort)MsgId.S2CHousingLoad, PacketHandler.S2CHousingLoadHandler);
+        _onRecv.Add((ushort)MsgId.S2CFurnitureCraft, MakePacket<S2CFurnitureCraft>);
+        _handler.Add((ushort)MsgId.S2CFurnitureCraft, PacketHandler.S2CFurnitureCraftHandler);
 
         _onRecv.Add((ushort)MsgId.S2CCreateParty, MakePacket<S2CCreateParty>);
         _handler.Add((ushort)MsgId.S2CCreateParty, PacketHandler.S2CCreatePartyHandler);
