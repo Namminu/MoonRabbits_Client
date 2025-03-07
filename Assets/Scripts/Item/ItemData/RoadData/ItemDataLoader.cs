@@ -103,7 +103,7 @@ public static class ItemDataLoader
         Debug.Log("하우징 아이템 생성 갯수 : " + HousingItemsList.Count);
     }
 
-    private static Sprite GetSpriteByItemId(int itemId)
+    public static Sprite GetSpriteByItemId(int itemId)
     {
         LoadSpriteDataBase();
         return spriteDataBase?.GetSprite(itemId);

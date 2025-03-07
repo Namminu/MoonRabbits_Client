@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,6 +81,8 @@ class PacketHandler
             pkt.Players.ToList(),
             pkt.Traps.ToList()
         );
+
+        PartyMemberUI.instance.UpdateUI();
     }
 
     public static void S2CEmoteHandler(PacketSession session, IMessage packet)
@@ -321,6 +323,15 @@ class PacketHandler
             return;
         Debug.Log($"S2CRejectInvite 패킷 무사 도착 : {pkt}");
     }
+
+    public static void S2CUpdatePartyHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CUpdateParty pkt)
+            return;
+        Debug.Log($"S2CUpdateParty 패킷 무사 도착 : {pkt}");
+        Party.instance.UpdatePartyData(pkt);
+    }
+
     #endregion
 
     #region Sector
@@ -568,11 +579,31 @@ class PacketHandler
         Debug.Log($"S2CInventoryUpdate 패킷 무사 도착 : {pkt}");
         InventoryManager.instance.UpdateInventoryData(pkt);
     }
-    public static void S2CCraftHandler(PacketSession session, IMessage packet)
+    #endregion
+
+    public static void S2CCraftStartHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CCraft pkt)
+        if (packet is not S2CCraftStart pkt)
             return;
-        Debug.Log($"S2CCraft 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CCraftStart 패킷 무사 도착 : {pkt}");
+
+        CanvasManager.Instance.craftManager.OnStart(pkt);
+    }
+    
+    public static void S2CCraftEndHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CCraftEnd pkt)
+            return;
+        Debug.Log($"S2CCraftEnd 패킷 무사 도착 : {pkt}");
+
+        CanvasManager.Instance.craftManager.OnEnd(pkt);
+    }
+
+    public static void S2CGetInventorySlotByItemIdHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CGetInventorySlotByItemId pkt) return;
+        Debug.Log($"S2CGetInventorySlotByItemId 패킷 무사 도착 : {pkt}");
+        CanvasManager.Instance.uiCraft.GetInventorySlotByItemId(pkt);
     }
     #endregion
 
