@@ -14,6 +14,9 @@ public class CanvasManager : MonoBehaviour
     public UIChat uIChat;
     public UIBattlePopup uIBattlePopup;
     public InventoryUI inventoryUI;
+    public UICraft uiCraft;
+    public GameObject uiMenu;
+    public CraftManager craftManager;
 
     public Player player;
 
@@ -35,6 +38,8 @@ public class CanvasManager : MonoBehaviour
         uIChat = GetComponentInChildren<UIChat>();
         uIBattlePopup = GetComponentInChildren<UIBattlePopup>();
         inventoryUI = GetComponentInChildren<InventoryUI>();
+        uiCraft = GetComponentInChildren<UICraft>();
+        craftManager = GetComponentInChildren<CraftManager>();
     }
 
     private void Start()
@@ -44,6 +49,7 @@ public class CanvasManager : MonoBehaviour
         uIChat.gameObject.SetActive(false);
         uIBattlePopup.gameObject.SetActive(false);
         inventoryUI.gameObject.SetActive(false);
+        uiCraft.gameObject.SetActive(false);
 
         if (player == null)
         {
@@ -70,5 +76,6 @@ public class CanvasManager : MonoBehaviour
         uIAnimation.gameObject.SetActive(true);
         uIPlayer.gameObject.SetActive(true);
         uIChat.gameObject.SetActive(true);
+        uiCraft.InitUiCraft();
     }
 }

@@ -122,10 +122,14 @@ class PacketManager
         _onRecv.Add((ushort)MsgId.S2CInvestPoint, MakePacket<S2CInvestPoint>);
         _handler.Add((ushort)MsgId.S2CInvestPoint, PacketHandler.S2CInvestPointHandler);
 
-        _onRecv.Add((ushort)MsgId.S2CCraft, MakePacket<S2CCraft>);
-        _handler.Add((ushort)MsgId.S2CCraft, PacketHandler.S2CCraftHandler);
+        _onRecv.Add((ushort)MsgId.S2CCraftStart, MakePacket<S2CCraftStart>);
+        _handler.Add((ushort)MsgId.S2CCraftStart, PacketHandler.S2CCraftStartHandler);
+        _onRecv.Add((ushort)MsgId.S2CCraftEnd, MakePacket<S2CCraftEnd>);
+        _handler.Add((ushort)MsgId.S2CCraftEnd, PacketHandler.S2CCraftEndHandler);
         _onRecv.Add((ushort)MsgId.S2CPing, MakePacket<S2CPing>);
         _handler.Add((ushort)MsgId.S2CPing, PacketHandler.S2CPingHandler);
+        _onRecv.Add((ushort)MsgId.S2CGetInventorySlotByItemId, MakePacket<S2CGetInventorySlotByItemId>);
+        _handler.Add((ushort)MsgId.S2CGetInventorySlotByItemId, PacketHandler.S2CGetInventorySlotByItemIdHandler);
 
         Debug.Log("핸들러 등록 완료");
     }
