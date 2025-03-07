@@ -12,6 +12,9 @@ public class ResourcesManager : MonoBehaviour
 {
     private static ResourcesManager _instance;
     public static ResourcesManager Instance => _instance;
+
+    public GameObject UIskillCheck;
+
     private GameObject[] resources;
 
     private JsonContainer<Resource> resourceContainer;
@@ -71,14 +74,18 @@ public class ResourcesManager : MonoBehaviour
                 var resourceController = resources[resource.ResourceIdx - 1].GetComponent<ResourceController>();
                 resourceController.idx = resource.ResourceIdx;
                 resourceController.resourceId = resourceType;
+                resourceController.Durability = resource.Durability;
             }
         }
     }
     public void ResourcesUpdateDurability(S2CUpdateDurability pkt)
     {
         Debug.Log("자원 id" + pkt.PlacedId);
+        Debug.Log("자원 durability" + pkt.Durability);
         var resourceController = resources[pkt.PlacedId - 1].GetComponent<ResourceController>();
-        resourceController.ResourcesUpdateDurability(pkt.Durability);
+        resourceController.Durability = pkt.Durability;
+        
+        if (pkt.Durability <= 0 && UISkillCheck.Instance.TargetResource == pkt.PlacedId) UISkillCheck.Instance.EndSkillCheck();
     }
     public void ResourcesGatheringStart(S2CGatheringStart pkt)
     {
