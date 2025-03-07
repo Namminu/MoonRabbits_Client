@@ -187,11 +187,6 @@ public class UICraft : MonoBehaviour
 
     public void OnCraftBtnClick()
     {
-        detailFrame.SetActive(false);
-        confirmButton.gameObject.SetActive(false);
-        progressFrame.SetActive(true); // 제작진행창 띄우기
-        craftingImage.sprite = ItemDataLoader.GetSpriteByItemId(selectedRecipe.craft_item_id);
-
         CanvasManager.Instance.craftManager.ProcessCraft(selectedRecipe.recipe_id, craftCount);
     }
 
