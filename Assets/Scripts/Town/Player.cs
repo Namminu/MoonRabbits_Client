@@ -539,10 +539,12 @@ public class Player : MonoBehaviour
     public void Damaged(int damage)
     {
         curHp -= damage;
+        ResourceManager.Instance.Instantiate("Effects", "FX_Shoot", transform.position);
 
         if (IsMine)
         {
             uiPlayer.InitHp(curHp);
         }
+        PartyMemberUI.instance.UpdateUI();
     }
 }

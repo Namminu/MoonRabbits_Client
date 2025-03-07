@@ -72,7 +72,11 @@ public class PartyMemberUI : MonoBehaviour
                     Destroy(memberUI);
                 }
                 memberUIs.Clear();
-                return;
+
+                Debug.Log("플레이어 못 찾음! 재귀 돌려!");
+
+                // return;
+                UpdateUI();
             }
 
             // 레벨 업데이트

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,6 +81,8 @@ class PacketHandler
             pkt.Players.ToList(),
             pkt.Traps.ToList()
         );
+
+        PartyMemberUI.instance.UpdateUI();
     }
 
     public static void S2CEmoteHandler(PacketSession session, IMessage packet)

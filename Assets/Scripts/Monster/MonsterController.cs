@@ -115,7 +115,8 @@ public class MonsterController : MonoBehaviour
             case 1:
                 anim.SetTrigger("Attack");
                 var player = GameManager.Instance.GetPlayer(info.TargetId);
-                player.Damaged(1);
+                if (player != null)
+                    player.Damaged(1);
                 break;
             default:
                 break;
