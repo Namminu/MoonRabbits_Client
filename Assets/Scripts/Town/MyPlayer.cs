@@ -56,6 +56,11 @@ public class MyPlayer : MonoBehaviour
     private InteractManager interactManager;
     public InteractManager InteractManager => interactManager;
 
+    
+    private bool uiCraftInput;
+    private bool uiPartyInput;
+    private bool uiMenuInput;
+    private bool uiInventoryInput;
     private LineRenderer _lineRenderer;
     private Camera _cam;
     private float zoomSpeed = 20f;
@@ -100,6 +105,7 @@ public class MyPlayer : MonoBehaviour
         Recall();
         EquipChange();
         Interact();
+        UIInput();
     }
 
     private void LateUpdate()
@@ -170,6 +176,8 @@ public class MyPlayer : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
         {
+            interactManager.GatherOut(false);
+
             if (
                 Physics.Raycast(
                     Camera.main.ScreenPointToRay(Input.mousePosition),
@@ -192,6 +200,10 @@ public class MyPlayer : MonoBehaviour
         recallInput = Input.GetKeyDown(KeyCode.T);
         interactInput = Input.GetKeyDown(KeyCode.F);
         equipChangeInput = Input.GetKeyDown(KeyCode.R);
+        uiCraftInput = Input.GetKeyDown(KeyCode.C);
+        uiPartyInput = Input.GetKeyDown(KeyCode.P);
+        uiMenuInput = Input.GetKeyDown(KeyCode.Escape);
+        uiInventoryInput = Input.GetKeyDown(KeyCode.I);
     }
 
     IEnumerator ExecuteEvery0_1Seconds()
@@ -345,5 +357,37 @@ public class MyPlayer : MonoBehaviour
     {
         transform.Find("StunEffect").gameObject.SetActive(false);
         NavAgent.isStopped = false;
+    }
+    
+    private void UIInput(){
+        if(uiCraftInput)
+        {
+            // C 키입력
+            GameObject uiCraft = CanvasManager.Instance.uiCraft.gameObject;
+            uiCraft.SetActive(!uiCraft.activeSelf);
+            CanvasManager.Instance.craftManager.Resume();
+            uiCraft.transform.SetAsLastSibling();
+        }
+        if(uiPartyInput)
+        {
+            // P 키입력
+            GameObject partyUi = CanvasManager.Instance.partyUI.gameObject;
+            partyUi.SetActive(!partyUi.activeSelf);
+            partyUi.transform.SetAsLastSibling();
+        }
+        if(uiMenuInput)
+        {
+            // ESC 키입력
+            GameObject uiMenu = CanvasManager.Instance.uiMenu;
+            uiMenu.SetActive(!uiMenu.activeSelf);
+            uiMenu.transform.SetAsLastSibling();
+        }
+        if(uiInventoryInput)
+        {
+            // I 키입력
+            GameObject inventoryUI = CanvasManager.Instance.inventoryUI.gameObject;
+            inventoryUI.SetActive(!inventoryUI.activeSelf);
+            inventoryUI.transform.SetAsLastSibling();
+        }
     }
 }

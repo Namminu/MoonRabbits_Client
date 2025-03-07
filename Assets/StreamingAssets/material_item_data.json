@@ -5,7 +5,7 @@
     {
       "item_id": 20000,
       "item_name": "재료 이름",
-      "item_type": "int 타입으로, 0은 Housing, 1은 Material",
+      "item_type": -1,
       "item_description": "재료 아이템은 20000부터 시작"
     },
     {

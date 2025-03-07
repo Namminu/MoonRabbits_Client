@@ -585,10 +585,28 @@ class PacketHandler
     }
     #endregion
 
-    public static void S2CCraftHandler(PacketSession session, IMessage packet)
+    public static void S2CCraftStartHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CCraft pkt)
+        if (packet is not S2CCraftStart pkt)
             return;
-        Debug.Log($"S2CCraft 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CCraftStart 패킷 무사 도착 : {pkt}");
+
+        CanvasManager.Instance.craftManager.OnStart(pkt);
+    }
+    
+    public static void S2CCraftEndHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CCraftEnd pkt)
+            return;
+        Debug.Log($"S2CCraftEnd 패킷 무사 도착 : {pkt}");
+
+        CanvasManager.Instance.craftManager.OnEnd(pkt);
+    }
+
+    public static void S2CGetInventorySlotByItemIdHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CGetInventorySlotByItemId pkt) return;
+        Debug.Log($"S2CGetInventorySlotByItemId 패킷 무사 도착 : {pkt}");
+        CanvasManager.Instance.uiCraft.GetInventorySlotByItemId(pkt);
     }
 }
