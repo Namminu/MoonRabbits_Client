@@ -1,3 +1,4 @@
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class PreviewSystem : MonoBehaviour
@@ -67,15 +68,16 @@ public class PreviewSystem : MonoBehaviour
 			Destroy(previewObject);
 	}
 
-	public void UpdatePosition(Vector3 position, bool validity)
+	public void UpdatePosition(Vector3 position, float yRotation, bool validity)
 	{
+		ObjectTransInfo newInfo = 
         if (previewObject != null)
         {
-			MovePreview(position);
+			MovePreview(gridInfo);
 			ApplyFeedBackToPreview(validity);
 		}
 
-		MoveCursor(position);
+		MoveCursor(gridInfo);
 		ApplyFeedBackToCursor(validity);
 	}
 
@@ -93,13 +95,16 @@ public class PreviewSystem : MonoBehaviour
 		cellIndicatorRenderer.material.color = color;
 	}
 
-	private void MoveCursor(Vector3 position)
+	private void MoveCursor(ObjectTransInfo gridInfo)
 	{
-		cellIndicator.transform.position = position;
+		cellIndicator.transform.position = gridInfo.ItemPosition;
+		cellIndicator.transform.rotation = Quaternion.Euler(0, gridInfo.ItemYRotation, 0);
 	}
 
-	private void MovePreview(Vector3 position)
+	private void MovePreview(ObjectTransInfo gridInfo)
 	{
-		previewObject.transform.position = new Vector3(position.x, position.y + previewYOffset, position.z);
+		//previewObject.transform.position = new Vector3(position.x, position.y + previewYOffset, position.z);
+		previewObject.transform.position = new Vector3(gridInfo.ItemPosition.x, gridInfo.ItemPosition.y + previewYOffset, gridInfo.ItemPosition.x);
+		previewObject.transform.rotation = Quaternion.Euler(0, gridInfo.ItemYRotation, 0);
 	}
 }

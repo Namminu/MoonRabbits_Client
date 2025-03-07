@@ -32,14 +32,14 @@ public class RemovingState : IBuildingState
 		previewSystem.StopShowingPreview();
 	}
 
-	public void OnAction(Vector3Int gridPosition)
+	public void OnAction(ObjectTransInfo gridInfo)
 	{
 		GridData selectedData = null;
-		if(!furnitureData.CanPlaceObjectAt(gridPosition, Vector2Int.one))
+		if(!furnitureData.CanPlaceObjectAt(gridInfo, Vector2Int.one))
 		{
 			selectedData = furnitureData;
 		}
-		else if(!floorData.CanPlaceObjectAt(gridPosition, Vector2Int.one))
+		else if(!floorData.CanPlaceObjectAt(gridInfo, Vector2Int.one))
 		{
 			selectedData = floorData;
 		}
@@ -50,25 +50,25 @@ public class RemovingState : IBuildingState
         }
 		else
 		{
-			gameObjectIndex = selectedData.GetRepresentationIndex(gridPosition);
+			gameObjectIndex = selectedData.GetRepresentationIndex(gridInfo.ItemPosition);
 			if (gameObjectIndex == -1) return;
 
-			selectedData.RemoveObjectAt(gridPosition);
+			selectedData.RemoveObjectAt(gridInfo.ItemPosition);
 			objectPlacer.RemoveObjectAt(gameObjectIndex);
 		}
-		Vector3 cellPosition = grid.CellToWorld(gridPosition);
-		previewSystem.UpdatePosition(cellPosition, CheckIfSelectionIsValid(gridPosition));
+		Vector3 cellPosition = grid.CellToWorld(gridInfo.ItemPosition);
+		previewSystem.UpdatePosition(cellPosition, gridInfo.ItemYRotation, CheckIfSelectionIsValid(gridInfo));
     }
 
-	private bool CheckIfSelectionIsValid(Vector3Int gridPosition)
+	private bool CheckIfSelectionIsValid(ObjectTransInfo gridInfo)
 	{
-		return !(furnitureData.CanPlaceObjectAt(gridPosition, Vector2Int.one) &&
-			floorData.CanPlaceObjectAt(gridPosition, Vector2Int.one));
+		return !(furnitureData.CanPlaceObjectAt(gridInfo, Vector2Int.one) &&
+			floorData.CanPlaceObjectAt(gridInfo, Vector2Int.one));
 	}
 
-	public void UpdateState(Vector3Int gridPosition)
+	public void UpdateState(ObjectTransInfo gridInfo)
 	{
-		bool validity = CheckIfSelectionIsValid(gridPosition);
-		previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), validity);
+		bool validity = CheckIfSelectionIsValid(gridInfo);
+		previewSystem.UpdatePosition(grid.CellToWorld(gridInfo.ItemPosition), gridInfo.ItemYRotation, validity);
 	}
 }

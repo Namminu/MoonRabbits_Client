@@ -42,37 +42,37 @@ public class PlacementState : IBuildingState
 		previewSystem.StopShowingPreview();
 	}
 
-	public void OnAction(Vector3Int gridPosition)
+	public void OnAction(ObjectTransInfo gridInfo)
 	{
-		bool placementValidity = CheckPlacementValidity(gridPosition, selectedObjectIndex);
+		bool placementValidity = CheckPlacementValidity(gridInfo, selectedObjectIndex);
 		if (placementValidity == false) return;
 
-		int index = objectPlacer.PlaceObject(ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemPrefab, 
-			grid.CellToWorld(gridPosition));
+		int index = objectPlacer.PlaceObject(ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemPrefab,
+			grid.CellToWorld(gridInfo.ItemPosition), gridInfo.ItemYRotation);
 
 		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ?
 			floorData : furnitureData;
 
-		selectedData.AddObjectAt(gridPosition,
+		selectedData.AddObjectAt(gridInfo,
 			ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize,
 			ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId,
 			index);
 
-		previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), false);
+		previewSystem.UpdatePosition(grid.CellToWorld(gridInfo.ItemPosition), false);
 	}
 
-	private bool CheckPlacementValidity(Vector3Int gridPosition, int selectedObjectItemId)
+	private bool CheckPlacementValidity(ObjectTransInfo gridInfo, int selectedObjectItemId)
 	{
 		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ?
 			floorData : furnitureData;
 
-		return selectedData.CanPlaceObjectAt(gridPosition, ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize);
+		return selectedData.CanPlaceObjectAt(gridInfo, ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize);
 	}
 
-	public void UpdateState(Vector3Int gridPosition)
+	public void UpdateState(ObjectTransInfo gridInfo)
 	{
-		bool placementValidity = CheckPlacementValidity(gridPosition, selectedObjectIndex);
+		bool placementValidity = CheckPlacementValidity(gridInfo, selectedObjectIndex);
 
-		previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), placementValidity);
+		previewSystem.UpdatePosition(grid.CellToWorld(gridInfo.ItemPosition), placementValidity);
 	}
 }

@@ -79,11 +79,12 @@ public class HouseManager : MonoBehaviour
             GridData selectedData = obj.DataType == 0 ? floorData : furnitureData;
 			int index = objectPlacer.PlaceObject(
 				ItemDataLoader.HousingItemsList.Find(x => x.ItemId == obj.ItemId).ItemPrefab,
-				grid.CellToWorld(obj.ItemPosition)
+				grid.CellToWorld(obj.ItemTransInfo.ItemPosition),
+                obj.ItemTransInfo.ItemYRotation
 			);
             Vector2Int objGridSize = ItemDataLoader.HousingItemsList.Find(x => x.ItemId == obj.ItemId).ItemGridSize;
 
-			selectedData.AddObjectAt(obj.ItemPosition, objGridSize, obj.ItemId, index);
+			selectedData.AddObjectAt(obj.ItemTransInfo, objGridSize, obj.ItemId, index);
 		}
 	}
 
