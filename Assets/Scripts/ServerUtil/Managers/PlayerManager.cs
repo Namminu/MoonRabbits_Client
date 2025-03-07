@@ -32,13 +32,12 @@ public class PlayerManager
         int playerId = player.PlayerId;
 
         // 해당 플레이어의 SavePlayerData가 없으면 생성
-        if (!playerSaveData.ContainsKey(playerId))
-            playerSaveData[playerId] = new SavePlayerData();
+        playerSaveData[playerId] = new SavePlayerData();
 
         SavePlayerData saveData = playerSaveData[playerId];
 
         // Player 컴포넌트에서 기본 데이터 저장 (파괴되지 않는 데이터)
-        saveData.PlayerId = playerId;
+        playerSaveData[playerId].PlayerId = playerId;
         saveData.Nickname = player.nickname;
         saveData.Level = player.level;
         saveData.CurHp = player.GetHp();

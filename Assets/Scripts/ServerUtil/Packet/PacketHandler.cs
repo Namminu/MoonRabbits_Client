@@ -310,6 +310,15 @@ class PacketHandler
             return;
         Debug.Log($"S2CRejectInvite 패킷 무사 도착 : {pkt}");
     }
+
+    public static void S2CUpdatePartyHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CUpdateParty pkt)
+            return;
+        Debug.Log($"S2CUpdateParty 패킷 무사 도착 : {pkt}");
+        Party.instance.UpdatePartyData(pkt);
+    }
+
     #endregion
 
     #region Sector

@@ -39,7 +39,7 @@ public class Party : MonoBehaviour
     members.Clear();
     foreach (var member in partyData.Members)
     {
-      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, CurrentSector = member.CurrentSector, IsMine = member.IsMine });
+      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, CurrentSector = member.CurrentSector, IsMine = member.IsMine, Hp = member.Hp, Level = member.Level, CurrentEquip = member.CurrentEquip });
     }
 
     // UI 업데이트 요청 (PartyUI에서 처리)
@@ -57,7 +57,7 @@ public class Party : MonoBehaviour
     members.Clear();
     foreach (var member in partyData.Members)
     {
-      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, CurrentSector = member.CurrentSector, IsMine = member.IsMine });
+      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, CurrentSector = member.CurrentSector, IsMine = member.IsMine, Hp = member.Hp, Level = member.Level, CurrentEquip = member.CurrentEquip });
     }
 
     // UI 업데이트 요청 (PartyUI에서 처리)
@@ -75,7 +75,7 @@ public class Party : MonoBehaviour
     members.Clear();
     foreach (var member in partyData.Members)
     {
-      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, CurrentSector = member.CurrentSector, IsMine = member.IsMine });
+      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, CurrentSector = member.CurrentSector, IsMine = member.IsMine, Hp = member.Hp, Level = member.Level, CurrentEquip = member.CurrentEquip });
     }
 
     // UI 업데이트 요청 (PartyUI에서 처리)
@@ -93,7 +93,7 @@ public class Party : MonoBehaviour
     members.Clear();
     foreach (var member in partyData.Members)
     {
-      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, CurrentSector = member.CurrentSector, IsMine = member.IsMine });
+      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, CurrentSector = member.CurrentSector, IsMine = member.IsMine, Hp = member.Hp, Level = member.Level, CurrentEquip = member.CurrentEquip });
     }
 
     // UI 업데이트 요청 (PartyUI에서 처리)
@@ -111,7 +111,25 @@ public class Party : MonoBehaviour
     members.Clear();
     foreach (var member in partyData.Members)
     {
-      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, CurrentSector = member.CurrentSector, IsMine = member.IsMine });
+      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, CurrentSector = member.CurrentSector, IsMine = member.IsMine, Hp = member.Hp, Level = member.Level, CurrentEquip = member.CurrentEquip });
+    }
+
+    // UI 업데이트 요청 (PartyUI에서 처리)
+    PartyUI.instance.isInParty = true;
+    PartyUI.instance.UpdateUI();
+  }
+
+  public void UpdatePartyData(S2CUpdateParty partyData)
+  {
+    partyId = partyData.PartyId;
+    leaderId = partyData.LeaderId;
+    memberCount = partyData.MemberCount;
+
+    // 기존 멤버 리스트 초기화 후 새 데이터로 채우기
+    members.Clear();
+    foreach (var member in partyData.Members)
+    {
+      members.Add(new MemberCardInfo { Id = member.Id, Nickname = member.Nickname, CurrentSector = member.CurrentSector, IsMine = member.IsMine, Hp = member.Hp, Level = member.Level, CurrentEquip = member.CurrentEquip });
     }
 
     // UI 업데이트 요청 (PartyUI에서 처리)

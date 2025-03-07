@@ -413,7 +413,6 @@ public class Player : MonoBehaviour
 
         ActiveEquipObj = equips[nextEquip];
         ActiveEquipObj.SetActive(true);
-        PartyMemberUI.instance.UpdateUI();
 
         if (IsMine)
         {
@@ -421,6 +420,8 @@ public class Player : MonoBehaviour
             PlayerManager.playerSaveData[PlayerId].CurrentEquip = nextEquip;
             MPlayer.InteractManager.isEquipChanging = false;
         }
+
+        PartyMemberUI.instance.UpdateUI();
     }
 
     private void CheckMove()
