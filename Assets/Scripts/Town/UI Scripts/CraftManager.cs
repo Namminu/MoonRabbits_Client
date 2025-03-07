@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Google.Protobuf.Protocol;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class CraftManager : MonoBehaviour
 {
@@ -12,8 +11,6 @@ public class CraftManager : MonoBehaviour
     private bool isCrafting = false;
     private int targetCount;
     private int currentCount;
-    private float duration;
-    private float elapsed;
     private string craftStr;
     private MaterialItemData targetItem;
 
@@ -23,15 +20,13 @@ public class CraftManager : MonoBehaviour
         uiCraft = CanvasManager.Instance.uiCraft;
     }
 
-    private void Resume()
+    public void Resume()
     {
-        uiCraft.successText.text = craftStr;
+        if(isCrafting) uiCraft.successText.text = craftStr;
     }
 
     public void ProcessCraft(int recipeId, int count)
     {
-        isCrafting = true;
-
         int id = GameManager.Instance.recipeContainer.data.Find(d => d.recipe_id == recipeId).craft_item_id;
         List<MaterialItemData> data = ItemDataLoader.MaterialItemsList;
         targetItem = data.Find(d => d.ItemId == id);
@@ -157,35 +152,4 @@ public class CraftManager : MonoBehaviour
 
         onProgressComplete?.Invoke();
     }
-
-
-
-
-    // private IEnumerator CraftCoroutine(int craftCount, float craftTime)
-    // {
-    //     for (int i = 0; i<craftCount; i++)
-    //     {
-    //         duration = 3f;
-    //         elapsed = 0f;
-
-    //         while(elapsed < duration)
-    //         {
-    //             elapsed += Time.deltaTime;
-
-    //             //uiCraft.UpdateProgressBar(duration, elapsed);
-
-    //             yield return null;
-
-    //             if(!isActive) continue;
-    //         }
-
-    //         currentCraftCount++;
-    //         craftStr = $"{currentCraftCount}/{craftCount}개 제작 완료";
-    //         if(isActive) uiCraft.successText.text = craftStr;
-
-    //         yield return new WaitForSeconds(0.5f);
-
-    //         if(isActive) uiCraft.CompleteCraft();
-    //     }
-    // }
 }

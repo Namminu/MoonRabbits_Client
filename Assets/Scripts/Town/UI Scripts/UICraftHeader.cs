@@ -24,6 +24,8 @@ public class DragUI : MonoBehaviour, IPointerDownHandler, IDragHandler
             out offset
         );
         offset = uiCraftRect.anchoredPosition - offset;
+
+        CanvasManager.Instance.uiCraft.transform.SetAsLastSibling();
     }
 
     public void OnDrag(PointerEventData eventData)

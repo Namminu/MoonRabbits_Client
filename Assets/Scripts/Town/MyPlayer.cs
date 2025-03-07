@@ -365,6 +365,7 @@ public class MyPlayer : MonoBehaviour
             // C 키입력
             GameObject uiCraft = CanvasManager.Instance.uiCraft.gameObject;
             uiCraft.SetActive(!uiCraft.activeSelf);
+            CanvasManager.Instance.craftManager.Resume();
             uiCraft.transform.SetAsLastSibling();
         }
         if(uiPartyInput)
