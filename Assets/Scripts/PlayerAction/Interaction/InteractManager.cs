@@ -16,6 +16,7 @@ public class InteractManager : MonoBehaviour
     private const int portalTimer = 5;
     private bool isPortalReady = true;
     private bool isInteracting = false;
+    public bool IsInteracting { get { return isInteracting; } set { isInteracting = value; } }
     public bool isEquipChanging = false;
 
     private string[] anims = { "none", "Axe", "PickAxe" };
@@ -58,7 +59,10 @@ public class InteractManager : MonoBehaviour
     private void GatherResource()
     {
         if (isInteracting)
+        {
+            UISkillCheck.Instance.SkillCheck();
             return;
+        }
 
         if (player.currentEquip != targetResource.resourceId)
         {
@@ -81,20 +85,15 @@ public class InteractManager : MonoBehaviour
             direction.y = 0;
             player.transform.rotation = Quaternion.LookRotation(direction);
 
-            player.Anim.SetTrigger(anims[player.currentEquip]);
+            //player.Anim.SetTrigger(anims[player.currentEquip]);
 
             GameManager.Network.Send(new C2SGatheringStart { PlacedId = targetResource.idx });
 
-            GameManager.Network.Send(
-                new C2SGatheringSkillCheck
-                {
-                    DeltaTime = (int)(
-                        DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - targetResource.Starttime
-                    ),
-                }
-            );
 
-            Invoke(nameof(GatherOut), 0.7f); // 재상호작용은 일단 0.7초 후에 가능 (애니메이션 출력시간)
+
+
+
+            //Invoke(nameof(GatherOut), 0.7f); // 재상호작용은 일단 0.7초 후에 가능 (애니메이션 출력시간)
         }
         else
         {
@@ -102,11 +101,15 @@ public class InteractManager : MonoBehaviour
         }
     }
 
-    private void GatherOut()
+    public void GatherOut(bool isinteracting)
     {
+        if (!this.isInteracting)
+        {
+            return;
+        }
         //targetResource.DecreaseDurability(1); // 숫자 만큼 감소시킴 나중에 능력치만큼 적용?
-        isInteracting = false;
-        // player.NavAgent.isStopped = false;
+        this.isInteracting = isinteracting;
+        UISkillCheck.Instance.EndSkillCheck();
     }
 
     public void UsePortal()
