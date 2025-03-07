@@ -69,6 +69,9 @@ public abstract class SManagerBase : MonoBehaviour
         {
             var player = SpawnPlayer(playerInfo);
 
+            // 플레이어 매니저에서 정보 업데이트
+            PlayerManager.RegisterPlayer(player);
+
             if (playerInfo.Nickname == GameManager.Instance.NickName)
             {
                 player.SetIsMine(true);
