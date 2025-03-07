@@ -535,4 +535,14 @@ public class Player : MonoBehaviour
         this.uiPlayer = uiPlayer;
         this.uiPlayer.gameObject.SetActive(true);
     }
+
+    public void Damaged(int damage)
+    {
+        curHp -= damage;
+
+        if (IsMine)
+        {
+            uiPlayer.InitHp(curHp);
+        }
+    }
 }
