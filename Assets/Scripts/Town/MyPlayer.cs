@@ -107,6 +107,7 @@ public class MyPlayer : MonoBehaviour
         PathFinding();
         ScreenScrollZoom();
     }
+
     void PathFinding()
     {
         if (agent.pathPending)
@@ -190,8 +191,6 @@ public class MyPlayer : MonoBehaviour
         recallInput = Input.GetKeyDown(KeyCode.T);
         interactInput = Input.GetKeyDown(KeyCode.F);
         equipChangeInput = Input.GetKeyDown(KeyCode.R);
-
-
     }
 
     IEnumerator ExecuteEvery0_1Seconds()
