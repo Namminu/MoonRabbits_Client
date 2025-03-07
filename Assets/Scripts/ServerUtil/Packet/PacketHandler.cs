@@ -568,12 +568,29 @@ class PacketHandler
         Debug.Log($"S2CInventoryUpdate 패킷 무사 도착 : {pkt}");
         InventoryManager.instance.UpdateInventoryData(pkt);
     }
-    #endregion
-
     public static void S2CCraftHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CCraft pkt)
             return;
         Debug.Log($"S2CCraft 패킷 무사 도착 : {pkt}");
     }
+    #endregion
+
+    #region Housing
+
+    public static void S2CHousingSaveHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CHousingSave pkt)
+            return;
+        Debug.Log($"S2CHousingSave 패킷 무사 도착 : {pkt}");
+    }
+
+    public static void S2CHousingLoadHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CHousingLoad pkt)
+            return;
+        Debug.Log($"S2CHousingLoad 패킷 무사 도착 : {pkt}");
+    }
+
+    # endregion
 }
