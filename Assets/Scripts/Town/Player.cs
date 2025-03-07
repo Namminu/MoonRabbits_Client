@@ -559,6 +559,8 @@ public class Player : MonoBehaviour
         {
             uiPlayer.InitHp(curHp);
         }
+
+        PartyMemberUI.instance.UpdateUI();
     }
 
     IEnumerator CoImotalTime(float time)
