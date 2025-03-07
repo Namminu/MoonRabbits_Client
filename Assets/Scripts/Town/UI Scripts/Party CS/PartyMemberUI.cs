@@ -64,23 +64,15 @@ public class PartyMemberUI : MonoBehaviour
             axe = newMember.transform.Find("MemberImage/WorkingOn/Axe").GetComponent<Image>();
             pickaxe = newMember.transform.Find("MemberImage/WorkingOn/Pickaxe").GetComponent<Image>();
 
-            Player player = GameManager.Instance.GetPlayer(member.Id);
-            if (player == null)
+            if (!PlayerManager.playerSaveData.ContainsKey(member.Id))
             {
-                foreach (GameObject memberUI in memberUIs)
-                {
-                    Destroy(memberUI);
-                }
-                memberUIs.Clear();
-
-                Debug.Log("플레이어 못 찾음! 재귀 돌려!");
-
-                // return;
-                UpdateUI();
+                PlayerManager.playerSaveData[member.Id] = new SavePlayerData();
             }
 
+            var player = PlayerManager.playerSaveData[member.Id];
+
             // 레벨 업데이트
-            newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{player.level}";
+            newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{player.Level}";
 
             // 체력 업데이트
             // 하트 찾아서 배열에 넣어주기
@@ -95,19 +87,19 @@ public class PartyMemberUI : MonoBehaviour
                 heart.SetActive(false);
             }
 
-            for (int i = 0; i < player.GetHp(); i++)
+            for (int i = 0; i < player.CurHp; i++)
             {
                 hearts[i].SetActive(true);
             }
 
             // 사용 중인 도구 업데이트
-            if (player.ActiveEquipObj == player.axe)
+            if (player.CurrentEquip == 1)
             {
                 hand.gameObject.SetActive(false);
                 axe.gameObject.SetActive(true);
                 pickaxe.gameObject.SetActive(false);
             }
-            else if (player.ActiveEquipObj == player.pickAxe)
+            else if (player.CurrentEquip == 2)
             {
                 hand.gameObject.SetActive(false);
                 axe.gameObject.SetActive(false);

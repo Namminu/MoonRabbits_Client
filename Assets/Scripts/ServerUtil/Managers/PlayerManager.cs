@@ -41,6 +41,7 @@ public class PlayerManager
         saveData.PlayerId = playerId;
         saveData.Nickname = player.nickname;
         saveData.Level = player.level;
+        saveData.CurHp = player.GetHp();
         saveData.IsMine = player.IsMine;
         saveData.IsStun = player.IsStun;
         saveData.IsImotal = player.GetIsImotal;

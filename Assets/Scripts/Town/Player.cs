@@ -120,6 +120,11 @@ public class Player : MonoBehaviour
         return this.curHp;
     }
 
+    public int SetHp(int num)
+    {
+        return this.curHp = num;
+    }
+
     public void SetIsMine(bool isMine)
     {
         IsMine = isMine;
@@ -381,6 +386,8 @@ public class Player : MonoBehaviour
         transform.Find("StunEffect").gameObject.SetActive(true);
         IsStun = true;
 
+        PlayerManager.playerSaveData[PlayerId].IsStun = true;
+
         if (IsMine)
         {
             MPlayer.NavAgent.ResetPath();
@@ -394,6 +401,7 @@ public class Player : MonoBehaviour
     {
         transform.Find("StunEffect").gameObject.SetActive(false);
         IsStun = false;
+        PlayerManager.playerSaveData[PlayerId].IsStun = false;
     }
 
     public void ChangeEquip(int nextEquip)
@@ -410,6 +418,7 @@ public class Player : MonoBehaviour
         if (IsMine)
         {
             MPlayer.currentEquip = nextEquip;
+            PlayerManager.playerSaveData[PlayerId].CurrentEquip = nextEquip;
             MPlayer.InteractManager.isEquipChanging = false;
         }
     }
@@ -514,6 +523,10 @@ public class Player : MonoBehaviour
         targetExp = newTargetExp;
         exp = updatedExp;
 
+        PlayerManager.playerSaveData[PlayerId].Level = level;
+        PlayerManager.playerSaveData[PlayerId].TargetExp = targetExp;
+        PlayerManager.playerSaveData[PlayerId].Exp = exp;
+
         Debug.Log($"레벨업 응답 실행 {level}/ap{abilityPoint}/{exp}/{targetExp} isMine?{IsMine}");
         if (IsMine)
             uiPlayer.LevelUp(
@@ -552,7 +565,9 @@ public class Player : MonoBehaviour
     {
         curHp -= damage;
         ResourceManager.Instance.Instantiate("Effects", "FX_Shoot", transform.position);
+        PlayerManager.playerSaveData[PlayerId].CurHp -= damage;
         isImotal = true;
+        PlayerManager.playerSaveData[PlayerId].IsImotal = true;
         StartCoroutine(CoImotalTime(ImotalTime));
 
         if (IsMine)
@@ -567,5 +582,6 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         isImotal = false;
+        // PlayerManager.playerSaveData[PlayerId].IsImotal = false;
     }
 }

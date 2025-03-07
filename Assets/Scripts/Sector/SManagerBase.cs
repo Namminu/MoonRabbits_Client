@@ -84,6 +84,8 @@ public abstract class SManagerBase : MonoBehaviour
                 player.SetIsMine(false);
             }
         }
+
+        PartyMemberUI.instance.UpdateUI();
     }
 
     public Player SpawnPlayer(PlayerInfo playerInfo)
@@ -113,6 +115,7 @@ public abstract class SManagerBase : MonoBehaviour
         player.SetPlayerId(playerInfo.PlayerId);
         player.SetNickname(playerInfo.Nickname);
         player.SetLevel(playerInfo.Level);
+        player.SetHp(playerInfo.StatInfo.Hp);
 
         // [4] 이미 접속된 플레이어인지 확인
         var players = GameManager.Instance.PlayerList[SectorCode];
