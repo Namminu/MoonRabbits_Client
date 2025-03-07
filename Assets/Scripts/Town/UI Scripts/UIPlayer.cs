@@ -315,6 +315,8 @@ public class UIPlayer : MonoBehaviour
         }
     }
 
+
+
     private void AddHp() // HP 증가 -> hearts 그리드에 하트 추가
     {
         if (hearts.Count <= heartBgs.Count)

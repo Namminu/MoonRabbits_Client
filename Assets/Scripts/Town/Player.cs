@@ -59,8 +59,6 @@ public class Player : MonoBehaviour
     private int pickSpeed;
     private int moveSpeed;
     private int abilityPoint;
-    private int cur_hp;
-    private int hp;
 
     private void Start()
     {
@@ -243,9 +241,9 @@ public class Player : MonoBehaviour
     public void Emote(int animCode)
     {
         Debug.Log(emotions[animCode]);
-        if(animCode < 100)
+        if (animCode < 100)
         {
-            if(animCode == 10)
+            if (animCode == 10)
             {
                 animator?.SetBool(emotions[11], false);
                 animator?.SetBool(emotions[12], false);
@@ -410,7 +408,7 @@ public class Player : MonoBehaviour
     public void SetStatInfo(StatInfo statInfo)
     {
         maxHp = 3;
-        curHp = 3;
+        curHp = statInfo.Hp;
         level = statInfo.Level;
         exp = statInfo.Exp;
         targetExp = statInfo.TargetExp;
@@ -426,7 +424,7 @@ public class Player : MonoBehaviour
                 Debug.LogError("uiPlayer is null. 먼저 세팅돼야함");
             uiPlayer.SetStatInfo(statInfo);
             uiPlayer.SetNickname(nickname);
-            uiPlayer.InitHp(3);
+            uiPlayer.InitHp(statInfo.Hp);
         }
     }
 
@@ -531,5 +529,15 @@ public class Player : MonoBehaviour
     {
         this.uiPlayer = uiPlayer;
         this.uiPlayer.gameObject.SetActive(true);
+    }
+
+    public void Damaged(int damage)
+    {
+        curHp -= damage;
+
+        if (IsMine)
+        {
+            uiPlayer.InitHp(curHp);
+        }
     }
 }
