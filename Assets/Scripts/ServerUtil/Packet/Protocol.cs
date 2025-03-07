@@ -9,8 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace Google.Protobuf.Protocol
-{
+namespace Google.Protobuf.Protocol {
 
   /// <summary>Holder for reflection information generated from protocol.proto</summary>
   public static partial class ProtocolReflection
@@ -337,6 +336,8 @@ namespace Google.Protobuf.Protocol
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.C2SPong), global::Google.Protobuf.Protocol.C2SPong.Parser, new[]{ "Timestamp" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.C2SGetInventorySlotByItemId), global::Google.Protobuf.Protocol.C2SGetInventorySlotByItemId.Parser, new[]{ "ItemIds" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.S2CGetInventorySlotByItemId), global::Google.Protobuf.Protocol.S2CGetInventorySlotByItemId.Parser, new[]{ "Slots" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.C2SGetInventorySlotByItemId), global::Google.Protobuf.Protocol.C2SGetInventorySlotByItemId.Parser, new[]{ "ItemIds" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.S2CGetInventorySlotByItemId), global::Google.Protobuf.Protocol.S2CGetInventorySlotByItemId.Parser, new[]{ "Slots" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.PlayerInfo), global::Google.Protobuf.Protocol.PlayerInfo.Parser, new[]{ "PlayerId", "Nickname", "Level", "ClassCode", "Transform", "StatInfo" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.PlayerRank), global::Google.Protobuf.Protocol.PlayerRank.Parser, new[]{ "Rank", "PlayerId", "Nickname", "Exp" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.RankingList), global::Google.Protobuf.Protocol.RankingList.Parser, new[]{ "RankingList_", "Timestamp" }, null, null, null, null),
@@ -357,6 +358,9 @@ namespace Google.Protobuf.Protocol
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.InventorySlot), global::Google.Protobuf.Protocol.InventorySlot.Parser, new[]{ "SlotIdx", "ItemId", "Stack" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.TrapInfo), global::Google.Protobuf.Protocol.TrapInfo.Parser, new[]{ "CasterId", "Pos" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Google.Protobuf.Protocol.MaterialInfo), global::Google.Protobuf.Protocol.MaterialInfo.Parser, new[]{ "MaterialId", "Count", "Slot" }, null, null, null, null)
+          }));
+    }
+    #endregion
           }));
     }
     #endregion
@@ -461,6 +465,7 @@ namespace Google.Protobuf.Protocol
   }
 
   #endregion
+  #endregion
 
   #region Messages
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
@@ -496,6 +501,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -776,6 +782,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CRegister : pb::IMessage<S2CRegister>
@@ -810,6 +817,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1047,6 +1055,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SLogin : pb::IMessage<C2SLogin>
@@ -1081,6 +1090,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1318,6 +1328,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CLogin : pb::IMessage<S2CLogin>
@@ -1352,6 +1363,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1617,6 +1629,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SCreateCharacter : pb::IMessage<C2SCreateCharacter>
@@ -1651,6 +1664,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1888,6 +1902,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CCreateCharacter : pb::IMessage<S2CCreateCharacter>
@@ -1922,6 +1937,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2159,6 +2175,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SEnterTown : pb::IMessage<C2SEnterTown>
@@ -2193,6 +2210,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2430,6 +2448,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CEnterTown : pb::IMessage<S2CEnterTown>
@@ -2464,6 +2483,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2643,6 +2663,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SMoveSector : pb::IMessage<C2SMoveSector>
@@ -2677,6 +2698,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2871,6 +2893,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CMoveSector : pb::IMessage<S2CMoveSector>
@@ -2905,6 +2928,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3155,6 +3179,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SEmote : pb::IMessage<C2SEmote>
@@ -3189,6 +3214,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3383,6 +3409,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CEmote : pb::IMessage<S2CEmote>
@@ -3417,6 +3444,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3654,6 +3682,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SChat : pb::IMessage<C2SChat>
@@ -3688,6 +3717,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4011,6 +4041,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CChat : pb::IMessage<S2CChat>
@@ -4045,6 +4076,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4325,6 +4357,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CSpawn : pb::IMessage<S2CSpawn>
@@ -4359,6 +4392,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4564,6 +4598,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CDespawn : pb::IMessage<S2CDespawn>
@@ -4598,6 +4633,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4792,6 +4828,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SPlayerMove : pb::IMessage<C2SPlayerMove>
@@ -4826,6 +4863,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5235,6 +5273,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CPlayerMove : pb::IMessage<S2CPlayerMove>
@@ -5269,6 +5308,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5420,6 +5460,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SPlayerLocation : pb::IMessage<C2SPlayerLocation>
@@ -5454,6 +5495,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5659,6 +5701,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CPlayerLocation : pb::IMessage<S2CPlayerLocation>
@@ -5693,6 +5736,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5984,6 +6028,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SPlayerRunning : pb::IMessage<C2SPlayerRunning>
@@ -6018,6 +6063,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6169,6 +6215,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CPlayerRunning : pb::IMessage<S2CPlayerRunning>
@@ -6203,6 +6250,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6354,6 +6402,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SPortal : pb::IMessage<C2SPortal>
@@ -6388,6 +6437,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6625,6 +6675,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CPortal : pb::IMessage<S2CPortal>
@@ -6659,6 +6710,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6864,6 +6916,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SRankingList : pb::IMessage<C2SRankingList>
@@ -6898,6 +6951,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7092,6 +7146,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CUpdateRanking : pb::IMessage<S2CUpdateRanking>
@@ -7126,6 +7181,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7374,6 +7430,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SCollision : pb::IMessage<C2SCollision>
@@ -7408,6 +7465,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7613,6 +7671,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CCollision : pb::IMessage<S2CCollision>
@@ -7647,6 +7706,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7852,6 +7912,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SItemObtained : pb::IMessage<C2SItemObtained>
@@ -7886,6 +7947,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -8123,6 +8185,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SItemDisassembly : pb::IMessage<C2SItemDisassembly>
@@ -8157,6 +8220,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -8394,6 +8458,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SItemDestroy : pb::IMessage<C2SItemDestroy>
@@ -8428,6 +8493,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -8665,6 +8731,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SInventorySort : pb::IMessage<C2SInventorySort>
@@ -8699,6 +8766,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -8878,6 +8946,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SItemMove : pb::IMessage<C2SItemMove>
@@ -8912,6 +8981,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -9091,6 +9161,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CInventoryUpdate : pb::IMessage<S2CInventoryUpdate>
@@ -9125,6 +9196,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -9304,6 +9376,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SCreateParty : pb::IMessage<C2SCreateParty>
@@ -9338,6 +9411,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -9489,6 +9563,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CCreateParty : pb::IMessage<S2CCreateParty>
@@ -9523,6 +9598,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -9831,6 +9907,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SInviteParty : pb::IMessage<C2SInviteParty>
@@ -9865,6 +9942,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -10102,6 +10180,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CInviteParty : pb::IMessage<S2CInviteParty>
@@ -10136,6 +10215,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -10416,6 +10496,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SJoinParty : pb::IMessage<C2SJoinParty>
@@ -10450,6 +10531,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -10687,6 +10769,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CJoinParty : pb::IMessage<S2CJoinParty>
@@ -10721,6 +10804,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -11029,6 +11113,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SLeaveParty : pb::IMessage<C2SLeaveParty>
@@ -11063,6 +11148,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -11300,6 +11386,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CLeaveParty : pb::IMessage<S2CLeaveParty>
@@ -11334,6 +11421,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -11642,6 +11730,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SCheckPartyList : pb::IMessage<C2SCheckPartyList>
@@ -11676,6 +11765,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -11827,6 +11917,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CCheckPartyList : pb::IMessage<S2CCheckPartyList>
@@ -11861,6 +11952,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -12083,6 +12175,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SKickOutMember : pb::IMessage<C2SKickOutMember>
@@ -12117,6 +12210,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -12354,6 +12448,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CKickOutMember : pb::IMessage<S2CKickOutMember>
@@ -12388,6 +12483,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -12696,6 +12792,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SDisbandParty : pb::IMessage<C2SDisbandParty>
@@ -12730,6 +12827,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -12924,6 +13022,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CDisbandParty : pb::IMessage<S2CDisbandParty>
@@ -12958,6 +13057,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -13152,6 +13252,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SAllowInvite : pb::IMessage<C2SAllowInvite>
@@ -13186,6 +13287,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -13423,6 +13525,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CAllowInvite : pb::IMessage<S2CAllowInvite>
@@ -13457,6 +13560,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -14107,6 +14211,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SRejectInvite : pb::IMessage<C2SRejectInvite>
@@ -14141,6 +14246,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -14335,6 +14441,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CRejectInvite : pb::IMessage<S2CRejectInvite>
@@ -14369,6 +14476,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -14520,6 +14628,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SMonsterLocation : pb::IMessage<C2SMonsterLocation>
@@ -14554,6 +14663,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -14802,6 +14912,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CMonsterLocation : pb::IMessage<S2CMonsterLocation>
@@ -14836,6 +14947,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -15084,6 +15196,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SDetectedPlayer : pb::IMessage<C2SDetectedPlayer>
@@ -15118,6 +15231,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -15355,6 +15469,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CDetectedPlayer : pb::IMessage<S2CDetectedPlayer>
@@ -15389,6 +15504,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -15626,6 +15742,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SMissingPlayer : pb::IMessage<C2SMissingPlayer>
@@ -15660,6 +15777,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -15897,6 +16015,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CMissingPlayer : pb::IMessage<S2CMissingPlayer>
@@ -15931,6 +16050,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -16168,6 +16288,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SResourcesList : pb::IMessage<C2SResourcesList>
@@ -16202,6 +16323,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -16353,6 +16475,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CResourcesList : pb::IMessage<S2CResourcesList>
@@ -16387,6 +16510,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -16566,6 +16690,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CUpdateDurability : pb::IMessage<S2CUpdateDurability>
@@ -16600,6 +16725,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -16837,6 +16963,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SGatheringStart : pb::IMessage<C2SGatheringStart>
@@ -16871,6 +16998,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -17065,6 +17193,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CGatheringStart : pb::IMessage<S2CGatheringStart>
@@ -17099,6 +17228,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -17379,6 +17509,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SGatheringSkillCheck : pb::IMessage<C2SGatheringSkillCheck>
@@ -17413,6 +17544,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -17650,6 +17782,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CGatheringSkillCheck : pb::IMessage<S2CGatheringSkillCheck>
@@ -17684,6 +17817,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -17921,6 +18055,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SGatheringDone : pb::IMessage<C2SGatheringDone>
@@ -17955,6 +18090,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -18106,6 +18242,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CGatheringDone : pb::IMessage<S2CGatheringDone>
@@ -18140,6 +18277,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -18420,6 +18558,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SGatheringAnimationEnd : pb::IMessage<C2SGatheringAnimationEnd>
@@ -18454,6 +18593,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -18605,6 +18745,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SRecall : pb::IMessage<C2SRecall>
@@ -18639,6 +18780,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -18790,6 +18932,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CRecall : pb::IMessage<S2CRecall>
@@ -18824,6 +18967,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -19061,6 +19205,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SThrowGrenade : pb::IMessage<C2SThrowGrenade>
@@ -19095,6 +19240,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -19354,6 +19500,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CThrowGrenade : pb::IMessage<S2CThrowGrenade>
@@ -19388,6 +19535,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -19679,6 +19827,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CTraps : pb::IMessage<S2CTraps>
@@ -19713,6 +19862,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -19892,6 +20042,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SSetTrap : pb::IMessage<C2SSetTrap>
@@ -19926,6 +20077,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -20131,6 +20283,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CSetTrap : pb::IMessage<S2CSetTrap>
@@ -20165,6 +20318,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -20413,6 +20567,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SRemoveTrap : pb::IMessage<C2SRemoveTrap>
@@ -20447,6 +20602,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -20652,6 +20808,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CRemoveTrap : pb::IMessage<S2CRemoveTrap>
@@ -20686,6 +20843,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -20865,6 +21023,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SStun : pb::IMessage<C2SStun>
@@ -20899,6 +21058,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -21153,6 +21313,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CStun : pb::IMessage<S2CStun>
@@ -21187,6 +21348,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -21441,6 +21603,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SEquipChange : pb::IMessage<C2SEquipChange>
@@ -21475,6 +21638,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -21669,6 +21833,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CEquipChange : pb::IMessage<S2CEquipChange>
@@ -21703,6 +21868,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -21940,6 +22106,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SAddExp : pb::IMessage<C2SAddExp>
@@ -21974,6 +22141,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -22168,6 +22336,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CAddExp : pb::IMessage<S2CAddExp>
@@ -22202,6 +22371,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -22396,6 +22566,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CLevelUp : pb::IMessage<S2CLevelUp>
@@ -22430,6 +22601,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -22796,6 +22968,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SInvestPoint : pb::IMessage<C2SInvestPoint>
@@ -22830,6 +23003,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -23024,6 +23198,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CInvestPoint : pb::IMessage<S2CInvestPoint>
@@ -23058,6 +23233,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -23263,6 +23439,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SCraft : pb::IMessage<C2SCraft>
@@ -23297,6 +23474,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -23534,6 +23712,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CCraft : pb::IMessage<S2CCraft>
@@ -23568,6 +23747,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -23685,15 +23865,15 @@ namespace Google.Protobuf.Protocol
 #else
       if (CraftedItemId != 0) {
         output.WriteRawTag(8);
-        output.WriteInt32(CraftedItemId);
+        output.WriteBool(IsSuccess);
       }
-      if (Count != 0) {
+      if (RecipeId != 0) {
         output.WriteRawTag(16);
-        output.WriteInt32(Count);
+        output.WriteInt32(RecipeId);
       }
-      if (Slot != 0) {
-        output.WriteRawTag(24);
-        output.WriteInt32(Slot);
+      if (Msg.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(Msg);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -23793,15 +23973,15 @@ namespace Google.Protobuf.Protocol
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            CraftedItemId = input.ReadInt32();
+            IsSuccess = input.ReadBool();
             break;
           }
           case 16: {
-            Count = input.ReadInt32();
+            RecipeId = input.ReadInt32();
             break;
           }
-          case 24: {
-            Slot = input.ReadInt32();
+          case 26: {
+            Msg = input.ReadString();
             break;
           }
         }
@@ -23848,6 +24028,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class S2CPing : pb::IMessage<S2CPing>
@@ -23882,6 +24063,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -24076,6 +24258,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class C2SPong : pb::IMessage<C2SPong>
@@ -24110,6 +24293,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -24732,6 +24916,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   /// <summary>
   /// 구조체 
@@ -24769,6 +24954,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -25200,6 +25386,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class PlayerRank : pb::IMessage<PlayerRank>
@@ -25234,6 +25421,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -25557,6 +25745,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class RankingList : pb::IMessage<RankingList>
@@ -25591,6 +25780,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -25813,6 +26003,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class TransformInfo : pb::IMessage<TransformInfo>
@@ -25847,6 +26038,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -26170,6 +26362,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class SectorInfo : pb::IMessage<SectorInfo>
@@ -26204,6 +26397,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -26426,6 +26620,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class PlayerStatus : pb::IMessage<PlayerStatus>
@@ -26460,6 +26655,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -26869,6 +27065,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ItemInfo : pb::IMessage<ItemInfo>
@@ -26903,6 +27100,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -27140,6 +27338,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class InventoryInfo : pb::IMessage<InventoryInfo>
@@ -27174,6 +27373,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -27325,6 +27525,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class MemberCardInfo : pb::IMessage<MemberCardInfo>
@@ -27359,6 +27560,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -27854,6 +28056,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class OwnedCharacter : pb::IMessage<OwnedCharacter>
@@ -27888,6 +28091,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -28125,6 +28329,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class CollisionInfo : pb::IMessage<CollisionInfo>
@@ -28159,6 +28364,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -28805,6 +29011,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class CollisionPushInfo : pb::IMessage<CollisionPushInfo>
@@ -28839,6 +29046,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -29345,6 +29553,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Vec3 : pb::IMessage<Vec3>
@@ -29379,6 +29588,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -29659,6 +29869,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Resource : pb::IMessage<Resource>
@@ -29693,6 +29904,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -29973,6 +30185,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class StatInfo : pb::IMessage<StatInfo>
@@ -30007,6 +30220,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -30545,6 +30759,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class MonsterStatus : pb::IMessage<MonsterStatus>
@@ -30579,6 +30794,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -30902,6 +31118,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class PartyInfo : pb::IMessage<PartyInfo>
@@ -30936,6 +31153,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -31216,6 +31434,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class InventorySlot : pb::IMessage<InventorySlot>
@@ -31250,6 +31469,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -31530,6 +31750,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class TrapInfo : pb::IMessage<TrapInfo>
@@ -31564,6 +31785,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -31812,6 +32034,7 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class MaterialInfo : pb::IMessage<MaterialInfo>
@@ -31846,6 +32069,7 @@ namespace Google.Protobuf.Protocol
       OnConstruction();
     }
 
+    partial void OnConstruction();
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -32126,7 +32350,9 @@ namespace Google.Protobuf.Protocol
 #endif
 
   }
+  }
 
+  #endregion
   #endregion
 
 }
