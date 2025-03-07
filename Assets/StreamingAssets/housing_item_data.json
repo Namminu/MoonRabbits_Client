@@ -37,6 +37,15 @@
       "item_prefab": "TestPlane",
       "item_dataType": 1,
       "item_gridSize": [1, 1]
+    },
+    {
+      "item_id": 30004,
+      "item_name": "testHSItem",
+      "item_type": 0,
+      "item_description": "테스트용 하우징 아이템",
+      "item_prefab": "TestLargeCube",
+      "item_dataType": 0,
+      "item_gridSize": [4, 3]
     }
   ]
 }

@@ -28,7 +28,7 @@ public class PreviewSystem : MonoBehaviour
 	{
 		previewObject = Instantiate(prefab);
 		currentRotation = 0;
-		PreparePreavie(previewObject);
+		PreparePreaview(previewObject);
 		PrepareCursor(size);
 		cellIndicator.SetActive(true);
 	}
@@ -71,7 +71,7 @@ public class PreviewSystem : MonoBehaviour
 		}
 	}
 
-	private void PreparePreavie(GameObject previewObject)
+	private void PreparePreaview(GameObject previewObject)
 	{
 		Renderer[] renderers = previewObject.GetComponentsInChildren<Renderer>();
 		foreach (Renderer renderer in renderers)

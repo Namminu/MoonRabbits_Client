@@ -62,7 +62,7 @@ public class PlacementState : IBuildingState
 			Quaternion.Euler(0, rotationY, 0) //  회전값 적용
 		);
 
-		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ?
+		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemDataType == 0 ?
 			floorData : furnitureData;
 
 		selectedData.AddObjectAt(gridPosition,
@@ -76,9 +76,9 @@ public class PlacementState : IBuildingState
 	}
 
 
-	private bool CheckPlacementValidity(Vector3Int gridPosition, int selectedObjectItemId)
+	private bool CheckPlacementValidity(Vector3Int gridPosition, int selectedObjectIndex)
 	{
-		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ?
+		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemDataType == 0 ?
 			floorData : furnitureData;
 
 		return selectedData.CanPlaceObjectAt(gridPosition, ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize);
