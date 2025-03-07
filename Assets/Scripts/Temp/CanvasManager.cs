@@ -16,6 +16,7 @@ public class CanvasManager : MonoBehaviour
     public InventoryUI inventoryUI;
     public UICraft uiCraft;
     public GameObject uiMenu;
+    public CraftManager craftManager;
 
     public Player player;
 
@@ -38,6 +39,7 @@ public class CanvasManager : MonoBehaviour
         uIBattlePopup = GetComponentInChildren<UIBattlePopup>();
         inventoryUI = GetComponentInChildren<InventoryUI>();
         uiCraft = GetComponentInChildren<UICraft>();
+        craftManager = GetComponentInChildren<CraftManager>();
     }
 
     private void Start()

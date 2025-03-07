@@ -35,6 +35,7 @@ public class UICraft : MonoBehaviour
     public Button btnClose;
     public GameObject uiCraftPanel;
     public GameObject progressFrame;
+    public Image craftingImage;
     public TextMeshProUGUI progressTitle;
     public Slider progressBar;
     public TextMeshProUGUI successText;
@@ -75,16 +76,24 @@ public class UICraft : MonoBehaviour
         foreach (Recipe recipe in GameManager.Instance.recipeContainer.data)
         {
             GameObject newRecipeBtn = Instantiate(recipeBtnPrefab, scrollViewContent.transform);
-            TextMeshProUGUI recipeBtnText = newRecipeBtn.GetComponentInChildren<TextMeshProUGUI>();
-            if (newRecipeBtn == null || recipeBtnText == null)
+            Image recipeBtnImg = null;
+            foreach (Transform child in newRecipeBtn.transform)
             {
-                Debug.LogError("레시피 버튼 생성 및 제목 할당 오류");
+                recipeBtnImg = child.GetComponent<Image>();
+                if(recipeBtnImg != null) break;
+            }
+            TextMeshProUGUI recipeBtnText = newRecipeBtn.GetComponentInChildren<TextMeshProUGUI>();
+            if (newRecipeBtn == null || recipeBtnImg == null || recipeBtnText == null)
+            {
+                Debug.LogError("레시피 버튼 할당 오류");
                 continue;
             }
 
-            List<ItemJson> itemData = GameManager.Instance.materialItemContainer.data;
-            ItemJson item = itemData.FirstOrDefault(d => d.item_id == recipe.craft_item_id);
-            string itemName = item?.item_name;
+            List<MaterialItemData> itemData = ItemDataLoader.MaterialItemsList;
+            MaterialItemData item = itemData.FirstOrDefault(d => d.ItemId == recipe.craft_item_id);
+
+            recipeBtnImg.sprite = item.ItemIcon;
+            string itemName = item?.ItemName;
             if (itemData == null || item == null || itemName == null)
             {
                 Debug.LogError("UICraft 초기화중 아이템 못 찾음");
@@ -179,16 +188,12 @@ public class UICraft : MonoBehaviour
 
     public void OnCraftBtnClick()
     {
-        if(true) {
-            Debug.LogWarning("제작 버튼!");
-            var pkt = new C2SCraft{
-                RecipeId = selectedRecipe.recipe_id,
-                Count = craftCount
-            };
-            GameManager.Network.Send(pkt);
-        }else {
-            Debug.LogWarning("제작 불가");
-        }
+        detailFrame.SetActive(false);
+        confirmButton.gameObject.SetActive(false);
+        progressFrame.SetActive(true); // 제작진행창 띄우기
+        craftingImage.sprite = ItemDataLoader.GetSpriteByItemId(selectedRecipe.craft_item_id);
+
+        CanvasManager.Instance.craftManager.ProcessCraft(selectedRecipe.recipe_id, craftCount);
     }
 
     public void OnDecreaseBtnClick()
@@ -247,67 +252,12 @@ public class UICraft : MonoBehaviour
         progressFrame.SetActive(false);
     }
 
-    public void CraftResult(S2CCraft pkt)
-    {
-        List<ItemJson> data = GameManager.Instance.materialItemContainer.data;
-        ItemJson resultItem = data.Find(d => d.item_id == pkt.CraftedItemId);
-
-        int craftedCount = 0;   // 현재 제작 개수를 저장할 변수
-
-        detailFrame.SetActive(false); // 제작설명서 끄기
-        confirmButton.gameObject.SetActive(false);
-        progressFrame.SetActive(true); // 제작진행창 띄우기
-        progressTitle.text = $"{resultItem.item_name}";
-        successText.text = $"{craftedCount}/{pkt.Count}개 제작 완료"; // 하나 제작 완료될때마다 갱신
-        disableMask.SetActive(true); // 제작하는동안 제작종류선택UI 클릭못하게 막는용도
-        
-        // progressBar 코루틴 실행
-        StartCoroutine(DoCraft(pkt.Count, () => {
-            // 모두 완료시 확인버튼 띄우기, 마스크 제거하기
-            confirmButton.gameObject.SetActive(true);
-            disableMask.SetActive(false);
-            
-            GameManager.Instance.SManager.UiChat.PushMessage(
-                    "System",
-                    $"{resultItem.item_name} {pkt.Count}개 제작에 성공하였습니다.",
-                    "System",
-                    true
-                );
-        }));
-    }
-
-    private IEnumerator DoCraft(int count, System.Action onComplete)
-    {
-        int craftedCount = 0;
-
-        for(int i=0; i<count; i++){
-            yield return StartCoroutine(UpdateProgressBar(3f, ()=>
-            {
-                craftedCount++;
-                successText.text = $"{craftedCount}/{count}개 제작 완료";
-            }));
-
-            if(i < count -1)
-            {
-                yield return new WaitForSeconds(0.5f);
-            }
-        }
-
-        onComplete?.Invoke();
-    }
-
-    private IEnumerator UpdateProgressBar(float duration, System.Action onProgressComplete)
-    {
-        float elapsed = 0f;
-
-        while(elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            progressBar.maxValue = duration;
-            progressBar.value = elapsed;
-            yield return null;
-        }
-
-        onProgressComplete?.Invoke();
-    }
+    // public void CraftResult(S2CCraft pkt)
+    // {
+    //     detailFrame.SetActive(false);
+    //     confirmButton.gameObject.SetActive(false);
+    //     progressFrame.SetActive(true); // 제작진행창 띄우기
+    //     craftingImage.sprite = ItemDataLoader.GetSpriteByItemId(selectedRecipe.craft_item_id);
+    //     CanvasManager.Instance.craftManager.StartCraft(pkt);
+    // }
 }
