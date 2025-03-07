@@ -357,6 +357,9 @@ public class Player : MonoBehaviour
 
     public void Stun(float timer)
     {
+        if (IsStun)
+            return;
+
         transform.Find("StunEffect").gameObject.SetActive(true);
         IsStun = true;
 
