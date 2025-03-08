@@ -193,12 +193,15 @@ public class ItemSlotUI
         if (item == null)
             return;
 
-		if (eventData.button == PointerEventData.InputButton.Right) return;
+        if (eventData.button == PointerEventData.InputButton.Right) return;
 
-		// Image copy process when dragging starts from an item slot
-		DragSlot.instance.dragSlot = this;
+        // Image copy process when dragging starts from an item slot
+        DragSlot.instance.dragSlot = this;
         DragSlot.instance.DragSetImage(itemImage);
         DragSlot.instance.transform.position = eventData.position;
+
+        // 슬롯의 이미지는 그대로 유지하되, 투명도를 낮춰서 드래그 중임을 표시
+        SetItemImageAlpha(0.5f);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -211,6 +214,8 @@ public class ItemSlotUI
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        // 드래그 종료 후 원래 슬롯 이미지의 투명도를 복원
+        SetItemImageAlpha(1);
         DragSlot.instance.SetItemImageAlpha(0);
         DragSlot.instance.dragSlot = null;
 
@@ -223,6 +228,13 @@ public class ItemSlotUI
     {
         if (DragSlot.instance.dragSlot == null) return;
 
+        // 만약 자기 자신(원래 슬롯)에 드랍되는 경우, 단순히 투명도를 복구하고 종료
+        if (DragSlot.instance.dragSlot == this)
+        {
+            SetItemImageAlpha(1);
+            return;
+        }
+
         // 드래그 중인 아이템 가져오기
         MaterialItem draggedItem = DragSlot.instance.dragSlot.GetItem();
         if (draggedItem == null) return;
@@ -232,7 +244,6 @@ public class ItemSlotUI
         {
             // 같은 아이템일 경우 병합 처리
             AddItem(draggedItem);
-
             // 드래그 중인 슬롯(원본)을 명확히 비움
             DragSlot.instance.dragSlot.ClearSlot();
         }

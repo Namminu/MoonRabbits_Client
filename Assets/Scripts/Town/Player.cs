@@ -445,6 +445,10 @@ public class Player : MonoBehaviour
         moveSpeed = statInfo.MoveSpeed;
         abilityPoint = statInfo.AbilityPoint;
 
+        SetStamina(stamina);
+        SetPickSpeed(pickSpeed);
+        SetMoveSpeed(moveSpeed);
+
         if (IsMine)
         {
             if (uiPlayer == null)
@@ -506,14 +510,12 @@ public class Player : MonoBehaviour
             uiPlayer.SetPickSpeed(pickSpeed, abilityPoint > 0);
     }
 
-    private void SetMoveSpeed(int moveSpeed)
+    private void SetMoveSpeed(float moveSpeed)
     {
         // 플레이어 오브젝트 속도 변경
-        GetComponent<NavMeshAgent>().speed = moveSpeed * 1 + 5;
-        GetComponent<NavMeshAgent>().angularSpeed = 300 + moveSpeed * 100;
-        GetComponent<NavMeshAgent>().acceleration = moveSpeed * 2 + 3;
+        GetComponent<NavMeshAgent>().speed = 3.0f + (moveSpeed * 0.1f);
 
-        this.moveSpeed = moveSpeed;
+        /*this.moveSpeed = moveSpeed;*/
         if (IsMine)
             uiPlayer.SetMoveSpeed(moveSpeed, abilityPoint > 0);
     }
