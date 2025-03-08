@@ -12,6 +12,8 @@ public class UIPlayer : MonoBehaviour
 
     private int APButtonsOffsetY = 39;
     private int APTextOffsetX = 152;
+    private Vector2 startAPButtonPosition;
+    private Vector2 startAPFramePosition;
 
     public Button btnAddExp;
     public Slider staminaSlider;
@@ -39,6 +41,8 @@ public class UIPlayer : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        startAPButtonPosition = APButtons.transform.position;
+        startAPFramePosition = APFrame.transform.position;
     }
 
     // Start is called before the first frame update
@@ -88,6 +92,8 @@ public class UIPlayer : MonoBehaviour
         APText.text = statInfo.AbilityPoint.ToString();
         if (statInfo.AbilityPoint > 0)
         {
+            APButtons.transform.position = startAPButtonPosition;
+            APFrame.transform.position = startAPFramePosition;
             Debug.Log(APButtons.transform.position);
             Debug.Log(APFrame.transform.position);
             Vector3 goalPos_APButtons =
