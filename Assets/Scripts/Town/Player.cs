@@ -444,6 +444,10 @@ public class Player : MonoBehaviour
         pickSpeed = statInfo.PickSpeed;
         moveSpeed = statInfo.MoveSpeed;
         abilityPoint = statInfo.AbilityPoint;
+        
+        SetStamina(stamina);
+        SetPickSpeed(pickSpeed);
+        SetMoveSpeed(moveSpeed);
 
         if (IsMine)
         {
