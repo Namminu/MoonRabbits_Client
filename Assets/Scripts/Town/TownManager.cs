@@ -9,7 +9,7 @@ public class TownManager : SManagerBase
     public static TownManager Instance => _instance;
 
     [SerializeField]
-    private UIStart uiStart;
+    public UIStart uiStart;
 
     [SerializeField]
     private UIAnimation uiAnimation;
@@ -51,6 +51,13 @@ public class TownManager : SManagerBase
         GameManager.Network.Init(gameServer, port);
         txtServer.text = gameServer;
     }
+
+    public void TryReconnectToServer(string newIP, string newPort)
+    {
+        GameManager.Network.Reconnect(newIP, newPort);
+        txtServer.text = newIP;  // UI에 새로운 서버 주소 표시
+    }
+
 
     public void GameStart(string userName, int classCode)
     {

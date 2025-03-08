@@ -4,6 +4,8 @@ using Google.Protobuf.Protocol;
 
 public class PlayerManager
 {
+    public static string email;
+    public static string pw;
     // 플레이어 컴포넌트와 저장 데이터를 관리하는 정적 딕셔너리
     public static Dictionary<int, Player> players = new Dictionary<int, Player>();
     public static Dictionary<int, SavePlayerData> playerSaveData = new Dictionary<int, SavePlayerData>();
@@ -94,6 +96,7 @@ public class SavePlayerData
     public bool IsMine;
     public bool IsStun;
     public bool IsImotal;
+
 
     // 변환 정보
     public Vector3 Position;

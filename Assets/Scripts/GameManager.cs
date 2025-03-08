@@ -8,13 +8,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using System.Threading.Tasks;
 
 public class GameManager : MonoBehaviour
 {
     [Header("Managers")]
     private static GameManager _instance = null;
     public static GameManager Instance => _instance;
-    
+
     private bool _isLowSpecMode;
     public bool IsLowSpecMode
     {
@@ -95,11 +96,11 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
 
             if (!IsLowSpecMode)
-            EffectManager.Instance.CreatePersistentEffect(
-                "Confetti",
-                new Vector3(-3, 14, 134),
-                Quaternion.identity
-            );
+                EffectManager.Instance.CreatePersistentEffect(
+                    "Confetti",
+                    new Vector3(-3, 14, 134),
+                    Quaternion.identity
+                );
         }
         else
         {
@@ -246,6 +247,38 @@ public class GameManager : MonoBehaviour
         CurrentSector = targetSector;
     }
 
+    public async void ChangeServer(string newIP, string newPort)
+    {
+        Debug.Log($"서버 변경: {newIP}:{newPort}");
+
+        // 서버에 접속한 후 플레이어 정보 요청
+
+        SceneManager.LoadScene("Town");
+        network.Discconect();  // 기존 연결 해제
+        network.Reconnect(newIP, newPort);
+        await Task.Delay(1000); // 네트워크 연결 대기
+
+        TownManager.Instance.uiStart.gameObject.SetActive(false);
+        TownManager.Instance.uiStart.UILogin.SetActive(false);
+
+        network.Send(new C2SLogin
+        {
+            Email = PlayerManager.email,
+            Pw = PlayerManager.pw
+        });
+
+        network.Send(new C2SEnterTown
+        {
+            Nickname = NickName,
+            ClassCode = ClassCode
+        });
+
+        Debug.Log("서버 변경 후 플레이어 정보 요청 완료");
+    }
+
+
+
+
     public void DespawnPlayer(int playerId)
     {
         // [1] 전체 플레이어 리스트 순회
@@ -313,18 +346,18 @@ public class GameManager : MonoBehaviour
 
         // recipe.json, materialItem.json 파일 로드
         string[] jsonFiles = { "recipe.json", "material_item_data.json" };
-        
-        foreach(string jsonFile in jsonFiles)
+
+        foreach (string jsonFile in jsonFiles)
         {
             string filePath = Path.Combine(Application.streamingAssetsPath, jsonFile);
 
-            if(!File.Exists(filePath))
+            if (!File.Exists(filePath))
             {
                 Debug.LogError($"{jsonFile} 파일을 찾을 수 없습니다: {filePath}");
                 continue;
             }
 
-            if(jsonFile == "recipe.json")
+            if (jsonFile == "recipe.json")
             {
                 recipeContainer = loader.ReadJsonFile<JsonContainer<Recipe>>(filePath);
                 if (recipeContainer == null || recipeContainer.data == null || recipeContainer.data.Count == 0)
@@ -333,7 +366,7 @@ public class GameManager : MonoBehaviour
                     continue;
                 }
             }
-            if(jsonFile == "material_item_data.json")
+            if (jsonFile == "material_item_data.json")
             {
                 materialItemContainer = loader.ReadJsonFile<JsonContainer<ItemJson>>(filePath);
                 if (materialItemContainer == null || materialItemContainer.data == null || materialItemContainer.data.Count == 0)

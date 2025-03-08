@@ -18,6 +18,12 @@ public class NetworkManager
         _session.Disconnect();
     }
 
+    public void Reconnect(string newIP, string newPort)
+    {
+        Init(newIP, newPort);  // 새로운 IP와 포트로 연결
+    }
+
+
     public bool IsConnected => _session?.IsConnected ?? false;
 
     public void Send(IMessage packet)

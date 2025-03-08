@@ -32,7 +32,7 @@ public class UIStart : MonoBehaviour
     private TMP_Text txtMessage;
 
     [SerializeField]
-    private GameObject UILogin;
+    public GameObject UILogin;
 
     [SerializeField]
     private TMP_Text placeHolder;

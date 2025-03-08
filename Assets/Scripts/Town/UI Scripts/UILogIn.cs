@@ -100,6 +100,9 @@ public class UILogIn : MonoBehaviour
             };
             GameManager.Network.Send(dataPacket);
         }
+
+        PlayerManager.email = userEmail.text;
+        PlayerManager.pw = userPW.text;
     }
 
     /// <summary>

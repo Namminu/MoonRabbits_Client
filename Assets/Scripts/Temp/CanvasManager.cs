@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CanvasManager : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class CanvasManager : MonoBehaviour
     public UICraft uiCraft;
     public GameObject uiMenu;
     public CraftManager craftManager;
+    public Button changeServer;
 
     public Player player;
 
@@ -55,6 +57,9 @@ public class CanvasManager : MonoBehaviour
         {
             StartCoroutine(nameof(EnterTownAfterUILoad));
         }
+
+        changeServer.onClick.RemoveAllListeners();
+        changeServer.onClick.AddListener(() => GameManager.Instance.ChangeServer("127.0.0.1", "3000"));
     }
 
     IEnumerator EnterTownAfterUILoad()
