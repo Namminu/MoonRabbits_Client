@@ -92,6 +92,7 @@ public abstract class SManagerBase : MonoBehaviour
     {
         // [1] 플레이어 프리펩 가져올 경로 찾기
         bool hasPrefab = prefabPaths.TryGetValue(playerInfo.ClassCode, out string prefabPath);
+        PlayerManager.classCode = playerInfo.ClassCode;
         if (!hasPrefab)
         {
             Debug.Log($"플레이어 프리펩을 찾지 못 했습니다 : {prefabPath}");

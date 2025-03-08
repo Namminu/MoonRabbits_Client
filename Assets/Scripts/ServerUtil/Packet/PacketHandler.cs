@@ -46,6 +46,15 @@ class PacketHandler
         Debug.Log($"S2CCreateCharacter 패킷 무사 도착 : {pkt}");
     }
 
+    // public static void S2CSwitchServerHandler(PacketSession session, IMessage packet)
+    // {
+    //     if (packet is not S2CSwitchServer pkt)
+    //         return;
+    //     Debug.Log($"S2CSwitchServer 패킷 무사 도착 : {pkt}");
+
+
+    // }
+
     public static void S2CPingHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CPing pkt)
@@ -576,7 +585,7 @@ class PacketHandler
 
         CanvasManager.Instance.craftManager.OnStart(pkt);
     }
-    
+
     public static void S2CCraftEndHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CCraftEnd pkt)

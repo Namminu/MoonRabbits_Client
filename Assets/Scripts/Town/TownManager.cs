@@ -9,7 +9,7 @@ public class TownManager : SManagerBase
     public static TownManager Instance => _instance;
 
     [SerializeField]
-    private UIStart uiStart;
+    public UIStart uiStart;
 
     [SerializeField]
     private UIAnimation uiAnimation;

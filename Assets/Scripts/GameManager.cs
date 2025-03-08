@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     [Header("Managers")]
     private static GameManager _instance = null;
     public static GameManager Instance => _instance;
-    
+
     private bool _isLowSpecMode;
     public bool IsLowSpecMode
     {
@@ -95,11 +95,11 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
 
             if (!IsLowSpecMode)
-            EffectManager.Instance.CreatePersistentEffect(
-                "Confetti",
-                new Vector3(-3, 14, 134),
-                Quaternion.identity
-            );
+                EffectManager.Instance.CreatePersistentEffect(
+                    "Confetti",
+                    new Vector3(-3, 14, 134),
+                    Quaternion.identity
+                );
         }
         else
         {
@@ -224,6 +224,36 @@ public class GameManager : MonoBehaviour
         yield return new WaitUntil(() => sManager != null);
         // [2] 마을에 있는 플레이어들 생성하고, 닉네임을 통해 내 플레이어면 마킹
         sManager.Enter(playerInfos);
+
+        Invoke("Wait3Sec", 10f);
+    }
+
+    void Wait3Sec()
+    {
+        network.Reconnect(); // 스트림, 소켓 닫고, 씬 로드 다시한다...
+
+        // ConfirmServer
+        TownManager.Instance.TryConnectToServer(network._ipString, "3000");
+        // TownManager.Instance.uiStart.gameObject.SetActive(false);
+        // TownManager.Instance.uiStart.UILogin.SetActive(true);
+
+        // ConfirmNickname
+        string nickname = NickName;
+
+        var dataPacket = new C2SCreateCharacter
+        {
+            Nickname = nickname,
+            ClassCode = PlayerManager.classCode,
+        };
+        network.Send(dataPacket);
+        TownManager.Instance.uiStart.gameObject.SetActive(false);
+        TownManager.Instance.uiStart.UILogin.SetActive(true);
+        TownManager.Instance.uiStart.gameObject.SetActive(false);
+
+
+        // 엔터를 다시 하기
+        var enterPacket = new C2SEnterTown { Nickname = NickName, ClassCode = PlayerManager.classCode };
+        network.Send(enterPacket);
     }
 
     IEnumerator EnterSector(
@@ -313,18 +343,18 @@ public class GameManager : MonoBehaviour
 
         // recipe.json, materialItem.json 파일 로드
         string[] jsonFiles = { "recipe.json", "material_item_data.json" };
-        
-        foreach(string jsonFile in jsonFiles)
+
+        foreach (string jsonFile in jsonFiles)
         {
             string filePath = Path.Combine(Application.streamingAssetsPath, jsonFile);
 
-            if(!File.Exists(filePath))
+            if (!File.Exists(filePath))
             {
                 Debug.LogError($"{jsonFile} 파일을 찾을 수 없습니다: {filePath}");
                 continue;
             }
 
-            if(jsonFile == "recipe.json")
+            if (jsonFile == "recipe.json")
             {
                 recipeContainer = loader.ReadJsonFile<JsonContainer<Recipe>>(filePath);
                 if (recipeContainer == null || recipeContainer.data == null || recipeContainer.data.Count == 0)
@@ -333,7 +363,7 @@ public class GameManager : MonoBehaviour
                     continue;
                 }
             }
-            if(jsonFile == "material_item_data.json")
+            if (jsonFile == "material_item_data.json")
             {
                 materialItemContainer = loader.ReadJsonFile<JsonContainer<ItemJson>>(filePath);
                 if (materialItemContainer == null || materialItemContainer.data == null || materialItemContainer.data.Count == 0)

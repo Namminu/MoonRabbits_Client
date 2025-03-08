@@ -4,18 +4,45 @@ using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
 using Google.Protobuf;
+using UnityEngine.SceneManagement;
+using System.Net.Sockets;
 
 public class NetworkManager
 {
+    private Socket _socket;
+    private NetworkStream _networkStream;
+    private bool _isConnected = false;
+
     private const string DefaultIP = "127.0.0.1";
     private const int DefaultPort = 3000;
     private const int MaxConnections = 1;
+    public IPEndPoint serverIP;
+    public string _ipString;
 
     private ServerSession _session = new ServerSession();
 
     public void Discconect()
     {
         _session.Disconnect();
+    }
+
+    public void Reconnect()
+    {
+        _networkStream?.Close();
+        _networkStream = null;
+
+        if (_socket != null)
+        {
+            _socket.Shutdown(SocketShutdown.Both); // 읽기/쓰기 모두 중지
+            _socket.Close();
+            _socket = null;
+        }
+
+        // 상태 초기화
+        _session.Disconnect();
+        _isConnected = false;
+        // 여기서 플레이어 오브젝트 싹 날리고 새로 불러오기
+        SceneManager.LoadScene("Town");
     }
 
     public bool IsConnected => _session?.IsConnected ?? false;
@@ -38,6 +65,11 @@ public class NetworkManager
 
         IPEndPoint endPoint = new IPEndPoint(ipAddr, port);
         InitializeConnection(endPoint);
+        serverIP = endPoint;
+        _ipString = ipString;
+
+        // 3초 후 Discconect => InitializeConnection
+
     }
 
     public void Update()
@@ -52,10 +84,11 @@ public class NetworkManager
 
     #region Private Methods
 
-    private void InitializeConnection(IPEndPoint endPoint)
+    public void InitializeConnection(IPEndPoint endPoint)
     {
         Connector connector = new Connector();
         connector.Connect(endPoint, () => _session, MaxConnections);
+        _isConnected = true;
     }
 
     private IPEndPoint GetDefaultEndPoint()
