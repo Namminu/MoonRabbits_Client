@@ -267,8 +267,8 @@ public class Player : MonoBehaviour
         {
             if (animCode == 10)
             {
-                animator?.SetBool(emotions[11], false);
                 animator?.SetBool(emotions[12], false);
+                animator?.SetBool(emotions[11], false);
             }
             else
             {
@@ -508,6 +508,10 @@ public class Player : MonoBehaviour
         this.pickSpeed = pickSpeed;
         if (IsMine)
             uiPlayer.SetPickSpeed(pickSpeed, abilityPoint > 0);
+    }
+    public int GetPickSpeed()
+    {
+        return this.pickSpeed;
     }
 
     private void SetMoveSpeed(float moveSpeed)
