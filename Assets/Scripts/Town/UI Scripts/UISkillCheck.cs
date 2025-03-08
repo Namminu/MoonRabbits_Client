@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,6 +18,7 @@ public class UISkillCheck : MonoBehaviour
     public Image blackCircle;
     public Image whiteCircle;
     public Image clockhand;
+    public GameObject dropedItem;
     private int targetResource;
     public int TargetResource { get { return targetResource; } }
     private int angle = 90;
@@ -24,6 +26,7 @@ public class UISkillCheck : MonoBehaviour
     private bool isEnabled = false;
     private bool isSuccess = false;
     private bool isFailed = false;
+    private float failTimeOut = 0;
     private Stopwatch skillChekcTime = new();
 
 
@@ -40,17 +43,13 @@ public class UISkillCheck : MonoBehaviour
     {
         if (isEnabled)
         {
-            float curAngle = (int)clockhand.transform.eulerAngles.z;
-            if (this.angle == 0 && curAngle > 0 && curAngle < 30)
+            clockhand.transform.Rotate(0, 0, 90f * Time.deltaTime);
+            if (isFailed) failTimeOut += Time.deltaTime;
+            else failTimeOut = 0;
+            if (failTimeOut > 1)
             {
-                this.angle = 1;
-                GameManager.Network.Send(new C2SGatheringDone { });
                 GameManager.Network.Send(new C2SGatheringStart { PlacedId = targetResource });
-
-            }
-            else
-            {
-                clockhand.transform.Rotate(0, 0, 90f * Time.deltaTime);
+                failTimeOut = 0;
             }
         }
         else
@@ -63,13 +62,13 @@ public class UISkillCheck : MonoBehaviour
 
     public void StartSkillCheck(int placedId, int angle, int difficulty)
     {
-
+        float pickSpeed = (float) MyPlayer.instance.GetPickSpeed();
         this.whiteCircle.color = Color.white;
         this.targetResource = placedId;
         this.angle = angle;
-        this.whiteCircle.transform.rotation = Quaternion.Euler(0, 0, this.angle + 60 / difficulty);
+        this.whiteCircle.transform.rotation = Quaternion.Euler(0, 0, (this.angle + 60 + (pickSpeed < 30 ? pickSpeed : 60 - 60 / pickSpeed)) / difficulty);
         this.difficulty = difficulty;
-        this.whiteCircle.fillAmount = 1f / (float)difficulty / 6f;
+        this.whiteCircle.fillAmount = 1f / (float)difficulty * (float)(60 + (pickSpeed < 30f ? pickSpeed : 60f - 60f / pickSpeed)) / 360f;
         this.isEnabled = true;
         this.isSuccess = false;
         this.isFailed = false;
@@ -87,7 +86,7 @@ public class UISkillCheck : MonoBehaviour
         GameManager.Network.Send(new C2SGatheringAnimationEnd { });
 
     }
-    public void SkillCheck()
+    public async void SkillCheck()
     {
         if (this.isSuccess || this.isFailed)
         {
@@ -103,6 +102,7 @@ public class UISkillCheck : MonoBehaviour
         }
         else
         {
+            this.failTimeOut = 0;
             this.isFailed = true;
             this.whiteCircle.color = Color.red;
         }
@@ -126,6 +126,32 @@ public class UISkillCheck : MonoBehaviour
             //즉시 종료
         }
     }
+    public void ResourcesGatheringDone(S2CGatheringDone pkt)
+    {
+        UnityEngine.Debug.Log(pkt);
+        if (dropedItem != null)
+        {
+            Instantiate(dropedItem, new Vector3(0, 0, 0), Quaternion.identity);
+
+            // Instantiate the prefab
+            GameObject instance = Instantiate(dropedItem, new Vector3(0, 0, 0), Quaternion.identity);
+
+            instance.transform.SetParent(gameObject.transform);
+            // Get the DroppedItem component from the instantiated prefab
+            UIItemDropOnCanvas droppedItem = instance.GetComponent<UIItemDropOnCanvas>();
+
+            // Check if the DroppedItem component exists
+            if (droppedItem != null)
+            {
+                // Initialize the prefab with custom values
+                droppedItem.Initialize(pkt.ItemId, gameObject.transform.position);
+
+                // Set the prefab to active
+            }
+
+        }
+    }
+
 
 
 

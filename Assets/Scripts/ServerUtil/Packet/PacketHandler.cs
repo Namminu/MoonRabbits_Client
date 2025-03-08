@@ -391,6 +391,7 @@ class PacketHandler
         if (packet is not S2CGatheringDone pkt)
             return;
         Debug.Log($"S2CGatheringDone 패킷 무사 도착 : {pkt}");
+        UISkillCheck.Instance.ResourcesGatheringDone(pkt);
     }
     #endregion
 
