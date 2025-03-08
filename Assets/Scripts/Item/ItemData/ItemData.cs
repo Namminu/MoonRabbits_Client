@@ -6,6 +6,12 @@ public enum ItemTypes
 	MaterialItem
 }
 
+public enum ItemDataTypes
+{
+	floorData,
+	furnitureData
+}
+
 public abstract class ItemData : ScriptableObject
 {
 	[Header("Item Info")]

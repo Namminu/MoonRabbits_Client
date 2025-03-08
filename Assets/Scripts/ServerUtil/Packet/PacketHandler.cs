@@ -193,8 +193,21 @@ class PacketHandler
     public static void S2CUpdateRankingHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CUpdateRanking pkt)
-            return;
-        Debug.Log($"S2CUpdateRanking 패킷 무사 도착 : {pkt}");
+        return;
+    
+    Debug.Log($"S2CUpdateRanking 패킷 무사 도착 : {pkt}");
+    
+    // 현재 씬에서 UIRanking 컴포넌트를 찾은 후, 해당 인스턴스의 UpdateRanking 호출
+    UIRanking uiRanking = UnityEngine.Object.FindObjectOfType<UIRanking>();
+    if (uiRanking != null)
+    {
+        uiRanking.UpdateRanking(pkt);
+    }
+    else
+    {
+        Debug.LogError("UIRanking 인스턴스를 찾을 수 없습니다.");
+    }
+        
     }
 
     #region Collision
@@ -558,7 +571,7 @@ class PacketHandler
     }
     #endregion
 
-    #region Item & Inventory
+    #region Item & Inventory & Crafting
 
     public static void S2CInventoryUpdateHandler(PacketSession session, IMessage packet)
     {
@@ -567,8 +580,6 @@ class PacketHandler
         Debug.Log($"S2CInventoryUpdate 패킷 무사 도착 : {pkt}");
         InventoryManager.instance.UpdateInventoryData(pkt);
     }
-    #endregion
-
     public static void S2CCraftStartHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CCraftStart pkt)
@@ -593,4 +604,30 @@ class PacketHandler
         Debug.Log($"S2CGetInventorySlotByItemId 패킷 무사 도착 : {pkt}");
         CanvasManager.Instance.uiCraft.GetInventorySlotByItemId(pkt);
     }
+    #endregion
+
+    #region Housing
+
+    public static void S2CHousingSaveHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CHousingSave pkt)
+            return;
+        Debug.Log($"S2CHousingSave 패킷 무사 도착 : {pkt}");
+    }
+
+    public static void S2CHousingLoadHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CHousingLoad pkt)
+            return;
+        Debug.Log($"S2CHousingLoad 패킷 무사 도착 : {pkt}");
+    }
+
+    public static void S2CFurnitureCraftHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CFurnitureCraft pkt)
+            return;
+        Debug.Log($"S2CFurnitureCraft 패킷 무사 도착 : {pkt}");
+    }
+
+    # endregion
 }

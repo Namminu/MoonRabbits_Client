@@ -30007,6 +30007,7 @@ MonoBehaviour:
   uiStart: {fileID: 1952650458}
   uiAnimation: {fileID: 0}
   txtServer: {fileID: 199268653}
+  inventoryUI: {fileID: 479120993}
 --- !u!4 &552473146
 Transform:
   m_ObjectHideFlags: 0

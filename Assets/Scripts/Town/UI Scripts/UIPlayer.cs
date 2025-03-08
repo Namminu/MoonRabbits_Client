@@ -150,7 +150,7 @@ public class UIPlayer : MonoBehaviour
             DeActiveAP();
     }
 
-    public void SetMoveSpeed(int moveSpeed, bool hasAP)
+    public void SetMoveSpeed(float moveSpeed, bool hasAP)
     {
         moveSpeedText.text = moveSpeed.ToString();
         if (!hasAP)

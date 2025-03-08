@@ -22,7 +22,8 @@ public class MaterialItemJsonData : ItemJsonData
 public class HousingItemJsonData : ItemJsonData
 {
 	public string item_prefab;
-	public Vector2Int item_gridsize;
+	public int[] item_gridSize;
+	public int item_dataType;
 }
 
 [Serializable]
