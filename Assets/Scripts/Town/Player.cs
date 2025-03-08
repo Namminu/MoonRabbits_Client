@@ -445,6 +445,10 @@ public class Player : MonoBehaviour
         moveSpeed = statInfo.MoveSpeed;
         abilityPoint = statInfo.AbilityPoint;
 
+        SetStamina(stamina);
+        SetPickSpeed(pickSpeed);
+        SetMoveSpeed(moveSpeed);
+
         if (IsMine)
         {
             if (uiPlayer == null)
