@@ -126,6 +126,11 @@ public class MyPlayer : MonoBehaviour
         _lineRenderer.SetPositions(corners);
     }
 
+    public int GetPickSpeed()
+    {
+        return player.GetPickSpeed();
+    }
+
     void ScreenScrollZoom()
     {
         float scrollData = Input.GetAxis("Mouse ScrollWheel"); // 마우스 휠 입력
