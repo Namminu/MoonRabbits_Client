@@ -44,7 +44,7 @@ public class PlacementState : IBuildingState
 
 	public void OnAction(ObjectTransInfo gridInfo)
 	{
-		bool placementValidity = CheckPlacementValidity(gridInfo.ObjectPosition, selectedObjectIndex);
+		bool placementValidity = CheckPlacementValidity(gridInfo, selectedObjectIndex);
 		if (placementValidity == false) return;
 
 		int index = objectPlacer.PlaceObject(ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemPrefab, 
@@ -63,17 +63,17 @@ public class PlacementState : IBuildingState
 		previewSystem.UpdatePosition(objectInfo, false);
 	}
 
-	private bool CheckPlacementValidity(Vector3Int gridPosition, int selectedObjectItemId)
+	private bool CheckPlacementValidity(ObjectTransInfo gridInfo, int selectedObjectItemId)
 	{
 		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ?
 			floorData : furnitureData;
 
-		return selectedData.CanPlaceObjectAt(gridPosition, ItemDataLoader.HousingItemsList[selectedObjectItemId].ItemGridSize);
+		return selectedData.CanPlaceObjectAt(gridInfo, ItemDataLoader.HousingItemsList[selectedObjectItemId].ItemGridSize);
 	}
 
 	public void UpdateState(ObjectTransInfo gridInfo)
 	{
-		bool placementValidity = CheckPlacementValidity(gridInfo.ObjectPosition, selectedObjectIndex);
+		bool placementValidity = CheckPlacementValidity(gridInfo, selectedObjectIndex);
 		ObjectTransInfo objectInfo = Helper.ChangeDataToTransInfo(
 			Helper.VectorDataToInt(grid.CellToWorld(gridInfo.ObjectPosition)), gridInfo.ObjectYRotation);
 
