@@ -34,29 +34,20 @@ public class UIBattlePopup : MonoBehaviour
     {
         for (int i = 0; i < btns.Length; i++)
         {
-            int dungeonIndex = i + 1;
-            btns[i].onClick.AddListener(() => OnButtonClicked(dungeonIndex));
+            int btnIdx = i + 1;
+            btns[i].onClick.AddListener(() => OnButtonClicked(btnIdx));
         }
     }
 
-    private void OnButtonClicked(int dungeonIndex)
+    private void OnButtonClicked(int btnIdx)
     {
-        // SceneManager.LoadScene("Test");
-
-        var pkt = new C2SMoveSector { TargetSector = dungeonIndex + 100 };
+        var pkt = new C2SMoveSector { TargetSector = btnIdx + 100 };
 
         GameManager.Network.Send(pkt);
-        // EnterDungeon(dungeonIndex);
+
+        if (gameObject.activeSelf)
+        {
+            gameObject.SetActive(false);
+        }
     }
 }
-
-/// <summary>
-/// 던전에 입장하는 패킷 전송
-/// </summary>
-/// <param name="dungeonIndex">입장할 던전의 코드</param>
-//     private void EnterDungeon(int dungeonIndex)
-//     {
-//         C2SSectorEnter enterPacket = new C2SSectorEnter { SectorId = dungeonIndex };
-//         GameManager.Network.Send(enterPacket);
-//     }
-// }

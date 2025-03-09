@@ -113,7 +113,6 @@ public class ResourceController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Debug.Log("상호작용 가능");
             if (isAvailable)
             {
                 availableIcon.SetActive(true);
@@ -129,8 +128,6 @@ public class ResourceController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Debug.Log("상호작용 불가");
-
             if (availableIcon.activeSelf)
                 availableIcon.SetActive(false);
             else if (unavailableIcon.activeSelf)

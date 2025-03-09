@@ -5,16 +5,16 @@ using System.IO;
 using System.Linq;
 using Google.Protobuf.Protocol;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     [Header("Managers")]
     private static GameManager _instance = null;
     public static GameManager Instance => _instance;
-    
+
     private bool _isLowSpecMode;
     public bool IsLowSpecMode
     {
@@ -95,11 +95,11 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
 
             if (!IsLowSpecMode)
-            EffectManager.Instance.CreatePersistentEffect(
-                "Confetti",
-                new Vector3(-3, 14, 134),
-                Quaternion.identity
-            );
+                EffectManager.Instance.CreatePersistentEffect(
+                    "Confetti",
+                    new Vector3(-3, 14, 134),
+                    Quaternion.identity
+                );
         }
         else
         {
@@ -176,10 +176,11 @@ public class GameManager : MonoBehaviour
     public void EnterAfterSceneAwake(
         int targetSector,
         List<PlayerInfo> playerInfos,
-        List<TrapInfo> trapInfos
+        List<TrapInfo> trapInfos,
+        bool hasChest
     )
     {
-        StartCoroutine(EnterSector(targetSector, playerInfos, trapInfos));
+        StartCoroutine(EnterSector(targetSector, playerInfos, trapInfos, hasChest));
     }
 
     private void OnApplicationQuit()
@@ -229,7 +230,8 @@ public class GameManager : MonoBehaviour
     IEnumerator EnterSector(
         int targetSector,
         List<PlayerInfo> playerInfos,
-        List<TrapInfo> trapInfos
+        List<TrapInfo> trapInfos,
+        bool hasChest
     )
     {
         // [1] 이동할 섹터의 매니저 찾고, 씬 로드 기다림
@@ -242,7 +244,12 @@ public class GameManager : MonoBehaviour
         {
             sManager.SetTraps(trapInfos);
         }
-        // [3] 현재 위치한 섹터 값 최신화
+        // [4] 보물상자 재생성 대기 중인 경우 비활성화
+        if (targetSector != 100 && !hasChest)
+        {
+            sManager.Chest.gameObject.SetActive(hasChest);
+        }
+        // [5] 현재 위치한 섹터 값 최신화
         CurrentSector = targetSector;
     }
 
@@ -313,30 +320,38 @@ public class GameManager : MonoBehaviour
 
         // recipe.json, materialItem.json 파일 로드
         string[] jsonFiles = { "recipe.json", "material_item_data.json" };
-        
-        foreach(string jsonFile in jsonFiles)
+
+        foreach (string jsonFile in jsonFiles)
         {
             string filePath = Path.Combine(Application.streamingAssetsPath, jsonFile);
 
-            if(!File.Exists(filePath))
+            if (!File.Exists(filePath))
             {
                 Debug.LogError($"{jsonFile} 파일을 찾을 수 없습니다: {filePath}");
                 continue;
             }
 
-            if(jsonFile == "recipe.json")
+            if (jsonFile == "recipe.json")
             {
                 recipeContainer = loader.ReadJsonFile<JsonContainer<Recipe>>(filePath);
-                if (recipeContainer == null || recipeContainer.data == null || recipeContainer.data.Count == 0)
+                if (
+                    recipeContainer == null
+                    || recipeContainer.data == null
+                    || recipeContainer.data.Count == 0
+                )
                 {
                     Debug.LogError($"{jsonFile} 파싱 실패: 데이터가 없습니다.");
                     continue;
                 }
             }
-            if(jsonFile == "material_item_data.json")
+            if (jsonFile == "material_item_data.json")
             {
                 materialItemContainer = loader.ReadJsonFile<JsonContainer<ItemJson>>(filePath);
-                if (materialItemContainer == null || materialItemContainer.data == null || materialItemContainer.data.Count == 0)
+                if (
+                    materialItemContainer == null
+                    || materialItemContainer.data == null
+                    || materialItemContainer.data.Count == 0
+                )
                 {
                     Debug.LogError($"{jsonFile} 파싱 실패: 데이터가 없습니다.");
                     continue;
