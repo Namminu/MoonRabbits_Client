@@ -10,8 +10,8 @@ public class UIPlayer : MonoBehaviour
     public static UIPlayer instance { get; private set; }
     public int player_level;
 
-    private int APButtonsOffsetY = 10;
-    private int APTextOffsetX = 70;
+    private int APButtonsOffsetY = 30;
+    private int APTextOffsetX = 100;
 
     public Button btnAddExp;
     public Slider staminaSlider;
