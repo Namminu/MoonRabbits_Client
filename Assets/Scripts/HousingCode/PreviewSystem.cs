@@ -25,7 +25,7 @@ public class PreviewSystem : MonoBehaviour
 	public void StartShowingPlacementPreview(GameObject prefab, Vector2Int size)
 	{
 		previewObject = Instantiate(prefab);
-		PreparePreavie(previewObject);
+		PreparePreaview(previewObject);
 		PrepareCursor(size);
 		cellIndicator.SetActive(true);
 	}
@@ -46,7 +46,7 @@ public class PreviewSystem : MonoBehaviour
 		}
 	}
 
-	private void PreparePreavie(GameObject previewObject)
+	private void PreparePreaview(GameObject previewObject)
 	{
 		Renderer[] renderers = previewObject.GetComponentsInChildren<Renderer>();
 		foreach(Renderer renderer in renderers)
@@ -67,15 +67,15 @@ public class PreviewSystem : MonoBehaviour
 			Destroy(previewObject);
 	}
 
-	public void UpdatePosition(Vector3 position, bool validity)
+	public void UpdatePosition(ObjectTransInfo objectInfo, bool validity)
 	{
         if (previewObject != null)
         {
-			MovePreview(position);
+			MovePreview(objectInfo);
 			ApplyFeedBackToPreview(validity);
 		}
 
-		MoveCursor(position);
+		MoveCursor(objectInfo);
 		ApplyFeedBackToCursor(validity);
 	}
 
@@ -93,13 +93,16 @@ public class PreviewSystem : MonoBehaviour
 		cellIndicatorRenderer.material.color = color;
 	}
 
-	private void MoveCursor(Vector3 position)
+	private void MoveCursor(ObjectTransInfo objectInfo)
 	{
-		cellIndicator.transform.position = position;
+		cellIndicator.transform.position = objectInfo.ObjectPosition;
+		cellIndicator.transform.rotation = Quaternion.Euler(0, objectInfo.ObjectYRotation, 0);
 	}
 
-	private void MovePreview(Vector3 position)
+	private void MovePreview(ObjectTransInfo objectInfo)
 	{
-		previewObject.transform.position = new Vector3(position.x, position.y + previewYOffset, position.z);
+		previewObject.transform.position = new Vector3(
+			objectInfo.ObjectPosition.x, objectInfo.ObjectPosition.y + previewYOffset, objectInfo.ObjectPosition.z);
+		previewObject.transform.rotation = Quaternion.Euler(0, objectInfo.ObjectYRotation, 0);
 	}
 }
