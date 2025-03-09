@@ -107,7 +107,6 @@ public class MyPlayer : MonoBehaviour
         Interact();
         UIInput();
     }
-
     private void LateUpdate()
     {
         CheckMove();
@@ -124,6 +123,11 @@ public class MyPlayer : MonoBehaviour
         _lineRenderer.positionCount = corners.Length;
 
         _lineRenderer.SetPositions(corners);
+    }
+
+    public int GetPickSpeed()
+    {
+        return player.GetPickSpeed();
     }
 
     void ScreenScrollZoom()

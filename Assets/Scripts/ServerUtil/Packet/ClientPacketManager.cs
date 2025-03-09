@@ -63,6 +63,13 @@ class PacketManager
         _onRecv.Add((ushort)MsgId.S2CInventoryUpdate, MakePacket<S2CInventoryUpdate>);
         _handler.Add((ushort)MsgId.S2CInventoryUpdate, PacketHandler.S2CInventoryUpdateHandler);
 
+        _onRecv.Add((ushort)MsgId.S2CHousingSave, MakePacket<S2CHousingSave>);
+        _handler.Add((ushort)MsgId.S2CHousingSave, PacketHandler.S2CHousingSaveHandler);
+        _onRecv.Add((ushort)MsgId.S2CHousingLoad, MakePacket<S2CHousingLoad>);
+        _handler.Add((ushort)MsgId.S2CHousingLoad, PacketHandler.S2CHousingLoadHandler);
+        _onRecv.Add((ushort)MsgId.S2CFurnitureCraft, MakePacket<S2CFurnitureCraft>);
+        _handler.Add((ushort)MsgId.S2CFurnitureCraft, PacketHandler.S2CFurnitureCraftHandler);
+
         _onRecv.Add((ushort)MsgId.S2CCreateParty, MakePacket<S2CCreateParty>);
         _handler.Add((ushort)MsgId.S2CCreateParty, PacketHandler.S2CCreatePartyHandler);
         _onRecv.Add((ushort)MsgId.S2CInviteParty, MakePacket<S2CInviteParty>);
@@ -79,6 +86,8 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CKickOutMember, PacketHandler.S2CKickOutMemberHandler);
         _onRecv.Add((ushort)MsgId.S2CDisbandParty, MakePacket<S2CDisbandParty>);
         _handler.Add((ushort)MsgId.S2CDisbandParty, PacketHandler.S2CDisbandPartyHandler);
+        _onRecv.Add((ushort)MsgId.S2CUpdateParty, MakePacket<S2CUpdateParty>);
+        _handler.Add((ushort)MsgId.S2CUpdateParty, PacketHandler.S2CUpdatePartyHandler);
         _onRecv.Add((ushort)MsgId.C2SRejectInvite, MakePacket<C2SRejectInvite>);
         _handler.Add((ushort)MsgId.S2CRejectInvite, PacketHandler.S2CRejectInviteHandler);
         _onRecv.Add((ushort)MsgId.S2CMonsterLocation, MakePacket<S2CMonsterLocation>);

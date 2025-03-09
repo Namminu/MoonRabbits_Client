@@ -29,8 +29,6 @@ public class InteractManager : MonoBehaviour
     }
     public bool isEquipChanging = false;
 
-    private string[] anims = { "none", "Axe", "PickAxe" };
-
     public Action eventF; // F키 누르면 발동
     public Action eventR; // R키 누르면 발동
 
@@ -108,11 +106,7 @@ public class InteractManager : MonoBehaviour
             direction.y = 0;
             MPlayer.transform.rotation = Quaternion.LookRotation(direction);
 
-            //player.Anim.SetTrigger(anims[player.currentEquip]);
-
             GameManager.Network.Send(new C2SGatheringStart { PlacedId = targetResource.idx });
-
-            //Invoke(nameof(GatherOut), 0.7f); // 재상호작용은 일단 0.7초 후에 가능 (애니메이션 출력시간)
         }
         else
         {
@@ -126,7 +120,6 @@ public class InteractManager : MonoBehaviour
         {
             return;
         }
-        //targetResource.DecreaseDurability(1); // 숫자 만큼 감소시킴 나중에 능력치만큼 적용?
         this.isInteracting = isinteracting;
         UISkillCheck.Instance.EndSkillCheck();
     }

@@ -5880,8 +5880,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiNameChat: {fileID: 2075369095008506869}
-  SmoothMoveSpeed: 10
-  SmoothRotateSpeed: 10
+  SmoothMoveSpeed: 15
+  SmoothRotateSpeed: 15
   TeleportDistanceThreshold: 0.5
   nickname: 
   level: 0

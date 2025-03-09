@@ -17,6 +17,18 @@ public class InventoryUI : MonoBehaviour
 
     private void Awake()
     {
+        // 현재 씬에 존재하는 InventoryUI 인스턴스들을 모두 찾습니다.
+        InventoryUI[] existingInstances = FindObjectsOfType<InventoryUI>(true);
+
+        // 만약 이미 한 개 이상의 인스턴스가 존재한다면 (자기 자신 포함하여 2개 이상)
+        if (existingInstances.Length > 1)
+        {
+            // 새로 들어온 객체는 파괴하여 중복 생성을 방지
+            Destroy(gameObject);
+            return;
+        }
+
+        // 중복이 없다면 DontDestroyOnLoad를 호출하여 씬 전환 시 유지되도록 합니다.
         DontDestroyOnLoad(gameObject);
 
         if (contentArea != null)
