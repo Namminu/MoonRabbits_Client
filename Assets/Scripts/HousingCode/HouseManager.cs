@@ -19,7 +19,6 @@ public class HouseManager : MonoBehaviour
 
     public List<PlacedObjectDatas> placedObjects = new();
 
-
     // Start is called before the first frame update
     void Awake()
     {
@@ -37,21 +36,21 @@ public class HouseManager : MonoBehaviour
         StartCoroutine(AutoSaveRoutine());
 
         /* Temp Test Code */
-        List<PlacedObjectDatas> testServerData = new List<PlacedObjectDatas>
-        {
-			new PlacedObjectDatas(30002, new ObjectTransInfo(new Vector3Int(-4, 0, 3), 270), 1),
-            new PlacedObjectDatas(30002, new ObjectTransInfo(new Vector3Int(-2, 0, 3), 180), 1),
-            new PlacedObjectDatas(30002, new ObjectTransInfo(new Vector3Int(-2, 0, 3), 90), 1),
-            new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(-3, 0, -2), 0), 1),
-            new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(-1, 0, -2), 270), 1),
-            new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(0, 0, -1), 180), 1),
-            new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(0, 0, -1), 90), 1),
-            new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(1, 0, -2), 0), 1),
-            new PlacedObjectDatas(30003, new ObjectTransInfo(new Vector3Int(0, 0, 2), 0), 1),
-            new PlacedObjectDatas(30003, new ObjectTransInfo(new Vector3Int(5, 0, -2), 270), 1),
-            new PlacedObjectDatas(30003, new ObjectTransInfo(new Vector3Int(9, 0, 5), 180), 1),
-		};
-        StartLoadingPlacedObjectData(testServerData);
+        //List<PlacedObjectDatas> testServerData = new List<PlacedObjectDatas>
+        //{
+        //    new PlacedObjectDatas(30002, new ObjectTransInfo(new Vector3Int(-4, 0, 3), 270), 1),
+        //    new PlacedObjectDatas(30002, new ObjectTransInfo(new Vector3Int(-2, 0, 3), 180), 1),
+        //    new PlacedObjectDatas(30002, new ObjectTransInfo(new Vector3Int(-2, 0, 3), 90), 1),
+        //    new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(-3, 0, -2), 0), 1),
+        //    new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(-1, 0, -2), 270), 1),
+        //    new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(0, 0, -1), 180), 1),
+        //    new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(0, 0, -1), 90), 1),
+        //    new PlacedObjectDatas(30001, new ObjectTransInfo(new Vector3Int(1, 0, -2), 0), 1),
+        //    new PlacedObjectDatas(30003, new ObjectTransInfo(new Vector3Int(0, 0, 2), 0), 1),
+        //    new PlacedObjectDatas(30003, new ObjectTransInfo(new Vector3Int(5, 0, -2), 270), 1),
+        //    new PlacedObjectDatas(30003, new ObjectTransInfo(new Vector3Int(9, 0, 5), 180), 1),
+        //};
+        //StartLoadingPlacedObjectData(testServerData);
     }
 
 	public void StartLoadingPlacedObjectData(List<PlacedObjectDatas> serverData)

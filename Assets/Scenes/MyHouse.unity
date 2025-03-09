@@ -6951,7 +6951,7 @@ MonoBehaviour:
   placementSystem: {fileID: 1172137090}
   objectPlacer: {fileID: 978349008}
   grid: {fileID: 176485859}
-  saveDelay: 15
+  saveDelay: 0
   placedObjects: []
 --- !u!4 &1523904971
 Transform:
