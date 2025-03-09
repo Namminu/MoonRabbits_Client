@@ -183,6 +183,11 @@ public class Party : MonoBehaviour
     return members.FirstOrDefault(m => m.Nickname == nickname);
   }
 
+  public MemberCardInfo GetMemberByID(int id)
+  {
+    return members.FirstOrDefault(m => m.Id == id);
+  }
+
 
   private Player GetMyPlayer()
   {
