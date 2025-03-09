@@ -14,6 +14,7 @@ public class ObjectPlacer : MonoBehaviour
 		newObject.transform.position = position;
 		newObject.transform.rotation = Quaternion.Euler(0, yRotation, 0);
 		placedGameObject.Add(newObject);
+		Debug.Log("Placer : " + newObject.transform.position + yRotation);
 
 		return placedGameObject.Count - 1;
 	}

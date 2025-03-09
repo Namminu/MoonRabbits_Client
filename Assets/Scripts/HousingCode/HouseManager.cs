@@ -56,10 +56,10 @@ public class HouseManager : MonoBehaviour
     {
         foreach(var obj in gridData.placedObjects)
         {
-            Vector3Int position = obj.Key;
+			ObjectTransInfo position = obj.Key;
             PlacementData data = obj.Value;
 
-            PlacedObjectDatas objectData = new PlacedObjectDatas(
+            PlacedObjectDatas objectData = new(
                 data.ID, position, dataType);
 
 			placedObjects.Add(objectData);
@@ -79,7 +79,7 @@ public class HouseManager : MonoBehaviour
             GridData selectedData = obj.DataType == 0 ? floorData : furnitureData;
 			int index = objectPlacer.PlaceObject(
 				ItemDataLoader.HousingItemsList.Find(x => x.ItemId == obj.ItemId).ItemPrefab,
-				grid.CellToWorld(obj.ItemTransInfo.ItemPosition),
+				Helper.Vector3ToInt(grid.CellToWorld(obj.ItemTransInfo.ItemPosition)),
                 obj.ItemTransInfo.ItemYRotation
 			);
             Vector2Int objGridSize = ItemDataLoader.HousingItemsList.Find(x => x.ItemId == obj.ItemId).ItemGridSize;

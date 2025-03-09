@@ -6,11 +6,13 @@ using UnityEngine.UIElements;
 
 public class GridData
 {
-	public Dictionary<Vector3Int, PlacementData> placedObjects = new();
+	public Dictionary<ObjectTransInfo, PlacementData> placedObjects = new();
 
 	public void AddObjectAt(ObjectTransInfo gridInfo, Vector2Int objectSize, int ID, int placedObjectIndex)
 	{
-		List<Vector3Int> positionToOccupy = CalculatePosition(gridInfo, objectSize);
+		Debug.Log("GridData : " + gridInfo.ItemPosition + gridInfo.ItemYRotation);
+
+		List<ObjectTransInfo> positionToOccupy = CalculatePosition(gridInfo, objectSize);	 
 		PlacementData data = new PlacementData(positionToOccupy, ID, placedObjectIndex);
 
 		foreach (var pos in positionToOccupy)
@@ -22,9 +24,9 @@ public class GridData
 		}
 	}
 
-	private List<Vector3Int> CalculatePosition(ObjectTransInfo gridInfo, Vector2Int objectSize)
+	private List<ObjectTransInfo> CalculatePosition(ObjectTransInfo gridInfo, Vector2Int objectSize)
 	{
-		List<Vector3Int> returnVal = new();
+		List<ObjectTransInfo> returnVal = new();
 
 		/* Switch between horizontal and vertical depending on the rotation of the object */
 		bool isRotated = Mathf.Approximately(gridInfo.ItemYRotation, 90) ||
@@ -36,7 +38,8 @@ public class GridData
 		{
 			for (int y = 0; y < height; y++)
 			{
-				returnVal.Add(gridInfo.ItemPosition + new Vector3Int(x, 0, y));
+				ObjectTransInfo newGridInfo = new(gridInfo.ItemPosition + new Vector3Int(x, 0, y), gridInfo.ItemYRotation);
+				returnVal.Add(newGridInfo);
 			}
 		}
 		return returnVal;
@@ -44,10 +47,10 @@ public class GridData
 
 	public bool CanPlaceObjectAt(ObjectTransInfo gridInfo, Vector2Int objectSize)
 	{
-		List<Vector3Int> positionToOccupy = CalculatePosition(gridInfo, objectSize);
+		List<ObjectTransInfo> positionToOccupy = CalculatePosition(gridInfo, objectSize);
 
 		/* Extract and save all occupied positions */
-		HashSet<Vector3Int> occupiedPositions = new();
+		HashSet<ObjectTransInfo> occupiedPositions = new();
 		foreach (var pos in placedObjects.Keys)
 		{
 			occupiedPositions.Add(pos);
@@ -61,14 +64,14 @@ public class GridData
 		return true;
 	}
 
-	internal int GetRepresentationIndex(Vector3Int gridPosition)
+	internal int GetRepresentationIndex(ObjectTransInfo gridPosition)
 	{
 		if (!placedObjects.ContainsKey(gridPosition)) return -1;
 
 		return placedObjects[gridPosition].PlacedObjectIndex;
 	}
 
-	internal void RemoveObjectAt(Vector3Int gridPosition)
+	internal void RemoveObjectAt(ObjectTransInfo gridPosition)
 	{
 		if (placedObjects.ContainsKey(gridPosition))
 		{
@@ -79,11 +82,11 @@ public class GridData
 
 public class PlacementData
 {
-	public List<Vector3Int> occupiedPositions;
+	public List<ObjectTransInfo> occupiedPositions;
 	public int ID { get; private set; }
 	public int PlacedObjectIndex { get; private set; }
 
-	public PlacementData(List<Vector3Int> occupiedPositions, int iD, int placedObjectIndex)
+	public PlacementData(List<ObjectTransInfo> occupiedPositions, int iD, int placedObjectIndex)
 	{
 		this.occupiedPositions = occupiedPositions;
 		ID = iD;

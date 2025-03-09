@@ -73,7 +73,7 @@ public class PlacementSystem : MonoBehaviour
 		Vector3 mousePosition = inputManager.GetSelectedMapPosition();
 		Vector3Int gridPosition = grid.WorldToCell(mousePosition);
 		ObjectTransInfo gridInfo = new(gridPosition, yRotateValue);
-
+		Debug.Log("PlaceStructure Called");
 		buildingState.OnAction(gridInfo);
 	}
 
@@ -93,10 +93,12 @@ public class PlacementSystem : MonoBehaviour
 	{
 		if (Input.GetKeyUp(KeyCode.Q))
 		{
+			Debug.Log("Q Key");
 			yRotateValue = 90;
 		}
 		else if (Input.GetKeyUp(KeyCode.E))
 		{
+			Debug.Log("E Key");
 			yRotateValue = -90;
 		}
 	}

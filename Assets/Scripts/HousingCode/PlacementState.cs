@@ -48,7 +48,7 @@ public class PlacementState : IBuildingState
 		if (placementValidity == false) return;
 
 		int index = objectPlacer.PlaceObject(ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemPrefab,
-			grid.CellToWorld(gridInfo.ItemPosition), gridInfo.ItemYRotation);
+			Helper.Vector3ToInt(grid.CellToWorld(gridInfo.ItemPosition)), gridInfo.ItemYRotation);
 
 		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ?
 			floorData : furnitureData;
@@ -58,7 +58,7 @@ public class PlacementState : IBuildingState
 			ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId,
 			index);
 
-		previewSystem.UpdatePosition(grid.CellToWorld(gridInfo.ItemPosition), false);
+		previewSystem.UpdatePosition(grid.CellToWorld(gridInfo.ItemPosition), gridInfo.ItemYRotation, false);
 	}
 
 	private bool CheckPlacementValidity(ObjectTransInfo gridInfo, int selectedObjectItemId)
@@ -73,6 +73,6 @@ public class PlacementState : IBuildingState
 	{
 		bool placementValidity = CheckPlacementValidity(gridInfo, selectedObjectIndex);
 
-		previewSystem.UpdatePosition(grid.CellToWorld(gridInfo.ItemPosition), placementValidity);
+		previewSystem.UpdatePosition(grid.CellToWorld(gridInfo.ItemPosition), gridInfo.ItemYRotation, placementValidity);
 	}
 }

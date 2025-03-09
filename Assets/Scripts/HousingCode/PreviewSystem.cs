@@ -70,14 +70,15 @@ public class PreviewSystem : MonoBehaviour
 
 	public void UpdatePosition(Vector3 position, float yRotation, bool validity)
 	{
-		ObjectTransInfo newInfo = 
-        if (previewObject != null)
+		ObjectTransInfo newInfo = new(Helper.Vector3ToInt(position), yRotation);
+
+		if (previewObject != null)
         {
-			MovePreview(gridInfo);
+			MovePreview(newInfo);
 			ApplyFeedBackToPreview(validity);
 		}
 
-		MoveCursor(gridInfo);
+		MoveCursor(newInfo);
 		ApplyFeedBackToCursor(validity);
 	}
 
