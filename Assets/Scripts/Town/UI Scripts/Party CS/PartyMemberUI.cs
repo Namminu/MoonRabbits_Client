@@ -12,6 +12,10 @@ public class PartyMemberUI : MonoBehaviour
     public GameObject memberPrefab; // MemberInfo 프리팹
     private List<GameObject> memberUIs = new List<GameObject>();
 
+    [SerializeField]
+    private GameObject[] hearts;
+
+
     public Image hand;
     public Image axe;
     public Image pickaxe;
@@ -60,25 +64,35 @@ public class PartyMemberUI : MonoBehaviour
             axe = newMember.transform.Find("MemberImage/WorkingOn/Axe").GetComponent<Image>();
             pickaxe = newMember.transform.Find("MemberImage/WorkingOn/Pickaxe").GetComponent<Image>();
 
-            Player player = GameManager.Instance.GetPlayer(member.Id);
-            if (player == null)
-            {
-                foreach (GameObject memberUI in memberUIs)
-                {
-                    Destroy(memberUI);
-                }
-                memberUIs.Clear();
-                return;
-            }
-            newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{player.level}";
+            // 레벨 업데이트
+            newMember.transform.Find("Level/LevelText").GetComponent<TMP_Text>().text = $"{member.Level}";
 
-            if (player.ActiveEquipObj == player.axe)
+            // 체력 업데이트
+            // 하트 찾아서 배열에 넣어주기
+            hearts = new GameObject[3];
+
+            hearts[0] = newMember.transform.Find("Heart1").gameObject;
+            hearts[1] = newMember.transform.Find("Heart2").gameObject;
+            hearts[2] = newMember.transform.Find("Heart3").gameObject;
+
+            foreach (var heart in hearts)
+            {
+                heart.SetActive(false);
+            }
+
+            for (int i = 0; i < member.Hp; i++)
+            {
+                hearts[i].SetActive(true);
+            }
+
+            // 사용 중인 도구 업데이트
+            if (member.CurrentEquip == 1)
             {
                 hand.gameObject.SetActive(false);
                 axe.gameObject.SetActive(true);
                 pickaxe.gameObject.SetActive(false);
             }
-            else if (player.ActiveEquipObj == player.pickAxe)
+            else if (member.CurrentEquip == 2)
             {
                 hand.gameObject.SetActive(false);
                 axe.gameObject.SetActive(false);

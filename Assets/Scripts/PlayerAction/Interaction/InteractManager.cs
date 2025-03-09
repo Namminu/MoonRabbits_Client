@@ -6,26 +6,35 @@ using UnityEngine;
 public class InteractManager : MonoBehaviour
 {
     [SerializeField]
-    private MyPlayer player;
+    private MyPlayer MPlayer;
 
     [SerializeField]
     private ResourceController targetResource = null;
+
+    [SerializeField]
+    private Gate targetGate = null;
+
+    [SerializeField]
+    private Chest targetChest = null;
 
     [SerializeField]
     private Portal targetPortal = null;
     private const int portalTimer = 5;
     private bool isPortalReady = true;
     private bool isInteracting = false;
+    public bool IsInteracting
+    {
+        get { return isInteracting; }
+        set { isInteracting = value; }
+    }
     public bool isEquipChanging = false;
-
-    private string[] anims = { "none", "Axe", "PickAxe" };
 
     public Action eventF; // F키 누르면 발동
     public Action eventR; // R키 누르면 발동
 
     private void Start()
     {
-        player = GetComponentInParent<MyPlayer>();
+        MPlayer = GetComponentInParent<MyPlayer>();
         eventF += Interact;
         eventR += ChangeEquip;
     }
@@ -37,7 +46,7 @@ public class InteractManager : MonoBehaviour
 
         isEquipChanging = true;
 
-        int nextEquip = player.currentEquip == 1 ? 2 : 1;
+        int nextEquip = MPlayer.currentEquip == 1 ? 2 : 1;
         var pkt = new C2SEquipChange { NextEquip = nextEquip };
         GameManager.Network.Send(pkt);
     }
@@ -48,19 +57,35 @@ public class InteractManager : MonoBehaviour
         {
             GatherResource();
         }
+        else if (targetGate != null)
+        {
+            UIEnter UI = CanvasManager.Instance.uIEnter;
+            if (!UI.gameObject.activeSelf)
+            {
+                UI.gameObject.SetActive(true);
+                UI.IdentifyGate(targetGate);
+            }
+        }
         else if (targetPortal != null)
         {
             var portalPacket = new C2SPortal { InPortalId = targetPortal.id };
             GameManager.Network.Send(portalPacket);
+        }
+        else if (targetChest != null && targetChest.gameObject.activeSelf)
+        {
+            StartOpenChest();
         }
     }
 
     private void GatherResource()
     {
         if (isInteracting)
+        {
+            UISkillCheck.Instance.SkillCheck();
             return;
+        }
 
-        if (player.currentEquip != targetResource.resourceId)
+        if (MPlayer.currentEquip != targetResource.resourceId)
         {
             Debug.Log("자원에 맞는 도구를 장비해주세요");
             return;
@@ -71,30 +96,17 @@ public class InteractManager : MonoBehaviour
             isInteracting = true;
 
             // player.NavAgent.isStopped = true;
-            player.NavAgent.ResetPath();
-            player.NavAgent.destination = player.transform.position;
-            player.NavAgent.velocity = Vector3.zero;
+            MPlayer.NavAgent.ResetPath();
+            MPlayer.NavAgent.destination = MPlayer.transform.position;
+            MPlayer.NavAgent.velocity = Vector3.zero;
 
             Vector3 direction = (
-                targetResource.transform.position - player.transform.position
+                targetResource.transform.position - MPlayer.transform.position
             ).normalized;
             direction.y = 0;
-            player.transform.rotation = Quaternion.LookRotation(direction);
-
-            player.Anim.SetTrigger(anims[player.currentEquip]);
+            MPlayer.transform.rotation = Quaternion.LookRotation(direction);
 
             GameManager.Network.Send(new C2SGatheringStart { PlacedId = targetResource.idx });
-
-            GameManager.Network.Send(
-                new C2SGatheringSkillCheck
-                {
-                    DeltaTime = (int)(
-                        DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - targetResource.Starttime
-                    ),
-                }
-            );
-
-            Invoke(nameof(GatherOut), 0.7f); // 재상호작용은 일단 0.7초 후에 가능 (애니메이션 출력시간)
         }
         else
         {
@@ -102,11 +114,14 @@ public class InteractManager : MonoBehaviour
         }
     }
 
-    private void GatherOut()
+    public void GatherOut(bool isinteracting)
     {
-        //targetResource.DecreaseDurability(1); // 숫자 만큼 감소시킴 나중에 능력치만큼 적용?
-        isInteracting = false;
-        // player.NavAgent.isStopped = false;
+        if (!this.isInteracting)
+        {
+            return;
+        }
+        this.isInteracting = isinteracting;
+        UISkillCheck.Instance.EndSkillCheck();
     }
 
     public void UsePortal()
@@ -125,8 +140,8 @@ public class InteractManager : MonoBehaviour
         Vector3 portalPos = targetPortal.ConnectedPortal.position;
         portalPos.y = 0;
 
-        player.NavAgent.Warp(portalPos);
-        player.NavAgent.ResetPath();
+        MPlayer.NavAgent.Warp(portalPos);
+        MPlayer.NavAgent.ResetPath();
 
         StartCoroutine(SetPortalTimer());
         isInteracting = false;
@@ -145,15 +160,41 @@ public class InteractManager : MonoBehaviour
         isPortalReady = true;
     }
 
+    private void StartOpenChest()
+    {
+        isInteracting = true;
+        MPlayer.SkillManager.IsCasting = true;
+
+        MPlayer.NavAgent.destination = MPlayer.transform.position;
+        MPlayer.NavAgent.velocity = Vector3.zero;
+
+        Vector3 direction = (
+            targetChest.transform.position - MPlayer.transform.position
+        ).normalized;
+        direction.y = 0;
+        MPlayer.transform.rotation = Quaternion.LookRotation(direction);
+
+        var pkt = new C2SOpenChest { };
+        GameManager.Network.Send(pkt);
+    }
+
     private void OnTriggerStay(Collider other)
     {
         if (targetResource == null && other.gameObject.CompareTag("Resource"))
         {
             targetResource = other.GetComponent<ResourceController>();
         }
+        else if (targetGate == null && other.gameObject.CompareTag("Gate"))
+        {
+            targetGate = other.GetComponent<Gate>();
+        }
         else if (targetPortal == null && other.gameObject.CompareTag("Portal"))
         {
             targetPortal = other.GetComponent<Portal>();
+        }
+        else if (targetChest == null && other.gameObject.CompareTag("Chest"))
+        {
+            targetChest = other.GetComponent<Chest>();
         }
     }
 
@@ -163,9 +204,17 @@ public class InteractManager : MonoBehaviour
         {
             targetResource = null;
         }
+        else if (targetGate != null && other.gameObject.CompareTag("Gate"))
+        {
+            targetGate = null;
+        }
         else if (targetPortal != null & other.gameObject.CompareTag("Portal"))
         {
             targetPortal = null;
+        }
+        else if (targetChest != null & other.gameObject.CompareTag("Chest"))
+        {
+            targetChest = null;
         }
     }
 }

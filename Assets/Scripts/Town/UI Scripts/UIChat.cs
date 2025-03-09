@@ -59,20 +59,6 @@ public class UIChat : MonoBehaviour
 
         baseChatItemWidth = txtChatItemBase.rectTransform.sizeDelta.x;
 
-        // string currentScene = SceneManager.GetActiveScene().name;
-        // switch (currentScene)
-        // {
-        //     case "Town":
-        //         player = TownManager.Instance.MyPlayer;
-        //         break;
-        //     case "Sector1":
-        //         player = S1Manager.Instance.MyPlayer;
-        //         break;
-        //     case "Sector2":
-        //         player = S2Manager.Instance.MyPlayer;
-        //         break;
-        // }
-
         btnSend.onClick.AddListener(SendMessage);
         btnToggle.onClick.AddListener(ToggleChatWindow);
 

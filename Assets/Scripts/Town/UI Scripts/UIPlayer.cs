@@ -11,7 +11,12 @@ public class UIPlayer : MonoBehaviour
     public int player_level;
 
     private int APButtonsOffsetY = 39;
-    private int APTextOffsetX = 152;
+    private int APTextOffsetX = 132;
+
+    private Vector3 startPosAPButton = new(160, 950, 0);
+    private Vector3 endPosAPButton = new(160, 884, 0);
+    private Vector3 startPosAPFrame = new(214, 960, 0);
+    private Vector3 endPosAPFrame = new(371, 960, 0);
 
     public Button btnAddExp;
     public Slider staminaSlider;
@@ -39,6 +44,8 @@ public class UIPlayer : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        // startAPButtonPosition = APButtons.transform.position;
+        // startAPFramePosition = APFrame.transform.position;
     }
 
     // Start is called before the first frame update
@@ -88,27 +95,35 @@ public class UIPlayer : MonoBehaviour
         APText.text = statInfo.AbilityPoint.ToString();
         if (statInfo.AbilityPoint > 0)
         {
-            Debug.Log(APButtons.transform.position);
-            Debug.Log(APFrame.transform.position);
-            Vector3 goalPos_APButtons =
-                APButtons.transform.position + new Vector3(0, -APButtonsOffsetY, 0);
-            Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(APTextOffsetX, 0, 0);
-            Debug.Log(goalPos_APButtons);
-            Debug.Log(goalPos_APFrame);
-            // 처음부터 위치 이동시키면 이상한 위치로 이동돼서 코루틴으로 이동시킴
-            // APButtons.transform.position = goalPos_APButtons;
-            // APFrame.transform.position = goalPos_APFrame;
             StartCoroutine(
-                SmoothChangeObjectPosition(
-                    APButtons,
-                    APButtons.transform.position,
-                    goalPos_APButtons,
-                    1
-                )
+                SmoothChangeObjectPosition(APButtons, startPosAPButton, endPosAPButton, 1)
             );
-            StartCoroutine(
-                SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1)
-            );
+            StartCoroutine(SmoothChangeObjectPosition(APFrame, startPosAPFrame, endPosAPFrame, 1));
+            // APButtons.transform.position = startAPButton.position;
+            // APFrame.transform.position = startAPFrame.position;
+            // Debug.Log(APButtons.transform.position);
+            // Debug.Log(APFrame.transform.position);
+
+            // Vector3 goalPos_APButtons =
+            //     APButtons.transform.position + new Vector3(0, -APButtonsOffsetY, 0);
+            // Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(APTextOffsetX, 0, 0);
+            // Debug.Log(goalPos_APButtons);
+            // Debug.Log(goalPos_APFrame);
+
+            // // 처음부터 위치 이동시키면 이상한 위치로 이동돼서 코루틴으로 이동시킴
+            // // APButtons.transform.position = goalPos_APButtons;
+            // // APFrame.transform.position = goalPos_APFrame;
+            // StartCoroutine(
+            //     SmoothChangeObjectPosition(
+            //         APButtons,
+            //         APButtons.transform.position,
+            //         goalPos_APButtons,
+            //         1
+            //     )
+            // );
+            // StartCoroutine(
+            //     SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1)
+            // );
         }
     }
 
@@ -144,7 +159,7 @@ public class UIPlayer : MonoBehaviour
             DeActiveAP();
     }
 
-    public void SetMoveSpeed(int moveSpeed, bool hasAP)
+    public void SetMoveSpeed(float moveSpeed, bool hasAP)
     {
         moveSpeedText.text = moveSpeed.ToString();
         if (!hasAP)
@@ -166,20 +181,23 @@ public class UIPlayer : MonoBehaviour
 
     public void DeActiveAP()
     {
-        Vector3 goalPos_APButtons =
-            APButtons.transform.position + new Vector3(0, APButtonsOffsetY, 0);
-        Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(-APTextOffsetX, 0, 0);
-        StartCoroutine(
-            SmoothChangeObjectPosition(
-                APButtons,
-                APButtons.transform.position,
-                goalPos_APButtons,
-                1
-            )
-        );
-        StartCoroutine(
-            SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1)
-        );
+        StartCoroutine(SmoothChangeObjectPosition(APButtons, endPosAPButton, startPosAPButton, 1));
+        StartCoroutine(SmoothChangeObjectPosition(APFrame, endPosAPFrame, startPosAPFrame, 1));
+        // Vector3 goalPos_APButtons =
+        //     APButtons.transform.position + new Vector3(0, APButtonsOffsetY, 0);
+        // Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(-APTextOffsetX, 0, 0);
+
+        // StartCoroutine(
+        //     SmoothChangeObjectPosition(
+        //         APButtons,
+        //         APButtons.transform.position,
+        //         goalPos_APButtons,
+        //         1
+        //     )
+        // );
+        // StartCoroutine(
+        //     SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1)
+        // );
     }
 
     private IEnumerator LevelUpSequence(
@@ -203,20 +221,25 @@ public class UIPlayer : MonoBehaviour
         if (abilityPoint == 0)
         {
             Debug.Log("+버튼 코루틴");
-            Vector3 goalPos_APButtons =
-                APButtons.transform.position + new Vector3(0, -APButtonsOffsetY, 0);
-            Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(APTextOffsetX, 0, 0);
             StartCoroutine(
-                SmoothChangeObjectPosition(
-                    APButtons,
-                    APButtons.transform.position,
-                    goalPos_APButtons,
-                    1f
-                )
+                SmoothChangeObjectPosition(APButtons, startPosAPButton, endPosAPButton, 1f)
             );
-            StartCoroutine(
-                SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1f)
-            );
+            StartCoroutine(SmoothChangeObjectPosition(APFrame, startPosAPFrame, endPosAPFrame, 1f));
+            // Vector3 goalPos_APButtons =
+            //     APButtons.transform.position + new Vector3(0, -APButtonsOffsetY, 0);
+            // Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(APTextOffsetX, 0, 0);
+
+            // StartCoroutine(
+            //     SmoothChangeObjectPosition(
+            //         APButtons,
+            //         APButtons.transform.position,
+            //         goalPos_APButtons,
+            //         1f
+            //     )
+            // );
+            // StartCoroutine(
+            //     SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1f)
+            // );
         }
         APText.text = updatedAbilityPoint.ToString();
 

@@ -14,11 +14,9 @@ public class Player : MonoBehaviour
     private UIPlayer uiPlayer;
 
     [Header("Movement Settings")]
-    public float SmoothMoveSpeed = 10f; // 위치 보간 속도
-    public float SmoothRotateSpeed = 10f; // 회전 보간 속도
-    public float TeleportDistanceThreshold = 0.5f; // 순간 이동 거리 임계값
-
-
+    public float SmoothMoveSpeed = 15f; // 위치 보간 속도
+    public float SmoothRotateSpeed = 15f; // 회전 보간 속도
+    public float TeleportDistanceThreshold = 1f; // 순간 이동 거리 임계값
 
     public Avatar Avatar { get; private set; }
     public MyPlayer MPlayer { get; private set; }
@@ -44,7 +42,6 @@ public class Player : MonoBehaviour
     public GameObject axe;
     public GameObject pickAxe;
     private Transform throwPoint;
-    private const int maxTraps = 2;
 
     private Dictionary<int, string> emotions = new();
     public bool IsStun = false;
@@ -61,8 +58,15 @@ public class Player : MonoBehaviour
     private int pickSpeed;
     private int moveSpeed;
     private int abilityPoint;
-    private int cur_hp;
-    private int hp;
+
+    //불멸의 시간이 다가왔다.
+    private float startImotalTime = 5f;
+    private float ImotalTime = 1f;
+    private bool isImotal = false;
+    public bool GetIsImotal
+    {
+        get { return isImotal; }
+    }
 
     private void Start()
     {
@@ -72,6 +76,27 @@ public class Player : MonoBehaviour
 
         SetAnimTrigger();
         SetEquipObj();
+
+        StartCoroutine(CoImotalTime(startImotalTime));
+    }
+
+    private void Update()
+    {
+        if (!isInitialized)
+            return;
+
+        if (!IsMine)
+        {
+            SmoothMoveAndRotate();
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (!IsMine)
+        {
+            CheckMove();
+        }
     }
 
     private void SetAnimTrigger()
@@ -79,6 +104,9 @@ public class Player : MonoBehaviour
         emotions[111] = "Happy";
         emotions[222] = "Sad";
         emotions[333] = "Greeting";
+        emotions[10] = "Exit";
+        emotions[11] = "PickAxe";
+        emotions[12] = "Axe";
     }
 
     private void SetEquipObj()
@@ -103,6 +131,16 @@ public class Player : MonoBehaviour
         this.level = level;
     }
 
+    public int GetHp()
+    {
+        return this.curHp;
+    }
+
+    public int SetHp(int num)
+    {
+        return this.curHp = num;
+    }
+
     public void SetIsMine(bool isMine)
     {
         IsMine = isMine;
@@ -118,19 +156,7 @@ public class Player : MonoBehaviour
         }
 
         uiChat = GameManager.Instance.SManager.UiChat;
-        // switch (currentSector)
-        // {
-        //     case 100:
-        //         uiChat = TownManager.Instance.UiChat;
-        //         break;
-        //     case 101:
-        //         uiChat = S1Manager.Instance.UiChat;
-        //         break;
-        //     case 102:
-        //         uiChat = S2Manager.Instance.UiChat;
-        //         break;
-        // }
-
+        uiPlayer = GameManager.Instance.SManager.UiPlayer;
         isInitialized = true;
     }
 
@@ -167,19 +193,6 @@ public class Player : MonoBehaviour
     private void SetMonsterCollision(CollisionPushInfo info) // 몬스터가 나에게 알려줄경우
     {
         //체력을 깎는다.
-    }
-
-    private void Update()
-    {
-        if (!isInitialized)
-            return;
-
-        if (!IsMine)
-        {
-            SmoothMoveAndRotate();
-        }
-
-        CheckMove();
     }
 
     private void SmoothMoveAndRotate()
@@ -246,7 +259,90 @@ public class Player : MonoBehaviour
 
     public void Emote(int animCode)
     {
-        animator?.SetTrigger(emotions[animCode]);
+        Debug.Log(emotions[animCode]);
+        if (animCode < 100)
+        {
+            if (animCode == 10)
+            {
+                animator?.SetBool(emotions[12], false);
+                animator?.SetBool(emotions[11], false);
+            }
+            else
+            {
+                animator?.SetBool(emotions[animCode], true);
+            }
+        }
+        else
+        {
+            animator?.SetTrigger(emotions[animCode]);
+        }
+    }
+
+    public void StartOpenChest(int openTimer)
+    {
+        StartCoroutine(TryOpen(openTimer));
+    }
+
+    IEnumerator TryOpen(int openTimer)
+    {
+        animator.SetBool("OpenChest", true);
+        // 진행도 유아이 액티브?
+        Vector3 startPos = transform.position;
+
+        int openWaiting = 0;
+
+        while (openWaiting < openTimer)
+        {
+            if (CancelOpen(startPos))
+                yield break;
+
+            yield return new WaitForSeconds(0.5f);
+
+            if (CancelOpen(startPos))
+                yield break;
+
+            yield return new WaitForSeconds(0.5f);
+            Debug.Log($"상자 오픈까지 남은 시간 : {openTimer - openWaiting}초");
+            openWaiting += 1;
+        }
+
+        yield return new WaitForSeconds(0.5f);
+        animator.SetBool("OpenChest", false);
+
+        GameObject chest = GameManager.Instance.SManager.Chest.gameObject;
+        if (chest != null && chest.activeSelf)
+        {
+            chest.SetActive(false);
+        }
+
+        if (IsMine)
+        {
+            MPlayer.SkillManager.IsCasting = false;
+            MPlayer.InteractManager.IsInteracting = false;
+
+            var pkt = new C2SGetTreasure { };
+            GameManager.Network.Send(pkt);
+        }
+    }
+
+    private bool CancelOpen(Vector3 startPos)
+    {
+        if (Vector3.Distance(startPos, transform.position) > 0.5f || IsStun)
+        {
+            animator.SetBool("OpenChest", false);
+
+            if (IsMine)
+            {
+                MPlayer.SkillManager.IsCasting = false;
+                MPlayer.InteractManager.IsInteracting = false;
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void CastRecall(int recallTimer)
@@ -265,19 +361,15 @@ public class Player : MonoBehaviour
 
         while (castingTime < recallTimer)
         {
-            if (Vector3.Distance(startPos, transform.position) > 0.2 || IsStun)
-            {
-                effect.SetActive(false);
-
-                if (IsMine)
-                {
-                    MPlayer.SkillManager.IsCasting = false;
-                }
-
+            if (CancelRecall(startPos, effect))
                 yield break;
-            }
 
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.5f);
+
+            if (CancelRecall(startPos, effect))
+                yield break;
+
+            yield return new WaitForSeconds(0.5f);
             Debug.Log($"귀환까지 남은 시간 : {recallTimer - castingTime}초");
             castingTime += 1;
         }
@@ -294,10 +386,30 @@ public class Player : MonoBehaviour
         }
     }
 
+    private bool CancelRecall(Vector3 startPos, GameObject effect)
+    {
+        if (Vector3.Distance(startPos, transform.position) > 0.5f || IsStun)
+        {
+            effect.SetActive(false);
+
+            if (IsMine)
+            {
+                MPlayer.SkillManager.IsCasting = false;
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public void CastGrenade(Vec3 vel, float coolTime)
     {
         GameObject grenadeObj = Instantiate(grenade, throwPoint.position, Quaternion.identity);
-        grenadeObj.GetComponent<SkillObj>().CasterId = PlayerId;
+        SkillObj skillObj = grenadeObj.GetComponent<SkillObj>();
+        skillObj.CasterId = PlayerId;
 
         Rigidbody rigid = grenadeObj.GetComponent<Rigidbody>();
         rigid.velocity = new Vector3(vel.X, vel.Y, vel.Z);
@@ -305,7 +417,7 @@ public class Player : MonoBehaviour
 
         if (IsMine)
         {
-            StartCoroutine(RunCoolTime(coolTime, 0));
+            StartCoroutine(RunCoolTime(coolTime, (int)skillObj.type));
         }
     }
 
@@ -318,36 +430,15 @@ public class Player : MonoBehaviour
             new Vector3(pos.X / 10f, 0, pos.Z / 10f),
             transform.rotation
         );
-        trapObj.GetComponent<SkillObj>().CasterId = PlayerId;
+
+        SkillObj skillObj = trapObj.GetComponent<SkillObj>();
+        skillObj.CasterId = PlayerId;
 
         if (IsMine)
         {
-            List<GameObject> myTraps = MPlayer.SkillManager.Traps;
-            myTraps.Add(trapObj);
-
-            if (myTraps.Count > maxTraps)
-            {
-                GameObject oldTrap = myTraps[0];
-                myTraps.Remove(oldTrap);
-
-                var pkt = new C2SRemoveTrap
-                {
-                    TrapInfo = new TrapInfo
-                    {
-                        CasterId = PlayerId,
-                        Pos = new Vec3
-                        {
-                            X = Mathf.Round(oldTrap.transform.position.x * 10f),
-                            Y = 0,
-                            Z = Mathf.Round(oldTrap.transform.position.z * 10f),
-                        },
-                    },
-                };
-
-                GameManager.Network.Send(pkt);
-            }
-
-            StartCoroutine(RunCoolTime(coolTime, 1));
+            MPlayer.NavAgent.SetDestination(transform.position);
+            MPlayer.NavAgent.velocity = Vector3.zero;
+            StartCoroutine(RunCoolTime(coolTime, (int)skillObj.type));
         }
     }
 
@@ -360,10 +451,10 @@ public class Player : MonoBehaviour
 
         switch (skillType)
         {
-            case 0:
+            case 1:
                 MPlayer.SkillManager.IsGrenadeReady = true;
                 break;
-            case 1:
+            case 2:
                 MPlayer.SkillManager.IsTrapReady = true;
                 break;
         }
@@ -371,8 +462,13 @@ public class Player : MonoBehaviour
 
     public void Stun(float timer)
     {
+        if (IsStun)
+            return;
+
         transform.Find("StunEffect").gameObject.SetActive(true);
         IsStun = true;
+
+        // PlayerManager.playerSaveData[PlayerId].IsStun = true;
 
         if (IsMine)
         {
@@ -387,6 +483,7 @@ public class Player : MonoBehaviour
     {
         transform.Find("StunEffect").gameObject.SetActive(false);
         IsStun = false;
+        // PlayerManager.playerSaveData[PlayerId].IsStun = false;
     }
 
     public void ChangeEquip(int nextEquip)
@@ -398,19 +495,21 @@ public class Player : MonoBehaviour
 
         ActiveEquipObj = equips[nextEquip];
         ActiveEquipObj.SetActive(true);
-        PartyMemberUI.instance.UpdateUI();
 
         if (IsMine)
         {
             MPlayer.currentEquip = nextEquip;
+            PlayerManager.playerSaveData[PlayerId].CurrentEquip = nextEquip;
             MPlayer.InteractManager.isEquipChanging = false;
         }
+
+        PartyMemberUI.instance.UpdateUI();
     }
 
     private void CheckMove()
     {
         float dist = Vector3.Distance(lastPos, transform.position);
-        animator.SetFloat(Constants.TownPlayerMove, dist * 100);
+        animator.SetFloat("Move", dist * 10);
         lastPos = transform.position;
     }
 
@@ -418,7 +517,7 @@ public class Player : MonoBehaviour
     public void SetStatInfo(StatInfo statInfo)
     {
         maxHp = 3;
-        curHp = 3;
+        curHp = statInfo.Hp;
         level = statInfo.Level;
         exp = statInfo.Exp;
         targetExp = statInfo.TargetExp;
@@ -428,13 +527,17 @@ public class Player : MonoBehaviour
         moveSpeed = statInfo.MoveSpeed;
         abilityPoint = statInfo.AbilityPoint;
 
+        SetStamina(stamina);
+        SetPickSpeed(pickSpeed);
+        SetMoveSpeed(moveSpeed);
+
         if (IsMine)
         {
             if (uiPlayer == null)
                 Debug.LogError("uiPlayer is null. 먼저 세팅돼야함");
             uiPlayer.SetStatInfo(statInfo);
             uiPlayer.SetNickname(nickname);
-            uiPlayer.InitHp(3);
+            uiPlayer.InitHp(curHp);
         }
     }
 
@@ -489,14 +592,17 @@ public class Player : MonoBehaviour
             uiPlayer.SetPickSpeed(pickSpeed, abilityPoint > 0);
     }
 
-    private void SetMoveSpeed(int moveSpeed)
+    public int GetPickSpeed()
+    {
+        return this.pickSpeed;
+    }
+
+    private void SetMoveSpeed(float moveSpeed)
     {
         // 플레이어 오브젝트 속도 변경
-        GetComponent<NavMeshAgent>().speed = moveSpeed * 1 + 5;
-        GetComponent<NavMeshAgent>().angularSpeed = 300 + moveSpeed * 100;
-        GetComponent<NavMeshAgent>().acceleration = moveSpeed * 2 + 3;
+        GetComponent<NavMeshAgent>().speed = 3.0f + (moveSpeed * 0.1f);
 
-        this.moveSpeed = moveSpeed;
+        /*this.moveSpeed = moveSpeed;*/
         if (IsMine)
             uiPlayer.SetMoveSpeed(moveSpeed, abilityPoint > 0);
     }
@@ -506,6 +612,10 @@ public class Player : MonoBehaviour
         level = updatedLevel;
         targetExp = newTargetExp;
         exp = updatedExp;
+
+        PlayerManager.playerSaveData[PlayerId].Level = level;
+        PlayerManager.playerSaveData[PlayerId].TargetExp = targetExp;
+        PlayerManager.playerSaveData[PlayerId].Exp = exp;
 
         Debug.Log($"레벨업 응답 실행 {level}/ap{abilityPoint}/{exp}/{targetExp} isMine?{IsMine}");
         if (IsMine)
@@ -539,5 +649,29 @@ public class Player : MonoBehaviour
     {
         this.uiPlayer = uiPlayer;
         this.uiPlayer.gameObject.SetActive(true);
+    }
+
+    public void Damaged(int damage)
+    {
+        curHp -= damage;
+        ResourceManager.Instance.Instantiate("Effects", "FX_Shoot", transform.position);
+        // PlayerManager.playerSaveData[PlayerId].CurHp -= damage;
+        isImotal = true;
+        // PlayerManager.playerSaveData[PlayerId].IsImotal = true;
+        StartCoroutine(CoImotalTime(ImotalTime));
+
+        if (IsMine)
+        {
+            uiPlayer.InitHp(curHp);
+        }
+
+        PartyMemberUI.instance.UpdateUI();
+    }
+
+    IEnumerator CoImotalTime(float time)
+    {
+        yield return new WaitForSeconds(time);
+        isImotal = false;
+        // PlayerManager.playerSaveData[PlayerId].IsImotal = false;
     }
 }

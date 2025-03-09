@@ -358,7 +358,7 @@ public class PartyUI : MonoBehaviour
             int leaderId = partyInfo.LeaderId;
             int memberCount = partyInfo.MemberCount;
             // string nickname = GetPlayerByPlayerId(leaderId).nickname;
-            string nickname = GameManager.Instance.GetPlayer(leaderId).nickname;
+            string nickname = Party.instance.GetMemberByID(leaderId).Nickname;
 
             // 새로운 파티 카드 생성
             GameObject newPartyCard = Instantiate(partyCardPrefab, partyListContainer);
@@ -430,7 +430,8 @@ public class PartyUI : MonoBehaviour
     private void SendKickOutPartyPacket(string nickname)
     {
         // int memberId = GetPlayerByNickname(nickname).PlayerId;
-        int memberId = GameManager.Instance.GetPlayer(nickname).PlayerId;
+        // int memberId = GameManager.Instance.GetPlayer(nickname).PlayerId;
+        int memberId = Party.instance.GetMemberByNickname(nickname).Id;
 
         var kickOutPartyPacket = new C2SKickOutMember
         {

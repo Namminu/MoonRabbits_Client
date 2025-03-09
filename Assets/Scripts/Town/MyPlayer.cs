@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class MyPlayer : MonoBehaviour
 {
-    private Player player;
+    public Player player;
 
     [SerializeField]
     public static MyPlayer instance { get; private set; }
@@ -56,6 +56,10 @@ public class MyPlayer : MonoBehaviour
     private InteractManager interactManager;
     public InteractManager InteractManager => interactManager;
 
+    private bool uiCraftInput;
+    private bool uiPartyInput;
+    private bool uiMenuInput;
+    private bool uiInventoryInput;
     private LineRenderer _lineRenderer;
     private Camera _cam;
     private float zoomSpeed = 20f;
@@ -86,12 +90,12 @@ public class MyPlayer : MonoBehaviour
         emoteManager = GetComponent<EmoteManager>();
     }
 
-    void Start()
+    private void Start()
     {
         StartCoroutine(ExecuteEvery0_1Seconds());
     }
 
-    void Update()
+    private void Update()
     {
         HandleInput();
         Emote();
@@ -100,10 +104,16 @@ public class MyPlayer : MonoBehaviour
         Recall();
         EquipChange();
         Interact();
+        UIInput();
+    }
+
+    private void LateUpdate()
+    {
         CheckMove();
         PathFinding();
         ScreenScrollZoom();
     }
+
     void PathFinding()
     {
         if (agent.pathPending)
@@ -113,6 +123,11 @@ public class MyPlayer : MonoBehaviour
         _lineRenderer.positionCount = corners.Length;
 
         _lineRenderer.SetPositions(corners);
+    }
+
+    public int GetPickSpeed()
+    {
+        return player.GetPickSpeed();
     }
 
     void ScreenScrollZoom()
@@ -141,11 +156,9 @@ public class MyPlayer : MonoBehaviour
         while (eSystem == null)
         {
             eSystem = GameManager.Instance.SManager.ESystem;
-            Debug.Log("!!! 이벤트 시스템 찾는 중");
             yield return new WaitForSeconds(1f);
         }
         yield return new WaitUntil(() => eSystem != null);
-        Debug.Log("!!! 이벤트 시스템 찾음");
         isReadyESystem = true;
     }
 
@@ -167,6 +180,8 @@ public class MyPlayer : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
         {
+            interactManager.GatherOut(false);
+
             if (
                 Physics.Raycast(
                     Camera.main.ScreenPointToRay(Input.mousePosition),
@@ -189,8 +204,10 @@ public class MyPlayer : MonoBehaviour
         recallInput = Input.GetKeyDown(KeyCode.T);
         interactInput = Input.GetKeyDown(KeyCode.F);
         equipChangeInput = Input.GetKeyDown(KeyCode.R);
-
-
+        uiCraftInput = Input.GetKeyDown(KeyCode.C);
+        uiPartyInput = Input.GetKeyDown(KeyCode.P);
+        uiMenuInput = Input.GetKeyDown(KeyCode.Escape);
+        uiInventoryInput = Input.GetKeyDown(KeyCode.I);
     }
 
     IEnumerator ExecuteEvery0_1Seconds()
@@ -261,7 +278,7 @@ public class MyPlayer : MonoBehaviour
     private void CheckMove()
     {
         float distanceMoved = Vector3.Distance(lastPos, transform.position);
-        anim.SetFloat(Constants.TownPlayerMove, distanceMoved * 100);
+        anim.SetFloat("Move", distanceMoved * 10);
 
         if (distanceMoved > 0.01f)
         {
@@ -298,12 +315,12 @@ public class MyPlayer : MonoBehaviour
         {
             skillManager.eventQ.Invoke();
 
-            float coolTime = 5;
+            // float coolTime = 5;
 
-            if (SceneManager.GetActiveScene().name == "Sector1")
-                S1Manager.Instance.UiPlayer.QSkillCool(coolTime);
-            else if (SceneManager.GetActiveScene().name == "Sector2")
-                S2Manager.Instance.UiPlayer.WSkillCool(coolTime);
+            // if (SceneManager.GetActiveScene().name == "Sector1")
+            //     S1Manager.Instance.UiPlayer.QSkillCool(coolTime);
+            // else if (SceneManager.GetActiveScene().name == "Sector2")
+            //     S2Manager.Instance.UiPlayer.WSkillCool(coolTime);
         }
     }
 
@@ -344,5 +361,38 @@ public class MyPlayer : MonoBehaviour
     {
         transform.Find("StunEffect").gameObject.SetActive(false);
         NavAgent.isStopped = false;
+    }
+
+    private void UIInput()
+    {
+        if (uiCraftInput)
+        {
+            // C 키입력
+            GameObject uiCraft = CanvasManager.Instance.uiCraft.gameObject;
+            uiCraft.SetActive(!uiCraft.activeSelf);
+            CanvasManager.Instance.craftManager.Resume();
+            uiCraft.transform.SetAsLastSibling();
+        }
+        if (uiPartyInput)
+        {
+            // P 키입력
+            GameObject partyUi = CanvasManager.Instance.partyUI.partyWindow;
+            partyUi.SetActive(!partyUi.activeSelf);
+            partyUi.transform.SetAsLastSibling();
+        }
+        if (uiMenuInput)
+        {
+            // ESC 키입력
+            GameObject uiMenu = CanvasManager.Instance.uiMenu;
+            uiMenu.SetActive(!uiMenu.activeSelf);
+            uiMenu.transform.SetAsLastSibling();
+        }
+        if (uiInventoryInput)
+        {
+            // I 키입력
+            GameObject inventoryUI = CanvasManager.Instance.inventoryUI.gameObject;
+            inventoryUI.SetActive(!inventoryUI.activeSelf);
+            inventoryUI.transform.SetAsLastSibling();
+        }
     }
 }

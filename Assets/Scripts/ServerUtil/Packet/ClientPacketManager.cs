@@ -35,8 +35,8 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CLogin, PacketHandler.S2CLoginHandler);
         _onRecv.Add((ushort)MsgId.S2CCreateCharacter, MakePacket<S2CCreateCharacter>);
         _handler.Add((ushort)MsgId.S2CCreateCharacter, PacketHandler.S2CCreateCharacterHandler);
-        _onRecv.Add((ushort)MsgId.S2CEnter, MakePacket<S2CEnter>);
-        _handler.Add((ushort)MsgId.S2CEnter, PacketHandler.S2CEnterHandler);
+        _onRecv.Add((ushort)MsgId.S2CEnterTown, MakePacket<S2CEnterTown>);
+        _handler.Add((ushort)MsgId.S2CEnterTown, PacketHandler.S2CEnterTownHandler);
         _onRecv.Add((ushort)MsgId.S2CMoveSector, MakePacket<S2CMoveSector>);
         _handler.Add((ushort)MsgId.S2CMoveSector, PacketHandler.S2CMoveSectorHandler);
         _onRecv.Add((ushort)MsgId.S2CEmote, MakePacket<S2CEmote>);
@@ -44,7 +44,7 @@ class PacketManager
         _onRecv.Add((ushort)MsgId.S2CChat, MakePacket<S2CChat>);
         _handler.Add((ushort)MsgId.S2CChat, PacketHandler.S2CChatHandler);
         _onRecv.Add((ushort)MsgId.S2CSpawn, MakePacket<S2CSpawn>);
-        _handler.Add((ushort)MsgId.S2CSpawn, PacketHandler.S2CPlayerSpawnHandler);
+        _handler.Add((ushort)MsgId.S2CSpawn, PacketHandler.S2CSpawnHandler);
         _onRecv.Add((ushort)MsgId.S2CDespawn, MakePacket<S2CDespawn>);
         _handler.Add((ushort)MsgId.S2CDespawn, PacketHandler.S2CDespawnHandler);
         _onRecv.Add((ushort)MsgId.S2CPlayerMove, MakePacket<S2CPlayerMove>);
@@ -63,6 +63,13 @@ class PacketManager
         _onRecv.Add((ushort)MsgId.S2CInventoryUpdate, MakePacket<S2CInventoryUpdate>);
         _handler.Add((ushort)MsgId.S2CInventoryUpdate, PacketHandler.S2CInventoryUpdateHandler);
 
+        _onRecv.Add((ushort)MsgId.S2CHousingSave, MakePacket<S2CHousingSave>);
+        _handler.Add((ushort)MsgId.S2CHousingSave, PacketHandler.S2CHousingSaveHandler);
+        _onRecv.Add((ushort)MsgId.S2CHousingLoad, MakePacket<S2CHousingLoad>);
+        _handler.Add((ushort)MsgId.S2CHousingLoad, PacketHandler.S2CHousingLoadHandler);
+        _onRecv.Add((ushort)MsgId.S2CFurnitureCraft, MakePacket<S2CFurnitureCraft>);
+        _handler.Add((ushort)MsgId.S2CFurnitureCraft, PacketHandler.S2CFurnitureCraftHandler);
+
         _onRecv.Add((ushort)MsgId.S2CCreateParty, MakePacket<S2CCreateParty>);
         _handler.Add((ushort)MsgId.S2CCreateParty, PacketHandler.S2CCreatePartyHandler);
         _onRecv.Add((ushort)MsgId.S2CInviteParty, MakePacket<S2CInviteParty>);
@@ -79,6 +86,8 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CKickOutMember, PacketHandler.S2CKickOutMemberHandler);
         _onRecv.Add((ushort)MsgId.S2CDisbandParty, MakePacket<S2CDisbandParty>);
         _handler.Add((ushort)MsgId.S2CDisbandParty, PacketHandler.S2CDisbandPartyHandler);
+        _onRecv.Add((ushort)MsgId.S2CUpdateParty, MakePacket<S2CUpdateParty>);
+        _handler.Add((ushort)MsgId.S2CUpdateParty, PacketHandler.S2CUpdatePartyHandler);
         _onRecv.Add((ushort)MsgId.C2SRejectInvite, MakePacket<C2SRejectInvite>);
         _handler.Add((ushort)MsgId.S2CRejectInvite, PacketHandler.S2CRejectInviteHandler);
         _onRecv.Add((ushort)MsgId.S2CMonsterLocation, MakePacket<S2CMonsterLocation>);
@@ -101,6 +110,11 @@ class PacketManager
         );
         _onRecv.Add((ushort)MsgId.S2CGatheringDone, MakePacket<S2CGatheringDone>);
         _handler.Add((ushort)MsgId.S2CGatheringDone, PacketHandler.S2CGatheringDoneHandler);
+
+        _onRecv.Add((ushort)MsgId.S2COpenChest, MakePacket<S2COpenChest>);
+        _handler.Add((ushort)MsgId.S2COpenChest, PacketHandler.S2COpenChestHandler);
+        _onRecv.Add((ushort)MsgId.S2CRegenChest, MakePacket<S2CRegenChest>);
+        _handler.Add((ushort)MsgId.S2CRegenChest, PacketHandler.S2CRegenChestHandler);
         _onRecv.Add((ushort)MsgId.S2CRecall, MakePacket<S2CRecall>);
         _handler.Add((ushort)MsgId.S2CRecall, PacketHandler.S2CRecallHandler);
         _onRecv.Add((ushort)MsgId.S2CThrowGrenade, MakePacket<S2CThrowGrenade>);
@@ -122,10 +136,14 @@ class PacketManager
         _onRecv.Add((ushort)MsgId.S2CInvestPoint, MakePacket<S2CInvestPoint>);
         _handler.Add((ushort)MsgId.S2CInvestPoint, PacketHandler.S2CInvestPointHandler);
 
-        _onRecv.Add((ushort)MsgId.S2CCraft, MakePacket<S2CCraft>);
-        _handler.Add((ushort)MsgId.S2CCraft, PacketHandler.S2CCraftHandler);
+        _onRecv.Add((ushort)MsgId.S2CCraftStart, MakePacket<S2CCraftStart>);
+        _handler.Add((ushort)MsgId.S2CCraftStart, PacketHandler.S2CCraftStartHandler);
+        _onRecv.Add((ushort)MsgId.S2CCraftEnd, MakePacket<S2CCraftEnd>);
+        _handler.Add((ushort)MsgId.S2CCraftEnd, PacketHandler.S2CCraftEndHandler);
         _onRecv.Add((ushort)MsgId.S2CPing, MakePacket<S2CPing>);
         _handler.Add((ushort)MsgId.S2CPing, PacketHandler.S2CPingHandler);
+        _onRecv.Add((ushort)MsgId.S2CGetInventorySlotByItemId, MakePacket<S2CGetInventorySlotByItemId>);
+        _handler.Add((ushort)MsgId.S2CGetInventorySlotByItemId, PacketHandler.S2CGetInventorySlotByItemIdHandler);
 
         Debug.Log("핸들러 등록 완료");
     }

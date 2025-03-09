@@ -12,8 +12,8 @@ public class SkillObj : MonoBehaviour
 {
     public enum SkillType
     {
-        grenade,
-        trap,
+        grenade = 1,
+        trap = 2,
     }
 
     public SkillType type;
@@ -32,9 +32,9 @@ public class SkillObj : MonoBehaviour
 
     private const float lifeTime = 5f;
     private const float explosionRange = 5f;
-    private const float stunTimer = 5f;
 
     private bool isActive = false;
+    public bool IsActive => isActive;
 
     void Start()
     {
@@ -43,7 +43,22 @@ public class SkillObj : MonoBehaviour
         trail = GetComponentInChildren<TrailRenderer>();
         effect = transform.Find("Effect").gameObject;
 
+        if (type == SkillType.trap)
+        {
+            SetTrapColor();
+        }
+
         StartCoroutine(SetDestroyTimer());
+    }
+
+    public void SetTrapColor()
+    {
+        if (casterId == GameManager.Instance.MPlayer.PlayerId)
+        {
+            GetComponentInChildren<Light>().color = new Color(0.5f, 1.0f, 0.5f);
+            // GetComponentInChildren<Light>().color = Color.green;
+            // GetComponentInChildren<Light>().color = new Color32(144, 238, 144, 255);
+        }
     }
 
     IEnumerator SetDestroyTimer()
@@ -80,10 +95,23 @@ public class SkillObj : MonoBehaviour
 
     public void RemoveThis()
     {
-        if (casterId == GameManager.Instance.MPlayer.PlayerId)
+        if (isActive)
         {
-            GameManager.Instance.MPlayer.MPlayer.SkillManager.Traps.Remove(gameObject);
+            StartCoroutine(DestroyAfterStun());
         }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    IEnumerator DestroyAfterStun()
+    {
+        var rune = transform.Find("Rune").gameObject;
+        rune.SetActive(false);
+        effect.SetActive(true);
+
+        yield return new WaitForSeconds(lifeTime);
         Destroy(gameObject);
     }
 
@@ -145,7 +173,12 @@ public class SkillObj : MonoBehaviour
                     }
                     else if (target.CompareTag("Player"))
                     {
-                        pkt.PlayerIds.Add(target.GetComponent<Player>().PlayerId);
+                        var targetId = target.GetComponent<Player>().PlayerId;
+
+                        if (targetId == casterId)
+                            continue;
+
+                        pkt.PlayerIds.Add(targetId);
                     }
                 }
 
@@ -162,39 +195,34 @@ public class SkillObj : MonoBehaviour
         yield return null;
         isActive = true;
 
-        var rune = transform.Find("Rune").gameObject;
-        rune.SetActive(false);
-        effect.SetActive(true);
-
         Player targetPlayer = target.GetComponent<Player>();
 
-        var stunPkt = new C2SStun { SkillType = (int)type };
-        stunPkt.PlayerIds.Add(targetPlayer.PlayerId);
-
-        GameManager.Network.Send(stunPkt);
-
-        yield return new WaitForSeconds(2f); // 스턴 패킷 기다려야해...
-        yield return new WaitUntil(() => !targetPlayer.IsStun);
-
-        var removePkt = new C2SRemoveTrap
+        if (casterId == GameManager.Instance.MPlayer.PlayerId)
         {
-            TrapInfo = new TrapInfo
+            var stunPkt = new C2SStun
             {
-                CasterId = casterId,
-                Pos = new Vec3
+                SkillType = (int)type,
+                Trap = new TrapInfo
                 {
-                    X = Mathf.Round(transform.position.x * 10f),
-                    Y = 0,
-                    Z = Mathf.Round(transform.position.z * 10f),
+                    CasterId = casterId,
+                    Pos = new Vec3
+                    {
+                        X = Mathf.Round(transform.position.x * 10),
+                        Y = 0,
+                        Z = Mathf.Round(transform.position.z * 10),
+                    },
                 },
-            },
-        };
+            };
+            stunPkt.PlayerIds.Add(targetPlayer.PlayerId);
 
-        GameManager.Network.Send(removePkt);
+            GameManager.Network.Send(stunPkt);
+        }
 
-        // target.GetComponent<Player>().Stun(stunTimer);
-
-        // yield return new WaitForSeconds(stunTimer);
-        // Destroy(gameObject);
+        yield return new WaitForSeconds(1f); // 서버 통신 기다렸다가
+        var rune = transform.Find("Rune").gameObject;
+        if (rune.activeSelf)
+        {
+            isActive = false;
+        }
     }
 }
