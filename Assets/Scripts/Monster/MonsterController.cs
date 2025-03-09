@@ -24,25 +24,27 @@ public class MonsterController : MonoBehaviour
     private Vector3 _targetPosition;
 
     private Animator anim;
+    private NavMeshAgent _agent;
 
     private void Start()
     {
         anim = GetComponent<Animator>();
         _collider = GetComponent<CapsuleCollider>();
+        _agent = GetComponent<NavMeshAgent>();
         MonsterManager.Instance.AddMonster(this);
     }
 
     private void Update()
     {
-        transform.position = Vector3.Lerp(transform.position, _targetPosition, Time.deltaTime * 5f);
-        Vector3 direction = _targetPosition - transform.position;
-        direction.y = 0;
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(
-            transform.rotation,
-            targetRotation,
-            Time.deltaTime * 150
-        );
+        // transform.position = Vector3.Lerp(transform.position, _targetPosition, Time.deltaTime * 5f);
+        // Vector3 direction = _targetPosition - transform.position;
+        // direction.y = 0;
+        // Quaternion targetRotation = Quaternion.LookRotation(direction);
+        // transform.rotation = Quaternion.Slerp(
+        //     transform.rotation,
+        //     targetRotation,
+        //     Time.deltaTime * 150
+        // );
     }
 
     IEnumerator CoMonsterAttackCoolTime()
@@ -96,7 +98,8 @@ public class MonsterController : MonoBehaviour
 
     public void SetPosition(Vector3 position)
     {
-        _targetPosition = position;
+        //_targetPosition = position;
+        _agent.SetDestination(position);
     }
 
     public void Stun(float timer)
