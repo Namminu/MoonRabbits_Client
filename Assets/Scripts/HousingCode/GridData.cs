@@ -6,33 +6,26 @@ using UnityEngine.UIElements;
 
 public class GridData 
 {
-	public Dictionary<Vector3Int, PlacementData> placedObjects = new();
+	/* Save installed objects */
+	public Dictionary<int, PlacementData> placedObjectsList = new();
+	/* Save all coordinates of the object */
+	private Dictionary<Vector3Int, PlacementData> placedObjectsPosition = new();
 
 	public void AddObjectAt(ObjectTransInfo gridInfo, Vector2Int objectSize, int ID, int placedObjectIndex)
 	{
 		List<Vector3Int> positionToOccupy = CalculatePosition(gridInfo.ObjectPosition, objectSize, gridInfo.ObjectYRotation);
-		PlacementData data = new PlacementData(positionToOccupy, ID, placedObjectIndex);
+		PlacementData data = new PlacementData(positionToOccupy, ID, placedObjectIndex, gridInfo.ObjectYRotation, gridInfo.ObjectPosition);
 		foreach (var pos in positionToOccupy)
 		{
-			if (placedObjects.ContainsKey(pos))
+			if (placedObjectsPosition.ContainsKey(pos))
 				throw new Exception($"Dictionary already contatins this cell position {pos}");
 
-			placedObjects[pos] = data;
+			placedObjectsPosition[pos] = data;
 		}
-	}
+		placedObjectsList[placedObjectIndex] = data;
 
-	//private List<Vector3Int> CalculatePosition(Vector3Int gridPosition, Vector2Int objectSize, float yRotation)
-	//{
-	//	List<Vector3Int> returnVal = new();
-	//	for(int x = 0; x < objectSize.x; x++)
-	//	{
-	//		for(int y = 0; y < objectSize.y; y++)
-	//		{
-	//			returnVal.Add(gridPosition + new Vector3Int(x, 0, y));
-	//		}
-	//	}
-	//	return returnVal;
-	//}
+		Debug.Log("GridData : " + placedObjectsPosition.Count); 
+	}
 
 	private List<Vector3Int> CalculatePosition(Vector3Int gridPosition, Vector2Int objectSize, float yRotation)
 	{
@@ -111,23 +104,23 @@ public class GridData
 		List<Vector3Int> positionToOccupy = CalculatePosition(gridInfo.ObjectPosition, objectSize, gridInfo.ObjectYRotation);
 		foreach(var pos in positionToOccupy)
 		{
-			if (placedObjects.ContainsKey(pos)) return false;
+			if (placedObjectsPosition.ContainsKey(pos)) return false;
 		}
 		return true;
 	}
 
 	internal int GetRepresentationIndex(Vector3Int gridPosition)
 	{
-		if (!placedObjects.ContainsKey(gridPosition)) return -1;
+		if (!placedObjectsPosition.ContainsKey(gridPosition)) return -1;
 
-		return placedObjects[gridPosition].PlacedObjectIndex;
+		return placedObjectsPosition[gridPosition].PlacedObjectIndex;
 	}
 
 	internal void RemoveObjectAt(Vector3Int gridPosition)
 	{
-		foreach(var pos in placedObjects[gridPosition].occupiedPosition)
+		foreach(var pos in placedObjectsPosition[gridPosition].occupiedPosition)
 		{
-			placedObjects.Remove(pos);
+			placedObjectsPosition.Remove(pos);
 		}
 	}
 }
@@ -137,11 +130,16 @@ public class PlacementData
 	public List<Vector3Int> occupiedPosition;
 	public int ID { get; private set; }
 	public int PlacedObjectIndex { get; private set; }
+	public float ObjectYRotation {  get; private set; }
+	public Vector3Int anchorPoint {  get; private set; }
 
-	public PlacementData(List<Vector3Int> occupiedPosition, int iD, int placedObjectIndex)
+	public PlacementData(List<Vector3Int> occupiedPosition, int iD, int placedObjectIndex, 
+		float objectYRotation, Vector3Int anchorPoint)
 	{
 		this.occupiedPosition = occupiedPosition;
 		ID = iD;
 		PlacedObjectIndex = placedObjectIndex;
+		ObjectYRotation = objectYRotation;
+		this.anchorPoint = anchorPoint;
 	}
 }
