@@ -56,7 +56,6 @@ public class MyPlayer : MonoBehaviour
     private InteractManager interactManager;
     public InteractManager InteractManager => interactManager;
 
-    
     private bool uiCraftInput;
     private bool uiPartyInput;
     private bool uiMenuInput;
@@ -107,6 +106,7 @@ public class MyPlayer : MonoBehaviour
         Interact();
         UIInput();
     }
+
     private void LateUpdate()
     {
         CheckMove();
@@ -362,9 +362,10 @@ public class MyPlayer : MonoBehaviour
         transform.Find("StunEffect").gameObject.SetActive(false);
         NavAgent.isStopped = false;
     }
-    
-    private void UIInput(){
-        if(uiCraftInput)
+
+    private void UIInput()
+    {
+        if (uiCraftInput)
         {
             // C 키입력
             GameObject uiCraft = CanvasManager.Instance.uiCraft.gameObject;
@@ -372,21 +373,21 @@ public class MyPlayer : MonoBehaviour
             CanvasManager.Instance.craftManager.Resume();
             uiCraft.transform.SetAsLastSibling();
         }
-        if(uiPartyInput)
+        if (uiPartyInput)
         {
             // P 키입력
-            GameObject partyUi = CanvasManager.Instance.partyUI.gameObject;
+            GameObject partyUi = CanvasManager.Instance.partyUI.partyWindow;
             partyUi.SetActive(!partyUi.activeSelf);
             partyUi.transform.SetAsLastSibling();
         }
-        if(uiMenuInput)
+        if (uiMenuInput)
         {
             // ESC 키입력
             GameObject uiMenu = CanvasManager.Instance.uiMenu;
             uiMenu.SetActive(!uiMenu.activeSelf);
             uiMenu.transform.SetAsLastSibling();
         }
-        if(uiInventoryInput)
+        if (uiInventoryInput)
         {
             // I 키입력
             GameObject inventoryUI = CanvasManager.Instance.inventoryUI.gameObject;

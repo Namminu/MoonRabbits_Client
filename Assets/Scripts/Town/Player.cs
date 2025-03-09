@@ -68,7 +68,6 @@ public class Player : MonoBehaviour
         get { return isImotal; }
     }
 
-
     private void Start()
     {
         Avatar = GetComponent<Avatar>();
@@ -108,7 +107,6 @@ public class Player : MonoBehaviour
         emotions[10] = "Exit";
         emotions[11] = "PickAxe";
         emotions[12] = "Axe";
-
     }
 
     private void SetEquipObj()
@@ -287,7 +285,7 @@ public class Player : MonoBehaviour
 
     IEnumerator TryOpen(int openTimer)
     {
-        animator.SetTrigger("OpenChest");
+        animator.SetBool("OpenChest", true);
         // 진행도 유아이 액티브?
         Vector3 startPos = transform.position;
 
@@ -309,6 +307,7 @@ public class Player : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.5f);
+        animator.SetBool("OpenChest", false);
 
         GameObject chest = GameManager.Instance.SManager.Chest.gameObject;
         if (chest != null && chest.activeSelf)
@@ -330,6 +329,8 @@ public class Player : MonoBehaviour
     {
         if (Vector3.Distance(startPos, transform.position) > 0.5f || IsStun)
         {
+            animator.SetBool("OpenChest", false);
+
             if (IsMine)
             {
                 MPlayer.SkillManager.IsCasting = false;
@@ -467,7 +468,7 @@ public class Player : MonoBehaviour
         transform.Find("StunEffect").gameObject.SetActive(true);
         IsStun = true;
 
-        PlayerManager.playerSaveData[PlayerId].IsStun = true;
+        // PlayerManager.playerSaveData[PlayerId].IsStun = true;
 
         if (IsMine)
         {
@@ -482,7 +483,7 @@ public class Player : MonoBehaviour
     {
         transform.Find("StunEffect").gameObject.SetActive(false);
         IsStun = false;
-        PlayerManager.playerSaveData[PlayerId].IsStun = false;
+        // PlayerManager.playerSaveData[PlayerId].IsStun = false;
     }
 
     public void ChangeEquip(int nextEquip)
@@ -590,6 +591,7 @@ public class Player : MonoBehaviour
         if (IsMine)
             uiPlayer.SetPickSpeed(pickSpeed, abilityPoint > 0);
     }
+
     public int GetPickSpeed()
     {
         return this.pickSpeed;
@@ -653,9 +655,9 @@ public class Player : MonoBehaviour
     {
         curHp -= damage;
         ResourceManager.Instance.Instantiate("Effects", "FX_Shoot", transform.position);
-        PlayerManager.playerSaveData[PlayerId].CurHp -= damage;
+        // PlayerManager.playerSaveData[PlayerId].CurHp -= damage;
         isImotal = true;
-        PlayerManager.playerSaveData[PlayerId].IsImotal = true;
+        // PlayerManager.playerSaveData[PlayerId].IsImotal = true;
         StartCoroutine(CoImotalTime(ImotalTime));
 
         if (IsMine)

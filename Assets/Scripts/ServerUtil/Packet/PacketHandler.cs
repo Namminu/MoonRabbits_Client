@@ -79,7 +79,8 @@ class PacketHandler
         GameManager.Instance.EnterAfterSceneAwake(
             pkt.TargetSector,
             pkt.Players.ToList(),
-            pkt.Traps.ToList()
+            pkt.Traps.ToList(),
+            pkt.HasChest
         );
 
         PartyMemberUI.instance.UpdateUI();
@@ -193,21 +194,20 @@ class PacketHandler
     public static void S2CUpdateRankingHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CUpdateRanking pkt)
-        return;
-    
-    Debug.Log($"S2CUpdateRanking 패킷 무사 도착 : {pkt}");
-    
-    // 현재 씬에서 UIRanking 컴포넌트를 찾은 후, 해당 인스턴스의 UpdateRanking 호출
-    UIRanking uiRanking = UnityEngine.Object.FindObjectOfType<UIRanking>();
-    if (uiRanking != null)
-    {
-        uiRanking.UpdateRanking(pkt);
-    }
-    else
-    {
-        Debug.LogError("UIRanking 인스턴스를 찾을 수 없습니다.");
-    }
-        
+            return;
+
+        Debug.Log($"S2CUpdateRanking 패킷 무사 도착 : {pkt}");
+
+        // 현재 씬에서 UIRanking 컴포넌트를 찾은 후, 해당 인스턴스의 UpdateRanking 호출
+        UIRanking uiRanking = UnityEngine.Object.FindObjectOfType<UIRanking>();
+        if (uiRanking != null)
+        {
+            uiRanking.UpdateRanking(pkt);
+        }
+        else
+        {
+            Debug.LogError("UIRanking 인스턴스를 찾을 수 없습니다.");
+        }
     }
 
     #region Collision
@@ -428,12 +428,14 @@ class PacketHandler
             return;
         Debug.Log($"S2CRegenChest 패킷 무사 도착 : {pkt}");
 
-        if (pkt.SectorCode == GameManager.Instance.CurrentSector) {
+        if (pkt.SectorCode == GameManager.Instance.CurrentSector)
+        {
             GameObject chest = GameManager.Instance.SManager.Chest.gameObject;
-            
-            if (chest != null && !chest.activeSelf) {
-            chest.SetActive(true);
-        }
+
+            if (chest != null && !chest.activeSelf)
+            {
+                chest.SetActive(true);
+            }
         }
     }
 
@@ -504,13 +506,7 @@ class PacketHandler
                     float difX = obj.transform.position.x - trap.Pos.X / 10f;
                     float difZ = obj.transform.position.z - trap.Pos.Z / 10f;
 
-                    if (
-                        !obj.IsActive
-                        && difX < 0.01f
-                        && difX > -0.01f
-                        && difZ < 0.01f
-                        && difZ > -0.01f
-                    )
+                    if (difX < 0.01f && difX > -0.01f && difZ < 0.01f && difZ > -0.01f)
                     {
                         obj.RemoveThis(); // 여기는 Monobehaviour가 아니라서 직접 Destroy 불가
                     }
@@ -608,6 +604,7 @@ class PacketHandler
         Debug.Log($"S2CInventoryUpdate 패킷 무사 도착 : {pkt}");
         InventoryManager.instance.UpdateInventoryData(pkt);
     }
+
     public static void S2CCraftStartHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CCraftStart pkt)
@@ -616,7 +613,7 @@ class PacketHandler
 
         CanvasManager.Instance.craftManager.OnStart(pkt);
     }
-    
+
     public static void S2CCraftEndHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CCraftEnd pkt)
@@ -628,7 +625,8 @@ class PacketHandler
 
     public static void S2CGetInventorySlotByItemIdHandler(PacketSession session, IMessage packet)
     {
-        if (packet is not S2CGetInventorySlotByItemId pkt) return;
+        if (packet is not S2CGetInventorySlotByItemId pkt)
+            return;
         Debug.Log($"S2CGetInventorySlotByItemId 패킷 무사 도착 : {pkt}");
         CanvasManager.Instance.uiCraft.GetInventorySlotByItemId(pkt);
     }
