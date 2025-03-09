@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Google.Protobuf.Protocol;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIStart : MonoBehaviour
@@ -64,6 +66,31 @@ public class UIStart : MonoBehaviour
         {
             if (inputNickname.IsActive())
                 btnConfirm.onClick.Invoke();
+        }
+    }
+
+    void OnEnable()
+    {
+        // 씬이 활성화 될 때 네트워크 상태를 확인하는 코루틴 시작
+        StartCoroutine(CheckConnectionCoroutine());
+    }
+
+    private IEnumerator CheckConnectionCoroutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1f);
+
+            // 예시로 GameManager.Network의 IsConnected 값을 통해 연결 상태를 파악합니다.
+            // 실제 구현에서는 본인의 네트워크 관리 객체에 맞게 연결 상태를 확인하세요.
+            if (GameManager.Network != null && !GameManager.Network.IsConnected)
+            {
+                Debug.Log("서버 연결이 끊어져 게임을 재시작합니다.");
+                // 현재 씬을 다시 로드하여 상태 초기화 실행
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                // 코루틴 종료
+                yield break;
+            }
         }
     }
 

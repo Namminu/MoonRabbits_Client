@@ -43,6 +43,7 @@ public class NetworkManager
             _session.Disconnect();
         }
         _session = new ServerSession();
+        _session.OnDisconnectedEvent += OnSessionDisconnected;
         IPEndPoint endPoint = GetDefaultEndPoint();
         InitializeConnection(endPoint);
     }
@@ -55,6 +56,7 @@ public class NetworkManager
             _session.Disconnect();
         }
         _session = new ServerSession();
+        _session.OnDisconnectedEvent += OnSessionDisconnected;
         IPAddress ipAddr = ParseIPAddress(ipString, DefaultIP);
         int port = ParsePort(portString, DefaultPort);
         IPEndPoint endPoint = new IPEndPoint(ipAddr, port);
@@ -67,6 +69,7 @@ public class NetworkManager
         Debug.Log("재접속 시도 시작");
         Disconnect();
         _session = new ServerSession();
+        _session.OnDisconnectedEvent += OnSessionDisconnected;
         IPAddress ipAddr = ParseIPAddress(ipString, DefaultIP);
         int port = ParsePort(portString, DefaultPort);
         IPEndPoint endPoint = new IPEndPoint(ipAddr, port);
@@ -119,6 +122,15 @@ public class NetworkManager
     private int ParsePort(string portString, int defaultPort)
     {
         return int.TryParse(portString, out int port) ? port : defaultPort;
+    }
+
+    // 세션 연결 종료 시 호출되는 이벤트 핸들러.
+    // UIManager.Instance.ShowDisconnectPopup()는 미리 준비된 팝업을 호출하여,
+    // 사용자가 확인 버튼을 누르면 Application.Quit()를 실행하도록 구현되어야 합니다.
+    private void OnSessionDisconnected(EndPoint endPoint)
+    {
+        Debug.Log($"세션 연결 종료됨: {endPoint}");
+        UIDisconnect.Instance.ShowDisconnectPopup();
     }
 
     #endregion
