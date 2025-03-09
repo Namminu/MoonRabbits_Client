@@ -32,14 +32,14 @@ public class RemovingState : IBuildingState
 		previewSystem.StopShowingPreview();
 	}
 
-	public void OnAction(Vector3Int gridPosition)
+	public void OnAction(ObjectTransInfo gridInfo)
 	{
 		GridData selectedData = null;
-		if(!furnitureData.CanPlaceObjectAt(gridPosition, Vector2Int.one))
+		if(!furnitureData.CanPlaceObjectAt(gridInfo.ObjectPosition, Vector2Int.one))
 		{
 			selectedData = furnitureData;
 		}
-		else if(!floorData.CanPlaceObjectAt(gridPosition, Vector2Int.one))
+		else if(!floorData.CanPlaceObjectAt(gridInfo.ObjectPosition, Vector2Int.one))
 		{
 			selectedData = floorData;
 		}
@@ -50,14 +50,17 @@ public class RemovingState : IBuildingState
         }
 		else
 		{
-			gameObjectIndex = selectedData.GetRepresentationIndex(gridPosition);
+			gameObjectIndex = selectedData.GetRepresentationIndex(gridInfo.ObjectPosition);
 			if (gameObjectIndex == -1) return;
 
-			selectedData.RemoveObjectAt(gridPosition);
+			selectedData.RemoveObjectAt(gridInfo.ObjectPosition);
 			objectPlacer.RemoveObjectAt(gameObjectIndex);
 		}
-		Vector3 cellPosition = grid.CellToWorld(gridPosition);
-		previewSystem.UpdatePosition(cellPosition, CheckIfSelectionIsValid(gridPosition));
+		Vector3 cellPosition = grid.CellToWorld(gridInfo.ObjectPosition);
+		ObjectTransInfo objectInfo = Helper.ChangeDataToTransInfo(
+			Helper.VectorDataToInt(cellPosition), gridInfo.ObjectYRotation);
+
+		previewSystem.UpdatePosition(objectInfo, CheckIfSelectionIsValid(gridInfo.ObjectPosition));
     }
 
 	private bool CheckIfSelectionIsValid(Vector3Int gridPosition)
@@ -66,9 +69,13 @@ public class RemovingState : IBuildingState
 			floorData.CanPlaceObjectAt(gridPosition, Vector2Int.one));
 	}
 
-	public void UpdateState(Vector3Int gridPosition)
+	public void UpdateState(ObjectTransInfo gridInfo)
 	{
-		bool validity = CheckIfSelectionIsValid(gridPosition);
-		previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), validity);
+		bool validity = CheckIfSelectionIsValid(gridInfo.ObjectPosition);
+		Vector3 cellPosition = grid.CellToWorld(gridInfo.ObjectPosition);
+		ObjectTransInfo objectInfo = Helper.ChangeDataToTransInfo(
+			Helper.VectorDataToInt(cellPosition), gridInfo.ObjectYRotation);
+
+		previewSystem.UpdatePosition(objectInfo, validity);
 	}
 }

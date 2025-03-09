@@ -8,9 +8,9 @@ public class GridData
 {
 	public Dictionary<Vector3Int, PlacementData> placedObjects = new();
 
-	public void AddObjectAt(Vector3Int gridPosition, Vector2Int objectSize, int ID, int placedObjectIndex)
+	public void AddObjectAt(ObjectTransInfo gridInfo, Vector2Int objectSize, int ID, int placedObjectIndex)
 	{
-		List<Vector3Int> positionToOccupy = CalculatePosition(gridPosition, objectSize);
+		List<Vector3Int> positionToOccupy = CalculatePosition(gridInfo.ObjectPosition, objectSize);
 		PlacementData data = new PlacementData(positionToOccupy, ID, placedObjectIndex);
 		foreach (var pos in positionToOccupy)
 		{

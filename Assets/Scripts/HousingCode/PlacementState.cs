@@ -42,23 +42,25 @@ public class PlacementState : IBuildingState
 		previewSystem.StopShowingPreview();
 	}
 
-	public void OnAction(Vector3Int gridPosition)
+	public void OnAction(ObjectTransInfo gridInfo)
 	{
-		bool placementValidity = CheckPlacementValidity(gridPosition, selectedObjectIndex);
+		bool placementValidity = CheckPlacementValidity(gridInfo.ObjectPosition, selectedObjectIndex);
 		if (placementValidity == false) return;
 
 		int index = objectPlacer.PlaceObject(ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemPrefab, 
-			grid.CellToWorld(gridPosition));
+			grid.CellToWorld(gridInfo.ObjectPosition), gridInfo.ObjectYRotation);
 
 		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ?
 			floorData : furnitureData;
 
-		selectedData.AddObjectAt(gridPosition,
+		selectedData.AddObjectAt(gridInfo,
 			ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize,
 			ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId,
 			index);
 
-		previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), false);
+		ObjectTransInfo objectInfo = Helper.ChangeDataToTransInfo(
+			Helper.VectorDataToInt(grid.CellToWorld(gridInfo.ObjectPosition)), gridInfo.ObjectYRotation);
+		previewSystem.UpdatePosition(objectInfo, false);
 	}
 
 	private bool CheckPlacementValidity(Vector3Int gridPosition, int selectedObjectItemId)
@@ -66,13 +68,15 @@ public class PlacementState : IBuildingState
 		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ?
 			floorData : furnitureData;
 
-		return selectedData.CanPlaceObjectAt(gridPosition, ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize);
+		return selectedData.CanPlaceObjectAt(gridPosition, ItemDataLoader.HousingItemsList[selectedObjectItemId].ItemGridSize);
 	}
 
-	public void UpdateState(Vector3Int gridPosition)
+	public void UpdateState(ObjectTransInfo gridInfo)
 	{
-		bool placementValidity = CheckPlacementValidity(gridPosition, selectedObjectIndex);
+		bool placementValidity = CheckPlacementValidity(gridInfo.ObjectPosition, selectedObjectIndex);
+		ObjectTransInfo objectInfo = Helper.ChangeDataToTransInfo(
+			Helper.VectorDataToInt(grid.CellToWorld(gridInfo.ObjectPosition)), gridInfo.ObjectYRotation);
 
-		previewSystem.UpdatePosition(grid.CellToWorld(gridPosition), placementValidity);
+		previewSystem.UpdatePosition(objectInfo, placementValidity);
 	}
 }
