@@ -157,7 +157,7 @@ class PacketHandler
     {
         if (packet is not S2CPlayerLocation pkt)
             return;
-        // Debug.Log($"S2CPlayerLocation 패킷 무사 도착 : {pkt}");
+        Debug.Log($"S2CPlayerLocation 패킷 무사 도착 : {pkt}");
 
         Vector3 position = new(pkt.Transform.PosX, pkt.Transform.PosY, pkt.Transform.PosZ);
         Quaternion rotation = Quaternion.Euler(0, pkt.Transform.Rot, 0);
