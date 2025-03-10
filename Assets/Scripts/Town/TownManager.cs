@@ -24,6 +24,7 @@ public class TownManager : SManagerBase
             _instance = this;
             base.Awake();
             SectorCode = 100;
+            GameManager.Instance.HelpUIInstantate();
         }
         else
         {

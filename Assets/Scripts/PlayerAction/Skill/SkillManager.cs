@@ -10,7 +10,7 @@ using UnityEngine.AI;
 public class SkillManager : MonoBehaviour
 {
     [SerializeField]
-    private MyPlayer player;
+    private MyPlayer MPlayer;
 
     private bool isCasting = false;
     public bool IsCasting
@@ -39,7 +39,7 @@ public class SkillManager : MonoBehaviour
 
     private void Start()
     {
-        player = GetComponentInParent<MyPlayer>();
+        MPlayer = GetComponentInParent<MyPlayer>();
         eventQ += ThrowGrenade;
         eventE += SetTrap;
         eventT += Recall;
@@ -90,7 +90,7 @@ public class SkillManager : MonoBehaviour
             return;
 
         int nearTraps = Physics
-            .OverlapSphere(player.transform.position, 1f, LayerMask.GetMask("Trap"))
+            .OverlapSphere(MPlayer.transform.position, 1f, LayerMask.GetMask("Trap"))
             .Count();
 
         if (nearTraps > 0)
@@ -105,9 +105,9 @@ public class SkillManager : MonoBehaviour
         {
             TrapPos = new Vec3
             {
-                X = Mathf.Round(player.transform.position.x * 10),
+                X = Mathf.Round(MPlayer.transform.position.x * 10),
                 Y = 0,
-                Z = Mathf.Round(player.transform.position.z * 10),
+                Z = Mathf.Round(MPlayer.transform.position.z * 10),
             },
         };
 
@@ -121,7 +121,7 @@ public class SkillManager : MonoBehaviour
 
         isCasting = true;
 
-        player.NavAgent.SetDestination(player.transform.position);
+        MPlayer.NavAgent.SetDestination(MPlayer.transform.position);
 
         var pkt = new C2SRecall { };
         GameManager.Network.Send(pkt);

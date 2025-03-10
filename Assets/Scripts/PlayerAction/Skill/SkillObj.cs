@@ -95,6 +95,23 @@ public class SkillObj : MonoBehaviour
 
     public void RemoveThis()
     {
+        if (isActive)
+        {
+            StartCoroutine(DestroyAfterStun());
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    IEnumerator DestroyAfterStun()
+    {
+        var rune = transform.Find("Rune").gameObject;
+        rune.SetActive(false);
+        effect.SetActive(true);
+
+        yield return new WaitForSeconds(lifeTime);
         Destroy(gameObject);
     }
 
@@ -156,7 +173,12 @@ public class SkillObj : MonoBehaviour
                     }
                     else if (target.CompareTag("Player"))
                     {
-                        pkt.PlayerIds.Add(target.GetComponent<Player>().PlayerId);
+                        var targetId = target.GetComponent<Player>().PlayerId;
+
+                        if (targetId == casterId)
+                            continue;
+
+                        pkt.PlayerIds.Add(targetId);
                     }
                 }
 
@@ -173,36 +195,34 @@ public class SkillObj : MonoBehaviour
         yield return null;
         isActive = true;
 
-        var rune = transform.Find("Rune").gameObject;
-        rune.SetActive(false);
-        effect.SetActive(true);
-
         Player targetPlayer = target.GetComponent<Player>();
 
-        var stunPkt = new C2SStun { SkillType = (int)type };
-        stunPkt.PlayerIds.Add(targetPlayer.PlayerId);
-
-        GameManager.Network.Send(stunPkt);
-
-        yield return new WaitForSeconds(2f); // 스턴 패킷 답장 기다려야해...
-        isActive = false;
-
-        yield return new WaitUntil(() => !targetPlayer.IsStun);
-
-        var removePkt = new C2SRemoveTrap
+        if (casterId == GameManager.Instance.MPlayer.PlayerId)
         {
-            TrapInfo = new TrapInfo
+            var stunPkt = new C2SStun
             {
-                CasterId = casterId,
-                Pos = new Vec3
+                SkillType = (int)type,
+                Trap = new TrapInfo
                 {
-                    X = Mathf.Round(transform.position.x * 10f),
-                    Y = 0,
-                    Z = Mathf.Round(transform.position.z * 10f),
+                    CasterId = casterId,
+                    Pos = new Vec3
+                    {
+                        X = Mathf.Round(transform.position.x * 10),
+                        Y = 0,
+                        Z = Mathf.Round(transform.position.z * 10),
+                    },
                 },
-            },
-        };
+            };
+            stunPkt.PlayerIds.Add(targetPlayer.PlayerId);
 
-        GameManager.Network.Send(removePkt);
+            GameManager.Network.Send(stunPkt);
+        }
+
+        yield return new WaitForSeconds(1f); // 서버 통신 기다렸다가
+        var rune = transform.Find("Rune").gameObject;
+        if (rune.activeSelf)
+        {
+            isActive = false;
+        }
     }
 }

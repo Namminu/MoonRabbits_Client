@@ -36,6 +36,10 @@ public abstract class SManagerBase : MonoBehaviour
     [SerializeField]
     private SkillObj trap;
 
+    [SerializeField]
+    private Chest chest;
+    public Chest Chest => chest;
+
     private readonly Dictionary<int, string> prefabPaths = new();
     public Player MPlayer { get; private set; }
 

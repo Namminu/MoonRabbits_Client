@@ -42,7 +42,6 @@ public class Player : MonoBehaviour
     public GameObject axe;
     public GameObject pickAxe;
     private Transform throwPoint;
-    private const int maxTraps = 2;
 
     private Dictionary<int, string> emotions = new();
     public bool IsStun = false;
@@ -69,7 +68,6 @@ public class Player : MonoBehaviour
         get { return isImotal; }
     }
 
-
     private void Start()
     {
         Avatar = GetComponent<Avatar>();
@@ -82,6 +80,25 @@ public class Player : MonoBehaviour
         StartCoroutine(CoImotalTime(startImotalTime));
     }
 
+    private void Update()
+    {
+        if (!isInitialized)
+            return;
+
+        if (!IsMine)
+        {
+            SmoothMoveAndRotate();
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (!IsMine)
+        {
+            CheckMove();
+        }
+    }
+
     private void SetAnimTrigger()
     {
         emotions[111] = "Happy";
@@ -90,7 +107,6 @@ public class Player : MonoBehaviour
         emotions[10] = "Exit";
         emotions[11] = "PickAxe";
         emotions[12] = "Axe";
-
     }
 
     private void SetEquipObj()
@@ -179,25 +195,6 @@ public class Player : MonoBehaviour
         //체력을 깎는다.
     }
 
-    private void Update()
-    {
-        if (!isInitialized)
-            return;
-
-        if (!IsMine)
-        {
-            SmoothMoveAndRotate();
-        }
-    }
-
-    private void LateUpdate()
-    {
-        if (!IsMine)
-        {
-            CheckMove();
-        }
-    }
-
     private void SmoothMoveAndRotate()
     {
         MoveSmoothly();
@@ -281,6 +278,73 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void StartOpenChest(int openTimer)
+    {
+        StartCoroutine(TryOpen(openTimer));
+    }
+
+    IEnumerator TryOpen(int openTimer)
+    {
+        animator.SetBool("OpenChest", true);
+        // 진행도 유아이 액티브?
+        Vector3 startPos = transform.position;
+
+        int openWaiting = 0;
+
+        while (openWaiting < openTimer)
+        {
+            if (CancelOpen(startPos))
+                yield break;
+
+            yield return new WaitForSeconds(0.5f);
+
+            if (CancelOpen(startPos))
+                yield break;
+
+            yield return new WaitForSeconds(0.5f);
+            Debug.Log($"상자 오픈까지 남은 시간 : {openTimer - openWaiting}초");
+            openWaiting += 1;
+        }
+
+        yield return new WaitForSeconds(0.5f);
+        animator.SetBool("OpenChest", false);
+
+        GameObject chest = GameManager.Instance.SManager.Chest.gameObject;
+        if (chest != null && chest.activeSelf)
+        {
+            chest.SetActive(false);
+        }
+
+        if (IsMine)
+        {
+            MPlayer.SkillManager.IsCasting = false;
+            MPlayer.InteractManager.IsInteracting = false;
+
+            var pkt = new C2SGetTreasure { };
+            GameManager.Network.Send(pkt);
+        }
+    }
+
+    private bool CancelOpen(Vector3 startPos)
+    {
+        if (Vector3.Distance(startPos, transform.position) > 0.5f || IsStun)
+        {
+            animator.SetBool("OpenChest", false);
+
+            if (IsMine)
+            {
+                MPlayer.SkillManager.IsCasting = false;
+                MPlayer.InteractManager.IsInteracting = false;
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public void CastRecall(int recallTimer)
     {
         StartCoroutine(TryRecall(recallTimer));
@@ -297,19 +361,15 @@ public class Player : MonoBehaviour
 
         while (castingTime < recallTimer)
         {
-            if (Vector3.Distance(startPos, transform.position) > 0.2 || IsStun)
-            {
-                effect.SetActive(false);
-
-                if (IsMine)
-                {
-                    MPlayer.SkillManager.IsCasting = false;
-                }
-
+            if (CancelRecall(startPos, effect))
                 yield break;
-            }
 
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.5f);
+
+            if (CancelRecall(startPos, effect))
+                yield break;
+
+            yield return new WaitForSeconds(0.5f);
             Debug.Log($"귀환까지 남은 시간 : {recallTimer - castingTime}초");
             castingTime += 1;
         }
@@ -323,6 +383,25 @@ public class Player : MonoBehaviour
 
             var pkt = new C2SMoveSector { TargetSector = 100 };
             GameManager.Network.Send(pkt);
+        }
+    }
+
+    private bool CancelRecall(Vector3 startPos, GameObject effect)
+    {
+        if (Vector3.Distance(startPos, transform.position) > 0.5f || IsStun)
+        {
+            effect.SetActive(false);
+
+            if (IsMine)
+            {
+                MPlayer.SkillManager.IsCasting = false;
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -383,10 +462,13 @@ public class Player : MonoBehaviour
 
     public void Stun(float timer)
     {
+        if (IsStun)
+            return;
+
         transform.Find("StunEffect").gameObject.SetActive(true);
         IsStun = true;
 
-        PlayerManager.playerSaveData[PlayerId].IsStun = true;
+        // PlayerManager.playerSaveData[PlayerId].IsStun = true;
 
         if (IsMine)
         {
@@ -401,7 +483,7 @@ public class Player : MonoBehaviour
     {
         transform.Find("StunEffect").gameObject.SetActive(false);
         IsStun = false;
-        PlayerManager.playerSaveData[PlayerId].IsStun = false;
+        // PlayerManager.playerSaveData[PlayerId].IsStun = false;
     }
 
     public void ChangeEquip(int nextEquip)
@@ -509,19 +591,18 @@ public class Player : MonoBehaviour
         if (IsMine)
             uiPlayer.SetPickSpeed(pickSpeed, abilityPoint > 0);
     }
+
     public int GetPickSpeed()
     {
         return this.pickSpeed;
     }
 
-    private void SetMoveSpeed(int moveSpeed)
+    private void SetMoveSpeed(float moveSpeed)
     {
         // 플레이어 오브젝트 속도 변경
-        GetComponent<NavMeshAgent>().speed = moveSpeed * 1 + 5;
-        GetComponent<NavMeshAgent>().angularSpeed = 300 + moveSpeed * 100;
-        GetComponent<NavMeshAgent>().acceleration = moveSpeed * 2 + 3;
+        GetComponent<NavMeshAgent>().speed = 3.0f + (moveSpeed * 0.1f);
 
-        this.moveSpeed = moveSpeed;
+        /*this.moveSpeed = moveSpeed;*/
         if (IsMine)
             uiPlayer.SetMoveSpeed(moveSpeed, abilityPoint > 0);
     }
@@ -574,9 +655,9 @@ public class Player : MonoBehaviour
     {
         curHp -= damage;
         ResourceManager.Instance.Instantiate("Effects", "FX_Shoot", transform.position);
-        PlayerManager.playerSaveData[PlayerId].CurHp -= damage;
+        // PlayerManager.playerSaveData[PlayerId].CurHp -= damage;
         isImotal = true;
-        PlayerManager.playerSaveData[PlayerId].IsImotal = true;
+        // PlayerManager.playerSaveData[PlayerId].IsImotal = true;
         StartCoroutine(CoImotalTime(ImotalTime));
 
         if (IsMine)
