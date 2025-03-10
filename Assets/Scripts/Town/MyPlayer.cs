@@ -280,7 +280,7 @@ public class MyPlayer : MonoBehaviour
         float distanceMoved = Vector3.Distance(lastPos, transform.position);
         anim.SetFloat("Move", distanceMoved * 10);
 
-        if (distanceMoved > 0.01f)
+        if (distanceMoved > 0.1f)
         {
             SendLocationPacket();
             lastPos = transform.position;
