@@ -20,6 +20,7 @@ public class CanvasManager : MonoBehaviour
     public CraftManager craftManager;
 
     public Player player;
+    // public UIDisconnect disconnectPopup;
 
     private void Awake()
     {
@@ -42,6 +43,7 @@ public class CanvasManager : MonoBehaviour
         uIEnter = GetComponentInChildren<UIEnter>();
         uiCraft = GetComponentInChildren<UICraft>();
         craftManager = GetComponentInChildren<CraftManager>();
+        // disconnectPopup = GetComponentInChildren<UIDisconnect>();
     }
 
     private void Start()
@@ -53,6 +55,7 @@ public class CanvasManager : MonoBehaviour
         inventoryUI.gameObject.SetActive(false);
         uIEnter.gameObject.SetActive(false);
         uiCraft.gameObject.SetActive(false);
+        // disconnectPopup.gameObject.SetActive(false);
 
         if (player == null)
         {
@@ -82,4 +85,5 @@ public class CanvasManager : MonoBehaviour
         uIChat.gameObject.SetActive(true);
         uiCraft.InitUiCraft();
     }
+
 }

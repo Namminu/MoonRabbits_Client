@@ -9,6 +9,8 @@ using UnityEngine;
 
 public class ServerSession : PacketSession
 {
+    // 연결 종료 시 외부에서 UI를 호출할 수 있도록 이벤트 선언
+    public event Action<EndPoint> OnDisconnectedEvent;
     public void Send(IMessage packet)
     {
         string msgName = packet.Descriptor.Name.Replace("_", String.Empty);
@@ -63,6 +65,8 @@ public class ServerSession : PacketSession
     {
         Debug.Log($"OnDisconnected : {endPoint}");
         IsConnected = false;
+        // 이벤트를 발생시켜 NetworkManager 등 외부에서 UI 호출 등의 처리를 진행할 수 있도록 함
+        OnDisconnectedEvent?.Invoke(endPoint);
     }
 
     public override void OnRecvPacket(ArraySegment<byte> buffer)
