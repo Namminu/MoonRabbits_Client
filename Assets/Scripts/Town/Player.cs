@@ -29,12 +29,15 @@ public class Player : MonoBehaviour
     private Quaternion goalRot;
 
     private Animator animator;
+    private bool _isMove;
 
     public int PlayerId { get; private set; }
     public bool IsMine { get; private set; }
     private bool isInitialized = false;
 
     private Vector3 lastPos;
+    private Vector3 _currentPos;
+    private Vector3 _prevPos;
 
     [Header("Equipments")]
     public GameObject grenade;
@@ -509,9 +512,23 @@ public class Player : MonoBehaviour
 
     private void CheckMove()
     {
+        _currentPos = transform.position;
+        if (_currentPos == _prevPos)
+        {
+            _isMove = false;
+        }
+        else
+        {
+            _isMove = true;
+        }
         float dist = Vector3.Distance(lastPos, transform.position);
-        animator.SetFloat("Move", dist * 10);
+        if (_isMove)
+            animator.SetFloat("Move", dist * 10);
+        else
+            animator.SetFloat("Move", 0);
+        animator.SetFloat("Move", dist * 10f);
         lastPos = transform.position;
+        _prevPos = _currentPos;
     }
 
     // STAT, UI
