@@ -672,6 +672,7 @@ public class Player : MonoBehaviour
         if (curHp <= 0)
         {
             animator.SetTrigger("Death");
+            IsStun = true;
             return;
         }
     }
