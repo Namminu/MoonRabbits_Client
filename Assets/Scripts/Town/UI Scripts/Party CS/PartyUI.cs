@@ -323,7 +323,7 @@ public class PartyUI : MonoBehaviour
                             RemovePartyMember(newMemberCard, playerId);
                         }
                     );
-                    kickOutButton.onClick.AddListener(() => SendKickOutPartyPacket(nameText.text));
+                    kickOutButton.onClick.AddListener(() => SendKickOutPartyPacket(playerId));
                 }
             }
             else
@@ -357,8 +357,7 @@ public class PartyUI : MonoBehaviour
             string partyId = partyInfo.PartyId;
             int leaderId = partyInfo.LeaderId;
             int memberCount = partyInfo.MemberCount;
-            // string nickname = GetPlayerByPlayerId(leaderId).nickname;
-            string nickname = Party.instance.GetMemberByID(leaderId).Nickname;
+            string nickname = partyInfo.LeaderNickname;
 
             // 새로운 파티 카드 생성
             GameObject newPartyCard = Instantiate(partyCardPrefab, partyListContainer);
@@ -427,16 +426,12 @@ public class PartyUI : MonoBehaviour
         invitePartyPopUp.SetActive(false);
     }
 
-    private void SendKickOutPartyPacket(string nickname)
+    private void SendKickOutPartyPacket(int playerId)
     {
-        // int memberId = GetPlayerByNickname(nickname).PlayerId;
-        // int memberId = GameManager.Instance.GetPlayer(nickname).PlayerId;
-        int memberId = Party.instance.GetMemberByNickname(nickname).Id;
-
         var kickOutPartyPacket = new C2SKickOutMember
         {
             PartyId = Party.instance.partyId,
-            MemberId = memberId,
+            MemberId = playerId,
         };
         GameManager.Network.Send(kickOutPartyPacket);
     }
