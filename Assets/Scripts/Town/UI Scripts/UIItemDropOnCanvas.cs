@@ -61,7 +61,7 @@ public class UIItemDropOnCanvas : MonoBehaviour
         {
             transform.position = Vector3.Lerp(transform.position, itemButtonPosition, 10 * Time.deltaTime);
             //force = Vector2.MoveTowards(transform.position, itemButtonPosition, speed);
-            if (transform.position.x >= itemButtonPosition.x)
+            if (transform.position.x >= itemButtonPosition.x - 30f)
             {
                 Destroy(gameObject);
             }
