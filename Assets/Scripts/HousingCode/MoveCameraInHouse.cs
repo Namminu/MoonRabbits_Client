@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class MoveCameraInHouse : MonoBehaviour
 {
+	[Header("Camera Action Prop")]
 	[SerializeField, Range(1f, 10f)] private float moveSpeed = 5f;
 	[SerializeField, Range(1f, 10f)] private float zoomSpeed = 5f;
 	[SerializeField, Range(1f, 10f)] private float rotateSpeed = 5f;
+
+	[Header("Camera Move Bound Set")]
+	[SerializeField] private Vector3 minLimit = new Vector3(-9.5f, 0.5f, -18.5f);
+	[SerializeField] private Vector3 maxLimit = new Vector3(9.5f, 15.5f, 9.5f);
 
 	private Vector3 targetPosition;
 	private bool canMoveState;
@@ -27,6 +32,8 @@ public class MoveCameraInHouse : MonoBehaviour
 		MoveCamera();
 		UpdownCamera();
 		RotateCamera();
+
+		SetLimitCameraMove();
 
 		transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 5f);
 		transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
@@ -88,6 +95,13 @@ public class MoveCameraInHouse : MonoBehaviour
 
 		targetRotation = horizontalRotation * targetRotation;
 		targetRotation = targetRotation * verticalRotation;
+	}
+
+	private void SetLimitCameraMove()
+	{
+		targetPosition.x = Mathf.Clamp(targetPosition.x, minLimit.x, maxLimit.x);
+		targetPosition.y = Mathf.Clamp(targetPosition.y, minLimit.y, maxLimit.y);
+		targetPosition.z = Mathf.Clamp(targetPosition.z, minLimit.z, maxLimit.z);
 	}
 
 	private void OnEnable()

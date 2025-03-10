@@ -192,6 +192,7 @@ class PacketHandler
     }
     #endregion
 
+    #region Ranking
     public static void S2CUpdateRankingHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2CUpdateRanking pkt)
@@ -210,6 +211,8 @@ class PacketHandler
             Debug.LogError("UIRanking 인스턴스를 찾을 수 없습니다.");
         }
     }
+
+    #endregion
 
     #region Collision
     public static void S2CCollisionHandler(PacketSession session, IMessage packet)
@@ -521,7 +524,10 @@ class PacketHandler
         if (packet is not S2CStun pkt)
             return;
         Debug.Log($"S2CStun 패킷 무사 도착 : {pkt}");
-        // 몬스터 경우 처리도 추가해야함
+
+        if (pkt.PlayerIds.Count < 1)
+            return;
+
         foreach (int playerId in pkt.PlayerIds)
         {
             var player = GameManager.Instance.GetPlayer(playerId);
@@ -647,6 +653,7 @@ class PacketHandler
         if (packet is not S2CHousingLoad pkt)
             return;
         Debug.Log($"S2CHousingLoad 패킷 무사 도착 : {pkt}");
+        HouseManager.Instance.HandleHousingLoad(pkt);
     }
 
     public static void S2CFurnitureCraftHandler(PacketSession session, IMessage packet)

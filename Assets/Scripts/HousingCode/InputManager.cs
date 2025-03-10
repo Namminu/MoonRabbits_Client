@@ -11,13 +11,17 @@ public class InputManager : MonoBehaviour
 
 	private Vector3 lastPosition;
 
-	public event Action OnClicked, OnExit;
+	public event Action OnClicked, OnQEnter, OnEEnter, OnExit;
 
 	private void Update()
 	{
 		if (Input.GetMouseButtonDown(0)) OnClicked?.Invoke();
 
 		if (Input.GetKeyDown(KeyCode.Escape)) OnExit?.Invoke();
+
+		if(Input.GetKeyUp(KeyCode.Q)) OnQEnter?.Invoke();
+
+		if(Input.GetKeyUp(KeyCode.E)) OnEEnter?.Invoke();
 	}
 
 	public bool IsPointerOverUI() => EventSystem.current.IsPointerOverGameObject();

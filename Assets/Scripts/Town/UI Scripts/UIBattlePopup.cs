@@ -1,4 +1,3 @@
-using System;
 using Google.Protobuf.Protocol;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -41,13 +40,20 @@ public class UIBattlePopup : MonoBehaviour
 
     private void OnButtonClicked(int btnIdx)
     {
-        var pkt = new C2SMoveSector { TargetSector = btnIdx + 100 };
-
-        GameManager.Network.Send(pkt);
-
-        if (gameObject.activeSelf)
+        if (btnIdx == 4)
         {
-            gameObject.SetActive(false);
+            SceneManager.LoadScene("MyHouse");
+        }
+        else
+        {
+            var pkt = new C2SMoveSector { TargetSector = btnIdx + 100 };
+
+            GameManager.Network.Send(pkt);
+
+            if (gameObject.activeSelf)
+            {
+                gameObject.SetActive(false);
+            }
         }
     }
 }

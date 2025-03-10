@@ -20,6 +20,14 @@ public class PlacementSystem : MonoBehaviour
 
 	IBuildingState buildingState;
 
+	private float yRotation = 0;
+	private float lastYRotation = 0;
+
+	Vector3 mousePosition;
+	Vector3Int gridPosition;
+	ObjectTransInfo gridInfo;
+	Vector2Int objectSize;
+
 	private void Start()
 	{
 		StopPlacement();
@@ -31,32 +39,28 @@ public class PlacementSystem : MonoBehaviour
 	{
 		if (buildingState == null) return;
 
-		Vector3 mousePosition = inputManager.GetSelectedMapPosition();
-		Vector3Int gridPosition = grid.WorldToCell(mousePosition);
+		CalcGridInfo();
 
-		if(lastDetectedPosition != gridPosition)
+		if (lastDetectedPosition != gridPosition || yRotation != lastYRotation)
 		{
-			buildingState.UpdateState(gridPosition);
+			buildingState.UpdateState(gridInfo);
 			lastDetectedPosition = gridPosition;
+			lastYRotation = yRotation;
 		}
 	}
 
 	public void StartPlacement(int itemId) 
 	{
 		StopPlacement();
-
-		//selectedObjectItemId = ItemDataLoader.HousingItemsList.FindIndex(data => data.ItemId == itemId);
-		// selectedObjectItemId = db.objectDatas.FindIndex(data => data.ID == itemId);
-
-		//if (selectedObjectItemId < 0)
-		//{
-		//	Debug.LogError($"No Id found in Housing Item List {itemId}");
-		//	return;
-		//}
 		gridVisualization.SetActive(true);
 
+		objectSize = ItemDataLoader.HousingItemsList.Find(
+			x => x.ItemId == itemId).ItemGridSize;
 		buildingState = new PlacementState(itemId, grid, preview, floorData, furnitureData, objectPlacer);
+
 		inputManager.OnClicked += PlaceStructure;
+		inputManager.OnQEnter += EnterQ;
+		inputManager.OnEEnter += EnterE;
 		inputManager.OnExit += StopPlacement;
 	}
 
@@ -74,10 +78,7 @@ public class PlacementSystem : MonoBehaviour
 	{
 		if (inputManager.IsPointerOverUI()) return;
 
-		Vector3 mousePosition = inputManager.GetSelectedMapPosition();
-		Vector3Int gridPosition = grid.WorldToCell(mousePosition);
-
-		buildingState.OnAction(gridPosition);
+		buildingState.OnAction(gridInfo);
 	}
 
 	private void StopPlacement()
@@ -87,10 +88,71 @@ public class PlacementSystem : MonoBehaviour
 		gridVisualization.SetActive(false);
 		buildingState.EndState();
 		inputManager.OnClicked -= PlaceStructure;
+		inputManager.OnQEnter -= EnterQ;
+		inputManager.OnEEnter -= EnterE;
 		inputManager.OnExit -= StopPlacement;
 		lastDetectedPosition = Vector3Int.zero;
 		buildingState = null;
+		yRotation = 0;
+		lastYRotation = 0;
 	}
+
+	private void EnterQ() => RotateObject(0);
+	private void EnterE() => RotateObject(1);
+
+	private void RotateObject(int enterKey)
+	{
+		switch(enterKey)
+		{
+			case 0:
+				yRotation -= 90;
+				break;
+
+			case 1:
+				yRotation += 90;
+				break;
+			default: break;
+		}
+		yRotation = (yRotation % 360 + 360) % 360;
+	}
+
+	private void CalcGridInfo()
+	{
+		mousePosition = inputManager.GetSelectedMapPosition();
+		gridPosition = grid.WorldToCell(mousePosition);
+		gridInfo = Helper.ChangeDataToTransInfo(gridPosition, yRotation);
+		//gridInfo = Helper.ChangeDataToTransInfo(GetRotatedGridPosition(), yRotation);
+	}
+
+	//private Vector3Int GetRotatedGridPosition()
+	//{
+	//	Vector3Int rotatedPos = gridInfo.ObjectPosition;
+	//	int width = objectSize.x;
+	//	int height = objectSize.y;
+
+	//	switch (gridInfo.ObjectYRotation)
+	//	{
+	//		case 90:
+	//			rotatedPos = new Vector3Int(gridInfo.ObjectPosition.x,
+	//				gridInfo.ObjectPosition.y, gridInfo.ObjectPosition.z + (width - 1));
+	//			rotatedPos.x -= (height - 1);
+	//			break;
+
+	//		case 180:
+	//			rotatedPos = new Vector3Int(gridInfo.ObjectPosition.x,
+	//				gridInfo.ObjectPosition.y, gridInfo.ObjectPosition.z);
+	//			rotatedPos.x -= (width - 1);
+	//			rotatedPos.z -= (height - 1);
+	//			break;
+
+	//		case 270:
+	//			rotatedPos = new Vector3Int(gridInfo.ObjectPosition.x,
+	//				gridInfo.ObjectPosition.y, gridInfo.ObjectPosition.z - (width - 1));
+	//			rotatedPos.x += (height - 1);
+	//			break;
+	//	}
+	//	return rotatedPos;
+	//}
 
 	public GridData GetFloorData() => floorData;
 	public GridData GetFurnitureData() => furnitureData;
