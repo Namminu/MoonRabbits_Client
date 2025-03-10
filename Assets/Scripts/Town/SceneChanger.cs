@@ -36,7 +36,10 @@ public class SceneChanger : MonoBehaviour, IMouseHoverable
 
         SceneManager.LoadScene(nextScene);
         EventManager.Unsubscribe("OnChangeScene", OnChangeScene);
+        GameManager.Instance.ApplyRenderSettings();
     }
+
+
 
     #region Mouse Hover Interface
     public void OnMouseClicked()

@@ -102,11 +102,14 @@ public class GameManager : MonoBehaviour
                     new Vector3(-3, 14, 134),
                     Quaternion.identity
                 );
+            ApplyRenderSettings();
         }
         else
         {
             Destroy(gameObject);
         }
+
+
 
         LoadJson();
         //SoundManager.Instance.Play(19, Define.Sound.Bgm);
@@ -259,6 +262,18 @@ public class GameManager : MonoBehaviour
         {
             HelpUIInstantate();
         }
+    }
+
+    private void SetRender()
+    {
+        RenderSettings.ambientMode = AmbientMode.Skybox; // 환경 설정
+        DynamicGI.UpdateEnvironment(); // 환경 업데이트
+        Debug.Log("환경 업데이트");
+    }
+
+    public void ApplyRenderSettings()
+    {
+        Invoke("SetRender", .1f);
     }
 
     public void HelpUIInstantate()

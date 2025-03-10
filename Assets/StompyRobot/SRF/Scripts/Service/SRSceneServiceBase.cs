@@ -54,9 +54,10 @@ namespace SRF.Service
             }
 
             base.OnDestroy();
+            Application.targetFrameRate = 60;
         }
 
-        protected virtual void OnLoaded() {}
+        protected virtual void OnLoaded() { }
 
         private IEnumerator LoadCoroutine()
         {
@@ -118,7 +119,7 @@ namespace SRF.Service
 
             yield break;
 
-            Error:
+        Error:
 
             SRServiceManager.LoadingCount--;
             Debug.LogError("[Service] Root object ({0}) not found".Fmt(SceneName), this);

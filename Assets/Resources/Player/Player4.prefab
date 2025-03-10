@@ -1731,7 +1731,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be4562fdfd7c2fa4ab6222cf45c919e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  MPlayer: {fileID: 0}
 --- !u!1 &1997035997884857844
 GameObject:
   m_ObjectHideFlags: 0
@@ -3379,8 +3379,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 869f7d7420d9f4c459aed2443c1846ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  MPlayer: {fileID: 0}
   targetResource: {fileID: 0}
+  targetGate: {fileID: 0}
+  targetChest: {fileID: 0}
   targetPortal: {fileID: 0}
   isEquipChanging: 0
 --- !u!1 &3877439511970461202
@@ -5973,7 +5975,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 311313efa011949e98b6761d652ad13c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

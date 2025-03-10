@@ -84,6 +84,7 @@ class PacketHandler
         );
 
         PartyMemberUI.instance.UpdateUI();
+        GameManager.Instance.ApplyRenderSettings();
     }
 
     public static void S2CEmoteHandler(PacketSession session, IMessage packet)

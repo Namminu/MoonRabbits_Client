@@ -73,6 +73,7 @@ public class CanvasManager : MonoBehaviour
         );
 
         SceneManager.LoadScene("Town");
+        GameManager.Instance.ApplyRenderSettings();
     }
 
     public void ActivateUI()
