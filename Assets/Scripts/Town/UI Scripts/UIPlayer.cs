@@ -373,7 +373,7 @@ public class UIPlayer : MonoBehaviour
         }
     }
 
-    private void UpdateHp(int curHp) // 주어진 HP만큼 하트 다시 그리기
+    public void UpdateHp(int curHp) // 주어진 HP만큼 하트 다시 그리기
     {
         foreach (GameObject heart in hearts)
         {

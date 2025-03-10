@@ -51,6 +51,7 @@ public class Player : MonoBehaviour
     // PlayerInfo
     private int maxHp;
     private int curHp;
+    public int CurHp => curHp;
     private int exp;
     private int targetExp;
     private int stamina;
@@ -61,7 +62,7 @@ public class Player : MonoBehaviour
 
     //불멸의 시간이 다가왔다.
     private float startImotalTime = 5f;
-    private float ImotalTime = 1f;
+    private float ImotalTime = 2f;
     private bool isImotal = false;
     public bool GetIsImotal
     {
@@ -654,18 +655,25 @@ public class Player : MonoBehaviour
     public void Damaged(int damage)
     {
         curHp -= damage;
+
+        if (IsMine)
+        {
+            uiPlayer.UpdateHp(curHp);
+        }
+
         ResourceManager.Instance.Instantiate("Effects", "FX_Shoot", transform.position);
         // PlayerManager.playerSaveData[PlayerId].CurHp -= damage;
         isImotal = true;
         // PlayerManager.playerSaveData[PlayerId].IsImotal = true;
         StartCoroutine(CoImotalTime(ImotalTime));
 
-        if (IsMine)
-        {
-            uiPlayer.InitHp(curHp);
-        }
-
         PartyMemberUI.instance.UpdateUI();
+
+        if (curHp <= 0)
+        {
+            animator.SetTrigger("Death");
+            return;
+        }
     }
 
     IEnumerator CoImotalTime(float time)

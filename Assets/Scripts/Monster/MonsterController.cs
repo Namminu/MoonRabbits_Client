@@ -112,10 +112,12 @@ public class MonsterController : MonoBehaviour
         {
             //충돌한 자가 플레이어면
             case 1:
-                anim.SetTrigger("Attack");
                 var player = GameManager.Instance.GetPlayer(info.TargetId);
-                if (player != null)
+                if (player != null && player.CurHp > 0)
+                {
+                    anim.SetTrigger("Attack");
                     player.Damaged(1);
+                }
                 break;
             default:
                 break;
