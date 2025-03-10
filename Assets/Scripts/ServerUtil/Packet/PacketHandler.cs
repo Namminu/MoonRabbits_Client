@@ -663,4 +663,22 @@ class PacketHandler
     }
 
     # endregion
+
+    #region MonsterPacketBatchingSender
+
+    public static void S2CMonsterBatchLocation(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CMonsterBatchLocation pkt)
+            return;
+        //Debug.Log($"S2CMonsterBatchLocation 패킷 무사 도착 : {pkt}");
+        var monsters = pkt.Monsters;
+        foreach (var monster in monsters)
+        {
+            var findMonster = MonsterManager.Instance.GetMonster(monster.Id);
+            if (findMonster == null) continue;
+            findMonster.SetPosition(new Vector3(monster.X, 0, monster.Z));
+        }
+    }
+
+    #endregion
 }
