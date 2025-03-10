@@ -523,7 +523,10 @@ class PacketHandler
         if (packet is not S2CStun pkt)
             return;
         Debug.Log($"S2CStun 패킷 무사 도착 : {pkt}");
-        // 몬스터 경우 처리도 추가해야함
+
+        if (pkt.PlayerIds.Count < 1)
+            return;
+
         foreach (int playerId in pkt.PlayerIds)
         {
             var player = GameManager.Instance.GetPlayer(playerId);

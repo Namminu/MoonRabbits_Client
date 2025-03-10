@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Google.Protobuf.Protocol;
 using TMPro;
 using UnityEngine;
@@ -13,10 +14,12 @@ public class UIPlayer : MonoBehaviour
     private int APButtonsOffsetY = 39;
     private int APTextOffsetX = 132;
 
-    private Vector3 startPosAPButton = new(160, 950, 0);
-    private Vector3 endPosAPButton = new(160, 884, 0);
-    private Vector3 startPosAPFrame = new(214, 960, 0);
-    private Vector3 endPosAPFrame = new(371, 960, 0);
+    private RectTransform buttonRect;
+    private RectTransform frameRect;
+    private Vector2 startPosAPButton;
+    private Vector2 startPosAPFrame;
+    private Vector2 endPosAPButton;
+    private Vector2 endPosAPFrame;
 
     public Button btnAddExp;
     public Slider staminaSlider;
@@ -44,8 +47,13 @@ public class UIPlayer : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        // startAPButtonPosition = APButtons.transform.position;
-        // startAPFramePosition = APFrame.transform.position;
+
+        buttonRect = APButtons.GetComponent<RectTransform>();
+        frameRect = APFrame.GetComponent<RectTransform>();
+        startPosAPButton = buttonRect.anchoredPosition;
+        startPosAPFrame = frameRect.anchoredPosition;
+        endPosAPButton = new Vector2(startPosAPButton.x, startPosAPButton.y - 150);
+        endPosAPFrame = new Vector2(startPosAPFrame.x + 160, startPosAPFrame.y);
     }
 
     // Start is called before the first frame update
@@ -93,12 +101,18 @@ public class UIPlayer : MonoBehaviour
         pickSpeedText.text = statInfo.PickSpeed.ToString();
         moveSpeedText.text = statInfo.MoveSpeed.ToString();
         APText.text = statInfo.AbilityPoint.ToString();
+
         if (statInfo.AbilityPoint > 0)
         {
-            StartCoroutine(
-                SmoothChangeObjectPosition(APButtons, startPosAPButton, endPosAPButton, 1)
-            );
-            StartCoroutine(SmoothChangeObjectPosition(APFrame, startPosAPFrame, endPosAPFrame, 1));
+            buttonRect.anchoredPosition = startPosAPButton;
+            frameRect.anchoredPosition = startPosAPFrame;
+            buttonRect.DOAnchorPos(endPosAPButton, 1f);
+            frameRect.DOAnchorPos(endPosAPFrame, 1f);
+
+            // StartCoroutine(
+            //     SmoothChangeObjectPosition(APButtons, startPosAPButton, endPosAPButton, 1)
+            // );
+            // StartCoroutine(SmoothChangeObjectPosition(APFrame, startPosAPFrame, endPosAPFrame, 1));
             // APButtons.transform.position = startAPButton.position;
             // APFrame.transform.position = startAPFrame.position;
             // Debug.Log(APButtons.transform.position);
@@ -181,8 +195,13 @@ public class UIPlayer : MonoBehaviour
 
     public void DeActiveAP()
     {
-        StartCoroutine(SmoothChangeObjectPosition(APButtons, endPosAPButton, startPosAPButton, 1));
-        StartCoroutine(SmoothChangeObjectPosition(APFrame, endPosAPFrame, startPosAPFrame, 1));
+        buttonRect.anchoredPosition = endPosAPButton;
+        frameRect.anchoredPosition = endPosAPFrame;
+        buttonRect.DOAnchorPos(startPosAPButton, 1f);
+        frameRect.DOAnchorPos(startPosAPFrame, 1f);
+
+        // StartCoroutine(SmoothChangeObjectPosition(APButtons, endPosAPButton, startPosAPButton, 1));
+        // StartCoroutine(SmoothChangeObjectPosition(APFrame, endPosAPFrame, startPosAPFrame, 1));
         // Vector3 goalPos_APButtons =
         //     APButtons.transform.position + new Vector3(0, APButtonsOffsetY, 0);
         // Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(-APTextOffsetX, 0, 0);
@@ -221,10 +240,15 @@ public class UIPlayer : MonoBehaviour
         if (abilityPoint == 0)
         {
             Debug.Log("+버튼 코루틴");
-            StartCoroutine(
-                SmoothChangeObjectPosition(APButtons, startPosAPButton, endPosAPButton, 1f)
-            );
-            StartCoroutine(SmoothChangeObjectPosition(APFrame, startPosAPFrame, endPosAPFrame, 1f));
+            buttonRect.anchoredPosition = startPosAPButton;
+            frameRect.anchoredPosition = startPosAPFrame;
+            buttonRect.DOAnchorPos(endPosAPButton, 1f);
+            frameRect.DOAnchorPos(endPosAPFrame, 1f);
+
+            // StartCoroutine(
+            //     SmoothChangeObjectPosition(APButtons, startPosAPButton, endPosAPButton, 1f)
+            // );
+            // StartCoroutine(SmoothChangeObjectPosition(APFrame, startPosAPFrame, endPosAPFrame, 1f));
             // Vector3 goalPos_APButtons =
             //     APButtons.transform.position + new Vector3(0, -APButtonsOffsetY, 0);
             // Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(APTextOffsetX, 0, 0);
@@ -373,7 +397,7 @@ public class UIPlayer : MonoBehaviour
         }
     }
 
-    private void UpdateHp(int curHp) // 주어진 HP만큼 하트 다시 그리기
+    public void UpdateHp(int curHp) // 주어진 HP만큼 하트 다시 그리기
     {
         foreach (GameObject heart in hearts)
         {
