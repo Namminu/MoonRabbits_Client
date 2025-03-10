@@ -57,10 +57,10 @@ public class Player : MonoBehaviour
     public int CurHp => curHp;
     private int exp;
     private int targetExp;
-    private int stamina;
-    private int cur_stamina;
+    public int stamina;
+    public int cur_stamina;
     private int pickSpeed;
-    private int moveSpeed;
+    public int moveSpeed;
     private int abilityPoint;
 
     //불멸의 시간이 다가왔다.

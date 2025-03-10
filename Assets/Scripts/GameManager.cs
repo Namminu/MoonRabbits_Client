@@ -78,6 +78,8 @@ public class GameManager : MonoBehaviour
 
     private async void Awake()
     {
+        Application.targetFrameRate = 60;
+
         if (_instance == null)
         {
             _instance = this;
