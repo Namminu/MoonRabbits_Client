@@ -4077,7 +4077,7 @@ GameObject:
   - component: {fileID: 808694115}
   - component: {fileID: 808694114}
   - component: {fileID: 808694113}
-  m_Layer: 3
+  m_Layer: 25
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4218,7 +4218,7 @@ MonoBehaviour:
   sceneCamera: {fileID: 972602339}
   placementLayermask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 33554432
 --- !u!1001 &843632147
 PrefabInstance:
   m_ObjectHideFlags: 0
