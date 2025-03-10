@@ -92,6 +92,8 @@ public class GameManager : MonoBehaviour
 
             CurrentSector = 100;
 
+            ResourceManager.Instance.LoadAll<GameObject>("Prefabs/UI");
+
             DontDestroyOnLoad(gameObject);
 
             if (!IsLowSpecMode)
@@ -251,6 +253,19 @@ public class GameManager : MonoBehaviour
         }
         // [5] 현재 위치한 섹터 값 최신화
         CurrentSector = targetSector;
+        Debug.Log($"현재 위치: {CurrentSector}");
+
+        if (CurrentSector == 100)
+        {
+            HelpUIInstantate();
+        }
+    }
+
+    public void HelpUIInstantate()
+    {
+        var position = new Vector3(-7, 0.85f, 131);
+        var rotation = Quaternion.Euler(90, -180, -47.6f);
+        ResourceManager.Instance.Instantiate("UI", "HelpUI", position, rotation);
     }
 
     public void DespawnPlayer(int playerId)
