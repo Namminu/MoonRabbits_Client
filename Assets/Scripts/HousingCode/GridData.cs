@@ -23,8 +23,6 @@ public class GridData
 			placedObjectsPosition[pos] = data;
 		}
 		placedObjectsList[placedObjectIndex] = data;
-
-		Debug.Log("GridData : " + placedObjectsPosition.Count); 
 	}
 
 	private List<Vector3Int> CalculatePosition(Vector3Int gridPosition, Vector2Int objectSize, float yRotation)

@@ -4361,7 +4361,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uD604\uC7AC \uC9D1\uC5D0  \uBC30\uCE58\uB41C     \uC0C1\uD0DC\uB97C \uC800\uC7A5\uD569\uB2C8\uB2E4."
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b322ed54ae39fcd4785a7e4fdc42bd1e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1fe099f46a237c149a87837c65b177ef, type: 2}
   m_sharedMaterial: {fileID: 655808461212083387, guid: b322ed54ae39fcd4785a7e4fdc42bd1e,
     type: 2}
   m_fontSharedMaterials: []
@@ -4426,7 +4426,7 @@ MonoBehaviour:
   m_margin: {x: 27.875977, y: 0, z: 26.327637, w: -72.01306}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &848954197
