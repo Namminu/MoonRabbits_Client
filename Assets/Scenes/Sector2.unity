@@ -137,7 +137,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -199,13 +199,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -666,7 +672,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -728,13 +734,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -754,7 +766,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -816,13 +828,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1242,7 +1260,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1946471147168920, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4242373248077636, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_LocalScale.x
@@ -1304,13 +1322,19 @@ PrefabInstance:
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1354,7 +1378,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -1416,13 +1440,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1454,7 +1484,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -1520,13 +1550,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1546,7 +1582,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -1612,13 +1648,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1829,7 +1871,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -1891,13 +1933,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2111,7 +2159,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1016043810732510, guid: d69ae9440b65b02478e015d6ddbf08c2, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4914313530241634, guid: d69ae9440b65b02478e015d6ddbf08c2, type: 3}
       propertyPath: m_LocalScale.x
@@ -2177,13 +2225,19 @@ PrefabInstance:
     - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2482,55 +2536,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 6905627203491782197}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &280503164
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 280503166}
-  - component: {fileID: 280503165}
-  m_Layer: 0
-  m_Name: Global Volume
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &280503165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 280503164}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IsGlobal: 1
-  priority: 0
-  blendDistance: 0
-  weight: 0.4
-  sharedProfile: {fileID: 11400000, guid: 86f3279a33be4b541b28409a59448b44, type: 2}
---- !u!4 &280503166
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 280503164}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.120486, y: 0.7555469, z: -40.038525}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &281901185
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2545,7 +2550,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1946471147168920, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4242373248077636, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_LocalScale.x
@@ -2607,13 +2612,19 @@ PrefabInstance:
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2633,7 +2644,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -2695,13 +2706,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3337,7 +3354,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -3399,13 +3416,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3425,7 +3448,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1946471147168920, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4242373248077636, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_LocalScale.x
@@ -3487,13 +3510,19 @@ PrefabInstance:
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3703,7 +3732,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -3769,13 +3798,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4072,6 +4107,55 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 89eb026709ac1d248b3af3462de22323, type: 3}
+--- !u!1 &421734106
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 421734108}
+  - component: {fileID: 421734107}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &421734107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421734106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 0.4
+  sharedProfile: {fileID: 11400000, guid: 9be9af7b83b13344da456a6f70fd408b, type: 2}
+--- !u!4 &421734108
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421734106}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.120486, y: 0.7555469, z: -40.038525}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &423945108
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4612,7 +4696,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 920272849}
+  - {fileID: 733708562}
   - {fileID: 2074317421}
   - {fileID: 1197057097}
   - {fileID: 1522088162}
@@ -4754,7 +4838,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1946471147168920, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4242373248077636, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_LocalScale.x
@@ -4816,13 +4900,19 @@ PrefabInstance:
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4842,7 +4932,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -4904,13 +4994,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4930,7 +5026,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1016043810732510, guid: d69ae9440b65b02478e015d6ddbf08c2, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4914313530241634, guid: d69ae9440b65b02478e015d6ddbf08c2, type: 3}
       propertyPath: m_LocalScale.x
@@ -4996,13 +5092,19 @@ PrefabInstance:
     - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5110,7 +5212,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -5172,13 +5274,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5302,7 +5410,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1016043810732510, guid: d69ae9440b65b02478e015d6ddbf08c2, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4914313530241634, guid: d69ae9440b65b02478e015d6ddbf08c2, type: 3}
       propertyPath: m_LocalScale.x
@@ -5368,13 +5476,19 @@ PrefabInstance:
     - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5586,7 +5700,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1946471147168920, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4242373248077636, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_LocalScale.x
@@ -5648,13 +5762,19 @@ PrefabInstance:
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5674,7 +5794,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1946471147168920, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4242373248077636, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_LocalScale.x
@@ -5736,13 +5856,19 @@ PrefabInstance:
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6393,7 +6519,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -6455,13 +6581,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6876,7 +7008,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -6938,13 +7070,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7064,7 +7202,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1016043810732510, guid: d69ae9440b65b02478e015d6ddbf08c2, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4914313530241634, guid: d69ae9440b65b02478e015d6ddbf08c2, type: 3}
       propertyPath: m_LocalScale.x
@@ -7130,13 +7268,19 @@ PrefabInstance:
     - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7255,7 +7399,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -7317,13 +7461,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7429,6 +7579,124 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 290459820}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &733708561
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 733708562}
+  - component: {fileID: 733708564}
+  - component: {fileID: 733708563}
+  m_Layer: 0
+  m_Name: Directional Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &733708562
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 733708561}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 50, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 442787115}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &733708563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 733708561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
+--- !u!108 &733708564
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 733708561}
+  m_Enabled: 1
+  serializedVersion: 10
+  m_Type: 1
+  m_Shape: 0
+  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Intensity: 0.5
+  m_Range: 10
+  m_SpotAngle: 30
+  m_InnerSpotAngle: 21.80208
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 2
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 0.3
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
 --- !u!1001 &735044293
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7443,7 +7711,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -7509,13 +7777,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7919,7 +8193,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1016043810732510, guid: d69ae9440b65b02478e015d6ddbf08c2, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4914313530241634, guid: d69ae9440b65b02478e015d6ddbf08c2, type: 3}
       propertyPath: m_LocalScale.x
@@ -7985,13 +8259,19 @@ PrefabInstance:
     - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8436,7 +8716,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -8502,13 +8782,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8528,7 +8814,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -8590,13 +8876,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8715,7 +9007,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -8777,13 +9069,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8809,7 +9107,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1016043810732510, guid: d69ae9440b65b02478e015d6ddbf08c2, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4914313530241634, guid: d69ae9440b65b02478e015d6ddbf08c2, type: 3}
       propertyPath: m_LocalScale.x
@@ -8875,13 +9173,19 @@ PrefabInstance:
     - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9371,7 +9675,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -9433,13 +9737,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9459,7 +9769,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -9521,136 +9831,24 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
---- !u!1 &920272847
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 920272849}
-  - component: {fileID: 920272848}
-  - component: {fileID: 920272850}
-  m_Layer: 0
-  m_Name: Directional Light
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!108 &920272848
-Light:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 920272847}
-  m_Enabled: 1
-  serializedVersion: 10
-  m_Type: 1
-  m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 0.8
-  m_Range: 10
-  m_SpotAngle: 30
-  m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
-  m_Shadows:
-    m_Type: 2
-    m_Resolution: -1
-    m_CustomResolution: -1
-    m_Strength: 0.5
-    m_Bias: 0.05
-    m_NormalBias: 0.4
-    m_NearPlane: 0.2
-    m_CullingMatrixOverride:
-      e00: 1
-      e01: 0
-      e02: 0
-      e03: 0
-      e10: 0
-      e11: 1
-      e12: 0
-      e13: 0
-      e20: 0
-      e21: 0
-      e22: 1
-      e23: 0
-      e30: 0
-      e31: 0
-      e32: 0
-      e33: 1
-    m_UseCullingMatrixOverride: 0
-  m_Cookie: {fileID: 0}
-  m_DrawHalo: 0
-  m_Flare: {fileID: 0}
-  m_RenderMode: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingLayerMask: 1
-  m_Lightmapping: 4
-  m_LightShadowCasterMode: 0
-  m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
-  m_ColorTemperature: 6570
-  m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
-  m_UseBoundingSphereOverride: 0
-  m_UseViewFrustumForShadowCasterCull: 1
-  m_ShadowRadius: 0
-  m_ShadowAngle: 0
---- !u!4 &920272849
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 920272847}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 50, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 442787115}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!114 &920272850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 920272847}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_UsePipelineSettings: 1
-  m_AdditionalLightsShadowResolutionTier: 2
-  m_LightLayerMask: 1
-  m_RenderingLayers: 1
-  m_CustomShadowLayers: 0
-  m_ShadowLayerMask: 1
-  m_ShadowRenderingLayers: 1
-  m_LightCookieSize: {x: 1, y: 1}
-  m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 0
 --- !u!4 &920756815 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8492229326555554319, guid: cd07b3be1580f664f9eaf2dffd2e8ace,
@@ -10475,7 +10673,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -10537,13 +10735,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10621,7 +10825,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -10683,13 +10887,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10876,7 +11086,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -10938,13 +11148,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10976,7 +11192,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1946471147168920, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4242373248077636, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_LocalScale.x
@@ -11038,13 +11254,19 @@ PrefabInstance:
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11070,7 +11292,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1016043810732510, guid: d69ae9440b65b02478e015d6ddbf08c2, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4914313530241634, guid: d69ae9440b65b02478e015d6ddbf08c2, type: 3}
       propertyPath: m_LocalScale.x
@@ -11136,13 +11358,19 @@ PrefabInstance:
     - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23932579394144738, guid: d69ae9440b65b02478e015d6ddbf08c2,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11444,7 +11672,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -11506,13 +11734,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11921,7 +12155,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1946471147168920, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4242373248077636, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_LocalScale.x
@@ -11983,13 +12217,19 @@ PrefabInstance:
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12021,7 +12261,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1946471147168920, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4242373248077636, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_LocalScale.x
@@ -12083,13 +12323,19 @@ PrefabInstance:
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12570,7 +12816,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -12632,13 +12878,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13198,7 +13450,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -13260,13 +13512,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14272,7 +14530,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -14334,13 +14592,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14583,7 +14847,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -14645,13 +14909,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14968,7 +15238,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1946471147168920, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4242373248077636, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_LocalScale.x
@@ -15030,13 +15300,19 @@ PrefabInstance:
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15745,7 +16021,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -15811,13 +16087,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -16087,7 +16369,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1946471147168920, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4242373248077636, guid: 99cb57bdfc205a24a88af63d19398229, type: 3}
       propertyPath: m_LocalScale.x
@@ -16149,13 +16431,19 @@ PrefabInstance:
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23995324629482230, guid: 99cb57bdfc205a24a88af63d19398229,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -16872,7 +17160,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -16934,13 +17222,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -17201,7 +17495,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -17263,13 +17557,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18199,7 +18499,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1144174481077496, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4325627411998998, guid: b8895cb8464eef945b0f78967d43900f, type: 3}
       propertyPath: m_LocalScale.x
@@ -18261,13 +18561,19 @@ PrefabInstance:
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 23715028858625972, guid: b8895cb8464eef945b0f78967d43900f,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -19550,7 +19856,7 @@ PrefabInstance:
     - target: {fileID: 3449218722960292088, guid: 168cde73539346c4fa4f8b0338075e3e,
         type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4952441916755427993, guid: 168cde73539346c4fa4f8b0338075e3e,
         type: 3}
@@ -19610,13 +19916,19 @@ PrefabInstance:
     - target: {fileID: 6260451433285678503, guid: 168cde73539346c4fa4f8b0338075e3e,
         type: 3}
       propertyPath: m_CastShadows
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6260451433285678503, guid: 168cde73539346c4fa4f8b0338075e3e,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6260451433285678503, guid: 168cde73539346c4fa4f8b0338075e3e,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: a586f600eda05084292be140d4664544, type: 2}
+      objectReference: {fileID: -6187358185566092044, guid: 43136b00bbb47ac468278e18eeb13589,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -19628,7 +19940,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 841692050}
   - {fileID: 442787115}
-  - {fileID: 280503166}
+  - {fileID: 421734108}
   - {fileID: 80232921}
   - {fileID: 1252058443}
   - {fileID: 1459939057}
