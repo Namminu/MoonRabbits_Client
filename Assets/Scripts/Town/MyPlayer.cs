@@ -66,6 +66,8 @@ public class MyPlayer : MonoBehaviour
     private float minFOV = 20f;
     private float maxFOV = 120f;
 
+    public bool isChat = false;
+
     void Awake()
     {
         instance = this;
@@ -177,6 +179,8 @@ public class MyPlayer : MonoBehaviour
     {
         if (player.IsStun || !isReadyESystem)
             return;
+
+        if(isChat) return;
 
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
         {

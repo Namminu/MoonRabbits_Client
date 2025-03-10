@@ -129,6 +129,8 @@ public class UIChat : MonoBehaviour
 
     public void SendMessage()
     {
+        inputChat.DeactivateInputField();
+
         if (string.IsNullOrWhiteSpace(inputChat.text))
             return;
 
