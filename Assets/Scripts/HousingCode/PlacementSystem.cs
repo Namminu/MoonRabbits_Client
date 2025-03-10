@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class PlacementSystem : MonoBehaviour
@@ -50,7 +46,7 @@ public class PlacementSystem : MonoBehaviour
 		}
 	}
 
-	public void StartPlacement(int itemId) 
+	public void StartPlacement(int itemId)
 	{
 		StopPlacement();
 		gridVisualization.SetActive(true);
@@ -103,7 +99,7 @@ public class PlacementSystem : MonoBehaviour
 
 	private void RotateObject(int enterKey)
 	{
-		switch(enterKey)
+		switch (enterKey)
 		{
 			case 0:
 				yRotation -= 90;
