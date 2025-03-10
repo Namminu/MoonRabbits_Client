@@ -69,13 +69,13 @@ public class UIStart : MonoBehaviour
         }
     }
 
-    void OnEnable()
+/*    void OnEnable()
     {
         // 씬이 활성화 될 때 네트워크 상태를 확인하는 코루틴 시작
         StartCoroutine(CheckConnectionCoroutine());
-    }
+    }*/
 
-    private IEnumerator CheckConnectionCoroutine()
+/*    private IEnumerator CheckConnectionCoroutine()
     {
         while (true)
         {
@@ -93,7 +93,7 @@ public class UIStart : MonoBehaviour
             }
         }
     }
-
+*/
     private void InitializeCharacterButtons()
     {
         for (int i = 0; i < charBtns.Length; i++)
