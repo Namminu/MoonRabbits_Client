@@ -32,6 +32,10 @@ public class ItemSlotUI
     [SerializeField] private GameObject PopupUI;
     private PopupUI popupUICs;
 
+    [Header("Seperate UI")]
+    [SerializeField] private GameObject SepeUI;
+    private SeperateUI sepeUICS;
+
     [SerializeField] [ReadOnly] private TooltipUI tooltipUI;
     private RectTransform rectTransform;
     private GameObject DecomUI;
@@ -284,7 +288,6 @@ public class ItemSlotUI
 		if (eventData.button == PointerEventData.InputButton.Right)
         {
 			DecomUI = GameObject.Find("UIDecomItem");
-
             if (DecomUI != null && DecomUI.activeSelf) /* 분해창이 활성화 되어 있을 시 */
             {
                 if (isInven) /* 인벤토리에서 우클릭 시  */
@@ -305,18 +308,18 @@ public class ItemSlotUI
                     ReturnToOriginSlot();
                 }
             }
-            else if(DecomUI == null || !DecomUI.activeSelf) /* 분해창 비활성화 때 우클릭 시 아이템 분리 */
-			{
-				SeperatingItem(); 
-			} 
 		}
 		#endregion
 
 		#region Left Mouse Click
 		if (eventData.button == PointerEventData.InputButton.Left)
         {
-
-        }
+			if (Input.GetKey(KeyCode.LeftShift))
+			{
+				Debug.Log("Shift + Right Click");
+				SeperatingItem();
+			}
+		}
 		#endregion
 	}
 	#endregion
@@ -358,25 +361,32 @@ public class ItemSlotUI
 	/// Seperate Cur Slot Item Count Method 
 	/// </summary>
 	/// <returns>seperated item count, If the number of items is odd, a smaller value is returned</returns>
-	private int SeperatingItem()
+	private void SeperatingItem()
     {
-        if (item.CurItemStack <= 1) return -1;
+        if (item.CurItemStack <= 1) return;
 
-        Debug.Log("Seperate Item Method");
-        int seperateLeftCount = item.CurItemStack / 2;
-        item.CurItemStack -= seperateLeftCount;
-		text_ItemAmount.text = item.CurItemStack.ToString();
-
-		MaterialItem tempItem = new MaterialItem(item.ItemData, seperateLeftCount);
-        DragSlot.instance.dragSlot = this;
-
-        DragSlot.instance.DragSetImage(itemImage);
-        DragSlot.instance.SetItemImageAlpha(1);
-
-        DragSlot.instance.dragSlot.AddItem(tempItem);
-
-		return seperateLeftCount;
+        sepeUICS.Seperating(item.CurItemStack);
+        EventManager.Subscribe<int>("OnSeperationConfirm", OnSeperationConfirm);
     }
+
+    private void OnSeperationConfirm(int seperatedStack)
+    {
+        item.CurItemStack -= seperatedStack;
+        text_ItemAmount.text = item.CurItemStack.ToString();
+
+        MaterialItem seperatedItem = new(item.ItemData, seperatedStack);
+
+        ItemSlotUI emptySlot = InventoryUI.GetEmptySlot();
+        if(emptySlot != null)
+        {
+            emptySlot.AddItem(seperatedItem);
+        }
+        else
+        {
+            Debug.Log("Inventory Slot Full");
+        }
+		EventManager.Unsubscribe<int>("OnSeperationConfirm", OnSeperationConfirm);
+	}
 
 	/* 아이템 등록 시 이미지 객체의 투명도 조절을 위한 메서드 */
 	private void SetItemImageAlpha(float alpha)
@@ -567,8 +577,14 @@ public class ItemSlotUI
             Debug.Log("PopupUI null");
             return;
         }
-        else
-            popupUICs = PopupUI.GetComponent<PopupUI>();
+        else popupUICs = PopupUI.GetComponent<PopupUI>();
+
+        if (SepeUI == null)
+        {
+            Debug.Log("SepeUI null");
+            return;
+        }
+        else sepeUICS = SepeUI.GetComponent<SeperateUI>();
     }
 
     private void OnDisable()
