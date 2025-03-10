@@ -145,9 +145,16 @@ public class UIPlayer : MonoBehaviour
 
     public void SetStamina(int cur_stamina, int stamina, bool hasAP)
     {
-        staminaText.text = stamina.ToString();
-        staminaSlider.maxValue = stamina;
-        staminaSlider.value = cur_stamina;
+        if (staminaSlider != null)
+        {
+            staminaSlider.maxValue = stamina;
+            staminaSlider.value = cur_stamina;
+        }
+        if (staminaText != null)
+        {
+            staminaText.text = /*cur_stamina.ToString() + " / " + */stamina.ToString();
+        }
+        // 추가 UI 처리 (예: 능력치 포인트 관련)가 필요한 경우 hasAP 플래그 활용
         if (!hasAP)
             DeActiveAP();
     }
@@ -410,4 +417,5 @@ public class UIPlayer : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
     }
+
 }

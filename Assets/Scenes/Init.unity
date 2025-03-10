@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.44844162, g: 0.49847764, b: 0.5756316, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5105,6 +5105,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UIEnterConfirm
+      objectReference: {fileID: 0}
+    - target: {fileID: 2065723631742285648, guid: 0a3e018a5fcbb734ebe7df1eb3bfe982,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2413360220037393657, guid: 0a3e018a5fcbb734ebe7df1eb3bfe982,
         type: 3}
