@@ -136,7 +136,7 @@ public class UISkillCheck : MonoBehaviour
             // Instantiate the prefab
             GameObject instance = Instantiate(dropedItem, new Vector3(0, 0, 0), Quaternion.identity);
 
-            instance.transform.SetParent(gameObject.transform);
+            instance.transform.SetParent(GameObject.Find("MainCanvas").transform);
             // Get the DroppedItem component from the instantiated prefab
             UIItemDropOnCanvas droppedItem = instance.GetComponent<UIItemDropOnCanvas>();
 

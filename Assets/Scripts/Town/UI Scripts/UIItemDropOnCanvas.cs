@@ -2,6 +2,7 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -54,15 +55,16 @@ public class UIItemDropOnCanvas : MonoBehaviour
                 force = new Vector2(0,0);
                 rd.totalForce = force;
             }
+            rd.AddForce(force);
         }
         else
         {
-            force = Vector2.MoveTowards(transform.position, itemButtonPosition, speed);
-            if (transform.position.x > itemButtonPosition.x)
+            transform.position = Vector3.Lerp(transform.position, itemButtonPosition, 10 * Time.deltaTime);
+            //force = Vector2.MoveTowards(transform.position, itemButtonPosition, speed);
+            if (transform.position.x >= itemButtonPosition.x)
             {
                 Destroy(gameObject);
             }
         }
-        rd.AddForce(force);
     }
 }
