@@ -434,7 +434,9 @@ public class MyPlayer : MonoBehaviour
     }
     private void HandleSprint()
     {
-        if (Input.GetKey(KeyCode.LeftShift) && currentStamina > 0)
+        bool isMoving = agent.velocity.magnitude > 0.1f;
+
+        if (Input.GetKey(KeyCode.LeftShift) && isMoving && currentStamina > 0)
         {
             // 달리는 동안 회복 대기 초기화 및 달리기 상태 활성화
             isSprinting = true;
