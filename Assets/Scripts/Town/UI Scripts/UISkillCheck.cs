@@ -23,6 +23,7 @@ public class UISkillCheck : MonoBehaviour
     public int TargetResource { get { return targetResource; } }
     private int angle = 90;
     private int difficulty = 1;
+    private float pickSpeed = 0;
     private bool isEnabled = false;
     private bool isSuccess = false;
     private bool isFailed = false;
@@ -62,13 +63,13 @@ public class UISkillCheck : MonoBehaviour
 
     public void StartSkillCheck(int placedId, int angle, int difficulty)
     {
-        float pickSpeed = (float) MyPlayer.instance.GetPickSpeed();
+        this.pickSpeed = (float)MyPlayer.instance.GetPickSpeed();
         this.whiteCircle.color = Color.white;
         this.targetResource = placedId;
         this.angle = angle;
-        this.whiteCircle.transform.rotation = Quaternion.Euler(0, 0, (float)(this.angle + 60 + (pickSpeed < 30 ? pickSpeed : 30 + pickSpeed * 0.3f) / difficulty));
+        this.whiteCircle.transform.rotation = Quaternion.Euler(0, 0, (float)(this.angle + (60 + (this.pickSpeed < 30 ? this.pickSpeed : 30 + this.pickSpeed * 0.3f))/difficulty));
         this.difficulty = difficulty;
-        this.whiteCircle.fillAmount = 1f / (float)difficulty * (float)(60 + (pickSpeed < 30f ? pickSpeed : 30f + pickSpeed * 0.3f)) / 360f;
+        this.whiteCircle.fillAmount = 1f / (float)difficulty * (float)(60 + (this.pickSpeed < 30f ? this.pickSpeed : 30f + this.pickSpeed * 0.3f)) / 360f;
         this.isEnabled = true;
         this.isSuccess = false;
         this.isFailed = false;
@@ -96,7 +97,7 @@ public class UISkillCheck : MonoBehaviour
         int skillCheckAngle = (int)clockhand.transform.eulerAngles.z;
         UnityEngine.Debug.Log(skillCheckAngle.ToString() + "   " + this.angle.ToString());
         GameManager.Network.Send(new C2SGatheringSkillCheck { DeltaTime = 0 });
-        if (skillCheckAngle > this.angle && skillCheckAngle < (this.angle + 60 / this.difficulty))
+        if (skillCheckAngle > this.angle && skillCheckAngle < (this.angle + 60 / this.difficulty * (float)(60 + (this.pickSpeed < 30f ? this.pickSpeed : 30f + this.pickSpeed * 0.3f)) / 360f))
         {
             this.isSuccess = true;
         }
