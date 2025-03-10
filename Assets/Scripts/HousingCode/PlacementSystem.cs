@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class PlacementSystem : MonoBehaviour
@@ -115,7 +114,6 @@ public class PlacementSystem : MonoBehaviour
 			default: break;
 		}
 		yRotation = (yRotation % 360 + 360) % 360;
-		Debug.Log($"{(enterKey == 0 ? "Q" : "E")}Enter, yRotation : {yRotation}");
 	}
 
 	private void CalcGridInfo()
