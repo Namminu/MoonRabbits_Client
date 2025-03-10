@@ -104,9 +104,6 @@ public class HouseManager : MonoBehaviour
             return;
         }
 
-        // 기존 grid에 배치된 가구 삭제
-        /*ClearPlacedObjects();*/
-
         // 서버 데이터를 PlacedObjectDatas 리스트로 가공하기
         List<PlacedObjectDatas> serverData = new List<PlacedObjectDatas>();
         foreach (var info in pkt.HousingInfo)
@@ -176,6 +173,7 @@ public class HouseManager : MonoBehaviour
         {
             yield return new WaitForSeconds(saveDelay);
             SavePlacedObjects();
+            SendHousingSave();
             Debug.Log("Auto Save Complete. Save Objs Count : " + placedObjects.Count);
         }
     }
@@ -183,6 +181,7 @@ public class HouseManager : MonoBehaviour
     private void OnApplicationQuit()
     {
         SavePlacedObjects();
+        SendHousingSave();
         Debug.Log("Game Quit Save Complete. Save Objs Count : " + placedObjects.Count);
     }
 
