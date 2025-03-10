@@ -26,6 +26,9 @@ public class MyPlayer : MonoBehaviour
     {
         get => anim;
     }
+    private bool _isMove;
+    private Vector3 _currentPos;
+    private Vector3 _prevPos;
     private Vector3 lastPos;
     private Vector3 targetPosition;
     public Vector3 TargetPos => targetPosition;
@@ -297,14 +300,26 @@ public class MyPlayer : MonoBehaviour
 
     private void CheckMove()
     {
-        float distanceMoved = Vector3.Distance(lastPos, transform.position);
-        anim.SetFloat("Move", distanceMoved * 10);
+        _currentPos = transform.position;
+        if (_currentPos == _prevPos)
+            _isMove = false;
+        else
+            _isMove = true;
 
+        float distanceMoved = Vector3.Distance(lastPos, transform.position);
+        //anim.SetFloat("Move", distanceMoved * 10f);
+        if (_isMove)
+            anim.SetFloat("Move", distanceMoved * 10f);
+        else
+        {
+            anim.SetFloat("Move", 0f);
+        }
         if (distanceMoved > 0.1f)
         {
             SendLocationPacket();
             lastPos = transform.position;
         }
+        _prevPos = _currentPos;
     }
 
     private void Emote()

@@ -29,12 +29,15 @@ public class Player : MonoBehaviour
     private Quaternion goalRot;
 
     private Animator animator;
+    private bool _isMove;
 
     public int PlayerId { get; private set; }
     public bool IsMine { get; private set; }
     private bool isInitialized = false;
 
     private Vector3 lastPos;
+    private Vector3 _currentPos;
+    private Vector3 _prevPos;
 
     [Header("Equipments")]
     public GameObject grenade;
@@ -51,6 +54,7 @@ public class Player : MonoBehaviour
     // PlayerInfo
     private int maxHp;
     private int curHp;
+    public int CurHp => curHp;
     private int exp;
     private int targetExp;
     public int stamina;
@@ -61,7 +65,7 @@ public class Player : MonoBehaviour
 
     //불멸의 시간이 다가왔다.
     private float startImotalTime = 5f;
-    private float ImotalTime = 1f;
+    private float ImotalTime = 2f;
     private bool isImotal = false;
     public bool GetIsImotal
     {
@@ -508,9 +512,23 @@ public class Player : MonoBehaviour
 
     private void CheckMove()
     {
+        _currentPos = transform.position;
+        if (_currentPos == _prevPos)
+        {
+            _isMove = false;
+        }
+        else
+        {
+            _isMove = true;
+        }
         float dist = Vector3.Distance(lastPos, transform.position);
-        animator.SetFloat("Move", dist * 10);
+        if (_isMove)
+            animator.SetFloat("Move", dist * 10);
+        else
+            animator.SetFloat("Move", 0);
+        animator.SetFloat("Move", dist * 10f);
         lastPos = transform.position;
+        _prevPos = _currentPos;
     }
 
     // STAT, UI
@@ -654,18 +672,26 @@ public class Player : MonoBehaviour
     public void Damaged(int damage)
     {
         curHp -= damage;
+
+        if (IsMine)
+        {
+            uiPlayer.UpdateHp(curHp);
+        }
+
         ResourceManager.Instance.Instantiate("Effects", "FX_Shoot", transform.position);
         // PlayerManager.playerSaveData[PlayerId].CurHp -= damage;
         isImotal = true;
         // PlayerManager.playerSaveData[PlayerId].IsImotal = true;
         StartCoroutine(CoImotalTime(ImotalTime));
 
-        if (IsMine)
-        {
-            uiPlayer.InitHp(curHp);
-        }
-
         PartyMemberUI.instance.UpdateUI();
+
+        if (curHp <= 0)
+        {
+            animator.SetTrigger("Death");
+            IsStun = true;
+            return;
+        }
     }
 
     IEnumerator CoImotalTime(float time)
