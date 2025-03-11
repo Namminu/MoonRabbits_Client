@@ -149,17 +149,18 @@ public class InventoryManager : MonoBehaviour
                 }
             }
         }
-        UpdateInventoryUI(); // InventoryUI.cs의 RefreshInventory()같은 갱신 로직 호출
+        UpdateInventoryUI(); 
         return (remaining == 0);
     }
 
     // UI 갱신 메서드 (InventoryUI의 RefreshInventory를 호출)
     public void UpdateInventoryUI()
     {
-        InventoryUI invUI = FindObjectOfType<InventoryUI>();
-        if (invUI != null)
+        
+        if (inventoryUI != null)
         {
-            invUI.RefreshInventory(inventoryDictionary);
+            inventoryUI.RefreshInventory(inventoryDictionary);
+            inventoryUI.OnInventoryStateChanged();
         }
     }
 

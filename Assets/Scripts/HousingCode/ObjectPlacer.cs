@@ -32,19 +32,23 @@ public class ObjectPlacer : MonoBehaviour
         foreach (RecipeMaterialItem material in recipe.material_items)
         {
             InventoryManager.instance.RemoveItem(material.item_id, material.count);
+            InventoryManager.instance.UpdateInventoryUI();
         }
-        InventoryManager.instance.UpdateInventoryUI();
         return true;
     }
 
     // 가구 오브젝트를 배치하는 메서드
-    public int PlaceObject(GameObject prefab, Vector3 position, float yRotation, int craftItemId)
+    public int PlaceObject(GameObject prefab, Vector3 position, float yRotation, int craftItemId, bool isLoading = false)
     {
         // 재료 소모 확인 후 실패하면 배치 중단
-        if (!ConsumeMaterials(craftItemId))
+        // 로드 모드가 아닌 경우에만 재료 소모 로직 실행
+        if (!isLoading)
         {
-            Debug.Log("가구 설치 실패: 재료 소모 실패");
-            return -1;
+            if (!ConsumeMaterials(craftItemId))
+            {
+                Debug.Log("가구 설치 실패: 재료 소모 실패");
+                return -1;
+            }
         }
         // 재료 소모 성공 시 가구 인스턴스 생성
         GameObject newObject = Instantiate(prefab, position, Quaternion.Euler(0, yRotation, 0));
