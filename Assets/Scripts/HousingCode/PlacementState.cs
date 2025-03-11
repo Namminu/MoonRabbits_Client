@@ -42,28 +42,55 @@ public class PlacementState : IBuildingState
 		previewSystem.StopShowingPreview();
 	}
 
-	public void OnAction(ObjectTransInfo gridInfo)
-	{
-		bool placementValidity = CheckPlacementValidity(gridInfo, selectedObjectIndex);
-		if (placementValidity == false) return;
+    public void OnAction(ObjectTransInfo gridInfo)
+    {
+        bool placementValidity = CheckPlacementValidity(gridInfo, selectedObjectIndex);
+        if (placementValidity == false) return;
 
-		int index = objectPlacer.PlaceObject(ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemPrefab, 
-			grid.CellToWorld(gridInfo.ObjectPosition), gridInfo.ObjectYRotation);
+        // 추가 매개변수 craftItemId 전달
+        int craftItemId = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId;
+        int index = objectPlacer.PlaceObject(
+            ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemPrefab,
+            grid.CellToWorld(gridInfo.ObjectPosition),
+            gridInfo.ObjectYRotation,
+            craftItemId
+        );
 
-		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ?
-			floorData : furnitureData;
+        GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ? floorData : furnitureData;
+        selectedData.AddObjectAt(gridInfo,
+            ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize,
+            ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId,
+            index);
 
-		selectedData.AddObjectAt(gridInfo,
-			ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize,
-			ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId,
-			index);
+        ObjectTransInfo objectInfo = Helper.ChangeDataToTransInfo(
+            Helper.VectorDataToInt(grid.CellToWorld(gridInfo.ObjectPosition)), gridInfo.ObjectYRotation);
+        previewSystem.UpdatePosition(objectInfo, false);
+    }
 
-		ObjectTransInfo objectInfo = Helper.ChangeDataToTransInfo(
-			Helper.VectorDataToInt(grid.CellToWorld(gridInfo.ObjectPosition)), gridInfo.ObjectYRotation);
-		previewSystem.UpdatePosition(objectInfo, false);
-	}
+    #region 이전 코드
+    /*	public void OnAction(ObjectTransInfo gridInfo)
+        {
+            bool placementValidity = CheckPlacementValidity(gridInfo, selectedObjectIndex);
+            if (placementValidity == false) return;
 
-	private bool CheckPlacementValidity(ObjectTransInfo gridInfo, int selectedObjectItemId)
+            int index = objectPlacer.PlaceObject(ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemPrefab, 
+                grid.CellToWorld(gridInfo.ObjectPosition), gridInfo.ObjectYRotation);
+
+            GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ?
+                floorData : furnitureData;
+
+            selectedData.AddObjectAt(gridInfo,
+                ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize,
+                ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId,
+                index);
+
+            ObjectTransInfo objectInfo = Helper.ChangeDataToTransInfo(
+                Helper.VectorDataToInt(grid.CellToWorld(gridInfo.ObjectPosition)), gridInfo.ObjectYRotation);
+            previewSystem.UpdatePosition(objectInfo, false);
+        }*/
+    #endregion
+
+    private bool CheckPlacementValidity(ObjectTransInfo gridInfo, int selectedObjectItemId)
 	{
 		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ?
 			floorData : furnitureData;
