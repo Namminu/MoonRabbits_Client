@@ -205,6 +205,9 @@ public class Player : MonoBehaviour
         RotateSmoothly();
     }
 
+
+
+    #region 기존 코드
     private void MoveSmoothly()
     {
         float distance = Vector3.Distance(transform.position, goalPos);
@@ -232,6 +235,8 @@ public class Player : MonoBehaviour
             transform.rotation = goalRot;
         }
     }
+
+    #endregion
 
     public void SendChatMessage(string msg, string chatType)
     {

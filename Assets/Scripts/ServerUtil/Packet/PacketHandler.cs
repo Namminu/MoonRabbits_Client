@@ -116,6 +116,16 @@ class PacketHandler
             return;
         }
 
+        if (pkt.ChatType == "Auth") {
+            var res = new C2SChat {
+                PlayerId = 0,
+                ChatMsg = "",
+                ChatType = "Auth",
+            };
+            GameManager.Network.Send(res);
+            return;
+        }
+
         if (pkt.PlayerId > 0)
         {
             var player = GameManager.Instance.GetPlayer(pkt.PlayerId);
@@ -660,6 +670,7 @@ class PacketHandler
         if (packet is not S2CHousingLoad pkt)
             return;
         Debug.Log($"S2CHousingLoad 패킷 무사 도착 : {pkt}");
+        HouseManager.Instance.HandleHousingLoad(pkt);
     }
 
     public static void S2CFurnitureCraftHandler(PacketSession session, IMessage packet)

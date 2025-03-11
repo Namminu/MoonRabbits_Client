@@ -394,21 +394,27 @@ public class ItemSlotUI
 		Color newColor = itemImage.color;
 		newColor.a = alpha;
 		itemImage.color = newColor;
-	}
+    }
 
-	/// <summary>
-	/// Destroy Item Method When EndDrag Over Inven UI
-	/// </summary>
-	private void OnDestroyItem()
-	{
-		if (selectedSlotToDestroy == this)
-		{
-			Debug.Log("Destory Item! " + item);
-			ClearSlot();
-		}
-		EventManager.Unsubscribe("OnDestroyItem", OnDestroyItem);
-		selectedSlotToDestroy = null;
-	}
+    /// <summary>
+    /// Destroy Item Method When EndDrag Over Inven UI
+    /// </summary>
+    private void OnDestroyItem()
+    {
+        if (selectedSlotToDestroy == this)
+        {
+            Debug.Log("Destory Item! " + item);
+            ClearSlot();
+        }
+        EventManager.Unsubscribe("OnDestroyItem", OnDestroyItem);
+        selectedSlotToDestroy = null;
+
+        InventoryUI invUI = FindObjectOfType<InventoryUI>();
+        if (invUI != null)
+        {
+            invUI.OnInventoryStateChanged();
+        }
+    }
 
     private void ChangeSlot()
     {
@@ -545,6 +551,7 @@ public class ItemSlotUI
         }
 
         popupUICs.SetPopupUI(destroyText, "OnDestroyItem");
+
     }
 
     /// <summary>
