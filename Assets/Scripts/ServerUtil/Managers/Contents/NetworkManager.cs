@@ -8,6 +8,7 @@ using Google.Protobuf;
 public class NetworkManager
 {
     private const string DefaultIP = "127.0.0.1";
+    private const string LocalIP = "127.0.0.1";
     private const int DefaultPort = 3000;
     private const int MaxConnections = 1;
 
