@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -101,15 +102,31 @@ public class UIChat : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.Return))
         {
-            if (inputChat.IsActive() && inputChat.isFocused)
+            if (inputChat.isFocused)
             {
-                SendMessage();
+                Debug.LogError($"채팅길이:{inputChat.text}/{inputChat.text.Length}");
+                //SendMessage();
+                //Debug.LogError("센드메시지");
+                Debug.LogError("디액티브");
+                inputChat.DeactivateInputField();
+                inputChat.caretPosition = -1;
                 isChating = false;
             }
             else
             {
-                ActivateInputFieldProperly();
-                isChating = true;
+                Debug.LogError($"채팅아닌데길이:{inputChat.text}/{inputChat.text.Length}");
+                if(isChating)
+                {
+                    DeactivateInputFieldProperly();
+                    isChating = false;
+                    Debug.LogError("디액티브");
+                }
+                else
+                {
+                    ActivateInputFieldProperly();
+                    isChating = true;
+                    Debug.LogError("액티브");
+                }
             }
         }
     }
@@ -158,6 +175,12 @@ public class UIChat : MonoBehaviour
         inputChat.ActivateInputField();
         inputChat.caretPosition = 0;
         ResetIME();
+    }
+    
+    private void DeactivateInputFieldProperly()
+    {
+        inputChat.DeactivateInputField();
+        inputChat.caretPosition = -1;
     }
 
     public void PushMessage(string nickName, string msg, string chatType, bool myChat)
