@@ -99,7 +99,6 @@ class PacketManager
         _onRecv.Add((ushort)MsgId.S2CMonsterBatchLocation, MakePacket<S2CMonsterBatchLocation>);
         _handler.Add((ushort)MsgId.S2CMonsterBatchLocation, PacketHandler.S2CMonsterBatchLocation);
 
-
         _onRecv.Add((ushort)MsgId.S2CResourcesList, MakePacket<S2CResourcesList>);
         _handler.Add((ushort)MsgId.S2CResourcesList, PacketHandler.S2CResourceListHandler);
         _onRecv.Add((ushort)MsgId.S2CUpdateDurability, MakePacket<S2CUpdateDurability>);
@@ -114,6 +113,8 @@ class PacketManager
         _onRecv.Add((ushort)MsgId.S2CGatheringDone, MakePacket<S2CGatheringDone>);
         _handler.Add((ushort)MsgId.S2CGatheringDone, PacketHandler.S2CGatheringDoneHandler);
 
+        _onRecv.Add((ushort)MsgId.S2CRecover, MakePacket<S2CRecover>);
+        _handler.Add((ushort)MsgId.S2CRecover, PacketHandler.S2CRecoverHandler);
         _onRecv.Add((ushort)MsgId.S2COpenChest, MakePacket<S2COpenChest>);
         _handler.Add((ushort)MsgId.S2COpenChest, PacketHandler.S2COpenChestHandler);
         _onRecv.Add((ushort)MsgId.S2CRegenChest, MakePacket<S2CRegenChest>);
@@ -145,8 +146,14 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CCraftEnd, PacketHandler.S2CCraftEndHandler);
         _onRecv.Add((ushort)MsgId.S2CPing, MakePacket<S2CPing>);
         _handler.Add((ushort)MsgId.S2CPing, PacketHandler.S2CPingHandler);
-        _onRecv.Add((ushort)MsgId.S2CGetInventorySlotByItemId, MakePacket<S2CGetInventorySlotByItemId>);
-        _handler.Add((ushort)MsgId.S2CGetInventorySlotByItemId, PacketHandler.S2CGetInventorySlotByItemIdHandler);
+        _onRecv.Add(
+            (ushort)MsgId.S2CGetInventorySlotByItemId,
+            MakePacket<S2CGetInventorySlotByItemId>
+        );
+        _handler.Add(
+            (ushort)MsgId.S2CGetInventorySlotByItemId,
+            PacketHandler.S2CGetInventorySlotByItemIdHandler
+        );
 
         Debug.Log("핸들러 등록 완료");
     }

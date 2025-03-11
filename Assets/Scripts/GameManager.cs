@@ -40,8 +40,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
-
     private NetworkManager network;
     public static NetworkManager Network => _instance.network;
 
@@ -70,6 +68,7 @@ public class GameManager : MonoBehaviour
     public JsonContainer<ItemJson> materialItemContainer;
     private readonly Dictionary<int, string> sceneName = new()
     {
+        { 99, "MyHouse" },
         { 100, "Town" },
         { 101, "Sector1" },
         { 102, "Sector2" },
@@ -278,8 +277,8 @@ public class GameManager : MonoBehaviour
 
     public void HelpUIInstantate()
     {
-        var position = new Vector3(-7, 0.85f, 131);
-        var rotation = Quaternion.Euler(90, -180, -47.6f);
+        var position = new Vector3(-4.5f, 1, 138);
+        var rotation = Quaternion.Euler(90, -180, -45);
         ResourceManager.Instance.Instantiate("UI", "HelpUI", position, rotation);
     }
 

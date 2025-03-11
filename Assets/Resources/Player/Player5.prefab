@@ -5481,7 +5481,7 @@ GameObject:
   - component: {fileID: 69819938429242056}
   m_Layer: 12
   m_Name: InteractArea
-  m_TagString: Untagged
+  m_TagString: Interact
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5511,7 +5511,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 12288
+    m_Bits: 62464
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 1052215
@@ -5541,6 +5541,7 @@ MonoBehaviour:
   targetGate: {fileID: 0}
   targetChest: {fileID: 0}
   targetPortal: {fileID: 0}
+  targetPlayer: {fileID: 0}
   isEquipChanging: 0
 --- !u!1 &7271047374389902693
 GameObject:
@@ -5890,6 +5891,7 @@ MonoBehaviour:
   axe: {fileID: 6797579532438289473}
   pickAxe: {fileID: 3171908851692027692}
   IsStun: 0
+  IsDead: 0
   ActiveEquipObj: {fileID: 0}
   stamina: 0
   cur_stamina: 0
