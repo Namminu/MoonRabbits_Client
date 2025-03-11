@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.44844162, g: 0.49847764, b: 0.5756316, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1240,7 +1240,7 @@ PrefabInstance:
     - target: {fileID: 73771601785436884, guid: a85cf9dc15ee5614c89a176536b79956,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.0043696165
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1683870878831640472, guid: a85cf9dc15ee5614c89a176536b79956,
         type: 3}
@@ -1357,10 +1357,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1763099818666759214, guid: a85cf9dc15ee5614c89a176536b79956,
+        type: 3}
+      propertyPath: m_Elasticity
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1763099818666759214, guid: a85cf9dc15ee5614c89a176536b79956,
+        type: 3}
+      propertyPath: m_DecelerationRate
+      value: 0.13
+      objectReference: {fileID: 0}
+    - target: {fileID: 1763099818666759214, guid: a85cf9dc15ee5614c89a176536b79956,
+        type: 3}
+      propertyPath: m_ScrollSensitivity
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 1840714694738771291, guid: a85cf9dc15ee5614c89a176536b79956,
         type: 3}
       propertyPath: m_Size
-      value: 0.9955798
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1840714694738771291, guid: a85cf9dc15ee5614c89a176536b79956,
+        type: 3}
+      propertyPath: m_NumberOfSteps
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2456258463701323945, guid: a85cf9dc15ee5614c89a176536b79956,
         type: 3}
@@ -1395,7 +1415,7 @@ PrefabInstance:
     - target: {fileID: 4241772236812795761, guid: a85cf9dc15ee5614c89a176536b79956,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: -17
+      value: -27
       objectReference: {fileID: 0}
     - target: {fileID: 4825957115443023478, guid: a85cf9dc15ee5614c89a176536b79956,
         type: 3}
@@ -1430,7 +1450,12 @@ PrefabInstance:
     - target: {fileID: 6310627558864921558, guid: a85cf9dc15ee5614c89a176536b79956,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -3.1226807
+      value: -0.00048828125
+      objectReference: {fileID: 0}
+    - target: {fileID: 6623635469439103884, guid: a85cf9dc15ee5614c89a176536b79956,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 30
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

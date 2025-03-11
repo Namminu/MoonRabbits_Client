@@ -80,7 +80,7 @@ public class HouseManager : MonoBehaviour
                 ItemDataLoader.HousingItemsList.Find(
                 x => x.ItemId == obj.ItemId).ItemPrefab,
                 grid.CellToWorld(obj.ItemTrans.ObjectPosition) /*+ new Vector3(0.5f, 0f, 0.5f)*/,
-                obj.ItemTrans.ObjectYRotation
+                obj.ItemTrans.ObjectYRotation, craftItemId: obj.ItemId
             );
             Vector2Int objGridSize = ItemDataLoader.HousingItemsList.Find(x => x.ItemId == obj.ItemId).ItemGridSize;
 
