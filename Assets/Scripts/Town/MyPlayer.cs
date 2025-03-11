@@ -474,8 +474,8 @@ public class MyPlayer : MonoBehaviour
             isRegenerating = false;
             regenTimer = 0f;
 
-            // sprintSpeedMultiplier는 속도를 높이기 위한 배수값(예: 1.5f)
-            // 혹은 sprintSpeed를 별도 변수로 미리 정의해두고 사용할 수 있습니다.
+            // sprintSpeedMultiplier는 속도를 높이기 위한 배수값
+            // 혹은 sprintSpeed를 별도 변수로 미리 정의해두고 사용 가능
             agent.speed = GetNormalSpeed() * 1.5f;
             currentStamina -= staminaDrainRate * Time.deltaTime;
             if (currentStamina <= 0)

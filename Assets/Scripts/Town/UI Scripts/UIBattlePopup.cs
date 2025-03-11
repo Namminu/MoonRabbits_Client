@@ -42,7 +42,14 @@ public class UIBattlePopup : MonoBehaviour
     {
         if (btnIdx == 4)
         {
-            SceneManager.LoadScene("MyHouse");
+            var pkt = new C2SMoveSector { TargetSector = 99 };
+
+            GameManager.Network.Send(pkt);
+
+            if (gameObject.activeSelf)
+            {
+                gameObject.SetActive(false);
+            }
         }
         else
         {
