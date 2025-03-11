@@ -143,9 +143,14 @@ public class MyPlayer : MonoBehaviour
             return;
 
         var corners = agent.path.corners;
-        _lineRenderer.positionCount = corners.Length;
 
-        _lineRenderer.SetPositions(corners);
+        _lineRenderer.positionCount = corners.Length;
+        for (int i = 0; i < corners.Length; i++)
+        {
+            var position = corners[i];
+            position.y = 0.75f;
+            _lineRenderer.SetPosition(i, position);
+        }
     }
 
     public int GetPickSpeed()
