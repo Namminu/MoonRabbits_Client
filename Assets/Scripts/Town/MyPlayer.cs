@@ -48,6 +48,7 @@ public class MyPlayer : MonoBehaviour
     private bool grenadeInput;
     private bool trapInput;
     private bool recallInput;
+    private bool isSprintStarted = false;
 
     private SkillManager skillManager;
     public SkillManager SkillManager => skillManager;
@@ -130,11 +131,15 @@ public class MyPlayer : MonoBehaviour
         HandleSprint(); // 달리기
     }
 
+    private void FixedUpdate()
+    {
+        CheckMove(); // 시간 간격을 최대한 일정하게 하고 싶어서
+    }
+
     private void LateUpdate()
     {
         PathFinding();
         ScreenScrollZoom();
-        CheckMove();
     }
 
     void PathFinding()
@@ -143,9 +148,14 @@ public class MyPlayer : MonoBehaviour
             return;
 
         var corners = agent.path.corners;
-        _lineRenderer.positionCount = corners.Length;
 
-        _lineRenderer.SetPositions(corners);
+        _lineRenderer.positionCount = corners.Length;
+        for (int i = 0; i < corners.Length; i++)
+        {
+            var position = corners[i];
+            position.y = 0.75f;
+            _lineRenderer.SetPosition(i, position);
+        }
     }
 
     public int GetPickSpeed()
@@ -453,6 +463,15 @@ public class MyPlayer : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftShift) && isMoving && currentStamina > 0)
         {
+
+            if (isSprintStarted == false)
+            {
+                // 달리기 시작 패킷 보내기
+                var startRunPacket = new C2SPlayerRunning();
+                GameManager.Network.Send(startRunPacket);
+            }
+
+            isSprintStarted = true;
             // 달리는 동안 회복 대기 초기화 및 달리기 상태 활성화
             isSprinting = true;
             isRegenerating = false;
@@ -474,6 +493,11 @@ public class MyPlayer : MonoBehaviour
             if (isSprinting)
             {
                 isSprinting = false;
+                isSprintStarted = false;
+
+                // 달리기 멈춤 패킷
+                var stopRunPacket = new C2SPlayerStopRunning();
+                GameManager.Network.Send(stopRunPacket);
             }
 
             agent.speed = GetNormalSpeed();

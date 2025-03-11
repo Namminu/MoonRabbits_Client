@@ -55,5 +55,6 @@ public class UIBattlePopup : MonoBehaviour
                 gameObject.SetActive(false);
             }
         }
+        GameManager.Instance.ApplyRenderSettings();
     }
 }
