@@ -443,6 +443,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: BlueDragon (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 2476837189206497129, guid: ab105b953233870458a82da9a87a6bfa,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 2476837189206497129, guid: ab105b953233870458a82da9a87a6bfa,
+        type: 3}
+      propertyPath: m_TagString
+      value: Monster
+      objectReference: {fileID: 0}
     - target: {fileID: 5821636043126930770, guid: ab105b953233870458a82da9a87a6bfa,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -8570,6 +8580,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: BlueDragon
       objectReference: {fileID: 0}
+    - target: {fileID: 2476837189206497129, guid: ab105b953233870458a82da9a87a6bfa,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 2476837189206497129, guid: ab105b953233870458a82da9a87a6bfa,
+        type: 3}
+      propertyPath: m_TagString
+      value: Monster
+      objectReference: {fileID: 0}
     - target: {fileID: 5821636043126930770, guid: ab105b953233870458a82da9a87a6bfa,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -9144,6 +9164,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BlueDragon (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2476837189206497129, guid: ab105b953233870458a82da9a87a6bfa,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 2476837189206497129, guid: ab105b953233870458a82da9a87a6bfa,
+        type: 3}
+      propertyPath: m_TagString
+      value: Monster
       objectReference: {fileID: 0}
     - target: {fileID: 5821636043126930770, guid: ab105b953233870458a82da9a87a6bfa,
         type: 3}
@@ -10442,12 +10472,12 @@ PrefabInstance:
     - target: {fileID: 2512629234131841555, guid: 68d232c3e2981c24dbc70cd8a2451390,
         type: 3}
       propertyPath: m_Layer
-      value: 14
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2512629234131841555, guid: 68d232c3e2981c24dbc70cd8a2451390,
         type: 3}
       propertyPath: m_TagString
-      value: Gate
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 2996431235636586665, guid: 68d232c3e2981c24dbc70cd8a2451390,
         type: 3}
@@ -12226,6 +12256,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 263069353}
     m_Modifications:
+    - target: {fileID: 2279357548647282035, guid: 867b256f933bd6e4db8f1be7c74392ab,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0.555906
+      objectReference: {fileID: 0}
+    - target: {fileID: 2279357548647282035, guid: 867b256f933bd6e4db8f1be7c74392ab,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.6065062
+      objectReference: {fileID: 0}
+    - target: {fileID: 2279357548647282035, guid: 867b256f933bd6e4db8f1be7c74392ab,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0.6150943
+      objectReference: {fileID: 0}
     - target: {fileID: 3732710118843453712, guid: 867b256f933bd6e4db8f1be7c74392ab,
         type: 3}
       propertyPath: m_Name

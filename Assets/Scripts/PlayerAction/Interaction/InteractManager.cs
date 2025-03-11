@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Security.Cryptography;
 using Google.Protobuf.Protocol;
 using UnityEngine;
 
@@ -19,6 +20,9 @@ public class InteractManager : MonoBehaviour
 
     [SerializeField]
     private Portal targetPortal = null;
+
+    [SerializeField]
+    private Player targetPlayer = null;
     private const int portalTimer = 5;
     private bool isPortalReady = true;
     private bool isInteracting = false;
@@ -53,7 +57,12 @@ public class InteractManager : MonoBehaviour
 
     private void Interact()
     {
-        if (targetResource != null)
+        if (targetPlayer != null && targetPlayer.IsDead)
+        {
+            var recoverPkt = new C2SRecover { TargetPlayerId = targetPlayer.PlayerId };
+            GameManager.Network.Send(recoverPkt);
+        }
+        else if (targetResource != null)
         {
             GatherResource();
         }
@@ -68,8 +77,8 @@ public class InteractManager : MonoBehaviour
         }
         else if (targetPortal != null)
         {
-            var portalPacket = new C2SPortal { InPortalId = targetPortal.id };
-            GameManager.Network.Send(portalPacket);
+            var portalPkt = new C2SPortal { InPortalId = targetPortal.id };
+            GameManager.Network.Send(portalPkt);
         }
         else if (targetChest != null && targetChest.gameObject.activeSelf)
         {
@@ -180,7 +189,11 @@ public class InteractManager : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (targetResource == null && other.gameObject.CompareTag("Resource"))
+        if (targetPlayer == null && other.CompareTag("Interact"))
+        {
+            targetPlayer = other.GetComponentInParent<Player>();
+        }
+        else if (targetResource == null && other.gameObject.CompareTag("Resource"))
         {
             targetResource = other.GetComponent<ResourceController>();
         }
@@ -200,7 +213,11 @@ public class InteractManager : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (targetResource != null && other.gameObject.CompareTag("Resource"))
+        if (targetPlayer != null && other.gameObject.CompareTag("Interact"))
+        {
+            targetPlayer = null;
+        }
+        else if (targetResource != null && other.gameObject.CompareTag("Resource"))
         {
             targetResource = null;
         }

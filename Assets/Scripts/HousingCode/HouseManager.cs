@@ -1,15 +1,20 @@
-using Google.Protobuf.Protocol;
 using System.Collections;
 using System.Collections.Generic;
+using Google.Protobuf.Protocol;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class HouseManager : MonoBehaviour
 {
     [Header("Scene Objects Ref")]
-    [SerializeField] private PlacementSystem placementSystem;
-    [SerializeField] private ObjectPlacer objectPlacer;
-    [SerializeField] private Grid grid;
+    [SerializeField]
+    private PlacementSystem placementSystem;
+
+    [SerializeField]
+    private ObjectPlacer objectPlacer;
+
+    [SerializeField]
+    private Grid grid;
 
     [Header("Members")]
     [SerializeField, Tooltip("Placed Objects Auto Save Delay")]
@@ -27,16 +32,23 @@ public class HouseManager : MonoBehaviour
         {
             _instance = this;
         }
-        else Destroy(gameObject);
+        else
+            Destroy(gameObject);
 
         if (placementSystem == null)
             placementSystem = FindObjectOfType<PlacementSystem>();
 
-        if (saveDelay == 0) saveDelay = 30f;
+        if (saveDelay == 0)
+            saveDelay = 30f;
 
         StartCoroutine(AutoSaveRoutine());
 
         LoadHousingData();
+
+        if (CanvasManager.Instance != null)
+        {
+            CanvasManager.Instance.DeactivateUI();
+        }
 
         /* Temp Test Code */
         //List<PlacedObjectDatas> testServerData = new List<PlacedObjectDatas>
@@ -66,9 +78,10 @@ public class HouseManager : MonoBehaviour
     private IEnumerator LoadPlacedObjects(List<PlacedObjectDatas> serverData)
     {
         /* Wait for FloorData&FurnitureData Instance Created */
-        yield return new WaitUntil(() =>
-            placementSystem.GetFloorData() != null &&
-            placementSystem.GetFurnitureData() != null);
+        yield return new WaitUntil(
+            () =>
+                placementSystem.GetFloorData() != null && placementSystem.GetFurnitureData() != null
+        );
 
         GridData floorData = placementSystem.GetFloorData();
         GridData furnitureData = placementSystem.GetFurnitureData();
@@ -77,15 +90,20 @@ public class HouseManager : MonoBehaviour
         {
             GridData selectedData = obj.DataType == 0 ? floorData : furnitureData;
             int index = objectPlacer.PlaceObject(
-                ItemDataLoader.HousingItemsList.Find(
-                x => x.ItemId == obj.ItemId).ItemPrefab,
-                grid.CellToWorld(obj.ItemTrans.ObjectPosition) /*+ new Vector3(0.5f, 0f, 0.5f)*/,
-                obj.ItemTrans.ObjectYRotation, craftItemId: obj.ItemId, true
+                ItemDataLoader.HousingItemsList.Find(x => x.ItemId == obj.ItemId).ItemPrefab,
+                grid.CellToWorld(
+                    obj.ItemTrans.ObjectPosition
+                ) /*+ new Vector3(0.5f, 0f, 0.5f)*/
+                ,
+                obj.ItemTrans.ObjectYRotation,
+                craftItemId: obj.ItemId,
+                true
             );
-            Vector2Int objGridSize = ItemDataLoader.HousingItemsList.Find(x => x.ItemId == obj.ItemId).ItemGridSize;
+            Vector2Int objGridSize = ItemDataLoader
+                .HousingItemsList.Find(x => x.ItemId == obj.ItemId)
+                .ItemGridSize;
 
-            selectedData.AddObjectAt(obj.ItemTrans, objGridSize,
-                obj.ItemId, index);
+            selectedData.AddObjectAt(obj.ItemTrans, objGridSize, obj.ItemId, index);
         }
 
         SavePlacedObjects();
@@ -95,23 +113,23 @@ public class HouseManager : MonoBehaviour
     {
         if (pkt == null)
         {
-            Debug.LogError("[HousingLoad] ÆÐÅ¶ÀÌ nullÀÔ´Ï´Ù.");
+            Debug.LogError("[HousingLoad] ï¿½ï¿½Å¶ï¿½ï¿½ nullï¿½Ô´Ï´ï¿½.");
             return;
         }
         if (pkt.Status != "success")
         {
-            Debug.LogError($"[HousingLoad] °¡±¸ ·Îµå ½ÇÆÐ: {pkt.Msg}");
+            Debug.LogError($"[HousingLoad] ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½: {pkt.Msg}");
             return;
         }
 
-        // ¼­¹ö µ¥ÀÌÅÍ¸¦ PlacedObjectDatas ¸®½ºÆ®·Î °¡°øÇÏ±â
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ PlacedObjectDatas ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½
         List<PlacedObjectDatas> serverData = new List<PlacedObjectDatas>();
         foreach (var info in pkt.HousingInfo)
         {
             int itemId = info.ItemId;
             int dataType = info.DataType;
 
-            // transform Á¤º¸°¡ ¾øÀ¸¸é ±âº»°ª »ç¿ë
+            // transform ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½âº»ï¿½ï¿½ ï¿½ï¿½ï¿½
             if (info.Transform == null)
             {
                 var defaultTrans = new ObjectTransInfo(Vector3Int.zero, 0f);
@@ -119,24 +137,24 @@ public class HouseManager : MonoBehaviour
             }
             else
             {
-                // PlacedObjectDatas.cs¿¡ Á¤ÀÇµÈ ObjectTransInfo´Â Vector3Int¿Í float¸¦ »ç¿ë
-                // ¼­¹ö¿¡¼­ Àü´Þ¹ÞÀº float ÁÂÇ¥ °ªÀ» ¹Ý¿Ã¸²ÇÏ¿© Vector3Int·Î º¯È¯
+                // PlacedObjectDatas.csï¿½ï¿½ ï¿½ï¿½ï¿½Çµï¿½ ObjectTransInfoï¿½ï¿½ Vector3Intï¿½ï¿½ floatï¿½ï¿½ ï¿½ï¿½ï¿½
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Þ¹ï¿½ï¿½ï¿½ float ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ ï¿½Ý¿Ã¸ï¿½ï¿½Ï¿ï¿½ Vector3Intï¿½ï¿½ ï¿½ï¿½È¯
                 Vector3Int position = new(
                     Mathf.RoundToInt(info.Transform.PosX),
                     Mathf.RoundToInt(info.Transform.PosY),
                     Mathf.RoundToInt(info.Transform.PosZ)
                 );
-                // ÇÊµå¸íÀÌ ´Ù¸¦ ¼ö ÀÖÀ¸´Ï ÇÁ·ÎÅäÄÝÀÇ rotation ÇÊµå¸íÀÌ RotationÀÌ¶ó°í °¡Á¤
+                // ï¿½Êµï¿½ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ rotation ï¿½Êµï¿½ï¿½ï¿½ï¿½ Rotationï¿½Ì¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 float rotation = info.Transform.Rot;
                 var transInfo = new ObjectTransInfo(position, rotation);
                 serverData.Add(new PlacedObjectDatas(itemId, transInfo, dataType));
             }
         }
 
-        // °¡°øµÈ serverData ¸®½ºÆ®¸¦ ÀÌ¿ëÇÏ¿© grid¿¡ °¡±¸¸¦ ¹èÄ¡
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ serverData ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½Ï¿ï¿½ gridï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
         StartLoadingPlacedObjectData(serverData);
 
-        Debug.Log("°¡±¸ µ¥ÀÌÅÍ ·Îµå ¹× ¹èÄ¡ ¿Ï·á");
+        Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½Ï·ï¿½");
     }
 
     /// <summary>
@@ -161,7 +179,10 @@ public class HouseManager : MonoBehaviour
             PlacementData data = obj.Value;
 
             PlacedObjectDatas objectData = new PlacedObjectDatas(
-                data.ID, new ObjectTransInfo(data.anchorPoint, data.ObjectYRotation), dataType);
+                data.ID,
+                new ObjectTransInfo(data.anchorPoint, data.ObjectYRotation),
+                dataType
+            );
 
             placedObjects.Add(objectData);
         }
@@ -192,54 +213,54 @@ public class HouseManager : MonoBehaviour
         Debug.Log("Button Click Save Complete. Save Objs Count : " + placedObjects.Count);
     }
 
-    #region ¼­¹ö ÆÐÅ¶ Àü¼Û
+    #region ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¶ ï¿½ï¿½ï¿½ï¿½
 
     /// <summary>
-    /// ÇÏ¿ìÂ¡ Á¤º¸¸¦ ¼­¹ö¿¡ Àü¼ÛÇÏ´Â ¸Þ¼Òµå
+    /// ï¿½Ï¿ï¿½Â¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Þ¼Òµï¿½
     /// </summary>
     public void SendHousingSave()
     {
-        // ÇÏ¿ìÂ¡ µ¥ÀÌÅÍ ÀúÀå(¾÷µ¥ÀÌÆ®) ÈÄ placedObjects ¸®½ºÆ®¸¦ ÃÖ½ÅÈ­
+        // ï¿½Ï¿ï¿½Â¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®) ï¿½ï¿½ placedObjects ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ö½ï¿½È­
         int savedCount = SavePlacedObjects();
 
         C2SHousingSave packet = new C2SHousingSave();
 
-        // placedObjects ¸®½ºÆ®¿¡ ÀÖ´Â °¢ µ¥ÀÌÅÍ¸¦ HousingInfo ¸Þ½ÃÁö·Î º¯È¯ÇÏ¿© ÆÐÅ¶¿¡ Ãß°¡
+        // placedObjects ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ HousingInfo ï¿½Þ½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ï¿ï¿½ ï¿½ï¿½Å¶ï¿½ï¿½ ï¿½ß°ï¿½
         foreach (var placedObj in placedObjects)
         {
             HousingInfo info = new HousingInfo();
-            info.ItemId = placedObj.ItemId;            // ¾ÆÀÌÅÛ ID
-            info.DataType = placedObj.DataType;          // µ¥ÀÌÅÍ Å¸ÀÔ (0: Floor, 1: Furniture)
-            info.Transform = ConvertToTransformInfo(placedObj.ItemTrans); // À§Ä¡ ¹× È¸Àü°ª º¯È¯
+            info.ItemId = placedObj.ItemId; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ID
+            info.DataType = placedObj.DataType; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ (0: Floor, 1: Furniture)
+            info.Transform = ConvertToTransformInfo(placedObj.ItemTrans); // ï¿½ï¿½Ä¡ ï¿½ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
 
             packet.HousingInfo.Add(info);
         }
 
-        // ³×Æ®¿öÅ© ¸Å´ÏÀú¸¦ ÅëÇØ ÆÐÅ¶ Àü¼Û (InventoryManager.csÀÇ Àü¼Û ¹æ½Ä°ú À¯»ç)
+        // ï¿½ï¿½Æ®ï¿½ï¿½Å© ï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¶ ï¿½ï¿½ï¿½ï¿½ (InventoryManager.csï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä°ï¿½ ï¿½ï¿½ï¿½ï¿½)
         GameManager.Network.Send(packet);
-        Debug.Log("ÇÏ¿ìÂ¡ ÀúÀå ÆÐÅ¶ Àü¼Û ¿Ï·á. µ¥ÀÌÅÍ °³¼ö: " + savedCount);
+        Debug.Log("ï¿½Ï¿ï¿½Â¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¶ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: " + savedCount);
     }
 
     /// <summary>
-    /// ¼­¹ö¿¡ ÇÏ¿ìÂ¡ ·Îµå ¿äÃ»À» Àü¼ÛÇÕ´Ï´Ù.
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï¿ï¿½Â¡ ï¿½Îµï¿½ ï¿½ï¿½Ã»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
     /// </summary>
     public void LoadHousingData()
     {
-        // ·Îµå ¿äÃ» Àü¿ë ÆÐÅ¶ »ý¼º (µ¥ÀÌÅÍ°¡ Á¸ÀçÇÏÁö ¾ÊÀ¸¹Ç·Î º°µµÀÇ ÆÄ¶ó¹ÌÅÍ ¾øÀÌ ºó ÆÐÅ¶)
+        // ï¿½Îµï¿½ ï¿½ï¿½Ã» ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¶ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Å¶)
         C2SHousingLoad loadPacket = new C2SHousingLoad();
-        Debug.Log("ÇÏ¿ìÂ¡ ·Îµå ¿äÃ» Àü¼Û");
+        Debug.Log("ï¿½Ï¿ï¿½Â¡ ï¿½Îµï¿½ ï¿½ï¿½Ã» ï¿½ï¿½ï¿½ï¿½");
         GameManager.Network.Send(loadPacket);
     }
 
     /// <summary>
-    /// ObjectTransInfo¸¦ protobufÀÇ TransformInfo·Î º¯È¯ÇÏ´Â ÇïÆÛ ¸Þ¼Òµå
+    /// ObjectTransInfoï¿½ï¿½ protobufï¿½ï¿½ TransformInfoï¿½ï¿½ ï¿½ï¿½È¯ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼Òµï¿½
     /// </summary>
-    /// <param name="objTrans">ObjectTransInfo Å¸ÀÔÀÇ °´Ã¼</param>
-    /// <returns>ÇÁ·ÎÅäÄÝ¿¡ ¸ÂÃá TransformInfo °´Ã¼</returns>
+    /// <param name="objTrans">ObjectTransInfo Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼</param>
+    /// <returns>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ ï¿½ï¿½ï¿½ï¿½ TransformInfo ï¿½ï¿½Ã¼</returns>
     private TransformInfo ConvertToTransformInfo(ObjectTransInfo objTrans)
     {
         TransformInfo tInfo = new TransformInfo();
-        // ¿¹½Ã·Î Vector3Int¸¦ °¢°¢ x, y, z °ªÀ¸·Î ÇÒ´çÇÏ°í, È¸Àü°ªÀº ObjectYRotationÀ¸·Î Ã³¸®ÇÕ´Ï´Ù.
+        // ï¿½ï¿½ï¿½Ã·ï¿½ Vector3Intï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ x, y, z ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½ï¿½Ï°ï¿½, È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ObjectYRotationï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
         tInfo.PosX = objTrans.ObjectPosition.x;
         tInfo.PosY = objTrans.ObjectPosition.y;
         tInfo.PosZ = objTrans.ObjectPosition.z;
@@ -247,5 +268,5 @@ public class HouseManager : MonoBehaviour
         return tInfo;
     }
 
-        #endregion
-    }
+    #endregion
+}
