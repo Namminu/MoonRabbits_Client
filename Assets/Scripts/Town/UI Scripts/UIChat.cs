@@ -104,29 +104,11 @@ public class UIChat : MonoBehaviour
         {
             if (inputChat.isFocused)
             {
-                Debug.LogError($"채팅길이:{inputChat.text}/{inputChat.text.Length}");
-                //SendMessage();
-                //Debug.LogError("센드메시지");
-                Debug.LogError("디액티브");
-                inputChat.DeactivateInputField();
-                inputChat.caretPosition = -1;
-                isChating = false;
+                SendMessage();
             }
             else
             {
-                Debug.LogError($"채팅아닌데길이:{inputChat.text}/{inputChat.text.Length}");
-                if(isChating)
-                {
-                    DeactivateInputFieldProperly();
-                    isChating = false;
-                    Debug.LogError("디액티브");
-                }
-                else
-                {
-                    ActivateInputFieldProperly();
-                    isChating = true;
-                    Debug.LogError("액티브");
-                }
+                ActivateInputFieldProperly();
             }
         }
     }
@@ -152,8 +134,11 @@ public class UIChat : MonoBehaviour
     {
         inputChat.DeactivateInputField();
 
-        if (string.IsNullOrWhiteSpace(inputChat.text))
+        if (string.IsNullOrWhiteSpace(inputChat.text)){
+            Debug.LogError("채팅 모드 -> 일반 모드 2");
+            isChating = false;
             return;
+        }
 
         if (chatType == null || chatType.options.Count == 0)
         {
@@ -172,15 +157,11 @@ public class UIChat : MonoBehaviour
 
     private void ActivateInputFieldProperly()
     {
+        Debug.LogError("일반 모드 -> 채팅 모드");
+        isChating = true;
         inputChat.ActivateInputField();
         inputChat.caretPosition = 0;
         ResetIME();
-    }
-    
-    private void DeactivateInputFieldProperly()
-    {
-        inputChat.DeactivateInputField();
-        inputChat.caretPosition = -1;
     }
 
     public void PushMessage(string nickName, string msg, string chatType, bool myChat)
