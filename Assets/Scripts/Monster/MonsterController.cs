@@ -61,7 +61,8 @@ public class MonsterController : MonoBehaviour
         if (_isAttack)
             return;
         var player = other.GetComponent<Player>();
-        if (player.GetIsImotal) return;
+        if (player.GetIsImotal)
+            return;
         StartCoroutine(CoMonsterAttackCoolTime());
         Debug.Log("플레이어가 몬스터와 충돌하였다.");
         CapsuleCollider playerCollider = other.GetComponent<CapsuleCollider>();
@@ -102,26 +103,21 @@ public class MonsterController : MonoBehaviour
         _agent.SetDestination(position);
     }
 
-    public void Stun(float timer)
-    {
-        Debug.Log($"걸린 녀석 : {ID}");
-        Invoke(nameof(StunOut), timer);
-    }
-
-    private void StunOut() { }
-
     public void SetCollision(CollisionPushInfo info)
     {
         var type = info.TargetType;
-        if (info.HasCollision == false) return;
+        if (info.HasCollision == false)
+            return;
         switch (type)
         {
             //충돌한 자가 플레이어면
             case 1:
-                anim.SetTrigger("Attack");
                 var player = GameManager.Instance.GetPlayer(info.TargetId);
-                if (player != null)
+                if (player != null && player.CurHp > 0)
+                {
+                    anim.SetTrigger("Attack");
                     player.Damaged(1);
+                }
                 break;
             default:
                 break;

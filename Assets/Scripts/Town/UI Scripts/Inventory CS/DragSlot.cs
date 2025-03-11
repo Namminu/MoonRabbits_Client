@@ -7,6 +7,7 @@ public class DragSlot : MonoBehaviour
 {
 	public static DragSlot instance;
 	public ItemSlotUI dragSlot;
+	public MaterialItem draggedItem;
 
 	[SerializeField] private Image itemImage;
 

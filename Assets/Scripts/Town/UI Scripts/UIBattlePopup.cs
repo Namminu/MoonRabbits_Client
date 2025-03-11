@@ -1,6 +1,4 @@
-using System;
 using Google.Protobuf.Protocol;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -57,5 +55,6 @@ public class UIBattlePopup : MonoBehaviour
                 gameObject.SetActive(false);
             }
         }
+        GameManager.Instance.ApplyRenderSettings();
     }
 }

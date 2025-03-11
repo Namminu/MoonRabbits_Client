@@ -45,6 +45,8 @@ public class UIChat : MonoBehaviour
     private bool isOpen = true;
     public TMP_Dropdown chatType;
 
+    public bool isChating = false; 
+
     void Start()
     {
         if (chatType == null)
@@ -102,10 +104,12 @@ public class UIChat : MonoBehaviour
             if (inputChat.IsActive() && inputChat.isFocused)
             {
                 SendMessage();
+                isChating = false;
             }
             else
             {
                 ActivateInputFieldProperly();
+                isChating = true;
             }
         }
     }

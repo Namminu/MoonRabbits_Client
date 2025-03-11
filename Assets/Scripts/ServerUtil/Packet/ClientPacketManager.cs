@@ -96,6 +96,9 @@ class PacketManager
         _handler.Add((ushort)MsgId.S2CDetectedPlayer, PacketHandler.S2CDetectedPlayerHandler);
         _onRecv.Add((ushort)MsgId.S2CMissingPlayer, MakePacket<S2CMissingPlayer>);
         _handler.Add((ushort)MsgId.S2CMissingPlayer, PacketHandler.S2CMissingPlayerHandler);
+        _onRecv.Add((ushort)MsgId.S2CMonsterBatchLocation, MakePacket<S2CMonsterBatchLocation>);
+        _handler.Add((ushort)MsgId.S2CMonsterBatchLocation, PacketHandler.S2CMonsterBatchLocation);
+
 
         _onRecv.Add((ushort)MsgId.S2CResourcesList, MakePacket<S2CResourcesList>);
         _handler.Add((ushort)MsgId.S2CResourcesList, PacketHandler.S2CResourceListHandler);

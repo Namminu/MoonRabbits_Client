@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MyPlayer : MonoBehaviour
 {
@@ -25,6 +26,9 @@ public class MyPlayer : MonoBehaviour
     {
         get => anim;
     }
+    private bool _isMove;
+    private Vector3 _currentPos;
+    private Vector3 _prevPos;
     private Vector3 lastPos;
     private Vector3 targetPosition;
     public Vector3 TargetPos => targetPosition;
@@ -66,7 +70,20 @@ public class MyPlayer : MonoBehaviour
     private float minFOV = 20f;
     private float maxFOV = 120f;
 
-    public bool isChat = false;
+    // 달리기 및 스테미나 관련 변수
+    public float maxStamina = 100f;      // 최대 스테미나
+    private float currentStamina;       // 현재 스테미나
+    public float staminaDrainRate = 20f; // 초당 스테미나 감소량
+    public float staminaRegenRate = 5f;  // 초당 스테미나 회복량
+    public float regenDelay = 2f;        // 회복 시작 전 대기 시간
+    public float normalSpeed;       // 일반 이동 속도
+    public float sprintSpeed = 1.3f;      // 달리기 시 이동 속도
+    public float exhaustedSpeed = 2f;    // 스테미나 소진 시 이동 속도
+
+    private bool isSprinting = false;    // 달리기 중인지 체크
+    private bool isRegenerating = false; // 스테미나 회복 시작 여부
+    private float regenTimer = 0f;       // 회복 대기 시간 측정용 타이머
+
 
     void Awake()
     {
@@ -94,6 +111,9 @@ public class MyPlayer : MonoBehaviour
 
     private void Start()
     {
+        currentStamina = GetCurStamina();
+        maxStamina = GetMaxStamina();
+
         StartCoroutine(ExecuteEvery0_1Seconds());
     }
 
@@ -107,13 +127,14 @@ public class MyPlayer : MonoBehaviour
         EquipChange();
         Interact();
         UIInput();
+        HandleSprint(); // 달리기
     }
 
     private void LateUpdate()
     {
-        CheckMove();
         PathFinding();
         ScreenScrollZoom();
+        CheckMove();
     }
 
     void PathFinding()
@@ -122,9 +143,14 @@ public class MyPlayer : MonoBehaviour
             return;
 
         var corners = agent.path.corners;
-        _lineRenderer.positionCount = corners.Length;
 
-        _lineRenderer.SetPositions(corners);
+        _lineRenderer.positionCount = corners.Length;
+        for (int i = 0; i < corners.Length; i++)
+        {
+            var position = corners[i];
+            position.y = 0.75f;
+            _lineRenderer.SetPosition(i, position);
+        }
     }
 
     public int GetPickSpeed()
@@ -180,7 +206,7 @@ public class MyPlayer : MonoBehaviour
         if (player.IsStun || !isReadyESystem)
             return;
 
-        if(isChat) return;
+        if(GameManager.Instance.SManager.UiChat.isChating) return;
 
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
         {
@@ -281,14 +307,26 @@ public class MyPlayer : MonoBehaviour
 
     private void CheckMove()
     {
-        float distanceMoved = Vector3.Distance(lastPos, transform.position);
-        anim.SetFloat("Move", distanceMoved * 10);
+        _currentPos = transform.position;
+        if (_currentPos == _prevPos)
+            _isMove = false;
+        else
+            _isMove = true;
 
-        if (distanceMoved > 0.01f)
+        float distanceMoved = Vector3.Distance(lastPos, transform.position);
+        //anim.SetFloat("Move", distanceMoved * 10f);
+        if (_isMove)
+            anim.SetFloat("Move", distanceMoved * 10f);
+        else
+        {
+            anim.SetFloat("Move", 0f);
+        }
+        if (distanceMoved > 0.1f)
         {
             SendLocationPacket();
             lastPos = transform.position;
         }
+        _prevPos = _currentPos;
     }
 
     private void Emote()
@@ -399,4 +437,74 @@ public class MyPlayer : MonoBehaviour
             inventoryUI.transform.SetAsLastSibling();
         }
     }
+
+    #region 달리기
+    private float GetNormalSpeed()
+    {
+        // player.moveSpeed는 Player 클래스에서 statInfo로 갱신됩니다.
+        return 3.0f + (player.moveSpeed * 0.1f);
+    }
+
+    private float GetCurStamina()
+    {
+        return player.cur_stamina;
+    }
+
+    private float GetMaxStamina()
+    {
+        return player.stamina;
+    }
+    private void HandleSprint()
+    {
+        bool isMoving = agent.velocity.magnitude > 0.1f;
+
+        if (Input.GetKey(KeyCode.LeftShift) && isMoving && currentStamina > 0)
+        {
+            // 달리는 동안 회복 대기 초기화 및 달리기 상태 활성화
+            isSprinting = true;
+            isRegenerating = false;
+            regenTimer = 0f;
+
+            // sprintSpeedMultiplier는 속도를 높이기 위한 배수값(예: 1.5f)
+            // 혹은 sprintSpeed를 별도 변수로 미리 정의해두고 사용할 수 있습니다.
+            agent.speed = GetNormalSpeed() * 1.5f;
+            currentStamina -= staminaDrainRate * Time.deltaTime;
+            if (currentStamina <= 0)
+            {
+                currentStamina = 0;
+                agent.speed = exhaustedSpeed; // 스테미나 소진 시 속도 감소
+            }
+        }
+        else
+        {
+            // 달리기를 멈추면 달리기 상태 해제 후 기본 속도로 복귀
+            if (isSprinting)
+            {
+                isSprinting = false;
+            }
+
+            agent.speed = GetNormalSpeed();
+
+            // 회복 딜레이 후 스테미나 자동 회복 처리
+            regenTimer += Time.deltaTime;
+            if (regenTimer >= regenDelay)
+            {
+                isRegenerating = true;
+            }
+            if (isRegenerating && currentStamina < maxStamina)
+            {
+                currentStamina += staminaRegenRate * Time.deltaTime;
+                if (currentStamina > maxStamina)
+                    currentStamina = maxStamina;
+            }
+        }
+        // UIPlayer.cs에서 스테미나 UI 갱신
+        if (UIPlayer.instance != null)
+        {
+            UIPlayer.instance.SetStamina((int)currentStamina, (int)maxStamina, true);
+        }
+    }
+
+
+    #endregion
 }
