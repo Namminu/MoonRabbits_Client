@@ -129,7 +129,7 @@ public class MyPlayer : MonoBehaviour
         Interact();
         UIInput();
         HandleSprint(); // 달리기
-        CheckMove(); // 시간 간격을 최대한 일정하게 하고 싶어서
+        CheckMove();
     }
 
     private void LateUpdate()
