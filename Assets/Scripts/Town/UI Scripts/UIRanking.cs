@@ -8,8 +8,9 @@ public class UIRanking : MonoBehaviour
     // UI 요소 연결
     public Transform rankSheet; // Content Area > RankSheet
     public GameObject rankItemPrefab; // RankSheet의 개별 랭킹 항목 프리팹
-    public Button allButton; // Down Area > ALL 버튼
     public Button top10Button; // Down Area > TOP10 버튼
+    public Button top20Button; // Down Area > TOP20 버튼
+    public Button top30Button; // Down Area > TOP30 버튼
 
     [SerializeField]
     private Button btn_Close;
@@ -20,8 +21,9 @@ public class UIRanking : MonoBehaviour
     private void Start()
     {
         // 버튼 클릭 이벤트 등록
-        allButton.onClick.AddListener(() => SendRankingListPacket("ALL"));
-        top10Button.onClick.AddListener(() => SendRankingListPacket("TOP"));
+        top10Button.onClick.AddListener(() => SendRankingListPacket("TOP10"));
+        top20Button.onClick.AddListener(() => SendRankingListPacket("TOP20"));
+        top30Button.onClick.AddListener(() => SendRankingListPacket("TOP30"));
         btn_Close.onClick.AddListener(CloseInvenUI);
     }
 
@@ -58,7 +60,7 @@ public class UIRanking : MonoBehaviour
 
     #region 패킷 전송 함수
 
-    // 랭킹 요청 패킷 전송 (type은 "ALL" 또는 "TOP")
+    // 랭킹 요청 패킷 전송 (type은 string 형태)
     public void SendRankingListPacket(string type)
     {
         // 멤버 변수와 혼동되지 않도록 RequestType에 값 저장
