@@ -108,10 +108,63 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // ----------------------------
-    // 인벤토리 관련 패킷 전송 함수들
-    // ----------------------------
+    public bool HasItem(int itemId, int count)
+    {
+        int totalCount = 0;
+        foreach (var kv in inventoryDictionary)
+        {
+            MaterialItem item = kv.Value;
+            if (item != null && item.ItemData.ItemId == itemId)
+            {
+                totalCount += item.CurItemStack;
+            }
+        }
+        return (totalCount >= count);
+    }
 
+    public bool RemoveItem(int itemId, int count)
+    {
+        int remaining = count;
+        // 슬롯 인덱스 순으로 처리: 낮은 인덱스부터 차감
+        foreach (var slot in inventoryDictionary.Keys.OrderBy(x => x).ToList())
+        {
+            MaterialItem item = inventoryDictionary[slot];
+            if (item != null && item.ItemData.ItemId == itemId)
+            {
+                if (item.CurItemStack >= remaining)
+                {
+                    item.CurItemStack -= remaining;
+                    if (item.CurItemStack == 0)
+                    {
+                        // 슬롯을 초기화 하거나 빈 슬롯으로 처리
+                        inventoryDictionary[slot] = null;
+                    }
+                    remaining = 0;
+                    break;
+                }
+                else
+                {
+                    remaining -= item.CurItemStack;
+                    inventoryDictionary[slot] = null;
+                }
+            }
+        }
+        UpdateInventoryUI(); 
+        return (remaining == 0);
+    }
+
+    // UI 갱신 메서드 (InventoryUI의 RefreshInventory를 호출)
+    public void UpdateInventoryUI()
+    {
+        
+        if (inventoryUI != null)
+        {
+            inventoryUI.RefreshInventory(inventoryDictionary);
+            inventoryUI.OnInventoryStateChanged();
+        }
+    }
+
+    #region 서버 전송 패킷
     /// <summary>
     /// 아이템 획득 패킷 전송 함수
     /// </summary>
@@ -197,6 +250,8 @@ public class InventoryManager : MonoBehaviour
 
         GameManager.Network.Send(packet);
     }
+
+    #endregion
 
 
     #region 인벤토리 클라 내부 로직
