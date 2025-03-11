@@ -104,6 +104,17 @@ class PacketHandler
         if (packet is not S2CChat pkt)
             return;
         Debug.Log($"S2CChat 패킷 무사 도착 : {pkt}");
+        
+        if (pkt.ChatType == "Auth") {
+            var res = new C2SChat {
+                PlayerId = 0,
+                ChatMsg = "",
+                ChatType = "Auth",
+                SenderName = "",
+            };
+            GameManager.Network.Send(res);
+            return;
+        }
 
         if (pkt.PlayerId > 0)
         {
