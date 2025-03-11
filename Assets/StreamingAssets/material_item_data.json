@@ -3,12 +3,6 @@
   "version": "1.0.0",
   "data": [
     {
-      "item_id": 20000,
-      "item_name": "재료 이름",
-      "item_type": -1,
-      "item_description": "재료 아이템은 20000부터 시작"
-    },
-    {
       "item_id": 20001,
       "item_name": "나뭇가지",
       "item_type": 1,
