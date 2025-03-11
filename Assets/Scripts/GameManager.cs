@@ -40,6 +40,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+
     private NetworkManager network;
     public static NetworkManager Network => _instance.network;
 
@@ -104,6 +106,7 @@ public class GameManager : MonoBehaviour
                     new Vector3(-3, 14, 134),
                     Quaternion.identity
                 );
+            ApplyRenderSettings();
         }
         else
         {
@@ -124,6 +127,18 @@ public class GameManager : MonoBehaviour
     {
         if (network != null)
             network.Update();
+    }
+
+    public void ApplyRenderSettings()
+    {
+        StartCoroutine(CoRenderSetting());
+    }
+
+    private IEnumerator CoRenderSetting()
+    {
+        yield return new WaitForSeconds(0.25f);
+        RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Skybox; // 환경 설정
+        DynamicGI.UpdateEnvironment(); // 환경 업데이트
     }
 
     private void SetPlayerList()
