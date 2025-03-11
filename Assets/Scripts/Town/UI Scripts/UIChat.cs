@@ -108,7 +108,15 @@ public class UIChat : MonoBehaviour
             }
             else
             {
-                ActivateInputFieldProperly();
+                if(isChating){
+                    inputChat.DeactivateInputField();
+                    isChating = false;
+                }
+                else
+                {
+                    ActivateInputFieldProperly();
+                    isChating = true;
+                }
             }
         }
     }
@@ -135,8 +143,16 @@ public class UIChat : MonoBehaviour
         inputChat.DeactivateInputField();
 
         if (string.IsNullOrWhiteSpace(inputChat.text)){
-            Debug.LogError("채팅 모드 -> 일반 모드 2");
-            isChating = false;
+            if(isChating)
+            {
+                isChating = false;
+                inputChat.DeactivateInputField();
+            }
+            else
+            {
+                isChating = true;
+                ActivateInputFieldProperly();
+            }
             return;
         }
 
@@ -157,8 +173,6 @@ public class UIChat : MonoBehaviour
 
     private void ActivateInputFieldProperly()
     {
-        Debug.LogError("일반 모드 -> 채팅 모드");
-        isChating = true;
         inputChat.ActivateInputField();
         inputChat.caretPosition = 0;
         ResetIME();
