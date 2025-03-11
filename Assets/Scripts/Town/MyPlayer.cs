@@ -129,10 +129,6 @@ public class MyPlayer : MonoBehaviour
         Interact();
         UIInput();
         HandleSprint(); // 달리기
-    }
-
-    private void FixedUpdate()
-    {
         CheckMove(); // 시간 간격을 최대한 일정하게 하고 싶어서
     }
 
@@ -281,7 +277,7 @@ public class MyPlayer : MonoBehaviour
         GameManager.Network.Send(movePacket);
     }
 
-    private void SendLocationPacket()
+    private void SendLocationPacket(float elapsedTime)
     {
         var tr = new TransformInfo
         {
@@ -291,7 +287,7 @@ public class MyPlayer : MonoBehaviour
             Rot = transform.eulerAngles.y,
         };
 
-        var locationPacket = new C2SPlayerLocation { Transform = tr };
+        var locationPacket = new C2SPlayerLocation { Transform = tr, ElapsedTime = elapsedTime };
         GameManager.Network.Send(locationPacket);
     }
 
@@ -317,6 +313,7 @@ public class MyPlayer : MonoBehaviour
             _isMove = true;
 
         float distanceMoved = Vector3.Distance(lastPos, transform.position);
+        float elapsedTime = Time.deltaTime;
         //anim.SetFloat("Move", distanceMoved * 10f);
         if (_isMove)
             anim.SetFloat("Move", distanceMoved * 10f);
@@ -326,7 +323,7 @@ public class MyPlayer : MonoBehaviour
         }
         if (distanceMoved > 0.1f)
         {
-            SendLocationPacket();
+            SendLocationPacket(elapsedTime);
             lastPos = transform.position;
         }
         _prevPos = _currentPos;
