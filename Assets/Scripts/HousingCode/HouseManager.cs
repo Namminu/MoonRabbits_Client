@@ -213,6 +213,21 @@ public class HouseManager : MonoBehaviour
         Debug.Log("Button Click Save Complete. Save Objs Count : " + placedObjects.Count);
     }
 
+    public void OnInventoryButton()
+    {
+        var inventory = CanvasManager.Instance.inventoryUI.gameObject;
+        inventory.SetActive(!inventory.activeSelf);
+    }
+
+    public void OnRecallButton()
+    {
+        SavePlacedObjects();
+        SendHousingSave();
+
+        var pkt = new C2SMoveSector { TargetSector = 100 };
+        GameManager.Network.Send(pkt);
+    }
+
     #region ���� ��Ŷ ����
 
     /// <summary>
