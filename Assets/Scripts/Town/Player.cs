@@ -96,8 +96,6 @@ public class Player : MonoBehaviour
         }
     }
 
-
-
     private void SetAnimTrigger()
     {
         emotions[111] = "Happy";
@@ -484,7 +482,7 @@ public class Player : MonoBehaviour
         {
             case 1:
                 MPlayer.SkillManager.IsGrenadeReady = true;
-                
+
                 break;
             case 2:
                 MPlayer.SkillManager.IsTrapReady = true;
@@ -733,6 +731,7 @@ public class Player : MonoBehaviour
 
     IEnumerator Death()
     {
+        goalPos = transform.position;
         animator.SetTrigger("Death");
         IsDead = true;
         IsStun = true;
