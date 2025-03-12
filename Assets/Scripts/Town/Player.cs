@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Google.Protobuf.Protocol;
-using Unity.Mathematics;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -81,6 +79,7 @@ public class Player : MonoBehaviour
 
         SetAnimTrigger();
         SetEquipObj();
+        goalPos = transform.position;
 
         StartCoroutine(CoImotalTime(startImotalTime));
     }
@@ -93,16 +92,11 @@ public class Player : MonoBehaviour
         if (!IsMine)
         {
             SmoothMoveAndRotate();
-        }
-    }
-
-    private void LateUpdate()
-    {
-        if (!IsMine)
-        {
             CheckMove();
         }
     }
+
+
 
     private void SetAnimTrigger()
     {
@@ -543,22 +537,21 @@ public class Player : MonoBehaviour
     private void CheckMove()
     {
         _currentPos = transform.position;
-        if (_currentPos == _prevPos)
+        float dist = Vector3.Distance(goalPos, transform.position);
+        //        Debug.LogWarning(dist);
+
+        if (dist < 0.001f)
         {
-            _isMove = false;
-        }
-        else
-        {
-            _isMove = true;
-        }
-        float dist = Vector3.Distance(lastPos, transform.position);
-        if (_isMove)
-            animator.SetFloat("Move", dist * 10);
-        else
             animator.SetFloat("Move", 0);
-        animator.SetFloat("Move", dist * 10f);
-        lastPos = transform.position;
-        _prevPos = _currentPos;
+        }
+        else
+        {
+            animator.SetFloat("Move", 1);
+        }
+
+        //animator.SetFloat("Move", dist * 10f);
+        //lastPos = transform.position;
+        //_prevPos = _currentPos;
     }
 
     // STAT, UI
