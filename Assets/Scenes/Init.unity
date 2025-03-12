@@ -4607,7 +4607,7 @@ MonoBehaviour:
   craftManager: {fileID: 0}
   uiRanking: {fileID: 0}
   btnMenu: {fileID: 295224515}
-  btnMenuClose: {fileID: 0}
+  btnMenuClose: {fileID: 2073193504}
   uiMenuOn: 0
   player: {fileID: 0}
 --- !u!114 &481567337
