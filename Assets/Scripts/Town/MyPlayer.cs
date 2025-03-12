@@ -48,6 +48,7 @@ public class MyPlayer : MonoBehaviour
     private bool grenadeInput;
     private bool trapInput;
     private bool recallInput;
+    private bool isSprintStarted = false;
 
     private SkillManager skillManager;
     public SkillManager SkillManager => skillManager;
@@ -128,13 +129,13 @@ public class MyPlayer : MonoBehaviour
         Interact();
         UIInput();
         HandleSprint(); // 달리기
+        CheckMove();
     }
 
     private void LateUpdate()
     {
         PathFinding();
         ScreenScrollZoom();
-        CheckMove();
     }
 
     void PathFinding()
@@ -276,7 +277,7 @@ public class MyPlayer : MonoBehaviour
         GameManager.Network.Send(movePacket);
     }
 
-    private void SendLocationPacket()
+    private void SendLocationPacket(float elapsedTime)
     {
         var tr = new TransformInfo
         {
@@ -286,7 +287,7 @@ public class MyPlayer : MonoBehaviour
             Rot = transform.eulerAngles.y,
         };
 
-        var locationPacket = new C2SPlayerLocation { Transform = tr };
+        var locationPacket = new C2SPlayerLocation { Transform = tr, ElapsedTime = elapsedTime };
         GameManager.Network.Send(locationPacket);
     }
 
@@ -312,6 +313,7 @@ public class MyPlayer : MonoBehaviour
             _isMove = true;
 
         float distanceMoved = Vector3.Distance(lastPos, transform.position);
+        float elapsedTime = Time.deltaTime;
         //anim.SetFloat("Move", distanceMoved * 10f);
         if (_isMove)
             anim.SetFloat("Move", distanceMoved * 10f);
@@ -321,7 +323,7 @@ public class MyPlayer : MonoBehaviour
         }
         if (distanceMoved > 0.1f)
         {
-            SendLocationPacket();
+            SendLocationPacket(elapsedTime);
             lastPos = transform.position;
         }
         _prevPos = _currentPos;
@@ -459,13 +461,22 @@ public class MyPlayer : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftShift) && isMoving && currentStamina > 0)
         {
+
+            if (isSprintStarted == false)
+            {
+                // 달리기 시작 패킷 보내기
+                var startRunPacket = new C2SPlayerRunning();
+                GameManager.Network.Send(startRunPacket);
+            }
+
+            isSprintStarted = true;
             // 달리는 동안 회복 대기 초기화 및 달리기 상태 활성화
             isSprinting = true;
             isRegenerating = false;
             regenTimer = 0f;
 
-            // sprintSpeedMultiplier는 속도를 높이기 위한 배수값(예: 1.5f)
-            // 혹은 sprintSpeed를 별도 변수로 미리 정의해두고 사용할 수 있습니다.
+            // sprintSpeedMultiplier는 속도를 높이기 위한 배수값
+            // 혹은 sprintSpeed를 별도 변수로 미리 정의해두고 사용 가능
             agent.speed = GetNormalSpeed() * 1.5f;
             currentStamina -= staminaDrainRate * Time.deltaTime;
             if (currentStamina <= 0)
@@ -480,6 +491,11 @@ public class MyPlayer : MonoBehaviour
             if (isSprinting)
             {
                 isSprinting = false;
+                isSprintStarted = false;
+
+                // 달리기 멈춤 패킷
+                var stopRunPacket = new C2SPlayerStopRunning();
+                GameManager.Network.Send(stopRunPacket);
             }
 
             agent.speed = GetNormalSpeed();

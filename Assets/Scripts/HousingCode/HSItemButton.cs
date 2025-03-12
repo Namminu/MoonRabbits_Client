@@ -3,15 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class HSItemButton : MonoBehaviour
+public class HSItemButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
 	[SerializeField] private Image hsItemIcon;
 	[SerializeField] public Button thisBtn;
 
 	private PlacementSystem placementSystem;
-	private int myItemId; 
+	private int myItemId;
 
 	private void Awake()
 	{
@@ -31,6 +32,8 @@ public class HSItemButton : MonoBehaviour
 	}
 	#endregion
 
+
+
 	#region Private Method
 	private void OnClickButtonEvent()
 	{
@@ -41,5 +44,17 @@ public class HSItemButton : MonoBehaviour
 		}
 		placementSystem.StartPlacement(myItemId);
 	}
-	#endregion
+    #endregion
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        // TooltipManager를 통해 아이템 정보를 보여줍니다. 실제 아이템 데이터(이름, 설명 등)는 myItemId로 조회할 수 있습니다.
+        TooltipManager.Instance.ShowTooltip(myItemId, eventData.position);
+    }
+
+    // IPointerExitHandler 구현: 마우스가 버튼을 벗어나면 툴팁 숨기기
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        TooltipManager.Instance.HideTooltip();
+    }
 }

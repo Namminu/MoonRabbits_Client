@@ -76,14 +76,18 @@ class PacketHandler
         string targetSceneName = GameManager.Instance.SceneName[pkt.TargetSector];
 
         SceneManager.LoadScene(targetSceneName);
-        GameManager.Instance.EnterAfterSceneAwake(
-            pkt.TargetSector,
-            pkt.Players.ToList(),
-            pkt.Traps.ToList(),
-            pkt.HasChest
-        );
 
-        PartyMemberUI.instance.UpdateUI();
+        if (pkt.TargetSector != 99)
+        {
+            GameManager.Instance.EnterAfterSceneAwake(
+                pkt.TargetSector,
+                pkt.Players.ToList(),
+                pkt.Traps.ToList(),
+                pkt.HasChest
+            );
+
+            PartyMemberUI.instance.UpdateUI();
+        }
     }
 
     public static void S2CEmoteHandler(PacketSession session, IMessage packet)
@@ -116,8 +120,10 @@ class PacketHandler
             return;
         }
 
-        if (pkt.ChatType == "Auth") {
-            var res = new C2SChat {
+        if (pkt.ChatType == "Auth")
+        {
+            var res = new C2SChat
+            {
                 PlayerId = 0,
                 ChatMsg = "",
                 ChatType = "Auth",
@@ -430,6 +436,25 @@ class PacketHandler
     #endregion
 
     #region PlayerAction
+    public static void S2CRecoverHandler(PacketSession session, IMessage packet)
+    {
+        if (packet is not S2CRecover pkt)
+            return;
+        Debug.Log($"S2CRecover 패킷 무사 도착 : {pkt}");
+
+        var caster = GameManager.Instance.GetPlayer(pkt.CasterId);
+        if (caster != null)
+        {
+            caster.Rescue();
+        }
+
+        var targetPlayer = GameManager.Instance.GetPlayer(pkt.TargetPlayerId);
+        if (targetPlayer != null)
+        {
+            targetPlayer.Recover();
+        }
+    }
+
     public static void S2COpenChestHandler(PacketSession session, IMessage packet)
     {
         if (packet is not S2COpenChest pkt)
@@ -693,7 +718,8 @@ class PacketHandler
         foreach (var monster in monsters)
         {
             var findMonster = MonsterManager.Instance.GetMonster(monster.Id);
-            if (findMonster == null) continue;
+            if (findMonster == null)
+                continue;
             findMonster.SetPosition(new Vector3(monster.X, 0, monster.Z));
         }
     }

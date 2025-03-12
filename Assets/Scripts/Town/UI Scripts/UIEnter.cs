@@ -27,7 +27,14 @@ public class UIEnter : MonoBehaviour
         if (currentGate.type == Gate.GateType.prev)
         {
             targetSector = currentGate.sectorCode - 1;
-            alert.text = "이전 섹터로\n이동하시겠습니까?";
+            if (currentGate.sectorCode == 100)
+            {
+                alert.text = "보금자리로\n이동하시겠습니까?";
+            }
+            else
+            {
+                alert.text = "이전 섹터로\n이동하시겠습니까?";
+            }
         }
         else
         {

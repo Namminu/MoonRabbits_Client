@@ -21,6 +21,7 @@ public class CanvasManager : MonoBehaviour
     public UIRanking uiRanking;
 
     public Player player;
+
     // public UIDisconnect disconnectPopup;
 
     private void Awake()
@@ -89,4 +90,10 @@ public class CanvasManager : MonoBehaviour
         uiCraft.InitUiCraft();
     }
 
+    public void DeactivateUI()
+    {
+        uIAnimation.gameObject.SetActive(false);
+        uIPlayer.gameObject.SetActive(false);
+        uIChat.gameObject.SetActive(false);
+    }
 }
