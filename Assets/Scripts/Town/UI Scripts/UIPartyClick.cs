@@ -7,6 +7,6 @@ public class UIPartyClick : MonoBehaviour, IPointerDownHandler
 {
     public void OnPointerDown(PointerEventData eventData)
     {
-        GetComponentInParent<PartyUI>().transform.SetAsLastSibling();
+        CanvasManager.Instance.partyUI.gameObject.transform.SetAsLastSibling();
     }
 }
