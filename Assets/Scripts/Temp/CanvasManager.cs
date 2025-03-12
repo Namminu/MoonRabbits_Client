@@ -21,6 +21,7 @@ public class CanvasManager : MonoBehaviour
     public CraftManager craftManager;
     public UIRanking uiRanking;
     public Button btnMenu;
+    public Button btnMenuClose;
     public bool uiMenuOn = false;
 
     public Player player;
@@ -71,10 +72,13 @@ public class CanvasManager : MonoBehaviour
         }
         
         btnMenu.onClick.AddListener(() => {
-            GameObject uiMenu = CanvasManager.Instance.uiMenu;
-            uiMenu.SetActive(!uiMenu.activeSelf);
+            uiMenu.SetActive(true);
             uiMenu.transform.SetAsLastSibling();
-            uiMenuOn = !uiMenuOn;
+            uiMenuOn = true;
+        });
+        btnMenuClose.onClick.AddListener(() => {
+            uiMenu.SetActive(false);
+            uiMenuOn = false;
         });
     }
 

@@ -162,12 +162,15 @@ public class MyPlayer : MonoBehaviour
 
     void ScreenScrollZoom()
     {
+        if (Input.mousePosition.x < 0 || Input.mousePosition.x > Screen.width) return;
+        if (Input.mousePosition.y < 0 || Input.mousePosition.y > Screen.height) return;
+        if (eSystem.IsPointerOverGameObject()) return;
+
         float scrollData = Input.GetAxis("Mouse ScrollWheel"); // 마우스 휠 입력
 
         if (_cam == null)
             _cam = Camera.main;
 
-        // 줌 조정
         // 줌 조정
         if (scrollData != 0f)
         {
