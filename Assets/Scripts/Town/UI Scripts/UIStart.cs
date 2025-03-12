@@ -9,6 +9,24 @@ using UnityEngine.UI;
 
 public class UIStart : MonoBehaviour
 {
+    #region server
+    [SerializeField]
+    private GameObject serverImage;
+
+    [SerializeField]
+    private TMP_InputField inputIp;
+
+    [SerializeField]
+    private TMP_InputField inputPort;
+
+    [SerializeField]
+    private Button btnEnter;
+    #endregion
+
+    #region nickname
+    [SerializeField]
+    private GameObject NicknameImage;
+
     [SerializeField]
     private GameObject charList;
 
@@ -28,9 +46,6 @@ public class UIStart : MonoBehaviour
     private TMP_InputField inputNickname;
 
     [SerializeField]
-    private TMP_InputField inputPort;
-
-    [SerializeField]
     private TMP_Text txtMessage;
 
     [SerializeField]
@@ -38,6 +53,7 @@ public class UIStart : MonoBehaviour
 
     [SerializeField]
     private TMP_Text placeHolder;
+    #endregion
 
     private int classIdx = 0;
     private string serverUrl;
@@ -46,7 +62,6 @@ public class UIStart : MonoBehaviour
 
     private const string DefaultServerMessage = "Input Server";
     private const string DefaultNicknameMessage = "닉네임 (2~10글자)";
-    private const string WelcomeMessage = "Welcome!";
     private const string ShortNicknameError = "이름을 2글자 이상 입력해주세요!";
     private const string LongNicknameError = "이름을 10글자 이하로 입력해주세요!";
 
@@ -56,6 +71,8 @@ public class UIStart : MonoBehaviour
 
         btnBack.onClick.AddListener(SetServerUI);
         localServerBtn.onClick.AddListener(OnClickLocalServer);
+        btnEnter.onClick.AddListener(ConfirmServer);
+        btnConfirm.onClick.AddListener(ConfirmNickname);
         SetServerUI();
         InitializeCharacterButtons();
     }
@@ -112,37 +129,27 @@ public class UIStart : MonoBehaviour
 
     private void SetServerUI()
     {
-        UpdateUI(WelcomeMessage, UnityEngine.Color.white, DefaultServerMessage, false, true);
-        btnConfirm.onClick.RemoveAllListeners();
-        btnConfirm.onClick.AddListener(ConfirmServer);
+        serverImage.SetActive(true);
+        NicknameImage.SetActive(false);
+#if UNITY_EDITOR
+        inputIp.gameObject.SetActive(true);
+        inputPort.gameObject.SetActive(true);
+        localServerBtn.gameObject.SetActive(true);
+#else
+        inputIp.gameObject.SetActive(false);
+        inputPort.gameObject.SetActive(false);
+        localServerBtn.gameObject.SetActive(false);
+#endif
     }
 
     public void SetNicknameUI()
     {
-        UpdateUI(WelcomeMessage, UnityEngine.Color.white, DefaultNicknameMessage, true, false);
-        btnConfirm.onClick.RemoveAllListeners();
-        btnConfirm.onClick.AddListener(ConfirmNickname);
-    }
-
-    private void UpdateUI(
-        string message,
-        UnityEngine.Color messageColor,
-        string placeholderText,
-        bool showCharList,
-        bool showPortInput
-    )
-    {
-        txtMessage.text = message;
-        txtMessage.color = messageColor;
-
-        placeHolder.text = placeholderText;
+        serverImage.SetActive(false);
+        NicknameImage.SetActive(true);
+        placeHolder.text = DefaultNicknameMessage;
         inputNickname.text = string.Empty;
-
-        charList.SetActive(showCharList);
-        btnBack.gameObject.SetActive(showCharList);
-        localServerBtn.gameObject.SetActive(showPortInput);
-        inputPort.gameObject.SetActive(showPortInput);
     }
+
 
     private void OnClickLocalServer()
     {
@@ -155,13 +162,13 @@ public class UIStart : MonoBehaviour
 
     private void ConfirmServer()
     {
-        if (string.IsNullOrWhiteSpace(inputNickname.text))
+        if (string.IsNullOrWhiteSpace(inputIp.text) && !string.IsNullOrEmpty(inputIp.text))
         {
             DisplayError(DefaultServerMessage);
             return;
         }
 
-        serverUrl = inputNickname.text;
+        serverUrl = inputIp.text;
         port = inputPort.text;
         TownManager.Instance.TryConnectToServer(serverUrl, port);
         gameObject.SetActive(false);
