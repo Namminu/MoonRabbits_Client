@@ -71,6 +71,7 @@ public abstract class SManagerBase : MonoBehaviour
         // [2] 받은 플레이어 정보들 순회하며 내꺼는 마킹
         foreach (PlayerInfo playerInfo in players)
         {
+            if (playerInfo == null) continue;
             var player = SpawnPlayer(playerInfo);
 
             // 플레이어 매니저에서 정보 업데이트
@@ -94,6 +95,8 @@ public abstract class SManagerBase : MonoBehaviour
 
     public Player SpawnPlayer(PlayerInfo playerInfo)
     {
+
+
         // [1] 플레이어 프리펩 가져올 경로 찾기
         bool hasPrefab = prefabPaths.TryGetValue(playerInfo.ClassCode, out string prefabPath);
         if (!hasPrefab)
