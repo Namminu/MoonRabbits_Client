@@ -87,10 +87,10 @@ public class SceneTransition : MonoBehaviour
         var isLowSpec = GameManager.Instance.IsLowSpecMode;
         var volum = FindObjectOfType<Volume>();
         if (volum)
-            volum.gameObject.SetActive(isLowSpec);
+            volum.gameObject.SetActive(!isLowSpec);
         UniversalAdditionalCameraData uac =
             Camera.main.GetComponent<UniversalAdditionalCameraData>();
-        uac.renderPostProcessing = isLowSpec;
+        uac.renderPostProcessing = !isLowSpec;
     }
 
     private void SetSound()
