@@ -67,6 +67,7 @@ public class UILogIn : MonoBehaviour
             ClearTextField();
             userPWC.gameObject.SetActive(false);
             btn_Reigster.gameObject.SetActive(true);
+            btn_Back.gameObject.SetActive(false);
         }
     }
 
@@ -81,6 +82,7 @@ public class UILogIn : MonoBehaviour
         ClearTextField();
         userPWC.gameObject.SetActive(true);
         btn_Reigster.gameObject.SetActive(false);
+        btn_Back.gameObject.SetActive(true);
     }
 
     public void ConfirmButton()
