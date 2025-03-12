@@ -89,6 +89,7 @@
     {
       "item_id": 22006,
       "item_name": "벽돌",
+      "item_type": 1,
       "item_description": "더 튼튼한 외벽을 만들기에 적합한 건축재료이다."
     }
   ]
