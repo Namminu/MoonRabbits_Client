@@ -11,9 +11,6 @@ public class UIPlayer : MonoBehaviour
     public static UIPlayer instance { get; private set; }
     public int player_level;
 
-    private int APButtonsOffsetY = 39;
-    private int APTextOffsetX = 132;
-
     private RectTransform buttonRect;
     private RectTransform frameRect;
     private Vector2 startPosAPButton;
@@ -21,7 +18,6 @@ public class UIPlayer : MonoBehaviour
     private Vector2 endPosAPButton;
     private Vector2 endPosAPFrame;
 
-    public Button btnAddExp;
     public Slider staminaSlider;
     public Slider expSlider;
     public TextMeshProUGUI levelText;
@@ -51,15 +47,15 @@ public class UIPlayer : MonoBehaviour
         buttonRect = APButtons.GetComponent<RectTransform>();
         frameRect = APFrame.GetComponent<RectTransform>();
         startPosAPButton = buttonRect.anchoredPosition;
+        startPosAPButton = new Vector2(170f, -140f);
         startPosAPFrame = frameRect.anchoredPosition;
-        endPosAPButton = new Vector2(startPosAPButton.x, startPosAPButton.y - 150);
+        endPosAPButton = new Vector2(startPosAPButton.x, startPosAPButton.y - 39);
         endPosAPFrame = new Vector2(startPosAPFrame.x + 160, startPosAPFrame.y);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        btnAddExp.onClick.AddListener(OnClickAddExp);
         btnStaminaUp.onClick.AddListener(OnClickStaminaUp);
         btnPickSpeedUp.onClick.AddListener(OnClickPickSpeedUp);
         btnMoveSpeedUp.onClick.AddListener(OnClickMoveSpeedUp);
@@ -108,36 +104,6 @@ public class UIPlayer : MonoBehaviour
             frameRect.anchoredPosition = startPosAPFrame;
             buttonRect.DOAnchorPos(endPosAPButton, 1f);
             frameRect.DOAnchorPos(endPosAPFrame, 1f);
-
-            // StartCoroutine(
-            //     SmoothChangeObjectPosition(APButtons, startPosAPButton, endPosAPButton, 1)
-            // );
-            // StartCoroutine(SmoothChangeObjectPosition(APFrame, startPosAPFrame, endPosAPFrame, 1));
-            // APButtons.transform.position = startAPButton.position;
-            // APFrame.transform.position = startAPFrame.position;
-            // Debug.Log(APButtons.transform.position);
-            // Debug.Log(APFrame.transform.position);
-
-            // Vector3 goalPos_APButtons =
-            //     APButtons.transform.position + new Vector3(0, -APButtonsOffsetY, 0);
-            // Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(APTextOffsetX, 0, 0);
-            // Debug.Log(goalPos_APButtons);
-            // Debug.Log(goalPos_APFrame);
-
-            // // 처음부터 위치 이동시키면 이상한 위치로 이동돼서 코루틴으로 이동시킴
-            // // APButtons.transform.position = goalPos_APButtons;
-            // // APFrame.transform.position = goalPos_APFrame;
-            // StartCoroutine(
-            //     SmoothChangeObjectPosition(
-            //         APButtons,
-            //         APButtons.transform.position,
-            //         goalPos_APButtons,
-            //         1
-            //     )
-            // );
-            // StartCoroutine(
-            //     SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1)
-            // );
         }
     }
 
@@ -202,28 +168,11 @@ public class UIPlayer : MonoBehaviour
 
     public void DeActiveAP()
     {
+        if (buttonRect.anchoredPosition.y >= -140) return;
         buttonRect.anchoredPosition = endPosAPButton;
         frameRect.anchoredPosition = endPosAPFrame;
         buttonRect.DOAnchorPos(startPosAPButton, 1f);
         frameRect.DOAnchorPos(startPosAPFrame, 1f);
-
-        // StartCoroutine(SmoothChangeObjectPosition(APButtons, endPosAPButton, startPosAPButton, 1));
-        // StartCoroutine(SmoothChangeObjectPosition(APFrame, endPosAPFrame, startPosAPFrame, 1));
-        // Vector3 goalPos_APButtons =
-        //     APButtons.transform.position + new Vector3(0, APButtonsOffsetY, 0);
-        // Vector3 goalPos_APFrame = APFrame.transform.position + new Vector3(-APTextOffsetX, 0, 0);
-
-        // StartCoroutine(
-        //     SmoothChangeObjectPosition(
-        //         APButtons,
-        //         APButtons.transform.position,
-        //         goalPos_APButtons,
-        //         1
-        //     )
-        // );
-        // StartCoroutine(
-        //     SmoothChangeObjectPosition(APFrame, APFrame.transform.position, goalPos_APFrame, 1)
-        // );
     }
 
     private IEnumerator LevelUpSequence(

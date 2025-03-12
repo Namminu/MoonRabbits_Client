@@ -75,8 +75,14 @@ class PacketHandler
 
         string targetSceneName = GameManager.Instance.SceneName[pkt.TargetSector];
 
-        SceneManager.LoadScene(targetSceneName);
+        //SceneManager.LoadScene(targetSceneName);
+        SceneManagerEx.LoadScene(targetSceneName, () => { MoveSectorCheck(pkt); });
 
+
+    }
+
+    private static void MoveSectorCheck(S2CMoveSector pkt)
+    {
         if (pkt.TargetSector != 99)
         {
             GameManager.Instance.EnterAfterSceneAwake(
@@ -108,6 +114,17 @@ class PacketHandler
         if (packet is not S2CChat pkt)
             return;
         Debug.Log($"S2CChat 패킷 무사 도착 : {pkt}");
+        
+        if (pkt.ChatType == "Auth") {
+            var res = new C2SChat {
+                PlayerId = 0,
+                ChatMsg = "",
+                ChatType = "Auth",
+                SenderName = "",
+            };
+            GameManager.Network.Send(res);
+            return;
+        }
 
         if (pkt.ChatType == "Auth")
         {

@@ -9,12 +9,25 @@ public class UIAnimation : MonoBehaviour
 
     private MyPlayer mPlayer;
 
+    private Button btnRankingUI;
+    private Button btnCraftUI;
+    private Button btnInventoryUI;
+    private Button btnPartyUI;
+
     private void Awake()
     {
+        btnRankingUI = transform.Find("Button_Ranking").GetComponent<Button>();
+        btnCraftUI = transform.Find("Button_Craft").GetComponent<Button>();
+        btnInventoryUI = transform.Find("Button_Inventory").GetComponent<Button>();
+        btnPartyUI = transform.Find("Button_Party").GetComponent<Button>();
     }
 
     void Start()
     {
+        btnRankingUI.onClick.AddListener(OnBtnRankingUIClick);
+        btnCraftUI.onClick.AddListener(OnBtnCraftUIClick);
+        btnInventoryUI.onClick.AddListener(OnBtnInventoryUIClick);
+        btnPartyUI.onClick.AddListener(OnBtnPartyUIClick);
         // mPlayer = GameManager.Instance.MPlayer.MPlayer;
         // mPlayer =
         //     TownManager.Instance.me != null && TownManager.Instance.me.MPlayer != null
@@ -53,4 +66,33 @@ public class UIAnimation : MonoBehaviour
 
     //     mPlayer.ExecuteAnimation(idx);
     // }
+
+    public void OnBtnRankingUIClick()
+    {
+        GameObject uiRanking = CanvasManager.Instance.uiRanking.gameObject;
+        uiRanking.SetActive(!uiRanking.activeSelf);
+        uiRanking.transform.SetAsLastSibling();
+    }
+
+    public void OnBtnCraftUIClick()
+    {
+        GameObject uiCraft = CanvasManager.Instance.uiCraft.gameObject;
+        uiCraft.SetActive(!uiCraft.activeSelf);
+        uiCraft.transform.SetAsLastSibling();
+    }
+
+    public void OnBtnInventoryUIClick()
+    {
+        GameObject uiInven = CanvasManager.Instance.inventoryUI.gameObject;
+        uiInven.SetActive(!uiInven.activeSelf);
+        uiInven.transform.SetAsLastSibling();
+    }
+
+    public void OnBtnPartyUIClick()
+    {
+        GameObject partyWindow = CanvasManager.Instance.partyUI.partyWindow;
+        partyWindow.SetActive(!partyWindow.activeSelf);
+        GameObject partyUI = CanvasManager.Instance.partyUI.gameObject;
+        partyUI.transform.SetAsLastSibling();
+    }
 }

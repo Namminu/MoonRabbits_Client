@@ -204,7 +204,7 @@ public class MyPlayer : MonoBehaviour
     // 충돌한 위치로 NavMeshAgent를 이동시킴 (agent.SetDestination(rayHit.point);
     private void HandleInput()
     {
-        if (player.IsStun || !isReadyESystem)
+        if (player.IsStun || !isReadyESystem || GameManager.Instance.SManager.UiChat.isChating)
             return;
 
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
@@ -407,7 +407,7 @@ public class MyPlayer : MonoBehaviour
 
     private void UIInput()
     {
-        if (uiCraftInput)
+        if (uiCraftInput && CanvasManager.Instance.uiMenuOn == false)
         {
             // C 키입력
             GameObject uiCraft = CanvasManager.Instance.uiCraft.gameObject;
@@ -415,12 +415,13 @@ public class MyPlayer : MonoBehaviour
             CanvasManager.Instance.craftManager.Resume();
             uiCraft.transform.SetAsLastSibling();
         }
-        if (uiPartyInput)
+        if (uiPartyInput && CanvasManager.Instance.uiMenuOn == false)
         {
             // P 키입력
-            GameObject partyUi = CanvasManager.Instance.partyUI.partyWindow;
-            partyUi.SetActive(!partyUi.activeSelf);
-            partyUi.transform.SetAsLastSibling();
+            GameObject partyWindow = CanvasManager.Instance.partyUI.partyWindow;
+            partyWindow.SetActive(!partyWindow.activeSelf);
+            GameObject partyUI = CanvasManager.Instance.partyUI.gameObject;
+            partyUI.transform.SetAsLastSibling();
         }
         if (uiMenuInput)
         {
@@ -428,8 +429,9 @@ public class MyPlayer : MonoBehaviour
             GameObject uiMenu = CanvasManager.Instance.uiMenu;
             uiMenu.SetActive(!uiMenu.activeSelf);
             uiMenu.transform.SetAsLastSibling();
+            CanvasManager.Instance.uiMenuOn = !CanvasManager.Instance.uiMenuOn;
         }
-        if (uiInventoryInput)
+        if (uiInventoryInput && CanvasManager.Instance.uiMenuOn == false)
         {
             // I 키입력
             GameObject inventoryUI = CanvasManager.Instance.inventoryUI.gameObject;
