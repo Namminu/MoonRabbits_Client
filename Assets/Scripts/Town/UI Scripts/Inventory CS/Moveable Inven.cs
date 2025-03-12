@@ -51,6 +51,7 @@ public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
 
     void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
     {
+        CanvasManager.Instance.inventoryUI.transform.SetAsLastSibling();
         beginPos = targetUI.position;
         moveBegin = eventData.position;
     }

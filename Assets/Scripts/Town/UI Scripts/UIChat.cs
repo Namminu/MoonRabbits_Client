@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -44,6 +45,8 @@ public class UIChat : MonoBehaviour
     }
     private bool isOpen = true;
     public TMP_Dropdown chatType;
+
+    public bool isChating = false; 
 
     void Start()
     {
@@ -97,17 +100,31 @@ public class UIChat : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Return))
+        if (isChating == false)
         {
-            if (inputChat.IsActive() && inputChat.isFocused)
-            {
-                SendMessage();
-            }
-            else
+            if (Input.GetKeyUp(KeyCode.Return))
             {
                 ActivateInputFieldProperly();
             }
         }
+        else
+        {
+            if (Input.GetKeyUp(KeyCode.Return))
+            {
+                SendMessage();
+            }
+        }
+        // if (Input.GetKeyUp(KeyCode.Return))
+        // {
+        //     if (inputChat.isFocused)
+        //     {
+        //         SendMessage();
+        //     }
+        //     else
+        //     {
+        //         ActivateInputFieldProperly();
+        //     }
+        // }
     }
 
     private void ToggleChatWindow()
@@ -129,8 +146,12 @@ public class UIChat : MonoBehaviour
 
     public void SendMessage()
     {
-        if (string.IsNullOrWhiteSpace(inputChat.text))
+        inputChat.DeactivateInputField();
+
+        if (string.IsNullOrWhiteSpace(inputChat.text)){
+            isChating = false;
             return;
+        }
 
         if (chatType == null || chatType.options.Count == 0)
         {
@@ -145,10 +166,13 @@ public class UIChat : MonoBehaviour
 
         inputChat.text = string.Empty;
         ActivateInputFieldProperly();
+
+        isChating = false;
     }
 
     private void ActivateInputFieldProperly()
     {
+        isChating = true;
         inputChat.ActivateInputField();
         inputChat.caretPosition = 0;
         ResetIME();
