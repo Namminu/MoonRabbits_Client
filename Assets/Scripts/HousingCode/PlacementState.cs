@@ -56,6 +56,10 @@ public class PlacementState : IBuildingState
             craftItemId
         );
 
+        // 재료 부족 등으로 인해 설치가 실패한 경우 index 값이 -1(또는 실패를 나타내는 값)이라면 추가하지 않음
+        if (index < 0)
+            return;
+
         GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ? floorData : furnitureData;
         selectedData.AddObjectAt(gridInfo,
             ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize,

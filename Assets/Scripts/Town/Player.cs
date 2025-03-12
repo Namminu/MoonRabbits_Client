@@ -48,6 +48,7 @@ public class Player : MonoBehaviour
 
     private Dictionary<int, string> emotions = new();
     public bool IsStun = false;
+    public bool IsDead = false;
     private Dictionary<int, GameObject> equips = new();
     public GameObject ActiveEquipObj = null;
 
@@ -285,6 +286,30 @@ public class Player : MonoBehaviour
         {
             animator?.SetTrigger(emotions[animCode]);
         }
+    }
+
+    public void Rescue()
+    {
+        animator.SetTrigger("SetTrap");
+    }
+
+    public void Recover()
+    {
+        if (curHp > 0 && !IsDead)
+            return;
+
+        animator.SetTrigger("Recover");
+        IsDead = false;
+        IsStun = false;
+
+        curHp = 3;
+
+        if (IsMine)
+        {
+            uiPlayer.UpdateHp(curHp);
+        }
+
+        PartyMemberUI.instance.UpdateUI();
     }
 
     public void StartOpenChest(int openTimer)
@@ -683,19 +708,51 @@ public class Player : MonoBehaviour
             uiPlayer.UpdateHp(curHp);
         }
 
+        PartyMemberUI.instance.UpdateUI();
+
         ResourceManager.Instance.Instantiate("Effects", "FX_Shoot", transform.position);
         // PlayerManager.playerSaveData[PlayerId].CurHp -= damage;
         isImotal = true;
         // PlayerManager.playerSaveData[PlayerId].IsImotal = true;
         StartCoroutine(CoImotalTime(ImotalTime));
 
-        PartyMemberUI.instance.UpdateUI();
-
         if (curHp <= 0)
         {
-            animator.SetTrigger("Death");
-            IsStun = true;
+            StartCoroutine(Death());
             return;
+        }
+    }
+
+    IEnumerator Death()
+    {
+        animator.SetTrigger("Death");
+        IsDead = true;
+        IsStun = true;
+
+        if (IsMine)
+        {
+            int recallTimer = 0;
+
+            while (IsDead || recallTimer <= 10)
+            {
+                if (!IsDead)
+                    yield break;
+
+                yield return new WaitForSeconds(0.5f);
+
+                if (!IsDead)
+                    yield break;
+
+                yield return new WaitForSeconds(0.5f);
+
+                if (IsDead && recallTimer == 10)
+                {
+                    var pkt = new C2SMoveSector { TargetSector = 100 };
+                    GameManager.Network.Send(pkt);
+                    yield break;
+                }
+                recallTimer += 1;
+            }
         }
     }
 

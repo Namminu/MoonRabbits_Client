@@ -38,21 +38,27 @@ public class UIDisconnect : MonoBehaviour
             }
             else
             {
-                Debug.LogError("UIDisconnect: 'UIDisconnect'이라는 자식 오브젝트를 찾을 수 없습니다.");
+                Debug.LogError(
+                    "UIDisconnect: 'UIDisconnect'이라는 자식 오브젝트를 찾을 수 없습니다."
+                );
             }
         }
 
         // Inspector에 연결되지 않은 경우, "DisconnectPopup/ConfirmButton" 경로로 확인 버튼 찾기
         if (confirmButton == null)
         {
-            Transform buttonTransform = transform.Find("UIDisconnect/OfflineReward/Bg/btnConfirm");
+            Transform buttonTransform = transform.Find(
+                "UIDisconnect/OfflineRewardC/BgC/btnConfirm"
+            );
             if (buttonTransform != null)
             {
                 confirmButton = buttonTransform.GetComponent<Button>();
             }
             else
             {
-                Debug.LogError("UIDisconnect: 'UIDisconnect/OfflineReward/Bg/btnConfirm' 경로의 버튼을 찾을 수 없습니다.");
+                Debug.LogError(
+                    "UIDisconnect: 'UIDisconnect/OfflineReward/Bg/btnConfirm' 경로의 버튼을 찾을 수 없습니다."
+                );
             }
         }
 
