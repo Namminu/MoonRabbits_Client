@@ -108,6 +108,7 @@ public class MyPlayer : MonoBehaviour
         skillManager = GetComponentInChildren<SkillManager>();
         interactManager = GetComponentInChildren<InteractManager>();
         emoteManager = GetComponent<EmoteManager>();
+        targetPosition = transform.position;
     }
 
     private void Start()
@@ -309,27 +310,23 @@ public class MyPlayer : MonoBehaviour
 
     private void CheckMove()
     {
-        _currentPos = transform.position;
-        if (_currentPos == _prevPos)
-            _isMove = false;
-        else
-            _isMove = true;
+        //_currentPos = transform.position;
+        float distanceMoved = Vector3.Distance(targetPosition, transform.position);
 
-        float distanceMoved = Vector3.Distance(lastPos, transform.position);
+        if (distanceMoved < 0.25f)
+            anim.SetFloat("Move", 0f);
+        else
+            anim.SetFloat("Move", 1f);
+
         float elapsedTime = Time.deltaTime;
         //anim.SetFloat("Move", distanceMoved * 10f);
-        if (_isMove)
-            anim.SetFloat("Move", distanceMoved * 10f);
-        else
-        {
-            anim.SetFloat("Move", 0f);
-        }
+
         if (distanceMoved > 0.1f)
         {
             SendLocationPacket(elapsedTime);
             lastPos = transform.position;
         }
-        _prevPos = _currentPos;
+        //_prevPos = _currentPos;
     }
 
     private void Emote()
