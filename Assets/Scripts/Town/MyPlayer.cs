@@ -203,10 +203,8 @@ public class MyPlayer : MonoBehaviour
     // 충돌한 위치로 NavMeshAgent를 이동시킴 (agent.SetDestination(rayHit.point);
     private void HandleInput()
     {
-        if (player.IsStun || !isReadyESystem)
+        if (player.IsStun || !isReadyESystem || GameManager.Instance.SManager.UiChat.isChating)
             return;
-
-        if(GameManager.Instance.SManager.UiChat.isChating) return;
 
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
         {
