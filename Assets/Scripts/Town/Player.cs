@@ -452,6 +452,7 @@ public class Player : MonoBehaviour
         if (IsMine)
         {
             StartCoroutine(RunCoolTime(coolTime, (int)skillObj.type));
+            CanvasManager.Instance.uIPlayer.QSkillCool(coolTime);
         }
     }
 
@@ -473,6 +474,7 @@ public class Player : MonoBehaviour
             MPlayer.NavAgent.SetDestination(transform.position);
             MPlayer.NavAgent.velocity = Vector3.zero;
             StartCoroutine(RunCoolTime(coolTime, (int)skillObj.type));
+            CanvasManager.Instance.uIPlayer.WSkillCool(coolTime);
         }
     }
 
@@ -487,6 +489,7 @@ public class Player : MonoBehaviour
         {
             case 1:
                 MPlayer.SkillManager.IsGrenadeReady = true;
+                
                 break;
             case 2:
                 MPlayer.SkillManager.IsTrapReady = true;
