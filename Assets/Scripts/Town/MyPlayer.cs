@@ -213,6 +213,8 @@ public class MyPlayer : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
         {
+            CanvasManager.Instance.uIChat.DeactiveInputFieldProperly();
+
             interactManager.GatherOut(false);
 
             if (

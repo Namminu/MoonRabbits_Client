@@ -178,6 +178,12 @@ public class UIChat : MonoBehaviour
         ResetIME();
     }
 
+    public void DeactiveInputFieldProperly()
+    {
+        isChating = false;
+        inputChat.DeactivateInputField();
+    }
+
     public void PushMessage(string nickName, string msg, string chatType, bool myChat)
     {
         if (!isOpen)
