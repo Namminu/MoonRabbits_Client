@@ -2,8 +2,9 @@ using Google.Protobuf.Protocol;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
 
-public class UIRanking : MonoBehaviour
+public class UIRanking : MonoBehaviour, IPointerDownHandler
 {
     // UI 요소 연결
     public Transform rankSheet; // Content Area > RankSheet
@@ -67,4 +68,9 @@ public class UIRanking : MonoBehaviour
     }
 
     #endregion
+    
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        CanvasManager.Instance.uiRanking.gameObject.transform.SetAsLastSibling();
+    }
 }

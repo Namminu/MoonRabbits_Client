@@ -18,6 +18,7 @@ public class CanvasManager : MonoBehaviour
     public UICraft uiCraft;
     public GameObject uiMenu;
     public CraftManager craftManager;
+    public UIRanking uiRanking;
 
     public Player player;
     // public UIDisconnect disconnectPopup;
@@ -43,6 +44,7 @@ public class CanvasManager : MonoBehaviour
         uIEnter = GetComponentInChildren<UIEnter>();
         uiCraft = GetComponentInChildren<UICraft>();
         craftManager = GetComponentInChildren<CraftManager>();
+        uiRanking = GetComponentInChildren<UIRanking>();
         // disconnectPopup = GetComponentInChildren<UIDisconnect>();
     }
 
@@ -55,6 +57,7 @@ public class CanvasManager : MonoBehaviour
         inventoryUI.gameObject.SetActive(false);
         uIEnter.gameObject.SetActive(false);
         uiCraft.gameObject.SetActive(false);
+        uiRanking.gameObject.SetActive(false);
         // disconnectPopup.gameObject.SetActive(false);
 
         if (player == null)

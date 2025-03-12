@@ -416,9 +416,10 @@ public class MyPlayer : MonoBehaviour
         if (uiPartyInput)
         {
             // P 키입력
-            GameObject partyUi = CanvasManager.Instance.partyUI.partyWindow;
-            partyUi.SetActive(!partyUi.activeSelf);
-            partyUi.transform.SetAsLastSibling();
+            GameObject partyWindow = CanvasManager.Instance.partyUI.partyWindow;
+            partyWindow.SetActive(!partyWindow.activeSelf);
+            GameObject partyUI = CanvasManager.Instance.partyUI.gameObject;
+            partyUI.transform.SetAsLastSibling();
         }
         if (uiMenuInput)
         {

@@ -27,7 +27,7 @@ public class UIPartyDrag : MonoBehaviour, IPointerDownHandler, IDragHandler
         );
         offset = uiPartyRect.anchoredPosition - offset;
 
-        CanvasManager.Instance.uiCraft.transform.SetAsLastSibling();
+        CanvasManager.Instance.partyUI.gameObject.transform.SetAsLastSibling();
     }
 
     public void OnDrag(PointerEventData eventData)

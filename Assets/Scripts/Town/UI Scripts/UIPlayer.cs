@@ -21,7 +21,6 @@ public class UIPlayer : MonoBehaviour
     private Vector2 endPosAPButton;
     private Vector2 endPosAPFrame;
 
-    public Button btnAddExp;
     public Slider staminaSlider;
     public Slider expSlider;
     public TextMeshProUGUI levelText;
@@ -59,7 +58,6 @@ public class UIPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        btnAddExp.onClick.AddListener(OnClickAddExp);
         btnStaminaUp.onClick.AddListener(OnClickStaminaUp);
         btnPickSpeedUp.onClick.AddListener(OnClickPickSpeedUp);
         btnMoveSpeedUp.onClick.AddListener(OnClickMoveSpeedUp);
