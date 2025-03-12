@@ -78,6 +78,10 @@ public class UISkillCheck : MonoBehaviour
     }
     public void EndSkillCheck()
     {
+        if (!this.isEnabled)
+        {
+            return;
+        }
         transform.Find("Circle").gameObject.SetActive(false);
         this.isEnabled = false;
         this.isSuccess = false;
