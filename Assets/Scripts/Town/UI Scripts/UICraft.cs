@@ -8,9 +8,10 @@ using Google.Protobuf.Protocol;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UICraft : MonoBehaviour
+public class UICraft : MonoBehaviour, IPointerDownHandler
 {
     public static UICraft instance { get; private set; }
 
@@ -31,7 +32,6 @@ public class UICraft : MonoBehaviour
     private Dictionary<int, int> itemSlotById = new Dictionary<int, int>();
     private Dictionary<int, int> itemStackById = new Dictionary<int, int>();
     private bool canCraft;
-    public Button btnAddWood;
     public Button btnClose;
     public GameObject uiCraftPanel;
     public GameObject progressFrame;
@@ -54,7 +54,6 @@ public class UICraft : MonoBehaviour
         btnIncrease.onClick.AddListener(OnIncreaseBtnClick);
         btnDecrease.onClick.AddListener(OnDecreaseBtnClick);
         btnCraft.onClick.AddListener(OnCraftBtnClick);
-        btnAddWood.onClick.AddListener(OnAddWoodClick);
         btnClose.onClick.AddListener(OnCloseBtnClick);
         confirmButton.onClick.AddListener(OnConfirmButtonClick);
     }
@@ -67,12 +66,13 @@ public class UICraft : MonoBehaviour
         {
             Debug.Log("레시피 로드 안 됨");
             return;
-        };
+        }
+        ;
 
         // 스크롤 공간의 높이 설정
         float totalHeight = 65 * GameManager.Instance.recipeContainer.data.Count + 100;
         scrollViewContent.GetComponent<RectTransform>().sizeDelta = new Vector2(scrollViewContent.GetComponent<RectTransform>().sizeDelta.x, totalHeight);
-        
+
         foreach (Recipe recipe in GameManager.Instance.recipeContainer.data)
         {
             GameObject newRecipeBtn = Instantiate(recipeBtnPrefab, scrollViewContent.transform);
@@ -80,7 +80,7 @@ public class UICraft : MonoBehaviour
             foreach (Transform child in newRecipeBtn.transform)
             {
                 recipeBtnImg = child.GetComponent<Image>();
-                if(recipeBtnImg != null) break;
+                if (recipeBtnImg != null) break;
             }
             TextMeshProUGUI recipeBtnText = newRecipeBtn.GetComponentInChildren<TextMeshProUGUI>();
             if (newRecipeBtn == null || recipeBtnImg == null || recipeBtnText == null)
@@ -109,7 +109,7 @@ public class UICraft : MonoBehaviour
 
     private void ClearUiCraft()
     {
-        for(int i = scrollViewContent.transform.childCount -1; i >= 0; i--)
+        for (int i = scrollViewContent.transform.childCount - 1; i >= 0; i--)
         {
             Transform child = scrollViewContent.transform.GetChild(i);
             Destroy(child.gameObject);
@@ -123,6 +123,8 @@ public class UICraft : MonoBehaviour
         int recipeId = recipe.recipe_id;
         InitDetailRecipe();
         GetInventorySlotByItemId();
+
+        CanvasManager.Instance.uiCraft.transform.SetAsLastSibling();
     }
 
     private void InitDetailRecipe()
@@ -137,7 +139,7 @@ public class UICraft : MonoBehaviour
     {
         if (progressFrame.activeSelf) progressFrame.SetActive(false);
         if (!detailFrame.activeSelf) detailFrame.SetActive(true);
-        
+
         // 제목
         string title = recipe.craft_item_name;   //item.json에서 아이템 이름 읽어야함
         titleText.text = title;
@@ -163,12 +165,12 @@ public class UICraft : MonoBehaviour
             }
             string name = material.name;
 
-            if(!itemStackById.TryGetValue(materialItemId, out int stack))
+            if (!itemStackById.TryGetValue(materialItemId, out int stack))
             {
                 stack = 0;
             }
             materialSb.Append($"{name} : {stack}/{craftCount * count} 개\n");
-            
+
             // 재료 부족
             if (craftCount * count > stack) canCraft = false;
         }
@@ -181,24 +183,29 @@ public class UICraft : MonoBehaviour
 
     public void OnFoldBtnClick()
     {
+        CanvasManager.Instance.uiCraft.transform.SetAsLastSibling();
         //InitDetailRecipe();
         detailFrame.SetActive(false);
     }
 
     public void OnCraftBtnClick()
     {
-        CanvasManager.Instance.craftManager.ProcessCraft(selectedRecipe.recipe_id, craftCount);
+        CanvasManager.Instance.uiCraft.transform.SetAsLastSibling();
+        if (canCraft) CanvasManager.Instance.craftManager.ProcessCraft(selectedRecipe.recipe_id, craftCount);
+        else alarmText.text = canCraft ? "" : "재료가 부족합니다!";
     }
 
     public void OnDecreaseBtnClick()
     {
-        if (craftCount <= 1) return; 
+        CanvasManager.Instance.uiCraft.transform.SetAsLastSibling();
+        if (craftCount <= 1) return;
         craftCount--;
         GetInventorySlotByItemId();
     }
 
     public void OnIncreaseBtnClick()
     {
+        CanvasManager.Instance.uiCraft.transform.SetAsLastSibling();
         craftCount++;
         GetInventorySlotByItemId();
     }
@@ -206,7 +213,8 @@ public class UICraft : MonoBehaviour
     private void GetInventorySlotByItemId()
     {
         var pkt = new C2SGetInventorySlotByItemId();
-        foreach(var material in selectedRecipe.material_items){
+        foreach (var material in selectedRecipe.material_items)
+        {
             pkt.ItemIds.Add(material.item_id);
         }
         GameManager.Network.Send(pkt);
@@ -217,21 +225,12 @@ public class UICraft : MonoBehaviour
     {
         itemSlotById.Clear();
         itemStackById.Clear();
-        foreach(var slot in pkt.Slots)
+        foreach (var slot in pkt.Slots)
         {
             itemSlotById[slot.ItemId] = slot.SlotIdx;
             itemStackById[slot.ItemId] = slot.Stack;
         }
         ShowDetailRecipe(selectedRecipe);
-    }
-
-    public void OnAddWoodClick()
-    {
-        var pkt = new C2SItemObtained{
-            ItemId = 20001,
-            SlotIdx = 1
-        };
-        GameManager.Network.Send(pkt);
     }
 
     private void OnCloseBtnClick()
@@ -253,4 +252,9 @@ public class UICraft : MonoBehaviour
     //     craftingImage.sprite = ItemDataLoader.GetSpriteByItemId(selectedRecipe.craft_item_id);
     //     CanvasManager.Instance.craftManager.StartCraft(pkt);
     // }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        CanvasManager.Instance.uiCraft.transform.SetAsLastSibling();
+    }
 }

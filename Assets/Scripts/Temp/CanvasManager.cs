@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CanvasManager : MonoBehaviour
 {
@@ -18,6 +19,10 @@ public class CanvasManager : MonoBehaviour
     public UICraft uiCraft;
     public GameObject uiMenu;
     public CraftManager craftManager;
+    public UIRanking uiRanking;
+    public Button btnMenu;
+    public Button btnMenuClose;
+    public bool uiMenuOn = false;
 
     public Player player;
 
@@ -44,6 +49,7 @@ public class CanvasManager : MonoBehaviour
         uIEnter = GetComponentInChildren<UIEnter>();
         uiCraft = GetComponentInChildren<UICraft>();
         craftManager = GetComponentInChildren<CraftManager>();
+        uiRanking = GetComponentInChildren<UIRanking>();
         // disconnectPopup = GetComponentInChildren<UIDisconnect>();
     }
 
@@ -56,12 +62,24 @@ public class CanvasManager : MonoBehaviour
         inventoryUI.gameObject.SetActive(false);
         uIEnter.gameObject.SetActive(false);
         uiCraft.gameObject.SetActive(false);
+        uiRanking.gameObject.SetActive(false);
+        uiMenu.SetActive(false);
         // disconnectPopup.gameObject.SetActive(false);
 
         if (player == null)
         {
             StartCoroutine(nameof(EnterTownAfterUILoad));
         }
+        
+        btnMenu.onClick.AddListener(() => {
+            uiMenu.SetActive(true);
+            uiMenu.transform.SetAsLastSibling();
+            uiMenuOn = true;
+        });
+        btnMenuClose.onClick.AddListener(() => {
+            uiMenu.SetActive(false);
+            uiMenuOn = false;
+        });
     }
 
     IEnumerator EnterTownAfterUILoad()
@@ -76,7 +94,8 @@ public class CanvasManager : MonoBehaviour
                 && uIEnter != null
         );
 
-        SceneManager.LoadScene("Town");
+        SceneManagerEx.LoadScene("Town");
+        //SceneManager.LoadScene("Town");
     }
 
     public void ActivateUI()
