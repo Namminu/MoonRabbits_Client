@@ -60,7 +60,7 @@ public class PlacementState : IBuildingState
         if (index < 0)
             return;
 
-        GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ? floorData : furnitureData;
+        GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemDataType == 0 ? floorData : furnitureData;
         selectedData.AddObjectAt(gridInfo,
             ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemGridSize,
             ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId,
@@ -96,7 +96,7 @@ public class PlacementState : IBuildingState
 
     private bool CheckPlacementValidity(ObjectTransInfo gridInfo, int selectedObjectItemId)
 	{
-		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemId == 0 ?
+		GridData selectedData = ItemDataLoader.HousingItemsList[selectedObjectIndex].ItemDataType == 0 ?
 			floorData : furnitureData;
 
 		return selectedData.CanPlaceObjectAt(gridInfo, ItemDataLoader.HousingItemsList[selectedObjectItemId].ItemGridSize);

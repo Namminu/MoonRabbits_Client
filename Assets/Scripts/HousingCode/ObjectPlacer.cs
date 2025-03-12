@@ -63,7 +63,8 @@ public class ObjectPlacer : MonoBehaviour
             return;
         Destroy(placedGameObject[gameObjectIndex]);
         placedGameObject[gameObjectIndex] = null;
-    }
+        //placedGameObject.RemoveAt(gameObjectIndex);
+	}
 
     #region 이전 코드
     /*public int PlaceObject(GameObject prefab, Vector3 position, float yRotation)

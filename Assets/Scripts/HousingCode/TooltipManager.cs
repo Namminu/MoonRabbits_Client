@@ -65,7 +65,7 @@ public class TooltipManager : MonoBehaviour
         return totalCount;
     }
 
-    // itemId(예를 들어, 가구의 craftItemId)를 받아 해당 아이템 제작에 필요한 재료와 인벤토리 상태를 문자열로 구성합니다.
+    // itemId(예를 들어, 가구의 craftItemId)를 받아 해당 아이템 제작에 필요한 재료와 인벤토리 상태를 문자열로 구성
     public string GetItemInfo(int itemId)
     {
         // RecipeManager를 통해 itemId에 해당하는 제작 레시피 정보를 조회합니다.
@@ -76,18 +76,26 @@ public class TooltipManager : MonoBehaviour
         }
 
         StringBuilder infoBuilder = new StringBuilder();
+
+        // 가구 이름을 가져오기 위해 ItemDataLoader의 HousingItemsList를 사용
+        string furnitureName = "Unknown Furniture";
+        var furnitureData = ItemDataLoader.HousingItemsList.Find(x => x.ItemId == itemId);
+        if (furnitureData != null)
+        {
+            furnitureName = furnitureData.ItemName;
+        }
+        // 가구 이름을 굵게 표시
+        infoBuilder.AppendLine($"<b>{furnitureName}</b>\n");
         infoBuilder.AppendLine("필요한 재료:");
 
-        // 레시피에 포함된 각 재료(material)가 요구하는 개수와 인벤토리 보유량을 비교합니다.
+        // 레시피에 포함된 각 재료(material)가 요구하는 개수와 인벤토리 보유량을 비교
         foreach (var material in recipe.material_items)
         {
             int ownedCount = GetOwnedItemCount(material.item_id);
             string itemName = "Unknown";
-            // ItemDataLoader.MaterialItemsList에서 해당 재료의 데이터를 조회합니다.
             var matData = ItemDataLoader.MaterialItemsList.Find(x => x.ItemId == material.item_id);
             if (matData != null)
             {
-                // 실제 프로젝트에서는 MaterialItemData에 ItemName 프로퍼티가 정의되어 있어야 합니다.
                 itemName = matData.ItemName;
             }
 

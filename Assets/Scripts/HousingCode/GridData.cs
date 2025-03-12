@@ -114,12 +114,14 @@ public class GridData
 		return placedObjectsPosition[gridPosition].PlacedObjectIndex;
 	}
 
-	internal void RemoveObjectAt(Vector3Int gridPosition)
+	public void RemoveObjectAt(Vector3Int gridPosition, int placedObjectIndex)
 	{
 		foreach(var pos in placedObjectsPosition[gridPosition].occupiedPosition)
 		{
 			placedObjectsPosition.Remove(pos);
 		}
+		placedObjectsList.Remove(placedObjectIndex);
+		Debug.Log("placedObjectsList Count : " + placedObjectsList.Count);
 	}
 }
 
