@@ -8,9 +8,10 @@ using Google.Protobuf.Protocol;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UICraft : MonoBehaviour
+public class UICraft : MonoBehaviour, IPointerDownHandler
 {
     public static UICraft instance { get; private set; }
 
@@ -31,7 +32,6 @@ public class UICraft : MonoBehaviour
     private Dictionary<int, int> itemSlotById = new Dictionary<int, int>();
     private Dictionary<int, int> itemStackById = new Dictionary<int, int>();
     private bool canCraft;
-    public Button btnAddWood;
     public Button btnClose;
     public GameObject uiCraftPanel;
     public GameObject progressFrame;
@@ -54,7 +54,6 @@ public class UICraft : MonoBehaviour
         btnIncrease.onClick.AddListener(OnIncreaseBtnClick);
         btnDecrease.onClick.AddListener(OnDecreaseBtnClick);
         btnCraft.onClick.AddListener(OnCraftBtnClick);
-        btnAddWood.onClick.AddListener(OnAddWoodClick);
         btnClose.onClick.AddListener(OnCloseBtnClick);
         confirmButton.onClick.AddListener(OnConfirmButtonClick);
     }
@@ -123,6 +122,8 @@ public class UICraft : MonoBehaviour
         int recipeId = recipe.recipe_id;
         InitDetailRecipe();
         GetInventorySlotByItemId();
+
+        CanvasManager.Instance.uiCraft.transform.SetAsLastSibling();
     }
 
     private void InitDetailRecipe()
@@ -181,17 +182,20 @@ public class UICraft : MonoBehaviour
 
     public void OnFoldBtnClick()
     {
+        CanvasManager.Instance.uiCraft.transform.SetAsLastSibling();
         //InitDetailRecipe();
         detailFrame.SetActive(false);
     }
 
     public void OnCraftBtnClick()
     {
+        CanvasManager.Instance.uiCraft.transform.SetAsLastSibling();
         CanvasManager.Instance.craftManager.ProcessCraft(selectedRecipe.recipe_id, craftCount);
     }
 
     public void OnDecreaseBtnClick()
     {
+        CanvasManager.Instance.uiCraft.transform.SetAsLastSibling();
         if (craftCount <= 1) return; 
         craftCount--;
         GetInventorySlotByItemId();
@@ -199,6 +203,7 @@ public class UICraft : MonoBehaviour
 
     public void OnIncreaseBtnClick()
     {
+        CanvasManager.Instance.uiCraft.transform.SetAsLastSibling();
         craftCount++;
         GetInventorySlotByItemId();
     }
@@ -225,15 +230,6 @@ public class UICraft : MonoBehaviour
         ShowDetailRecipe(selectedRecipe);
     }
 
-    public void OnAddWoodClick()
-    {
-        var pkt = new C2SItemObtained{
-            ItemId = 20001,
-            SlotIdx = 1
-        };
-        GameManager.Network.Send(pkt);
-    }
-
     private void OnCloseBtnClick()
     {
         //InitDetailRecipe();
@@ -253,4 +249,9 @@ public class UICraft : MonoBehaviour
     //     craftingImage.sprite = ItemDataLoader.GetSpriteByItemId(selectedRecipe.craft_item_id);
     //     CanvasManager.Instance.craftManager.StartCraft(pkt);
     // }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        CanvasManager.Instance.uiCraft.transform.SetAsLastSibling();
+    }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CanvasManager : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class CanvasManager : MonoBehaviour
     public UICraft uiCraft;
     public GameObject uiMenu;
     public CraftManager craftManager;
+    public UIRanking uiRanking;
+    public Button btnMenu;
 
     public Player player;
 
@@ -44,6 +47,7 @@ public class CanvasManager : MonoBehaviour
         uIEnter = GetComponentInChildren<UIEnter>();
         uiCraft = GetComponentInChildren<UICraft>();
         craftManager = GetComponentInChildren<CraftManager>();
+        uiRanking = GetComponentInChildren<UIRanking>();
         // disconnectPopup = GetComponentInChildren<UIDisconnect>();
     }
 
@@ -56,6 +60,7 @@ public class CanvasManager : MonoBehaviour
         inventoryUI.gameObject.SetActive(false);
         uIEnter.gameObject.SetActive(false);
         uiCraft.gameObject.SetActive(false);
+        uiRanking.gameObject.SetActive(false);
         // disconnectPopup.gameObject.SetActive(false);
 
         if (player == null)

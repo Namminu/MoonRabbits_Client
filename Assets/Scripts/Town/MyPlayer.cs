@@ -61,6 +61,7 @@ public class MyPlayer : MonoBehaviour
     private InteractManager interactManager;
     public InteractManager InteractManager => interactManager;
 
+    private bool uiMenuOn = false;
     private bool uiCraftInput;
     private bool uiPartyInput;
     private bool uiMenuInput;
@@ -115,6 +116,12 @@ public class MyPlayer : MonoBehaviour
     {
         currentStamina = GetCurStamina();
         maxStamina = GetMaxStamina();
+        CanvasManager.Instance.btnMenu.onClick.AddListener(() => {
+            GameObject uiMenu = CanvasManager.Instance.uiMenu;
+            uiMenu.SetActive(!uiMenu.activeSelf);
+            uiMenu.transform.SetAsLastSibling();
+            uiMenuOn = !uiMenuOn;
+        });
 
         StartCoroutine(ExecuteEvery0_1Seconds());
     }
@@ -205,7 +212,7 @@ public class MyPlayer : MonoBehaviour
     // 충돌한 위치로 NavMeshAgent를 이동시킴 (agent.SetDestination(rayHit.point);
     private void HandleInput()
     {
-        if (player.IsStun || !isReadyESystem)
+        if (player.IsStun || !isReadyESystem || GameManager.Instance.SManager.UiChat.isChating)
             return;
 
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
@@ -404,7 +411,7 @@ public class MyPlayer : MonoBehaviour
 
     private void UIInput()
     {
-        if (uiCraftInput)
+        if (uiCraftInput && uiMenuOn == false)
         {
             // C 키입력
             GameObject uiCraft = CanvasManager.Instance.uiCraft.gameObject;
@@ -412,12 +419,13 @@ public class MyPlayer : MonoBehaviour
             CanvasManager.Instance.craftManager.Resume();
             uiCraft.transform.SetAsLastSibling();
         }
-        if (uiPartyInput)
+        if (uiPartyInput && uiMenuOn == false)
         {
             // P 키입력
-            GameObject partyUi = CanvasManager.Instance.partyUI.partyWindow;
-            partyUi.SetActive(!partyUi.activeSelf);
-            partyUi.transform.SetAsLastSibling();
+            GameObject partyWindow = CanvasManager.Instance.partyUI.partyWindow;
+            partyWindow.SetActive(!partyWindow.activeSelf);
+            GameObject partyUI = CanvasManager.Instance.partyUI.gameObject;
+            partyUI.transform.SetAsLastSibling();
         }
         if (uiMenuInput)
         {
@@ -425,8 +433,9 @@ public class MyPlayer : MonoBehaviour
             GameObject uiMenu = CanvasManager.Instance.uiMenu;
             uiMenu.SetActive(!uiMenu.activeSelf);
             uiMenu.transform.SetAsLastSibling();
+            uiMenuOn = !uiMenuOn;
         }
-        if (uiInventoryInput)
+        if (uiInventoryInput && uiMenuOn == false)
         {
             // I 키입력
             GameObject inventoryUI = CanvasManager.Instance.inventoryUI.gameObject;
