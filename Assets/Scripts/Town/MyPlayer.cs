@@ -208,12 +208,16 @@ public class MyPlayer : MonoBehaviour
     // 충돌한 위치로 NavMeshAgent를 이동시킴 (agent.SetDestination(rayHit.point);
     private void HandleInput()
     {
-        if (player.IsStun || !isReadyESystem || GameManager.Instance.SManager.UiChat.isChating)
+        if (player.IsStun || !isReadyESystem)
             return;
 
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
         {
-            CanvasManager.Instance.uIChat.DeactiveInputFieldProperly();
+            if(GameManager.Instance.SManager.UiChat.isChating)
+            {
+                CanvasManager.Instance.uIChat.DeactivateInputFieldProperly();
+                return;
+            }
 
             interactManager.GatherOut(false);
 
@@ -230,6 +234,8 @@ public class MyPlayer : MonoBehaviour
                 targetPosition = rayHit.point;
             }
         }
+
+        if(GameManager.Instance.SManager.UiChat.isChating) return;
 
         happyInput = Input.GetKeyDown(KeyCode.Alpha1);
         sadInput = Input.GetKeyDown(KeyCode.Alpha2);

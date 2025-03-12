@@ -177,6 +177,14 @@ public class UIChat : MonoBehaviour
         inputChat.caretPosition = 0;
         ResetIME();
     }
+    
+    public void DeactivateInputFieldProperly()
+    {
+        isChating = false;
+        inputChat.DeactivateInputField();
+        inputChat.text = string.Empty;
+        inputChat.caretPosition = 0;
+    }
 
     public void DeactiveInputFieldProperly()
     {
