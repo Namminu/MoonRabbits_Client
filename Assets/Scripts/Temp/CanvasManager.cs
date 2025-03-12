@@ -76,7 +76,8 @@ public class CanvasManager : MonoBehaviour
                 && uIEnter != null
         );
 
-        SceneManager.LoadScene("Town");
+        SceneManagerEx.LoadScene("Town");
+        //SceneManager.LoadScene("Town");
     }
 
     public void ActivateUI()

@@ -1,4 +1,5 @@
-﻿using Google.Protobuf.Protocol;
+﻿using System;
+using Google.Protobuf.Protocol;
 
 public class SceneManagerEx
 {
@@ -21,8 +22,8 @@ public class SceneManagerEx
         //_transition = GameObject.Instantiate(resource).GetComponent<SceneTransition>();
     }
 
-    public static void SetScene(string sceneName, PlayerInfo playerInfo)
+    public static void LoadScene(string sceneName, Action action = null)
     {
-        _transition.SetScene(sceneName, playerInfo);
+        _transition.SetScene(sceneName, action);
     }
 }

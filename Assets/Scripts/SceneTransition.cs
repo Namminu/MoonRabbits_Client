@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -36,7 +37,7 @@ public class SceneTransition : MonoBehaviour
 
     [SerializeField]
     private string sceneName = DefaultSceneName; // 현재 씬 이름
-    private PlayerInfo playerInfo;
+    Action action;
     private Dictionary<string, int> sceneCode = new()
     {
         { "Town", 100 },
@@ -110,10 +111,10 @@ public class SceneTransition : MonoBehaviour
         }
     }
 
-    public void SetScene(string sceneName, PlayerInfo playerInfo)
+    public void SetScene(string sceneName, Action action)
     {
         this.sceneName = sceneName;
-        this.playerInfo = playerInfo;
+        this.action = action;
         // 씬 이름 설정
         gameObject.SetActive(true); // 씬 전환 UI 활성화
     }
@@ -136,8 +137,10 @@ public class SceneTransition : MonoBehaviour
         yield return LoadSceneAsync(); // 씬 비동기 로드
         ApplyRenderSettings(); // 렌더 설정 적용
         yield return FadeOut(); // 페이드 아웃
+        action?.Invoke();
         yield return OpenShutters(); // 셔터 열기
         SetSound();
+        action = null;
 
         gameObject.SetActive(false); // UI 비활성화
     }

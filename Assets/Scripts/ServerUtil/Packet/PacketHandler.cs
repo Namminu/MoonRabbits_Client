@@ -75,8 +75,14 @@ class PacketHandler
 
         string targetSceneName = GameManager.Instance.SceneName[pkt.TargetSector];
 
-        SceneManager.LoadScene(targetSceneName);
+        //SceneManager.LoadScene(targetSceneName);
+        SceneManagerEx.LoadScene(targetSceneName, () => { MoveSectorCheck(pkt); });
 
+
+    }
+
+    private static void MoveSectorCheck(S2CMoveSector pkt)
+    {
         if (pkt.TargetSector != 99)
         {
             GameManager.Instance.EnterAfterSceneAwake(
