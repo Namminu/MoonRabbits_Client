@@ -96,8 +96,6 @@ public class Player : MonoBehaviour
         }
     }
 
-
-
     private void SetAnimTrigger()
     {
         emotions[111] = "Happy";
@@ -200,8 +198,6 @@ public class Player : MonoBehaviour
         RotateSmoothly();
     }
 
-
-
     #region 기존 코드
     private void MoveSmoothly()
     {
@@ -293,6 +289,7 @@ public class Player : MonoBehaviour
             return;
 
         animator.SetTrigger("Recover");
+        isImotal = true;
         IsDead = false;
         IsStun = false;
 
@@ -304,6 +301,8 @@ public class Player : MonoBehaviour
         }
 
         PartyMemberUI.instance.UpdateUI();
+
+        StartCoroutine(CoImotalTime(ImotalTime));
     }
 
     public void StartOpenChest(int openTimer)
@@ -483,7 +482,7 @@ public class Player : MonoBehaviour
         {
             case 1:
                 MPlayer.SkillManager.IsGrenadeReady = true;
-                
+
                 break;
             case 2:
                 MPlayer.SkillManager.IsTrapReady = true;
@@ -496,16 +495,19 @@ public class Player : MonoBehaviour
         if (IsStun)
             return;
 
+        if (IsMine)
+        {
+            MPlayer.NavAgent.ResetPath();
+            MPlayer.NavAgent.velocity = Vector3.zero;
+
+            MPlayer.InteractManager.GatherOut(false);
+        }
+
         transform.Find("StunEffect").gameObject.SetActive(true);
         IsStun = true;
 
         // PlayerManager.playerSaveData[PlayerId].IsStun = true;
 
-        if (IsMine)
-        {
-            MPlayer.NavAgent.ResetPath();
-            MPlayer.NavAgent.velocity = Vector3.zero;
-        }
 
         Invoke(nameof(StunOut), timer);
     }
@@ -697,6 +699,10 @@ public class Player : MonoBehaviour
 
     public void Damaged(int damage)
     {
+        if (isImotal)
+            return;
+
+        isImotal = true;
         curHp -= damage;
 
         if (IsMine)
@@ -708,12 +714,16 @@ public class Player : MonoBehaviour
 
         ResourceManager.Instance.Instantiate("Effects", "FX_Shoot", transform.position);
         // PlayerManager.playerSaveData[PlayerId].CurHp -= damage;
-        isImotal = true;
         // PlayerManager.playerSaveData[PlayerId].IsImotal = true;
         StartCoroutine(CoImotalTime(ImotalTime));
 
         if (curHp <= 0)
         {
+            if (IsMine)
+            {
+                MPlayer.InteractManager.GatherOut(false);
+            }
+
             StartCoroutine(Death());
             return;
         }
@@ -721,6 +731,7 @@ public class Player : MonoBehaviour
 
     IEnumerator Death()
     {
+        goalPos = transform.position;
         animator.SetTrigger("Death");
         IsDead = true;
         IsStun = true;
