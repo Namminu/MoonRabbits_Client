@@ -42,8 +42,9 @@ public class UIEntrance : MonoBehaviour
 
     private void YesButton()
     {
-        SceneManager.LoadScene(nextSceneName);
-        GameManager.Instance.ApplyRenderSettings();
+        SceneManagerEx.LoadScene(nextSceneName);
+        //SceneManager.LoadScene(nextSceneName);
+        //GameManager.Instance.ApplyRenderSettings();
     }
     private void CloseButton()
     {
