@@ -103,7 +103,10 @@ public class UICraft : MonoBehaviour, IPointerDownHandler
             recipeBtnText.text = itemName;
 
             Recipe r = recipe;
-            newRecipeBtn.GetComponent<Button>().onClick.AddListener(() => OnRecipeBtnClick(r));
+            newRecipeBtn.GetComponent<Button>().onClick.AddListener(() => {
+                OnRecipeBtnClick(r);
+                StartCoroutine(BtnCooldown(newRecipeBtn.GetComponent<Button>(), 0.5f));
+            });
         }
     }
 
@@ -193,6 +196,8 @@ public class UICraft : MonoBehaviour, IPointerDownHandler
         CanvasManager.Instance.uiCraft.transform.SetAsLastSibling();
         if (canCraft) CanvasManager.Instance.craftManager.ProcessCraft(selectedRecipe.recipe_id, craftCount);
         else alarmText.text = canCraft ? "" : "재료가 부족합니다!";
+
+        StartCoroutine(BtnCooldown(btnCraft, 0.5f));
     }
 
     public void OnDecreaseBtnClick()
@@ -201,6 +206,8 @@ public class UICraft : MonoBehaviour, IPointerDownHandler
         if (craftCount <= 1) return;
         craftCount--;
         GetInventorySlotByItemId();
+
+        StartCoroutine(BtnCooldown(btnDecrease, 0.5f));
     }
 
     public void OnIncreaseBtnClick()
@@ -208,6 +215,8 @@ public class UICraft : MonoBehaviour, IPointerDownHandler
         CanvasManager.Instance.uiCraft.transform.SetAsLastSibling();
         craftCount++;
         GetInventorySlotByItemId();
+
+        StartCoroutine(BtnCooldown(btnIncrease, 0.5f));
     }
 
     private void GetInventorySlotByItemId()
@@ -256,5 +265,11 @@ public class UICraft : MonoBehaviour, IPointerDownHandler
     public void OnPointerDown(PointerEventData eventData)
     {
         CanvasManager.Instance.uiCraft.transform.SetAsLastSibling();
+    }
+    IEnumerator BtnCooldown(Button btn, float cooltime)
+    {
+        btn.interactable = false;
+        yield return new WaitForSeconds(cooltime);
+        btn.interactable = true;
     }
 }
