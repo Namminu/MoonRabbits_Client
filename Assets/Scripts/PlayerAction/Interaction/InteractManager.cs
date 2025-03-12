@@ -44,7 +44,7 @@ public class InteractManager : MonoBehaviour
     }
     private void Update()
     {
-        if (!IsInteracting)
+        if (UISkillCheck.Instance != null && !IsInteracting)
         {
             UISkillCheck.Instance.EndSkillCheck();
         }
