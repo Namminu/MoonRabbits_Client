@@ -69,6 +69,7 @@ public class MoveableInven : MonoBehaviour, IPointerDownHandler, IDragHandler
 
     private void SortButton()
     {
+
         Debug.Log("item sort btn click");
         InvenUI.GetComponent<InventoryUI>().SortItemList();
     }
