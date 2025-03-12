@@ -7,11 +7,8 @@ public class HSItemsContentUI : MonoBehaviour
 	[SerializeField] private GameObject HSItemPrefab;
 	[SerializeField][ReadOnly] List<GameObject> HSItems;
 
-	private async void Awake()
+	private void Awake()
 	{
-		/* Json 파일 로드 임시 코드 */
-		await ItemDataLoader.GenerateAllItems();
-
 		CreateItemIconButton();
 	}
 

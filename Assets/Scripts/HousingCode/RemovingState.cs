@@ -53,7 +53,7 @@ public class RemovingState : IBuildingState
 			gameObjectIndex = selectedData.GetRepresentationIndex(gridInfo.ObjectPosition);
 			if (gameObjectIndex == -1) return;
 
-			selectedData.RemoveObjectAt(gridInfo.ObjectPosition);
+			selectedData.RemoveObjectAt(gridInfo.ObjectPosition, gameObjectIndex);
 			objectPlacer.RemoveObjectAt(gameObjectIndex);
 		}
 		Vector3 cellPosition = grid.CellToWorld(gridInfo.ObjectPosition);
