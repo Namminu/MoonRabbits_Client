@@ -10,7 +10,7 @@ OcclusionCullingSettings:
     backfaceThreshold: 100
   m_SceneGUID: 00000000000000000000000000000000
   m_OcclusionCullingData: {fileID: 0}
---- !u!104 &2
+--- !u!104 &2ㄹㄴ
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
