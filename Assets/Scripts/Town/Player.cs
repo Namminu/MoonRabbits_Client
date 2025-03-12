@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Google.Protobuf.Protocol;
-using Unity.Mathematics;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -81,6 +79,7 @@ public class Player : MonoBehaviour
 
         SetAnimTrigger();
         SetEquipObj();
+        goalPos = transform.position;
 
         StartCoroutine(CoImotalTime(startImotalTime));
     }
@@ -93,13 +92,6 @@ public class Player : MonoBehaviour
         if (!IsMine)
         {
             SmoothMoveAndRotate();
-        }
-    }
-
-    private void LateUpdate()
-    {
-        if (!IsMine)
-        {
             CheckMove();
         }
     }
@@ -206,8 +198,6 @@ public class Player : MonoBehaviour
         RotateSmoothly();
     }
 
-
-
     #region 기존 코드
     private void MoveSmoothly()
     {
@@ -299,6 +289,7 @@ public class Player : MonoBehaviour
             return;
 
         animator.SetTrigger("Recover");
+        isImotal = true;
         IsDead = false;
         IsStun = false;
 
@@ -310,6 +301,8 @@ public class Player : MonoBehaviour
         }
 
         PartyMemberUI.instance.UpdateUI();
+
+        StartCoroutine(CoImotalTime(ImotalTime));
     }
 
     public void StartOpenChest(int openTimer)
@@ -489,7 +482,7 @@ public class Player : MonoBehaviour
         {
             case 1:
                 MPlayer.SkillManager.IsGrenadeReady = true;
-                
+
                 break;
             case 2:
                 MPlayer.SkillManager.IsTrapReady = true;
@@ -502,16 +495,19 @@ public class Player : MonoBehaviour
         if (IsStun)
             return;
 
+        if (IsMine)
+        {
+            MPlayer.NavAgent.ResetPath();
+            MPlayer.NavAgent.velocity = Vector3.zero;
+
+            MPlayer.InteractManager.GatherOut(false);
+        }
+
         transform.Find("StunEffect").gameObject.SetActive(true);
         IsStun = true;
 
         // PlayerManager.playerSaveData[PlayerId].IsStun = true;
 
-        if (IsMine)
-        {
-            MPlayer.NavAgent.ResetPath();
-            MPlayer.NavAgent.velocity = Vector3.zero;
-        }
 
         Invoke(nameof(StunOut), timer);
     }
@@ -546,22 +542,21 @@ public class Player : MonoBehaviour
     private void CheckMove()
     {
         _currentPos = transform.position;
-        if (_currentPos == _prevPos)
+        float dist = Vector3.Distance(goalPos, transform.position);
+        //        Debug.LogWarning(dist);
+
+        if (dist < 0.001f)
         {
-            _isMove = false;
-        }
-        else
-        {
-            _isMove = true;
-        }
-        float dist = Vector3.Distance(lastPos, transform.position);
-        if (_isMove)
-            animator.SetFloat("Move", dist * 10);
-        else
             animator.SetFloat("Move", 0);
-        animator.SetFloat("Move", dist * 10f);
-        lastPos = transform.position;
-        _prevPos = _currentPos;
+        }
+        else
+        {
+            animator.SetFloat("Move", 1);
+        }
+
+        //animator.SetFloat("Move", dist * 10f);
+        //lastPos = transform.position;
+        //_prevPos = _currentPos;
     }
 
     // STAT, UI
@@ -704,6 +699,10 @@ public class Player : MonoBehaviour
 
     public void Damaged(int damage)
     {
+        if (isImotal)
+            return;
+
+        isImotal = true;
         curHp -= damage;
 
         if (IsMine)
@@ -715,12 +714,16 @@ public class Player : MonoBehaviour
 
         ResourceManager.Instance.Instantiate("Effects", "FX_Shoot", transform.position);
         // PlayerManager.playerSaveData[PlayerId].CurHp -= damage;
-        isImotal = true;
         // PlayerManager.playerSaveData[PlayerId].IsImotal = true;
         StartCoroutine(CoImotalTime(ImotalTime));
 
         if (curHp <= 0)
         {
+            if (IsMine)
+            {
+                MPlayer.InteractManager.GatherOut(false);
+            }
+
             StartCoroutine(Death());
             return;
         }
@@ -728,6 +731,7 @@ public class Player : MonoBehaviour
 
     IEnumerator Death()
     {
+        goalPos = transform.position;
         animator.SetTrigger("Death");
         IsDead = true;
         IsStun = true;

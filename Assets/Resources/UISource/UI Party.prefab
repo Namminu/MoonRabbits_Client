@@ -1178,7 +1178,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &6244792737484904461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4906,6 +4906,7 @@ MonoBehaviour:
   memberContainer: {fileID: 6502412655820865196}
   memberPrefab: {fileID: 7473251661319263505, guid: 4e67301029995324087ed58e3d328017,
     type: 3}
+  hearts: []
   hand: {fileID: 0}
   axe: {fileID: 0}
   pickaxe: {fileID: 0}

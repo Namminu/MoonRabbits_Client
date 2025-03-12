@@ -72,19 +72,18 @@ public class MyPlayer : MonoBehaviour
     private float maxFOV = 120f;
 
     // 달리기 및 스테미나 관련 변수
-    public float maxStamina = 100f;      // 최대 스테미나
-    private float currentStamina;       // 현재 스테미나
+    public float maxStamina = 100f; // 최대 스테미나
+    private float currentStamina; // 현재 스테미나
     public float staminaDrainRate = 20f; // 초당 스테미나 감소량
-    public float staminaRegenRate = 5f;  // 초당 스테미나 회복량
-    public float regenDelay = 2f;        // 회복 시작 전 대기 시간
-    public float normalSpeed;       // 일반 이동 속도
-    public float sprintSpeed = 1.3f;      // 달리기 시 이동 속도
-    public float exhaustedSpeed = 2f;    // 스테미나 소진 시 이동 속도
+    public float staminaRegenRate = 5f; // 초당 스테미나 회복량
+    public float regenDelay = 2f; // 회복 시작 전 대기 시간
+    public float normalSpeed; // 일반 이동 속도
+    public float sprintSpeed = 1.3f; // 달리기 시 이동 속도
+    public float exhaustedSpeed = 2f; // 스테미나 소진 시 이동 속도
 
-    private bool isSprinting = false;    // 달리기 중인지 체크
+    private bool isSprinting = false; // 달리기 중인지 체크
     private bool isRegenerating = false; // 스테미나 회복 시작 여부
-    private float regenTimer = 0f;       // 회복 대기 시간 측정용 타이머
-
+    private float regenTimer = 0f; // 회복 대기 시간 측정용 타이머
 
     void Awake()
     {
@@ -108,6 +107,7 @@ public class MyPlayer : MonoBehaviour
         skillManager = GetComponentInChildren<SkillManager>();
         interactManager = GetComponentInChildren<InteractManager>();
         emoteManager = GetComponent<EmoteManager>();
+        targetPosition = transform.position;
     }
 
     private void Start()
@@ -161,12 +161,18 @@ public class MyPlayer : MonoBehaviour
 
     void ScreenScrollZoom()
     {
+        if (Input.mousePosition.x < 0 || Input.mousePosition.x > Screen.width)
+            return;
+        if (Input.mousePosition.y < 0 || Input.mousePosition.y > Screen.height)
+            return;
+        if (eSystem.IsPointerOverGameObject())
+            return;
+
         float scrollData = Input.GetAxis("Mouse ScrollWheel"); // 마우스 휠 입력
 
         if (_cam == null)
             _cam = Camera.main;
 
-        // 줌 조정
         // 줌 조정
         if (scrollData != 0f)
         {
@@ -204,11 +210,17 @@ public class MyPlayer : MonoBehaviour
     // 충돌한 위치로 NavMeshAgent를 이동시킴 (agent.SetDestination(rayHit.point);
     private void HandleInput()
     {
-        if (player.IsStun || !isReadyESystem || GameManager.Instance.SManager.UiChat.isChating)
+        if (player.IsStun || !isReadyESystem)
             return;
 
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
         {
+            if(GameManager.Instance.SManager.UiChat.isChating)
+            {
+                CanvasManager.Instance.uIChat.DeactivateInputFieldProperly();
+                return;
+            }
+
             interactManager.GatherOut(false);
 
             if (
@@ -224,6 +236,8 @@ public class MyPlayer : MonoBehaviour
                 targetPosition = rayHit.point;
             }
         }
+
+        if(GameManager.Instance.SManager.UiChat.isChating) return;
 
         happyInput = Input.GetKeyDown(KeyCode.Alpha1);
         sadInput = Input.GetKeyDown(KeyCode.Alpha2);
@@ -306,27 +320,23 @@ public class MyPlayer : MonoBehaviour
 
     private void CheckMove()
     {
-        _currentPos = transform.position;
-        if (_currentPos == _prevPos)
-            _isMove = false;
-        else
-            _isMove = true;
+        //_currentPos = transform.position;
+        float distanceMoved = Vector3.Distance(targetPosition, transform.position);
 
-        float distanceMoved = Vector3.Distance(lastPos, transform.position);
+        if (distanceMoved < 0.25f)
+            anim.SetFloat("Move", 0f);
+        else
+            anim.SetFloat("Move", 1f);
+
         float elapsedTime = Time.deltaTime;
         //anim.SetFloat("Move", distanceMoved * 10f);
-        if (_isMove)
-            anim.SetFloat("Move", distanceMoved * 10f);
-        else
-        {
-            anim.SetFloat("Move", 0f);
-        }
+
         if (distanceMoved > 0.1f)
         {
             SendLocationPacket(elapsedTime);
             lastPos = transform.position;
         }
-        _prevPos = _currentPos;
+        //_prevPos = _currentPos;
     }
 
     private void Emote()
@@ -335,16 +345,19 @@ public class MyPlayer : MonoBehaviour
         {
             if (happyInput)
             {
+                targetPosition = transform.position;
                 isEmoting = true;
                 emoteManager.event1.Invoke();
             }
             else if (sadInput)
             {
+                targetPosition = transform.position;
                 isEmoting = true;
                 emoteManager.event2.Invoke();
             }
             else if (greetingInput)
             {
+                targetPosition = transform.position;
                 isEmoting = true;
                 emoteManager.event3.Invoke();
             }
@@ -369,13 +382,19 @@ public class MyPlayer : MonoBehaviour
     private void SetTrap()
     {
         if (trapInput && GameManager.Instance.CurrentSector != 100)
+        {
+            targetPosition = transform.position;
             skillManager.eventE.Invoke();
+        }
     }
 
     private void Recall()
     {
         if (recallInput && GameManager.Instance.CurrentSector != 100)
+        {
+            targetPosition = transform.position;
             skillManager.eventT.Invoke();
+        }
     }
 
     private void EquipChange()
@@ -387,12 +406,16 @@ public class MyPlayer : MonoBehaviour
     private void Interact()
     {
         if (interactInput)
+        {
+            targetPosition = transform.position;
             interactManager.eventF.Invoke();
+        }
     }
 
     public void Stun(float timer)
     {
         transform.Find("StunEffect").gameObject.SetActive(true);
+        targetPosition = transform.position;
         NavAgent.velocity = Vector3.zero;
         NavAgent.ResetPath();
         NavAgent.isStopped = true;
@@ -456,13 +479,13 @@ public class MyPlayer : MonoBehaviour
     {
         return player.stamina;
     }
+
     private void HandleSprint()
     {
         bool isMoving = agent.velocity.magnitude > 0.1f;
 
         if (Input.GetKey(KeyCode.LeftShift) && isMoving && currentStamina > 0)
         {
-
             if (isSprintStarted == false)
             {
                 // 달리기 시작 패킷 보내기
@@ -520,7 +543,6 @@ public class MyPlayer : MonoBehaviour
             UIPlayer.instance.SetStamina((int)currentStamina, (int)maxStamina, true);
         }
     }
-
 
     #endregion
 }
