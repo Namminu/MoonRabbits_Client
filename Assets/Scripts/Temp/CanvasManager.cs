@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CanvasManager : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class CanvasManager : MonoBehaviour
     public GameObject uiMenu;
     public CraftManager craftManager;
     public UIRanking uiRanking;
+    public Button btnMenu;
 
     public Player player;
 

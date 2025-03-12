@@ -198,12 +198,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 21678186}
   m_CullTransparentMesh: 1
---- !u!1 &53335604 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8941830063506114286, guid: 92f00e4c3c90c5a46a9c370e414739b4,
-    type: 3}
-  m_PrefabInstance: {fileID: 1545055967}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &70855082
 GameObject:
   m_ObjectHideFlags: 0
@@ -3482,19 +3476,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 295224516}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 939658935}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &295224516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4466,19 +4448,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 442168127}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 739519373}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &442168127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4636,6 +4606,7 @@ MonoBehaviour:
   uiMenu: {fileID: 939658935}
   craftManager: {fileID: 0}
   uiRanking: {fileID: 0}
+  btnMenu: {fileID: 295224515}
   player: {fileID: 0}
 --- !u!114 &481567337
 MonoBehaviour:
@@ -5718,12 +5689,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 731728845}
   m_CullTransparentMesh: 1
---- !u!1 &739519373 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2666675866484753376, guid: 54671235aefa3e34e9741e43ffe30823,
-    type: 3}
-  m_PrefabInstance: {fileID: 6007124407533723720}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &803502365
 GameObject:
   m_ObjectHideFlags: 0
@@ -6342,19 +6307,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 955292583}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 53335604}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &955292583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7957,12 +7910,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1255672222}
   m_CullTransparentMesh: 1
---- !u!1 &1274372096 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6277954304434088370, guid: 3bfba2a8ee9db6e4db9769713db7a0cb,
-    type: 3}
-  m_PrefabInstance: {fileID: 1028758649}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1274372097 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8879391496150862913, guid: 3bfba2a8ee9db6e4db9769713db7a0cb,
@@ -8660,19 +8607,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1434634881}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1539572597}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1434634881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8936,12 +8871,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1511952467}
   m_CullTransparentMesh: 1
---- !u!1 &1539572597 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2360188327868102986, guid: 277e35cade1bbc7489cc671e9886bb53,
-    type: 3}
-  m_PrefabInstance: {fileID: 251481848}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1539572598 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4829318620471886199, guid: 277e35cade1bbc7489cc671e9886bb53,
@@ -8954,7 +8883,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 251481848}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1539572597}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee705d2f884408145b784d2d86ea4cff, type: 3}
@@ -11061,19 +10990,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1882602775}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1274372096}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1882602775
 MonoBehaviour:
   m_ObjectHideFlags: 0
