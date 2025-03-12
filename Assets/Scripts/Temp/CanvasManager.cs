@@ -21,6 +21,8 @@ public class CanvasManager : MonoBehaviour
     public CraftManager craftManager;
     public UIRanking uiRanking;
     public Button btnMenu;
+    public Button btnMenuClose;
+    public bool uiMenuOn = false;
 
     public Player player;
 
@@ -61,12 +63,23 @@ public class CanvasManager : MonoBehaviour
         uIEnter.gameObject.SetActive(false);
         uiCraft.gameObject.SetActive(false);
         uiRanking.gameObject.SetActive(false);
+        uiMenu.SetActive(false);
         // disconnectPopup.gameObject.SetActive(false);
 
         if (player == null)
         {
             StartCoroutine(nameof(EnterTownAfterUILoad));
         }
+        
+        btnMenu.onClick.AddListener(() => {
+            uiMenu.SetActive(true);
+            uiMenu.transform.SetAsLastSibling();
+            uiMenuOn = true;
+        });
+        btnMenuClose.onClick.AddListener(() => {
+            uiMenu.SetActive(false);
+            uiMenuOn = false;
+        });
     }
 
     IEnumerator EnterTownAfterUILoad()

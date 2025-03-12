@@ -61,7 +61,6 @@ public class MyPlayer : MonoBehaviour
     private InteractManager interactManager;
     public InteractManager InteractManager => interactManager;
 
-    private bool uiMenuOn = false;
     private bool uiCraftInput;
     private bool uiPartyInput;
     private bool uiMenuInput;
@@ -109,18 +108,13 @@ public class MyPlayer : MonoBehaviour
         skillManager = GetComponentInChildren<SkillManager>();
         interactManager = GetComponentInChildren<InteractManager>();
         emoteManager = GetComponent<EmoteManager>();
+        targetPosition = transform.position;
     }
 
     private void Start()
     {
         currentStamina = GetCurStamina();
         maxStamina = GetMaxStamina();
-        CanvasManager.Instance.btnMenu.onClick.AddListener(() => {
-            GameObject uiMenu = CanvasManager.Instance.uiMenu;
-            uiMenu.SetActive(!uiMenu.activeSelf);
-            uiMenu.transform.SetAsLastSibling();
-            uiMenuOn = !uiMenuOn;
-        });
 
         StartCoroutine(ExecuteEvery0_1Seconds());
     }
@@ -168,12 +162,15 @@ public class MyPlayer : MonoBehaviour
 
     void ScreenScrollZoom()
     {
+        if (Input.mousePosition.x < 0 || Input.mousePosition.x > Screen.width) return;
+        if (Input.mousePosition.y < 0 || Input.mousePosition.y > Screen.height) return;
+        if (eSystem.IsPointerOverGameObject()) return;
+
         float scrollData = Input.GetAxis("Mouse ScrollWheel"); // 마우스 휠 입력
 
         if (_cam == null)
             _cam = Camera.main;
 
-        // 줌 조정
         // 줌 조정
         if (scrollData != 0f)
         {
@@ -313,27 +310,23 @@ public class MyPlayer : MonoBehaviour
 
     private void CheckMove()
     {
-        _currentPos = transform.position;
-        if (_currentPos == _prevPos)
-            _isMove = false;
-        else
-            _isMove = true;
+        //_currentPos = transform.position;
+        float distanceMoved = Vector3.Distance(targetPosition, transform.position);
 
-        float distanceMoved = Vector3.Distance(lastPos, transform.position);
+        if (distanceMoved < 0.25f)
+            anim.SetFloat("Move", 0f);
+        else
+            anim.SetFloat("Move", 1f);
+
         float elapsedTime = Time.deltaTime;
         //anim.SetFloat("Move", distanceMoved * 10f);
-        if (_isMove)
-            anim.SetFloat("Move", distanceMoved * 10f);
-        else
-        {
-            anim.SetFloat("Move", 0f);
-        }
+
         if (distanceMoved > 0.1f)
         {
             SendLocationPacket(elapsedTime);
             lastPos = transform.position;
         }
-        _prevPos = _currentPos;
+        //_prevPos = _currentPos;
     }
 
     private void Emote()
@@ -414,7 +407,7 @@ public class MyPlayer : MonoBehaviour
 
     private void UIInput()
     {
-        if (uiCraftInput && uiMenuOn == false)
+        if (uiCraftInput && CanvasManager.Instance.uiMenuOn == false)
         {
             // C 키입력
             GameObject uiCraft = CanvasManager.Instance.uiCraft.gameObject;
@@ -422,7 +415,7 @@ public class MyPlayer : MonoBehaviour
             CanvasManager.Instance.craftManager.Resume();
             uiCraft.transform.SetAsLastSibling();
         }
-        if (uiPartyInput && uiMenuOn == false)
+        if (uiPartyInput && CanvasManager.Instance.uiMenuOn == false)
         {
             // P 키입력
             GameObject partyWindow = CanvasManager.Instance.partyUI.partyWindow;
@@ -436,9 +429,9 @@ public class MyPlayer : MonoBehaviour
             GameObject uiMenu = CanvasManager.Instance.uiMenu;
             uiMenu.SetActive(!uiMenu.activeSelf);
             uiMenu.transform.SetAsLastSibling();
-            uiMenuOn = !uiMenuOn;
+            CanvasManager.Instance.uiMenuOn = !CanvasManager.Instance.uiMenuOn;
         }
-        if (uiInventoryInput && uiMenuOn == false)
+        if (uiInventoryInput && CanvasManager.Instance.uiMenuOn == false)
         {
             // I 키입력
             GameObject inventoryUI = CanvasManager.Instance.inventoryUI.gameObject;
