@@ -29,6 +29,7 @@ public class UISkillCheck : MonoBehaviour
     private bool isFailed = false;
     private float failTimeOut = 0;
     private Stopwatch skillChekcTime = new();
+    private bool isRunning = false;
 
 
     void Start()
@@ -52,11 +53,23 @@ public class UISkillCheck : MonoBehaviour
                 GameManager.Network.Send(new C2SGatheringStart { PlacedId = targetResource });
                 failTimeOut = 0;
             }
+            this.isRunning = true;
         }
         else
         {
             this.angle = 0;
             clockhand.transform.Rotate(0, 0, 0);
+            if (this.isRunning)
+            {
+                transform.Find("Circle").gameObject.SetActive(false);
+                this.isEnabled = false;
+                this.isSuccess = false;
+                this.isFailed = false;
+                this.whiteCircle.color = Color.white;
+                MyPlayer.instance.InteractManager.IsInteracting = false;
+                GameManager.Network.Send(new C2SGatheringAnimationEnd { });
+            }
+            this.isRunning = false;
         }
     }
 
@@ -78,18 +91,7 @@ public class UISkillCheck : MonoBehaviour
     }
     public void EndSkillCheck()
     {
-        if (!this.isEnabled)
-        {
-            return;
-        }
-        transform.Find("Circle").gameObject.SetActive(false);
         this.isEnabled = false;
-        this.isSuccess = false;
-        this.isFailed = false;
-        this.whiteCircle.color = Color.white;
-        MyPlayer.instance.InteractManager.IsInteracting = false;
-        GameManager.Network.Send(new C2SGatheringAnimationEnd { });
-
     }
     public async void SkillCheck()
     {
@@ -153,11 +155,6 @@ public class UISkillCheck : MonoBehaviour
 
                 // Set the prefab to active
             }
-
         }
     }
-
-
-
-
 }

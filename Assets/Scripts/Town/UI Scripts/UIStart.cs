@@ -68,7 +68,6 @@ public class UIStart : MonoBehaviour
     void Awake()
     {
         // placeHolder = inputNickname.placeholder.GetComponent<TMP_Text>();
-
         btnBack.onClick.AddListener(SetServerUI);
         localServerBtn.onClick.AddListener(OnClickLocalServer);
         btnEnter.onClick.AddListener(ConfirmServer);
