@@ -26,6 +26,8 @@ public class ServerSession : PacketSession
         Array.Copy(BitConverter.GetBytes(size + 5), 0, sendBuff, 0, sizeof(int)); // 데이터 크기 (4바이트)
         sendBuff[4] = (byte)msgId; // 프로토콜의 아이디 (1바이트)
         Array.Copy(packet.ToByteArray(), 0, sendBuff, 5, size); // 전달하려는 데이터
+
+        Send(new ArraySegment<byte>(sendBuff));
     }
 
     public override void OnConnected(EndPoint endPoint)
