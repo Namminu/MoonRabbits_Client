@@ -14,8 +14,8 @@ namespace SRDebugger.UI.Controls
     using UnityEngine.UI;
 
     [ExecuteInEditMode]
-    [RequireComponent(typeof (RectTransform))]
-    [RequireComponent(typeof (CanvasRenderer))]
+    [RequireComponent(typeof(RectTransform))]
+    [RequireComponent(typeof(CanvasRenderer))]
     public class ProfilerGraphControl : Graphic
     {
         public enum VerticalAlignments
@@ -134,12 +134,12 @@ namespace SRDebugger.UI.Controls
                 targetFps = Application.targetFrameRate;
             }
 
-            var maxValue = 1f/targetFps;
+            var maxValue = 1f / targetFps;
 
             // Holds the index of the nearest 'useful' FPS step
             var fpsStep = -1;
 
-            var maxFrameTime = FloatingScale ? CalculateMaxFrameTime() : 1f/targetFps;
+            var maxFrameTime = FloatingScale ? CalculateMaxFrameTime() : 1f / targetFps;
 
             if (FloatingScale)
             {
@@ -147,7 +147,7 @@ namespace SRDebugger.UI.Controls
                 {
                     var step = ScaleSteps[i];
 
-                    if (maxFrameTime < step*1.1f)
+                    if (maxFrameTime < step * 1.1f)
                     {
                         maxValue = step;
                         fpsStep = i;
@@ -176,7 +176,7 @@ namespace SRDebugger.UI.Controls
                 }
             }
 
-            var verticalScale = (graphHeight - (VerticalPadding*2))/maxValue;
+            var verticalScale = (graphHeight - (VerticalPadding * 2)) / maxValue;
 
             // Number of data points that can fit into the graph space
             var availableDataPoints = CalculateVisibleDataPointCount();
@@ -196,7 +196,7 @@ namespace SRDebugger.UI.Controls
                 var frame = GetFrame(sampleCount - i - 1);
 
                 // Left-hand x coord
-                var lx = graphWidth - DataPointWidth*i - DataPointWidth - graphWidth/2f;
+                var lx = graphWidth - DataPointWidth * i - DataPointWidth - graphWidth / 2f;
 
                 DrawDataPoint(lx, verticalScale, frame);
             }
@@ -205,7 +205,7 @@ namespace SRDebugger.UI.Controls
             {
                 if (!FloatingScale)
                 {
-                    DrawAxis(maxValue, maxValue*verticalScale, GetAxisLabel(0));
+                    DrawAxis(maxValue, maxValue * verticalScale, GetAxisLabel(0));
                 }
 
                 var axisCount = 2;
@@ -223,7 +223,7 @@ namespace SRDebugger.UI.Controls
                         break;
                     }
 
-                    DrawAxis(ScaleSteps[i], ScaleSteps[i]*verticalScale, GetAxisLabel(j));
+                    DrawAxis(ScaleSteps[i], ScaleSteps[i] * verticalScale, GetAxisLabel(j));
                     ++j;
                 }
             }
@@ -241,7 +241,7 @@ namespace SRDebugger.UI.Controls
         protected void DrawDataPoint(float xPosition, float verticalScale, ProfilerFrame frame)
         {
             // Right-hand x-coord
-            var rx = Mathf.Min(_clipBounds.width/2f, xPosition + DataPointWidth - DataPointMargin);
+            var rx = Mathf.Min(_clipBounds.width / 2f, xPosition + DataPointWidth - DataPointMargin);
 
             var currentLineHeight = 0f;
 
@@ -253,30 +253,30 @@ namespace SRDebugger.UI.Controls
 
                 if (j == 0)
                 {
-                    value = (float) frame.UpdateTime;
+                    value = (float)frame.UpdateTime;
                 }
                 else if (j == 1)
                 {
-                    value = (float) frame.RenderTime;
+                    value = (float)frame.RenderTime;
                 }
                 else if (j == 2)
                 {
-                    value = (float) frame.OtherTime;
+                    value = (float)frame.OtherTime;
                 }
 
                 value *= verticalScale;
 
-                if (value.ApproxZero() || value - DataPointVerticalMargin*2f < 0f)
+                if (value.ApproxZero() || value - DataPointVerticalMargin * 2f < 0f)
                 {
                     continue;
                 }
 
                 // Lower y-coord
-                var ly = currentLineHeight + DataPointVerticalMargin - rectTransform.rect.height/2f;
+                var ly = currentLineHeight + DataPointVerticalMargin - rectTransform.rect.height / 2f;
 
                 if (VerticalAlignment == VerticalAlignments.Top)
                 {
-                    ly = rectTransform.rect.height/2f - currentLineHeight - DataPointVerticalMargin;
+                    ly = rectTransform.rect.height / 2f - currentLineHeight - DataPointVerticalMargin;
                 }
 
                 // Upper y-coord
@@ -289,8 +289,8 @@ namespace SRDebugger.UI.Controls
 
                 var c = LineColours[lineIndex];
 
-                AddRect(new Vector3(Mathf.Max(-_clipBounds.width/2f, xPosition), ly),
-                    new Vector3(Mathf.Max(-_clipBounds.width/2f, xPosition), uy), new Vector3(rx, uy),
+                AddRect(new Vector3(Mathf.Max(-_clipBounds.width / 2f, xPosition), ly),
+                    new Vector3(Mathf.Max(-_clipBounds.width / 2f, xPosition), uy), new Vector3(rx, uy),
                     new Vector3(rx, ly), c);
 
                 currentLineHeight += value;
@@ -304,11 +304,11 @@ namespace SRDebugger.UI.Controls
 				Debug.Log("Draw Axis: {0}".Fmt(yPosition));
 #endif
 
-            var lx = -rectTransform.rect.width*0.5f;
+            var lx = -rectTransform.rect.width * 0.5f;
             var rx = -lx;
 
-            var uy = yPosition - rectTransform.rect.height*0.5f + 0.5f;
-            var ly = yPosition - rectTransform.rect.height*0.5f - 0.5f;
+            var uy = yPosition - rectTransform.rect.height * 0.5f + 0.5f;
+            var ly = yPosition - rectTransform.rect.height * 0.5f - 0.5f;
 
             var c = new Color(1f, 1f, 1f, 0.4f);
 
@@ -341,7 +341,7 @@ namespace SRDebugger.UI.Controls
 
 #else
 
-    // New UI system uses triangles
+            // New UI system uses triangles
 
             _meshVertices.Add(tl);
             _meshVertices.Add(tr);
@@ -380,7 +380,7 @@ namespace SRDebugger.UI.Controls
 
         protected int CalculateVisibleDataPointCount()
         {
-            return Mathf.RoundToInt(rectTransform.rect.width/DataPointWidth);
+            return Mathf.RoundToInt(rectTransform.rect.width / DataPointWidth);
         }
 
         protected int GetFrameBufferCurrentSize()
@@ -430,7 +430,7 @@ namespace SRDebugger.UI.Controls
                 }
             }
 
-            return (float) max;
+            return (float)max;
         }
 
         private ProfilerGraphAxisLabel GetAxisLabel(int index)
@@ -485,18 +485,18 @@ namespace SRDebugger.UI.Controls
 
                     if (j == 0)
                     {
-                        v = Mathf.PerlinNoise(i/200f, 0);
+                        v = Mathf.PerlinNoise(i / 200f, 0);
                     }
                     else if (j == 1)
                     {
-                        v = Mathf.PerlinNoise(0, i/200f);
+                        v = Mathf.PerlinNoise(0, i / 200f);
                     }
                     else
                     {
                         v = Random.Range(0, 1f);
                     }
 
-                    v *= (1f/60f)*0.333f;
+                    v *= (1f / 60f) * 0.333f;
 
                     // Simulate spikes
                     if (Random.value > 0.8f)
@@ -535,7 +535,7 @@ namespace SRDebugger.UI.Controls
 
             data[sampleCount - 1] = new ProfilerFrame
             {
-                FrameTime = 1d/60d,
+                FrameTime = 1d / 60d,
                 RenderTime = 0.007,
                 UpdateTime = 0.007
             };

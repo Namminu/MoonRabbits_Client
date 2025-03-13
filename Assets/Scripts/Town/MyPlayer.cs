@@ -84,6 +84,8 @@ public class MyPlayer : MonoBehaviour
     private bool isSprinting = false; // 달리기 중인지 체크
     private bool isRegenerating = false; // 스테미나 회복 시작 여부
     private float regenTimer = 0f; // 회복 대기 시간 측정용 타이머
+    private float lastUpdateTime = 0f; // 마지막 패킷 전송 시간
+
 
     void Awake()
     {
@@ -215,7 +217,7 @@ public class MyPlayer : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
         {
-            if(GameManager.Instance.SManager.UiChat.isChating)
+            if (GameManager.Instance.SManager.UiChat.isChating)
             {
                 CanvasManager.Instance.uIChat.DeactivateInputFieldProperly();
                 return;
@@ -237,7 +239,7 @@ public class MyPlayer : MonoBehaviour
             }
         }
 
-        if(GameManager.Instance.SManager.UiChat.isChating) return;
+        if (GameManager.Instance.SManager.UiChat.isChating) return;
 
         happyInput = Input.GetKeyDown(KeyCode.Alpha1);
         sadInput = Input.GetKeyDown(KeyCode.Alpha2);
@@ -320,7 +322,6 @@ public class MyPlayer : MonoBehaviour
 
     private void CheckMove()
     {
-        //_currentPos = transform.position;
         float distanceMoved = Vector3.Distance(targetPosition, transform.position);
 
         if (distanceMoved < 0.25f)
@@ -329,14 +330,17 @@ public class MyPlayer : MonoBehaviour
             anim.SetFloat("Move", 1f);
 
         float elapsedTime = Time.deltaTime;
-        //anim.SetFloat("Move", distanceMoved * 10f);
 
         if (distanceMoved > 0.1f)
         {
-            SendLocationPacket(elapsedTime);
+            if (Time.time - lastUpdateTime >= 0.1f) // 0.1초마다 실행
+            {
+                SendLocationPacket(elapsedTime);
+                lastUpdateTime = Time.time; // 마지막 업데이트 시간 갱신
+            }
+
             lastPos = transform.position;
         }
-        //_prevPos = _currentPos;
     }
 
     private void Emote()
