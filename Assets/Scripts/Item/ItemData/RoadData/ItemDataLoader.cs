@@ -14,6 +14,7 @@ public static class ItemDataLoader
     /* 데이터 저장 리스트 */
     public static List<MaterialItemData> MaterialItemsList { get; private set; } =
         new List<MaterialItemData>();
+
     public static List<HousingItemData> HousingItemsList { get; private set; } =
         new List<HousingItemData>();
 
