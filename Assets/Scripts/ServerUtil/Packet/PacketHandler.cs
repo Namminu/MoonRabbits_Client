@@ -169,12 +169,16 @@ class PacketHandler
 
         List<int> spawnRequests = GameManager.Instance.SpawnRequests;
 
-        var player = GameManager.Instance.SManager.SpawnPlayer(pkt.Player);
-        if (player != null)
+        var player = GameManager.Instance.GetPlayer(pkt.Player.PlayerId);
+        if (player == null)
         {
-            player.SetIsMine(false);
-
-            spawnRequests.RemoveAll((id) => id == player.PlayerId); // 혹시 모를 중복 값도 제거
+            var newPlayer = GameManager.Instance.SManager.SpawnPlayer(pkt.Player);
+            if (newPlayer == null)
+            {
+                return;
+            }
+            newPlayer.SetIsMine(false);
+            spawnRequests.RemoveAll((id) => id == newPlayer.PlayerId);
         }
     }
 
@@ -204,17 +208,22 @@ class PacketHandler
 
         Vector3 position = new(pkt.Transform.PosX, pkt.Transform.PosY, pkt.Transform.PosZ);
         Quaternion rotation = Quaternion.Euler(0, pkt.Transform.Rot, 0);
-        // bool isValidTransform = pkt.IsValidTransform; // 이거 안 쓰나여?
 
         List<int> spawnRequests = GameManager.Instance.SpawnRequests;
 
         var player = GameManager.Instance.GetPlayer(pkt.PlayerId);
+
         if (player != null)
         {
             player.Move(position, rotation);
         }
-        else if (!spawnRequests.Contains(pkt.PlayerId))
+        else if (
+            !spawnRequests.Contains(pkt.PlayerId)
+            && !GameManager.Instance.SManager.spawnWaitings.Contains(pkt.PlayerId)
+        )
         {
+            GameManager.Instance.DespawnPlayer(pkt.PlayerId);
+
             var spawnRequest = new C2SSpawn { PlayerId = pkt.PlayerId };
             GameManager.Network.Send(spawnRequest);
             spawnRequests.Add(pkt.PlayerId);
