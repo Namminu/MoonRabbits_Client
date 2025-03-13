@@ -92,7 +92,6 @@ namespace SRDebugger.UI.Controls
             _profilerService = SRServiceManager.GetService<IProfilerService>();
 
             Application.targetFrameRate = 60;
-            QualitySettings.vSyncCount = 1;
         }
 
         protected override void Start()
