@@ -738,6 +738,9 @@ public class Player : MonoBehaviour
 
         if (IsMine)
         {
+            MPlayer.NavAgent.ResetPath();
+            MPlayer.NavAgent.velocity = Vector3.zero;
+
             int recallTimer = 0;
 
             while (IsDead || recallTimer <= 10)
