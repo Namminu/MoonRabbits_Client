@@ -5883,7 +5883,7 @@ MonoBehaviour:
   uiNameChat: {fileID: 2075369095008506869}
   SmoothMoveSpeed: 22
   SmoothRotateSpeed: 22
-  TeleportDistanceThreshold: 0.5
+  TeleportDistanceThreshold: 1
   nickname: 
   level: 0
   grenade: {fileID: 8700056273354997158, guid: c346da6ce729d474bb43bfa7c19e1e37, type: 3}
