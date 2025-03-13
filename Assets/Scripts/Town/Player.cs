@@ -628,7 +628,7 @@ public class Player : MonoBehaviour
             this.cur_stamina += (stamina - this.stamina);
         this.stamina = stamina;
         if (IsMine)
-            uiPlayer.SetStamina(cur_stamina, stamina, abilityPoint > 0);
+            uiPlayer.SetStamina(stamina, abilityPoint > 0);
     }
 
     private void SetPickSpeed(int pickSpeed)

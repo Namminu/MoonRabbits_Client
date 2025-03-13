@@ -76,6 +76,7 @@ public class GameManager : MonoBehaviour
         { 104, "Sector4" },
     };
     public Dictionary<int, string> SceneName => sceneName;
+    public List<int> SpawnRequests = new();
 
     private async void Awake()
     {

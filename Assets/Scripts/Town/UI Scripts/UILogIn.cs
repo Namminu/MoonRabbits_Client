@@ -89,7 +89,7 @@ public class UILogIn : MonoBehaviour
     {
         if (isLogin) // 로그인 시도
         {
-            var dataPacket = new C2SLogin { Email = userEmail.text, Pw = userPW.text };
+            var dataPacket = new C2SLogin { Email = userEmail.text, Pw = userPW.text, Version = Application.version };
             GameManager.Network.Send(dataPacket);
         }
         else // 회원가입 시도

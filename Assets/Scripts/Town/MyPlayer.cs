@@ -84,6 +84,7 @@ public class MyPlayer : MonoBehaviour
     private bool isSprinting = false; // 달리기 중인지 체크
     private bool isRegenerating = false; // 스테미나 회복 시작 여부
     private float regenTimer = 0f; // 회복 대기 시간 측정용 타이머
+    private float lastUpdateTime = 0f; // 마지막 패킷 전송 시간
 
     void Awake()
     {
@@ -215,14 +216,17 @@ public class MyPlayer : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
         {
-            if(GameManager.Instance.SManager.UiChat.isChating)
+            if (CanvasManager.Instance.uIChat.isChating)
             {
                 CanvasManager.Instance.uIChat.DeactivateInputFieldProperly();
                 return;
             }
 
             interactManager.GatherOut(false);
-
+            if (UISkillCheck.Instance != null)
+            {
+                UISkillCheck.Instance.EndSkillCheck();
+            }
             if (
                 Physics.Raycast(
                     Camera.main.ScreenPointToRay(Input.mousePosition),
@@ -237,20 +241,21 @@ public class MyPlayer : MonoBehaviour
             }
         }
 
-        if(GameManager.Instance.SManager.UiChat.isChating) return;
-
-        happyInput = Input.GetKeyDown(KeyCode.Alpha1);
-        sadInput = Input.GetKeyDown(KeyCode.Alpha2);
-        greetingInput = Input.GetKeyDown(KeyCode.Alpha3);
-        grenadeInput = Input.GetKeyDown(KeyCode.Q);
-        trapInput = Input.GetKeyDown(KeyCode.E);
-        recallInput = Input.GetKeyDown(KeyCode.T);
-        interactInput = Input.GetKeyDown(KeyCode.F);
-        equipChangeInput = Input.GetKeyDown(KeyCode.R);
-        uiCraftInput = Input.GetKeyDown(KeyCode.C);
-        uiPartyInput = Input.GetKeyDown(KeyCode.P);
-        uiMenuInput = Input.GetKeyDown(KeyCode.Escape);
-        uiInventoryInput = Input.GetKeyDown(KeyCode.I);
+        if (!CanvasManager.Instance.uIChat.isChating)
+        {
+            happyInput = Input.GetKeyDown(KeyCode.Alpha1);
+            sadInput = Input.GetKeyDown(KeyCode.Alpha2);
+            greetingInput = Input.GetKeyDown(KeyCode.Alpha3);
+            grenadeInput = Input.GetKeyDown(KeyCode.Q);
+            trapInput = Input.GetKeyDown(KeyCode.E);
+            recallInput = Input.GetKeyDown(KeyCode.T);
+            interactInput = Input.GetKeyDown(KeyCode.F);
+            equipChangeInput = Input.GetKeyDown(KeyCode.R);
+            uiCraftInput = Input.GetKeyDown(KeyCode.C);
+            uiPartyInput = Input.GetKeyDown(KeyCode.P);
+            uiMenuInput = Input.GetKeyDown(KeyCode.Escape);
+            uiInventoryInput = Input.GetKeyDown(KeyCode.I);
+        }
     }
 
     IEnumerator ExecuteEvery0_1Seconds()
@@ -320,7 +325,6 @@ public class MyPlayer : MonoBehaviour
 
     private void CheckMove()
     {
-        //_currentPos = transform.position;
         float distanceMoved = Vector3.Distance(targetPosition, transform.position);
 
         if (distanceMoved < 0.25f)
@@ -329,14 +333,17 @@ public class MyPlayer : MonoBehaviour
             anim.SetFloat("Move", 1f);
 
         float elapsedTime = Time.deltaTime;
-        //anim.SetFloat("Move", distanceMoved * 10f);
 
         if (distanceMoved > 0.1f)
         {
-            SendLocationPacket(elapsedTime);
+            if (Time.time - lastUpdateTime >= 0.1f) // 0.1초마다 실행
+            {
+                SendLocationPacket(elapsedTime);
+                lastUpdateTime = Time.time; // 마지막 업데이트 시간 갱신
+            }
+
             lastPos = transform.position;
         }
-        //_prevPos = _currentPos;
     }
 
     private void Emote()
@@ -540,7 +547,7 @@ public class MyPlayer : MonoBehaviour
         // UIPlayer.cs에서 스테미나 UI 갱신
         if (UIPlayer.instance != null)
         {
-            UIPlayer.instance.SetStamina((int)currentStamina, (int)maxStamina, true);
+            UIPlayer.instance.SetStamina((int)currentStamina, (int)maxStamina);
         }
     }
 
