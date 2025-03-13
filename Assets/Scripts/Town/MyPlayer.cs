@@ -224,7 +224,10 @@ public class MyPlayer : MonoBehaviour
             }
 
             interactManager.GatherOut(false);
-
+            if(UISkillCheck.Instance != null)
+            {
+                UISkillCheck.Instance.EndSkillCheck();
+            }
             if (
                 Physics.Raycast(
                     Camera.main.ScreenPointToRay(Input.mousePosition),
