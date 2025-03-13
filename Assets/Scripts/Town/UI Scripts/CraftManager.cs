@@ -30,6 +30,7 @@ public class CraftManager : MonoBehaviour
             uiCraft.successText.text = craftStr;
             uiCraft.confirmButton.gameObject.SetActive(true);
             uiCraft.disableMask.SetActive(false);
+            uiCraft.disableMask.SetActive(false);
         }
     }
 
@@ -65,6 +66,7 @@ public class CraftManager : MonoBehaviour
                 uiCraft.successText.text = craftStr;
                 uiCraft.confirmButton.gameObject.SetActive(true);
                 uiCraft.disableMask.SetActive(false);
+                uiCraft.inventoryDisableMask.SetActive(false);
             }
 
             isCrafting = false;
@@ -102,6 +104,7 @@ public class CraftManager : MonoBehaviour
             uiCraft.progressTitle.text = $"{targetItem.ItemName}";
             uiCraft.successText.text = $"{currentCount}/{targetCount}개 제작 완료";
             uiCraft.disableMask.SetActive(true); // 제작하는동안 다른 아이템 제작 클릭못하게 막는용도
+            uiCraft.inventoryDisableMask.SetActive(true);
         }
 
         StartCoroutine(UpdateProgressBar(3f, () =>
@@ -140,6 +143,7 @@ public class CraftManager : MonoBehaviour
             {
                 uiCraft.confirmButton.gameObject.SetActive(true);
                 uiCraft.disableMask.SetActive(false);
+                uiCraft.inventoryDisableMask.SetActive(false);
             }
 
             isCrafting = false;
