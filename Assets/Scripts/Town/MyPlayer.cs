@@ -211,7 +211,7 @@ public class MyPlayer : MonoBehaviour
     // 충돌한 위치로 NavMeshAgent를 이동시킴 (agent.SetDestination(rayHit.point);
     private void HandleInput()
     {
-        if (player.IsStun || !isReadyESystem)
+        if (player.IsStun || player.IsDead || !isReadyESystem)
             return;
 
         if (Input.GetMouseButtonDown(0) && !eSystem.IsPointerOverGameObject())
@@ -274,7 +274,7 @@ public class MyPlayer : MonoBehaviour
 
     private void MoveAndSendMovePacket()
     {
-        if (player.IsStun)
+        if (player.IsStun || player.IsDead)
             return;
 
         // 플레이어 이동시키기
