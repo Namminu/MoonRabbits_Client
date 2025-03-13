@@ -41,6 +41,7 @@ public class UICraft : MonoBehaviour, IPointerDownHandler
     public TextMeshProUGUI successText;
     public Button confirmButton;
     public GameObject disableMask;
+    public GameObject inventoryDisableMask;
 
     private void Awake()
     {
