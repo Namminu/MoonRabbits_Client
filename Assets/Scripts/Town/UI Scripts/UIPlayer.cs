@@ -123,18 +123,20 @@ public class UIPlayer : MonoBehaviour
         APText.text = ap.ToString();
     }
 
-    public void SetStamina(int cur_stamina, int stamina, bool hasAP)
+    public void SetStamina(int cur_stamina, int stamina)
     {
+        // 달리기 시 슬라이더 UI 갱신용
         if (staminaSlider != null)
         {
             staminaSlider.maxValue = stamina;
             staminaSlider.value = cur_stamina;
         }
-        if (staminaText != null)
-        {
-            staminaText.text = /*cur_stamina.ToString() + " / " + */stamina.ToString();
-        }
-        // 추가 UI 처리 (예: 능력치 포인트 관련)가 필요한 경우 hasAP 플래그 활용
+    }
+
+    public void SetStamina(int stamina, bool hasAP)
+    {
+        // 스탯 투자 시 숫자 텍스트 UI 갱신용
+        staminaText.text = stamina.ToString();
         if (!hasAP)
             DeActiveAP();
     }
@@ -168,7 +170,8 @@ public class UIPlayer : MonoBehaviour
 
     public void DeActiveAP()
     {
-        if (buttonRect.anchoredPosition.y >= -140) return;
+        if (buttonRect.anchoredPosition.y >= -140)
+            return;
         buttonRect.anchoredPosition = endPosAPButton;
         frameRect.anchoredPosition = endPosAPFrame;
         buttonRect.DOAnchorPos(startPosAPButton, 1f);
@@ -390,5 +393,4 @@ public class UIPlayer : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
     }
-
 }

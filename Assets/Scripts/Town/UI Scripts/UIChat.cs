@@ -46,7 +46,7 @@ public class UIChat : MonoBehaviour
     private bool isOpen = true;
     public TMP_Dropdown chatType;
 
-    public bool isChating = false; 
+    public bool isChating = false;
 
     void Start()
     {
@@ -72,6 +72,21 @@ public class UIChat : MonoBehaviour
                 {
                     SendMessage();
                 }
+            }
+        );
+
+        inputChat.onSelect.AddListener(
+            (text) =>
+            {
+                isChating = true;
+                ActivateInputFieldProperly();
+            }
+        );
+        inputChat.onDeselect.AddListener(
+            (text) =>
+            {
+                isChating = false;
+                inputChat.DeactivateInputField();
             }
         );
 
@@ -148,7 +163,8 @@ public class UIChat : MonoBehaviour
     {
         inputChat.DeactivateInputField();
 
-        if (string.IsNullOrWhiteSpace(inputChat.text)){
+        if (string.IsNullOrWhiteSpace(inputChat.text))
+        {
             isChating = false;
             return;
         }
@@ -177,7 +193,7 @@ public class UIChat : MonoBehaviour
         inputChat.caretPosition = 0;
         ResetIME();
     }
-    
+
     public void DeactivateInputFieldProperly()
     {
         isChating = false;
@@ -188,6 +204,7 @@ public class UIChat : MonoBehaviour
 
     public void DeactiveInputFieldProperly()
     {
+        inputChat.text = "";
         isChating = false;
         inputChat.DeactivateInputField();
     }
