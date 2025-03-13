@@ -90,8 +90,6 @@ namespace SRDebugger.UI.Controls
         {
             base.Awake();
             _profilerService = SRServiceManager.GetService<IProfilerService>();
-
-            Application.targetFrameRate = 60;
         }
 
         protected override void Start()
