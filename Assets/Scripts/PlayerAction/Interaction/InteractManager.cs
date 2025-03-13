@@ -31,6 +31,7 @@ public class InteractManager : MonoBehaviour
         get { return isInteracting; }
         set { isInteracting = value; }
     }
+    private float interactingTime = 0;
     public bool isEquipChanging = false;
 
     public Action eventF; // F키 누르면 발동
@@ -44,9 +45,17 @@ public class InteractManager : MonoBehaviour
     }
     private void Update()
     {
-        if (UISkillCheck.Instance != null && !IsInteracting)
+        if (UISkillCheck.Instance != null && !IsInteracting && interactingTime != 0)
         {
             UISkillCheck.Instance.EndSkillCheck();
+        }
+        if (IsInteracting)
+        {
+            interactingTime += Time.deltaTime;
+        }
+        else
+        {
+            interactingTime = 0;
         }
     }
 
@@ -109,7 +118,9 @@ public class InteractManager : MonoBehaviour
 
         if (targetResource.Durability > 0)
         {
+            GameManager.Network.Send(new C2SGatheringStart { PlacedId = targetResource.idx });
             isInteracting = true;
+            Debug.Log("move X");
 
             // player.NavAgent.isStopped = true;
             MPlayer.NavAgent.ResetPath();
@@ -122,7 +133,6 @@ public class InteractManager : MonoBehaviour
             direction.y = 0;
             MPlayer.transform.rotation = Quaternion.LookRotation(direction);
 
-            GameManager.Network.Send(new C2SGatheringStart { PlacedId = targetResource.idx });
         }
         else
         {
@@ -132,7 +142,8 @@ public class InteractManager : MonoBehaviour
 
     public void GatherOut(bool isinteracting)
     {
-        this.isInteracting = isinteracting;
+            this.isInteracting = isinteracting;
+        Debug.Log("move O");
     }
 
     public void UsePortal()
