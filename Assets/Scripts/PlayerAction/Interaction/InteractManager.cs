@@ -42,6 +42,13 @@ public class InteractManager : MonoBehaviour
         eventF += Interact;
         eventR += ChangeEquip;
     }
+    private void Update()
+    {
+        if (UISkillCheck.Instance != null && !IsInteracting)
+        {
+            UISkillCheck.Instance.EndSkillCheck();
+        }
+    }
 
     private void ChangeEquip()
     {
@@ -125,12 +132,7 @@ public class InteractManager : MonoBehaviour
 
     public void GatherOut(bool isinteracting)
     {
-        if (!this.isInteracting)
-        {
-            return;
-        }
         this.isInteracting = isinteracting;
-        UISkillCheck.Instance.EndSkillCheck();
     }
 
     public void UsePortal()

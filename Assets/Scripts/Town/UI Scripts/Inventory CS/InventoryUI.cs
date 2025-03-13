@@ -140,51 +140,49 @@ public class InventoryUI : MonoBehaviour
                 int itemId = item.Data.ItemId;
                 int maxStack = item.ItemData.ItemMaxStack;
                 int remainStack = item.CurItemStack;
-
-                // 기존 병합 리스트에서 동일한 아이템 찾기
-                var targetItem = mergedItemList.FirstOrDefault(mergedItem =>
-                    mergedItem.Data.ItemId == itemId && mergedItem.CurItemStack < maxStack);
-
+                var targetItem = mergedItemList.FirstOrDefault(
+                    mergedItem => mergedItem.Data.ItemId == itemId && mergedItem.CurItemStack < maxStack
+                );
                 if (targetItem != null)
                 {
                     int spaceLeft = maxStack - targetItem.CurItemStack;
                     if (remainStack <= spaceLeft)
                     {
-                        targetItem.CurItemStack += remainStack; // 병합 성공
+                        targetItem.CurItemStack += remainStack;
                         remainStack = 0;
                     }
                     else
                     {
-                        targetItem.CurItemStack = maxStack; // 최대 스택 채움
+                        targetItem.CurItemStack = maxStack;
                         remainStack -= spaceLeft;
                     }
+                    while (remainStack > 0)
+                    {
+                        int stackToAdd = Mathf.Min(remainStack, maxStack);
+                        mergedItemList.Add(new MaterialItem((MaterialItemData)item.Data, stackToAdd));
+                        remainStack -= stackToAdd;
+                    }
                 }
-
-                // 남은 개수가 있으면 새 스택 생성
-                while (remainStack > 0)
+                else
                 {
-                    int stackToAdd = Mathf.Min(remainStack, maxStack);
-                    mergedItemList.Add(new MaterialItem((MaterialItemData)item.Data, stackToAdd));
-                    remainStack -= stackToAdd;
+                    mergedItemList.Add(item);
                 }
             }
 
-            // 정렬 수행 (아이템 ID 기준)
+            // 아이템 ID 기준 정렬
             mergedItemList.Sort((x, y) => x.Data.ItemId.CompareTo(y.Data.ItemId));
 
-            // 기존 슬롯 초기화
+            // 기존 슬롯 초기화 (ClearSlot 내부에서 별도의 업데이트 호출이 없다면 그대로 사용)
             foreach (var slot in itemSlots)
             {
                 slot.ClearSlot();
             }
 
-            // 정렬된 아이템을 첫 번째 슬롯부터 할당
+            // 정렬된 아이템을 첫 번째 슬롯부터 할당 (업데이트 전송은 생략)
             for (int i = 0; i < mergedItemList.Count; i++)
             {
                 if (i < itemSlots.Count)
-                {
-                    itemSlots[i].AddItem(mergedItemList[i]);
-                }
+                    itemSlots[i].AddItem(mergedItemList[i], true); // skipTransmit를 true로 설정
                 else
                 {
                     Debug.LogWarning("슬롯 개수가 부족하여 일부 아이템이 할당되지 않았습니다.");
@@ -192,15 +190,11 @@ public class InventoryUI : MonoBehaviour
                 }
             }
 
-            // 정렬된 결과를 서버로 전송
+            // 정렬된 결과를 기반으로 단 한번의 업데이트 전송
             if (InventoryManager.instance != null)
-            {
                 InventoryManager.instance.SendInventorySort(mergedItemList);
-            }
             else
-            {
                 Debug.LogWarning("InventoryManager 인스턴스가 존재하지 않음");
-            }
 
             return 0; // 성공
         }
