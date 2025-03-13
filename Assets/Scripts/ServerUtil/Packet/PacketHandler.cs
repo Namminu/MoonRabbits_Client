@@ -76,9 +76,13 @@ class PacketHandler
         string targetSceneName = GameManager.Instance.SceneName[pkt.TargetSector];
 
         //SceneManager.LoadScene(targetSceneName);
-        SceneManagerEx.LoadScene(targetSceneName, () => { MoveSectorCheck(pkt); });
-
-
+        SceneManagerEx.LoadScene(
+            targetSceneName,
+            () =>
+            {
+                MoveSectorCheck(pkt);
+            }
+        );
     }
 
     private static void MoveSectorCheck(S2CMoveSector pkt)
@@ -114,9 +118,11 @@ class PacketHandler
         if (packet is not S2CChat pkt)
             return;
         Debug.Log($"S2CChat 패킷 무사 도착 : {pkt}");
-        
-        if (pkt.ChatType == "Auth") {
-            var res = new C2SChat {
+
+        if (pkt.ChatType == "Auth")
+        {
+            var res = new C2SChat
+            {
                 PlayerId = 0,
                 ChatMsg = "",
                 ChatType = "Auth",
@@ -161,10 +167,14 @@ class PacketHandler
             return;
         Debug.Log($"S2CSpawn 패킷 무사 도착 : {pkt}");
 
+        List<int> spawnRequests = GameManager.Instance.SpawnRequests;
+
         var player = GameManager.Instance.SManager.SpawnPlayer(pkt.Player);
         if (player != null)
         {
             player.SetIsMine(false);
+
+            spawnRequests.RemoveAll((id) => id == player.PlayerId); // 혹시 모를 중복 값도 제거
         }
     }
 
@@ -196,9 +206,19 @@ class PacketHandler
         Quaternion rotation = Quaternion.Euler(0, pkt.Transform.Rot, 0);
         // bool isValidTransform = pkt.IsValidTransform; // 이거 안 쓰나여?
 
+        List<int> spawnRequests = GameManager.Instance.SpawnRequests;
+
         var player = GameManager.Instance.GetPlayer(pkt.PlayerId);
         if (player != null)
+        {
             player.Move(position, rotation);
+        }
+        else if (!spawnRequests.Contains(pkt.PlayerId))
+        {
+            var spawnRequest = new C2SSpawn { PlayerId = pkt.PlayerId };
+            GameManager.Network.Send(spawnRequest);
+            spawnRequests.Add(pkt.PlayerId);
+        }
     }
 
     public static void S2CPlayerRunningHandler(PacketSession session, IMessage packet)
