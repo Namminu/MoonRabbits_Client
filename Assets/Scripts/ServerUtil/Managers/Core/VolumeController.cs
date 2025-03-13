@@ -34,7 +34,7 @@ public class VolumeController : MonoBehaviour
 
         if (PlayerPrefs.GetString($"LowSpecMode") == "")
         {
-            PlayerPrefs.SetString($"LowSpecMode", "True");
+            PlayerPrefs.SetString($"LowSpecMode", "False");
         }
 
         lowSpecMode.onValueChanged.AddListener(
