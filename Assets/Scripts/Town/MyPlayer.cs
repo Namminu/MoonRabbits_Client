@@ -69,7 +69,7 @@ public class MyPlayer : MonoBehaviour
     private Camera _cam;
     private float zoomSpeed = 20f;
     private float minFOV = 20f;
-    private float maxFOV = 120f;
+    private float maxFOV = 60f;
 
     // 달리기 및 스테미나 관련 변수
     public float maxStamina = 100f; // 최대 스테미나
