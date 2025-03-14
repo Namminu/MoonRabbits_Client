@@ -444,6 +444,7 @@ public class Player : MonoBehaviour
 
         if (IsMine)
         {
+            MPlayer.SkillManager.IsCasting = false;
             StartCoroutine(RunCoolTime(coolTime, (int)skillObj.type));
             CanvasManager.Instance.uIPlayer.QSkillCool(coolTime);
         }
@@ -464,6 +465,7 @@ public class Player : MonoBehaviour
 
         if (IsMine)
         {
+            MPlayer.SkillManager.IsCasting = false;
             MPlayer.NavAgent.SetDestination(transform.position);
             MPlayer.NavAgent.velocity = Vector3.zero;
             StartCoroutine(RunCoolTime(coolTime, (int)skillObj.type));
@@ -474,7 +476,6 @@ public class Player : MonoBehaviour
     IEnumerator RunCoolTime(float coolTime, int skillType)
     {
         yield return new WaitForSeconds(1f);
-        MPlayer.SkillManager.IsCasting = false;
 
         yield return new WaitForSeconds(coolTime);
 
