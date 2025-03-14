@@ -33,6 +33,8 @@ public class SkillManager : MonoBehaviour
         set { isTrapReady = value; }
     }
 
+    private const int grenadeDistance = 7;
+
     public Action eventQ; // Q키 누르면 발동
     public Action eventE; // E키 누르면 발동
     public Action eventT; // T키 누르면 발동
@@ -71,12 +73,22 @@ public class SkillManager : MonoBehaviour
                 Y = transform.position.y,
                 Z = transform.position.z,
             };
+            Vector3 targetPos;
+
+            if (Vector3.Distance(throwTargetPos.point, MPlayer.player.transform.position) > grenadeDistance)
+            {
+                targetPos = MPlayer.player.transform.position + (throwTargetPos.point - MPlayer.player.transform.position).normalized * grenadeDistance;
+            }
+            else
+            {
+                targetPos = throwTargetPos.point;
+            }
 
             var tp = new Vec3
             {
-                X = throwTargetPos.point.x,
-                Y = throwTargetPos.point.y,
-                Z = throwTargetPos.point.z,
+                X = targetPos.x,
+                Y = targetPos.y,
+                Z = targetPos.z,
             };
 
             var pkt = new C2SThrowGrenade { StartPos = sp, TargetPos = tp };
