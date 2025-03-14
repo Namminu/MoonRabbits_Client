@@ -40,6 +40,11 @@ public class UIBattlePopup : MonoBehaviour
 
     private void OnButtonClicked(int btnIdx)
     {
+        if (GameManager.Instance.MPlayer.IsDead || GameManager.Instance.MPlayer.IsStun)
+        {
+            return;
+        }
+
         if (btnIdx == 4)
         {
             var pkt = new C2SMoveSector { TargetSector = 99 };
