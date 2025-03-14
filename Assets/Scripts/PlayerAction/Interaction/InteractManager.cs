@@ -1,0 +1,250 @@
+using System;
+using System.Collections;
+using System.Security.Cryptography;
+using Google.Protobuf.Protocol;
+using UnityEngine;
+
+public class InteractManager : MonoBehaviour
+{
+    [SerializeField]
+    private MyPlayer MPlayer;
+
+    [SerializeField]
+    private ResourceController targetResource = null;
+
+    [SerializeField]
+    private Gate targetGate = null;
+
+    [SerializeField]
+    private Chest targetChest = null;
+
+    [SerializeField]
+    private Portal targetPortal = null;
+
+    [SerializeField]
+    private Player targetPlayer = null;
+    private const int portalTimer = 5;
+    private bool isPortalReady = true;
+    private bool isInteracting = false;
+    public bool IsInteracting
+    {
+        get { return isInteracting; }
+        set { isInteracting = value; }
+    }
+    private float interactingTime = 0;
+    public bool isEquipChanging = false;
+
+    public Action eventF; // F키 누르면 발동
+    public Action eventR; // R키 누르면 발동
+
+    private void Start()
+    {
+        MPlayer = GetComponentInParent<MyPlayer>();
+        eventF += Interact;
+        eventR += ChangeEquip;
+    }
+    private void Update()
+    {
+        if (UISkillCheck.Instance != null && !IsInteracting && interactingTime != 0)
+        {
+            UISkillCheck.Instance.EndSkillCheck();
+        }
+        if (IsInteracting)
+        {
+            interactingTime += Time.deltaTime;
+        }
+        else
+        {
+            interactingTime = 0;
+        }
+    }
+
+    private void ChangeEquip()
+    {
+        if (isInteracting || isEquipChanging)
+            return;
+
+        isEquipChanging = true;
+
+        int nextEquip = MPlayer.currentEquip == 1 ? 2 : 1;
+        var pkt = new C2SEquipChange { NextEquip = nextEquip };
+        GameManager.Network.Send(pkt);
+    }
+
+    private void Interact()
+    {
+        if (targetPlayer != null && targetPlayer.IsDead)
+        {
+            var recoverPkt = new C2SRecover { TargetPlayerId = targetPlayer.PlayerId };
+            GameManager.Network.Send(recoverPkt);
+        }
+        else if (targetResource != null)
+        {
+            GatherResource();
+        }
+        else if (targetGate != null)
+        {
+            UIEnter UI = CanvasManager.Instance.uIEnter;
+            if (!UI.gameObject.activeSelf)
+            {
+                UI.gameObject.SetActive(true);
+                UI.IdentifyGate(targetGate);
+            }
+        }
+        else if (targetPortal != null)
+        {
+            var portalPkt = new C2SPortal { InPortalId = targetPortal.id };
+            GameManager.Network.Send(portalPkt);
+        }
+        else if (targetChest != null && targetChest.gameObject.activeSelf)
+        {
+            StartOpenChest();
+        }
+    }
+
+    private void GatherResource()
+    {
+        if (isInteracting)
+        {
+            UISkillCheck.Instance.SkillCheck();
+            return;
+        }
+
+        if (MPlayer.currentEquip != targetResource.resourceId)
+        {
+            Debug.Log("자원에 맞는 도구를 장비해주세요");
+            return;
+        }
+
+        if (targetResource.Durability > 0)
+        {
+            GameManager.Network.Send(new C2SGatheringStart { PlacedId = targetResource.idx });
+            isInteracting = true;
+            Debug.Log("move X");
+
+            // player.NavAgent.isStopped = true;
+            MPlayer.NavAgent.ResetPath();
+            MPlayer.NavAgent.destination = MPlayer.transform.position;
+            MPlayer.NavAgent.velocity = Vector3.zero;
+
+            Vector3 direction = (
+                targetResource.transform.position - MPlayer.transform.position
+            ).normalized;
+            direction.y = 0;
+            MPlayer.transform.rotation = Quaternion.LookRotation(direction);
+
+        }
+        else
+        {
+            Debug.Log("더 이상 캘 수 없는 자원임다");
+        }
+    }
+
+    public void GatherOut(bool isinteracting)
+    {
+            this.isInteracting = isinteracting;
+        Debug.Log("move O");
+    }
+
+    public void UsePortal()
+    {
+        if (isInteracting)
+            return;
+        if (!isPortalReady)
+        {
+            Debug.Log("아직 포탈을 이용할 수 없습니다");
+            return;
+        }
+
+        isInteracting = true;
+        isPortalReady = false;
+
+        Vector3 portalPos = targetPortal.ConnectedPortal.position;
+        portalPos.y = 0;
+
+        MPlayer.NavAgent.Warp(portalPos);
+        MPlayer.NavAgent.ResetPath();
+
+        StartCoroutine(SetPortalTimer());
+        isInteracting = false;
+    }
+
+    IEnumerator SetPortalTimer()
+    {
+        int remainingTime = 0;
+        while (remainingTime < portalTimer)
+        {
+            yield return new WaitForSeconds(1f);
+            Debug.Log($"포탈 재이용까지 남은 시간 : {portalTimer - remainingTime}");
+            remainingTime += 1;
+        }
+        yield return new WaitForSeconds(0.5f);
+        isPortalReady = true;
+    }
+
+    private void StartOpenChest()
+    {
+        isInteracting = true;
+        MPlayer.SkillManager.IsCasting = true;
+
+        MPlayer.NavAgent.destination = MPlayer.transform.position;
+        MPlayer.NavAgent.velocity = Vector3.zero;
+
+        Vector3 direction = (
+            targetChest.transform.position - MPlayer.transform.position
+        ).normalized;
+        direction.y = 0;
+        MPlayer.transform.rotation = Quaternion.LookRotation(direction);
+
+        var pkt = new C2SOpenChest { };
+        GameManager.Network.Send(pkt);
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (targetPlayer == null && other.CompareTag("Interact"))
+        {
+            targetPlayer = other.GetComponentInParent<Player>();
+        }
+        else if (targetResource == null && other.gameObject.CompareTag("Resource"))
+        {
+            targetResource = other.GetComponent<ResourceController>();
+        }
+        else if (targetGate == null && other.gameObject.CompareTag("Gate"))
+        {
+            targetGate = other.GetComponent<Gate>();
+        }
+        else if (targetPortal == null && other.gameObject.CompareTag("Portal"))
+        {
+            targetPortal = other.GetComponent<Portal>();
+        }
+        else if (targetChest == null && other.gameObject.CompareTag("Chest"))
+        {
+            targetChest = other.GetComponent<Chest>();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (targetPlayer != null && other.gameObject.CompareTag("Interact"))
+        {
+            targetPlayer = null;
+        }
+        else if (targetResource != null && other.gameObject.CompareTag("Resource"))
+        {
+            targetResource = null;
+        }
+        else if (targetGate != null && other.gameObject.CompareTag("Gate"))
+        {
+            targetGate = null;
+        }
+        else if (targetPortal != null & other.gameObject.CompareTag("Portal"))
+        {
+            targetPortal = null;
+        }
+        else if (targetChest != null & other.gameObject.CompareTag("Chest"))
+        {
+            targetChest = null;
+        }
+    }
+}

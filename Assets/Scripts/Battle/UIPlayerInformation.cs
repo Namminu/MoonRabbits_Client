@@ -6,14 +6,23 @@ using UnityEngine.UI;
 
 public class UIPlayerInformation : MonoBehaviour
 {
-    [SerializeField] private TMP_Text txtLevel;
-    [SerializeField] private TMP_Text txtName;
+    [SerializeField]
+    private TMP_Text txtLevel;
 
-    [SerializeField] private TMP_Text txtHp;
-    [SerializeField] private Image imgHpFill;
+    [SerializeField]
+    private TMP_Text txtName;
 
-    [SerializeField] private TMP_Text txtMp;
-    [SerializeField] private Image imgMpFill;
+    [SerializeField]
+    private TMP_Text txtHp;
+
+    [SerializeField]
+    private Image imgHpFill;
+
+    [SerializeField]
+    private TMP_Text txtMp;
+
+    [SerializeField]
+    private Image imgMpFill;
 
     private float maxHP;
     private float currentHP;
@@ -24,17 +33,17 @@ public class UIPlayerInformation : MonoBehaviour
     private const float FillWidth = 634f;
     private const float FillHeight = 40f;
 
-    public void Configure(PlayerStatus playerStatus)
-    {
-        Debug.Log(playerStatus);
+    // public void Configure(PlayerStatus playerStatus)
+    // {
+    //     Debug.Log(playerStatus);
 
-        SetName(playerStatus.PlayerName);
-        SetLevel(playerStatus.PlayerLevel);
-        SetMaxHP(playerStatus.PlayerFullHp);
-        SetMaxMP(playerStatus.PlayerFullMp);
-        UpdateHP(playerStatus.PlayerCurHp);
-        UpdateMP(playerStatus.PlayerCurMp);
-    }
+    //     SetName(playerStatus.PlayerName);
+    //     SetLevel(playerStatus.PlayerLevel);
+    //     SetMaxHP(playerStatus.PlayerFullHp);
+    //     SetMaxMP(playerStatus.PlayerFullMp);
+    //     UpdateHP(playerStatus.PlayerCurHp);
+    //     UpdateMP(playerStatus.PlayerCurMp);
+    // }
 
     public void SetName(string name)
     {
@@ -101,6 +110,9 @@ public class UIPlayerInformation : MonoBehaviour
 
     private void ResizeText(TMP_Text textComponent)
     {
-        textComponent.rectTransform.sizeDelta = new Vector2(textComponent.preferredWidth + 50, FillHeight);
+        textComponent.rectTransform.sizeDelta = new Vector2(
+            textComponent.preferredWidth + 50,
+            FillHeight
+        );
     }
 }

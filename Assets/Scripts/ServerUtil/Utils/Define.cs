@@ -16,6 +16,7 @@ public class Define
     {
         Bgm,
         Effect,
+        Jingle,
         MaxCount,
     }
 

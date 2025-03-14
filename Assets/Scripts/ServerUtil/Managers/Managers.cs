@@ -25,15 +25,13 @@ public class Managers : MonoBehaviour
 
     #region Core Managers
     private PoolManager _pool = new PoolManager();
-    private ResourceManager _resource = new ResourceManager();
     private SceneManagerEx _scene = new SceneManagerEx();
-    private SoundManager _sound = new SoundManager();
+
     private UIManager _ui = new UIManager();
 
     public static PoolManager Pool => Instance._pool;
-    public static ResourceManager Resource => Instance._resource;
     public static SceneManagerEx Scene => Instance._scene;
-    public static SoundManager Sound => Instance._sound;
+
     public static UIManager UI => Instance._ui;
     #endregion
 
@@ -52,7 +50,8 @@ public class Managers : MonoBehaviour
     // 초기화 메서드
     private static void Init()
     {
-        if (_isInitialized) return;
+        if (_isInitialized)
+            return;
 
         if (s_instance == null)
         {
@@ -67,9 +66,9 @@ public class Managers : MonoBehaviour
             s_instance = go.GetComponent<Managers>();
 
             // 개별 매니저 초기화
-            s_instance._network?.Init();
+            // s_instance._network?.Init();
             s_instance._pool?.Init();
-            s_instance._sound?.Init();
+
         }
 
         _isInitialized = true;
@@ -78,8 +77,6 @@ public class Managers : MonoBehaviour
     // 모든 매니저를 초기화 상태로 리셋
     public static void Clear()
     {
-        Sound.Clear();
-        Scene.Clear();
         Pool.Clear();
     }
 }

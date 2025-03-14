@@ -3,13 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// 해당 코드 사용하지 않음
+// 우선은 참조용으로 두고 있음
+
 public class Monster : MonoBehaviour
 {
     [SerializeField] private UIMonsterInformation uiMonsterInfo;
-    
+
     private Animator animator;
 
-    
+
 
     private int[] animCodeList = new[]
     {
@@ -20,7 +23,7 @@ public class Monster : MonoBehaviour
         Constants.MonsterDie,
         Constants.MonsterHit
     };
-    
+
     public UIMonsterInformation UiMonsterInfo => uiMonsterInfo;
 
     private void Awake()
@@ -30,9 +33,9 @@ public class Monster : MonoBehaviour
 
     public void SetAnim(int idx)
     {
-        if(idx < 0 || idx >= animCodeList.Length)
+        if (idx < 0 || idx >= animCodeList.Length)
             return;
-        
+
         var animCode = animCodeList[idx];
         animator.SetTrigger(animCode);
     }

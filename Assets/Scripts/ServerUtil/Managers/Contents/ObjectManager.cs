@@ -7,20 +7,20 @@ using UnityEngine;
 public class ObjectManager
 {
     // public MyPlayerController MyPlayer { get; set; }
-    
+
     Dictionary<int, GameObject> _objects = new Dictionary<int, GameObject>();
 
-    
+
     public void Remove(int id)
     {
         GameObject go = FindById(id);
-        if(go == null)
+        if (go == null)
             return;
-        
+
         _objects.Remove(id);
-        Managers.Resource.Destroy(go);
+
     }
-    
+
     public GameObject FindById(int id)
     {
         GameObject go = null;
@@ -53,13 +53,11 @@ public class ObjectManager
 
         return null;
     }
-    
+
     public void Clear()
     {
-        foreach (var obj in _objects.Values)
-            Managers.Resource.Destroy(obj);
-        _objects.Clear();
-        
+
+
         //MyPlayer = null;
     }
 }

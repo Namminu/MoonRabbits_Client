@@ -1,72 +1,168 @@
+using System;
+using System.Collections.Generic;
 using Google.Protobuf;
 using Google.Protobuf.Protocol;
 using ServerCore;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 class PacketManager
 {
-	#region Singleton
-	static PacketManager _instance = new PacketManager();
-	public static PacketManager Instance { get { return _instance; } }
-	#endregion
+    #region Singleton
+    static PacketManager _instance = new PacketManager();
+    public static PacketManager Instance
+    {
+        get { return _instance; }
+    }
+    #endregion
 
-	PacketManager()
-	{
-		Register();
-	}
+    PacketManager()
+    {
+        Register();
+    }
 
-	Dictionary<ushort, Action<PacketSession, ArraySegment<byte>, ushort>> _onRecv = new Dictionary<ushort, Action<PacketSession, ArraySegment<byte>, ushort>>();
-	Dictionary<ushort, Action<PacketSession, IMessage>> _handler = new Dictionary<ushort, Action<PacketSession, IMessage>>();
-		
-	public Action<PacketSession, IMessage, ushort> CustomHandler { get; set; }
+    Dictionary<ushort, Action<PacketSession, ArraySegment<byte>, ushort>> _onRecv =
+        new Dictionary<ushort, Action<PacketSession, ArraySegment<byte>, ushort>>();
+    Dictionary<ushort, Action<PacketSession, IMessage>> _handler =
+        new Dictionary<ushort, Action<PacketSession, IMessage>>();
 
-	public void Register()
-	{		
-		_onRecv.Add((ushort)MsgId.SEnter, MakePacket<S_Enter>);
-		_handler.Add((ushort)MsgId.SEnter, PacketHandler.S_EnterHandler);		
-		_onRecv.Add((ushort)MsgId.SSpawn, MakePacket<S_Spawn>);
-		_handler.Add((ushort)MsgId.SSpawn, PacketHandler.S_SpawnHandler);		
-		_onRecv.Add((ushort)MsgId.SLeave, MakePacket<S_Leave>);
-		_handler.Add((ushort)MsgId.SLeave, PacketHandler.S_LeaveHandler);		
-		_onRecv.Add((ushort)MsgId.SDespawn, MakePacket<S_Despawn>);
-		_handler.Add((ushort)MsgId.SDespawn, PacketHandler.S_DespawnHandler);		
-		_onRecv.Add((ushort)MsgId.SMove, MakePacket<S_Move>);
-		_handler.Add((ushort)MsgId.SMove, PacketHandler.S_MoveHandler);		
-		_onRecv.Add((ushort)MsgId.SAnimation, MakePacket<S_Animation>);
-		_handler.Add((ushort)MsgId.SAnimation, PacketHandler.S_AnimationHandler);		
-		_onRecv.Add((ushort)MsgId.SChangeCostume, MakePacket<S_ChangeCostume>);
-		_handler.Add((ushort)MsgId.SChangeCostume, PacketHandler.S_ChangeCostumeHandler);		
-		_onRecv.Add((ushort)MsgId.SChat, MakePacket<S_Chat>);
-		_handler.Add((ushort)MsgId.SChat, PacketHandler.S_ChatHandler);		
-		_onRecv.Add((ushort)MsgId.SEnterDungeon, MakePacket<S_EnterDungeon>);
-		_handler.Add((ushort)MsgId.SEnterDungeon, PacketHandler.S_EnterDungeonHandler);		
-		_onRecv.Add((ushort)MsgId.SLeaveDungeon, MakePacket<S_LeaveDungeon>);
-		_handler.Add((ushort)MsgId.SLeaveDungeon, PacketHandler.S_LeaveDungeonHandler);		
-		_onRecv.Add((ushort)MsgId.SScreenText, MakePacket<S_ScreenText>);
-		_handler.Add((ushort)MsgId.SScreenText, PacketHandler.S_ScreenTextHandler);		
-		_onRecv.Add((ushort)MsgId.SScreenDone, MakePacket<S_ScreenDone>);
-		_handler.Add((ushort)MsgId.SScreenDone, PacketHandler.S_ScreenDoneHandler);		
-		_onRecv.Add((ushort)MsgId.SBattleLog, MakePacket<S_BattleLog>);
-		_handler.Add((ushort)MsgId.SBattleLog, PacketHandler.S_BattleLogHandler);		
-		_onRecv.Add((ushort)MsgId.SSetPlayerHp, MakePacket<S_SetPlayerHp>);
-		_handler.Add((ushort)MsgId.SSetPlayerHp, PacketHandler.S_SetPlayerHpHandler);		
-		_onRecv.Add((ushort)MsgId.SSetPlayerMp, MakePacket<S_SetPlayerMp>);
-		_handler.Add((ushort)MsgId.SSetPlayerMp, PacketHandler.S_SetPlayerMpHandler);		
-		_onRecv.Add((ushort)MsgId.SSetMonsterHp, MakePacket<S_SetMonsterHp>);
-		_handler.Add((ushort)MsgId.SSetMonsterHp, PacketHandler.S_SetMonsterHpHandler);		
-		_onRecv.Add((ushort)MsgId.SPlayerAction, MakePacket<S_PlayerAction>);
-		_handler.Add((ushort)MsgId.SPlayerAction, PacketHandler.S_PlayerActionHandler);		
-		_onRecv.Add((ushort)MsgId.SMonsterAction, MakePacket<S_MonsterAction>);
-		_handler.Add((ushort)MsgId.SMonsterAction, PacketHandler.S_MonsterActionHandler);
+    public Action<PacketSession, IMessage, ushort> CustomHandler { get; set; }
+
+    public void Register()
+    {
+        _onRecv.Add((ushort)MsgId.S2CRegister, MakePacket<S2CRegister>);
+        _handler.Add((ushort)MsgId.S2CRegister, PacketHandler.S2CRegisterHandler);
+        _onRecv.Add((ushort)MsgId.S2CLogin, MakePacket<S2CLogin>);
+        _handler.Add((ushort)MsgId.S2CLogin, PacketHandler.S2CLoginHandler);
+        _onRecv.Add((ushort)MsgId.S2CCreateCharacter, MakePacket<S2CCreateCharacter>);
+        _handler.Add((ushort)MsgId.S2CCreateCharacter, PacketHandler.S2CCreateCharacterHandler);
+        _onRecv.Add((ushort)MsgId.S2CEnterTown, MakePacket<S2CEnterTown>);
+        _handler.Add((ushort)MsgId.S2CEnterTown, PacketHandler.S2CEnterTownHandler);
+        _onRecv.Add((ushort)MsgId.S2CMoveSector, MakePacket<S2CMoveSector>);
+        _handler.Add((ushort)MsgId.S2CMoveSector, PacketHandler.S2CMoveSectorHandler);
+        _onRecv.Add((ushort)MsgId.S2CEmote, MakePacket<S2CEmote>);
+        _handler.Add((ushort)MsgId.S2CEmote, PacketHandler.S2CEmoteHandler);
+        _onRecv.Add((ushort)MsgId.S2CChat, MakePacket<S2CChat>);
+        _handler.Add((ushort)MsgId.S2CChat, PacketHandler.S2CChatHandler);
+        _onRecv.Add((ushort)MsgId.S2CSpawn, MakePacket<S2CSpawn>);
+        _handler.Add((ushort)MsgId.S2CSpawn, PacketHandler.S2CSpawnHandler);
+        _onRecv.Add((ushort)MsgId.S2CDespawn, MakePacket<S2CDespawn>);
+        _handler.Add((ushort)MsgId.S2CDespawn, PacketHandler.S2CDespawnHandler);
+        _onRecv.Add((ushort)MsgId.S2CPlayerMove, MakePacket<S2CPlayerMove>);
+        _handler.Add((ushort)MsgId.S2CPlayerMove, PacketHandler.S2CPlayerMoveHandler);
+        _onRecv.Add((ushort)MsgId.S2CPlayerLocation, MakePacket<S2CPlayerLocation>);
+        _handler.Add((ushort)MsgId.S2CPlayerLocation, PacketHandler.S2CPlayerLocationHandler);
+        _onRecv.Add((ushort)MsgId.S2CPlayerRunning, MakePacket<S2CPlayerRunning>);
+        _handler.Add((ushort)MsgId.S2CPlayerRunning, PacketHandler.S2CPlayerRunningHandler);
+        _onRecv.Add((ushort)MsgId.S2CPortal, MakePacket<S2CPortal>);
+        _handler.Add((ushort)MsgId.S2CPortal, PacketHandler.S2CPortalHandler);
+        _onRecv.Add((ushort)MsgId.S2CUpdateRanking, MakePacket<S2CUpdateRanking>);
+        _handler.Add((ushort)MsgId.S2CUpdateRanking, PacketHandler.S2CUpdateRankingHandler);
+        _onRecv.Add((ushort)MsgId.S2CCollision, MakePacket<S2CCollision>);
+        _handler.Add((ushort)MsgId.S2CCollision, PacketHandler.S2CCollisionHandler);
+
+        _onRecv.Add((ushort)MsgId.S2CInventoryUpdate, MakePacket<S2CInventoryUpdate>);
+        _handler.Add((ushort)MsgId.S2CInventoryUpdate, PacketHandler.S2CInventoryUpdateHandler);
+
+        _onRecv.Add((ushort)MsgId.S2CHousingSave, MakePacket<S2CHousingSave>);
+        _handler.Add((ushort)MsgId.S2CHousingSave, PacketHandler.S2CHousingSaveHandler);
+        _onRecv.Add((ushort)MsgId.S2CHousingLoad, MakePacket<S2CHousingLoad>);
+        _handler.Add((ushort)MsgId.S2CHousingLoad, PacketHandler.S2CHousingLoadHandler);
+        _onRecv.Add((ushort)MsgId.S2CFurnitureCraft, MakePacket<S2CFurnitureCraft>);
+        _handler.Add((ushort)MsgId.S2CFurnitureCraft, PacketHandler.S2CFurnitureCraftHandler);
+
+        _onRecv.Add((ushort)MsgId.S2CCreateParty, MakePacket<S2CCreateParty>);
+        _handler.Add((ushort)MsgId.S2CCreateParty, PacketHandler.S2CCreatePartyHandler);
+        _onRecv.Add((ushort)MsgId.S2CInviteParty, MakePacket<S2CInviteParty>);
+        _handler.Add((ushort)MsgId.S2CInviteParty, PacketHandler.S2CInvitePartyHandler);
+        _onRecv.Add((ushort)MsgId.S2CAllowInvite, MakePacket<S2CAllowInvite>);
+        _handler.Add((ushort)MsgId.S2CAllowInvite, PacketHandler.S2CAllowInviteHandler);
+        _onRecv.Add((ushort)MsgId.S2CJoinParty, MakePacket<S2CJoinParty>);
+        _handler.Add((ushort)MsgId.S2CJoinParty, PacketHandler.S2CJoinPartyHandler);
+        _onRecv.Add((ushort)MsgId.S2CLeaveParty, MakePacket<S2CLeaveParty>);
+        _handler.Add((ushort)MsgId.S2CLeaveParty, PacketHandler.S2CLeavePartyHandler);
+        _onRecv.Add((ushort)MsgId.S2CCheckPartyList, MakePacket<S2CCheckPartyList>);
+        _handler.Add((ushort)MsgId.S2CCheckPartyList, PacketHandler.S2CCheckPartyListHandler);
+        _onRecv.Add((ushort)MsgId.S2CKickOutMember, MakePacket<S2CKickOutMember>);
+        _handler.Add((ushort)MsgId.S2CKickOutMember, PacketHandler.S2CKickOutMemberHandler);
+        _onRecv.Add((ushort)MsgId.S2CDisbandParty, MakePacket<S2CDisbandParty>);
+        _handler.Add((ushort)MsgId.S2CDisbandParty, PacketHandler.S2CDisbandPartyHandler);
+        _onRecv.Add((ushort)MsgId.S2CUpdateParty, MakePacket<S2CUpdateParty>);
+        _handler.Add((ushort)MsgId.S2CUpdateParty, PacketHandler.S2CUpdatePartyHandler);
+        _onRecv.Add((ushort)MsgId.C2SRejectInvite, MakePacket<C2SRejectInvite>);
+        _handler.Add((ushort)MsgId.S2CRejectInvite, PacketHandler.S2CRejectInviteHandler);
+        _onRecv.Add((ushort)MsgId.S2CMonsterLocation, MakePacket<S2CMonsterLocation>);
+        _handler.Add((ushort)MsgId.S2CMonsterLocation, PacketHandler.S2CMonsterLocationHandler);
+        _onRecv.Add((ushort)MsgId.S2CDetectedPlayer, MakePacket<S2CDetectedPlayer>);
+        _handler.Add((ushort)MsgId.S2CDetectedPlayer, PacketHandler.S2CDetectedPlayerHandler);
+        _onRecv.Add((ushort)MsgId.S2CMissingPlayer, MakePacket<S2CMissingPlayer>);
+        _handler.Add((ushort)MsgId.S2CMissingPlayer, PacketHandler.S2CMissingPlayerHandler);
+        _onRecv.Add((ushort)MsgId.S2CMonsterBatchLocation, MakePacket<S2CMonsterBatchLocation>);
+        _handler.Add((ushort)MsgId.S2CMonsterBatchLocation, PacketHandler.S2CMonsterBatchLocation);
+
+        _onRecv.Add((ushort)MsgId.S2CResourcesList, MakePacket<S2CResourcesList>);
+        _handler.Add((ushort)MsgId.S2CResourcesList, PacketHandler.S2CResourceListHandler);
+        _onRecv.Add((ushort)MsgId.S2CUpdateDurability, MakePacket<S2CUpdateDurability>);
+        _handler.Add((ushort)MsgId.S2CUpdateDurability, PacketHandler.S2CUpdateDurabilityHandler);
+        _onRecv.Add((ushort)MsgId.S2CGatheringStart, MakePacket<S2CGatheringStart>);
+        _handler.Add((ushort)MsgId.S2CGatheringStart, PacketHandler.S2CGatheringStartHandler);
+        _onRecv.Add((ushort)MsgId.S2CGatheringSkillCheck, MakePacket<S2CGatheringSkillCheck>);
+        _handler.Add(
+            (ushort)MsgId.S2CGatheringSkillCheck,
+            PacketHandler.S2CGatheringSkillCheckHandler
+        );
+        _onRecv.Add((ushort)MsgId.S2CGatheringDone, MakePacket<S2CGatheringDone>);
+        _handler.Add((ushort)MsgId.S2CGatheringDone, PacketHandler.S2CGatheringDoneHandler);
+
+        _onRecv.Add((ushort)MsgId.S2CRecover, MakePacket<S2CRecover>);
+        _handler.Add((ushort)MsgId.S2CRecover, PacketHandler.S2CRecoverHandler);
+        _onRecv.Add((ushort)MsgId.S2COpenChest, MakePacket<S2COpenChest>);
+        _handler.Add((ushort)MsgId.S2COpenChest, PacketHandler.S2COpenChestHandler);
+        _onRecv.Add((ushort)MsgId.S2CRegenChest, MakePacket<S2CRegenChest>);
+        _handler.Add((ushort)MsgId.S2CRegenChest, PacketHandler.S2CRegenChestHandler);
+        _onRecv.Add((ushort)MsgId.S2CRecall, MakePacket<S2CRecall>);
+        _handler.Add((ushort)MsgId.S2CRecall, PacketHandler.S2CRecallHandler);
+        _onRecv.Add((ushort)MsgId.S2CThrowGrenade, MakePacket<S2CThrowGrenade>);
+        _handler.Add((ushort)MsgId.S2CThrowGrenade, PacketHandler.S2CThrowGrenadeHandler);
+        _onRecv.Add((ushort)MsgId.S2CTraps, MakePacket<S2CTraps>);
+        _handler.Add((ushort)MsgId.S2CTraps, PacketHandler.S2CTrapsHandler);
+        _onRecv.Add((ushort)MsgId.S2CSetTrap, MakePacket<S2CSetTrap>);
+        _handler.Add((ushort)MsgId.S2CSetTrap, PacketHandler.S2CSetTrapHandler);
+        _onRecv.Add((ushort)MsgId.S2CRemoveTrap, MakePacket<S2CRemoveTrap>);
+        _handler.Add((ushort)MsgId.S2CRemoveTrap, PacketHandler.S2CRemoveTrapHandler);
+        _onRecv.Add((ushort)MsgId.S2CStun, MakePacket<S2CStun>);
+        _handler.Add((ushort)MsgId.S2CStun, PacketHandler.S2CStunHandler);
+        _onRecv.Add((ushort)MsgId.S2CEquipChange, MakePacket<S2CEquipChange>);
+        _handler.Add((ushort)MsgId.S2CEquipChange, PacketHandler.S2CEquipChangeHandler);
+        _onRecv.Add((ushort)MsgId.S2CAddExp, MakePacket<S2CAddExp>);
+        _handler.Add((ushort)MsgId.S2CAddExp, PacketHandler.S2CAddExpHandler);
+        _onRecv.Add((ushort)MsgId.S2CLevelUp, MakePacket<S2CLevelUp>);
+        _handler.Add((ushort)MsgId.S2CLevelUp, PacketHandler.S2CLevelUpHandler);
+        _onRecv.Add((ushort)MsgId.S2CInvestPoint, MakePacket<S2CInvestPoint>);
+        _handler.Add((ushort)MsgId.S2CInvestPoint, PacketHandler.S2CInvestPointHandler);
+
+        _onRecv.Add((ushort)MsgId.S2CCraftStart, MakePacket<S2CCraftStart>);
+        _handler.Add((ushort)MsgId.S2CCraftStart, PacketHandler.S2CCraftStartHandler);
+        _onRecv.Add((ushort)MsgId.S2CCraftEnd, MakePacket<S2CCraftEnd>);
+        _handler.Add((ushort)MsgId.S2CCraftEnd, PacketHandler.S2CCraftEndHandler);
+        _onRecv.Add((ushort)MsgId.S2CPing, MakePacket<S2CPing>);
+        _handler.Add((ushort)MsgId.S2CPing, PacketHandler.S2CPingHandler);
+        _onRecv.Add(
+            (ushort)MsgId.S2CGetInventorySlotByItemId,
+            MakePacket<S2CGetInventorySlotByItemId>
+        );
+        _handler.Add(
+            (ushort)MsgId.S2CGetInventorySlotByItemId,
+            PacketHandler.S2CGetInventorySlotByItemIdHandler
+        );
 
         Debug.Log("핸들러 등록 완료");
     }
 
     public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer)
     {
-        Debug.Log($"PacketManager.OnRecvPacket 호출: {BitConverter.ToString(buffer.Array, buffer.Offset, buffer.Count)}");
+        // Debug.Log(
+        //     $"PacketManager.OnRecvPacket 호출: {BitConverter.ToString(buffer.Array, buffer.Offset, buffer.Count)}"
+        // );
 
         ushort count = 0;
 
@@ -94,8 +190,6 @@ class PacketManager
 
         Action<PacketSession, ArraySegment<byte>, ushort> action = null;
 
-
-
         if (_onRecv.TryGetValue(id, out action))
         {
             Debug.Log($"패킷 핸들러 실행: {id}");
@@ -107,8 +201,9 @@ class PacketManager
         }
     }
 
-    void MakePacket<T>(PacketSession session, ArraySegment<byte> buffer, ushort id) where T : IMessage, new()
-	{
+    void MakePacket<T>(PacketSession session, ArraySegment<byte> buffer, ushort id)
+        where T : IMessage, new()
+    {
         try
         {
             T pkt = new T();
@@ -139,11 +234,11 @@ class PacketManager
         }
     }
 
-	public Action<PacketSession, IMessage> GetPacketHandler(ushort id)
-	{
-		Action<PacketSession, IMessage> action = null;
-		if (_handler.TryGetValue(id, out action))
-			return action;
-		return null;
-	}
+    public Action<PacketSession, IMessage> GetPacketHandler(ushort id)
+    {
+        Action<PacketSession, IMessage> action = null;
+        if (_handler.TryGetValue(id, out action))
+            return action;
+        return null;
+    }
 }
