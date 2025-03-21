@@ -8,7 +8,8 @@ public class EventManager : MonoBehaviour
 	private static EventManager instance;
 	public static EventManager Instance => instance;
 
-	private static Dictionary<string, Delegate> events = new Dictionary<string, Delegate>();
+	[SerializeField] [ReadOnly] private static Dictionary<string, Delegate> events = 
+		new Dictionary<string, Delegate>();
 
 	private void Awake()
 	{
@@ -47,12 +48,28 @@ public class EventManager : MonoBehaviour
 		}
 	}
 
+	public static void Trigger<T>(string eventName, T arg)
+	{
+		if(events.ContainsKey(eventName) && events[eventName] is Action<T> action)
+		{
+			action.Invoke(arg);
+		}
+	}
+	public static void Trigger(string eventName)
+	{
+		if (events.ContainsKey(eventName) && events[eventName] is Action action)
+		{
+			action.Invoke();
+		}
+	}
+
+
 	public static void Unsubscribe<T>(string eventName, Action<T> listener)
 	{
-		if(events.ContainsKey(eventName))
+		if (events.ContainsKey(eventName))
 		{
 			var currentDelegate = Delegate.Remove(events[eventName], listener);
-			if(currentDelegate == null)
+			if (currentDelegate == null)
 			{
 				events.Remove(eventName);
 			}
@@ -75,21 +92,6 @@ public class EventManager : MonoBehaviour
 			{
 				events[eventName] = currentDelegate;
 			}
-		}
-	}
-
-	public static void Trigger<T>(string eventName, T arg)
-	{
-		if(events.ContainsKey(eventName) && events[eventName] is Action<T> action)
-		{
-			action.Invoke(arg);
-		}
-	}
-	public static void Trigger(string eventName)
-	{
-		if (events.ContainsKey(eventName) && events[eventName] is Action action)
-		{
-			action.Invoke();
 		}
 	}
 }

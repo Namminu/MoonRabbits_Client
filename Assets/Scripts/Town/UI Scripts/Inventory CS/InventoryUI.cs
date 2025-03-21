@@ -127,13 +127,11 @@ public class InventoryUI : MonoBehaviour
     {
         try
         {
-            // 현재 아이템 리스트 가져오기
-            List<MaterialItem> itemList = itemSlots
-                .Where(slot => slot.HasItem())
-                .Select(slot => slot.GetItem())
-                .ToList();
+            /* 현재 아이템 리스트 가져오기 */
+            List<MaterialItem> itemList = itemSlots.Where(slot => slot.HasItem())
+                .Select(slot => slot.GetItem()).ToList();
 
-            // 병합 아이템 리스트 생성 및 병합 로직
+            /* 병합 아이템 리스트 생성 및 병합 로직 */
             List<MaterialItem> mergedItemList = new List<MaterialItem>();
             foreach (var item in itemList)
             {
@@ -141,7 +139,8 @@ public class InventoryUI : MonoBehaviour
                 int maxStack = item.ItemData.ItemMaxStack;
                 int remainStack = item.CurItemStack;
                 var targetItem = mergedItemList.FirstOrDefault(
-                    mergedItem => mergedItem.Data.ItemId == itemId && mergedItem.CurItemStack < maxStack
+                    mergedItem => mergedItem.Data.ItemId == itemId && 
+                    mergedItem.CurItemStack < maxStack
                 );
                 if (targetItem != null)
                 {
@@ -169,20 +168,19 @@ public class InventoryUI : MonoBehaviour
                 }
             }
 
-            // 아이템 ID 기준 정렬
+            /* 아이템 ID 기준 정렬 */
             mergedItemList.Sort((x, y) => x.Data.ItemId.CompareTo(y.Data.ItemId));
 
-            // 기존 슬롯 초기화 (ClearSlot 내부에서 별도의 업데이트 호출이 없다면 그대로 사용)
             foreach (var slot in itemSlots)
             {
                 slot.ClearSlot();
             }
 
-            // 정렬된 아이템을 첫 번째 슬롯부터 할당 (업데이트 전송은 생략)
+            /* 정렬된 아이템을 첫 번째 슬롯부터 할당 */
             for (int i = 0; i < mergedItemList.Count; i++)
             {
                 if (i < itemSlots.Count)
-                    itemSlots[i].AddItem(mergedItemList[i], true); // skipTransmit를 true로 설정
+                    itemSlots[i].AddItem(mergedItemList[i], true);
                 else
                 {
                     Debug.LogWarning("슬롯 개수가 부족하여 일부 아이템이 할당되지 않았습니다.");

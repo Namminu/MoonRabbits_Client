@@ -218,12 +218,10 @@ public class ItemSlotUI
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        // 드래그 종료 후 원래 슬롯 이미지의 투명도를 복원
         SetItemImageAlpha(1);
         DragSlot.instance.SetItemImageAlpha(0);
         DragSlot.instance.dragSlot = null;
 
-        //if (item == null) return;
         if (!IsPointerInsideInventory(eventData))
             SetPopupDestroy();
     }
@@ -232,30 +230,22 @@ public class ItemSlotUI
     {
         if (DragSlot.instance.dragSlot == null) return;
 
-        // 만약 자기 자신(원래 슬롯)에 드랍되는 경우, 단순히 투명도를 복구하고 종료
         if (DragSlot.instance.dragSlot == this)
         {
             SetItemImageAlpha(1);
             return;
         }
 
-        // 드래그 중인 아이템 가져오기
         MaterialItem draggedItem = DragSlot.instance.dragSlot.GetItem();
         if (draggedItem == null) return;
 
-        // 현재 슬롯(대상)의 아이템 가져오기
+        // 현재 슬롯(대상)의 아이템과 종류 일치 검사
         if (HasItem() && item.Data.ItemId == draggedItem.Data.ItemId)
         {
-            // 같은 아이템일 경우 병합 처리
             AddItem(draggedItem);
-            // 드래그 중인 슬롯(원본)을 명확히 비움
             DragSlot.instance.dragSlot.ClearSlot();
         }
-        else
-        {
-            // 다른 아이템일 경우 교체 처리
-            ChangeSlot();
-        }
+        else ChangeSlot();
 
         // 상태 변경 후 서버로 전송
         InventoryUI invUI = FindObjectOfType<InventoryUI>();
@@ -282,8 +272,7 @@ public class ItemSlotUI
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (item == null) return;
-		
+        if (item == null) return;	
         #region Right Mouse Click
 		if (eventData.button == PointerEventData.InputButton.Right)
         {
@@ -292,7 +281,6 @@ public class ItemSlotUI
             {
                 if (isInven) /* 인벤토리에서 우클릭 시  */
                 {
-                    Debug.Log("Right Click On Inventory Slot");
                     ItemSlotUI emptySlot = FindEmptySlot(false);
                     if (emptySlot != null)
                     {
@@ -304,19 +292,16 @@ public class ItemSlotUI
                 }
                 else if (!isInven) /* 분해창에서 우클릭 시 */
                 {
-                    Debug.Log("Right Click On Decom Slot");
                     ReturnToOriginSlot();
                 }
             }
 		}
 		#endregion
-
 		#region Left Mouse Click
 		if (eventData.button == PointerEventData.InputButton.Left)
         {
 			if (Input.GetKey(KeyCode.LeftShift))
 			{
-				Debug.Log("Shift + Right Click");
 				SeperatingItem();
 			}
 		}
@@ -416,35 +401,35 @@ public class ItemSlotUI
         }
     }
 
-    private void ChangeSlot()
-    {
-        if (DragSlot.instance.dragSlot == null)
-            return;
+    //private void ChangeSlot()
+    //{
+    //    if (DragSlot.instance.dragSlot == null)
+    //        return;
 
-        // 드래그 중인 슬롯(원본)에서 아이템을 가져옴
-        MaterialItem draggedItem = DragSlot.instance.dragSlot.GetItem();
-        if (draggedItem == null)
-            return;
+    //    // 드래그 중인 슬롯(원본)에서 아이템을 가져옴
+    //    MaterialItem draggedItem = DragSlot.instance.dragSlot.GetItem();
+    //    if (draggedItem == null)
+    //        return;
 
-        // 현재 슬롯(대상)의 아이템을 임시 변수에 보관
-        MaterialItem targetItem = this.item;
+    //    // 현재 슬롯(대상)의 아이템을 임시 변수에 보관
+    //    MaterialItem targetItem = this.item;
 
-        // 원본 슬롯은 미리 클리어하여 중복 표시를 방지
-        DragSlot.instance.dragSlot.ClearSlot();
+    //    // 원본 슬롯은 미리 클리어하여 중복 표시를 방지
+    //    DragSlot.instance.dragSlot.ClearSlot();
 
-        // 대상 슬롯에 드래그한 아이템을 할당 및 UI 갱신
-        SetItem(draggedItem);
+    //    // 대상 슬롯에 드래그한 아이템을 할당 및 UI 갱신
+    //    SetItem(draggedItem);
 
-        // 대상 슬롯에 기존에 아이템이 있었다면 원본 슬롯으로 이동(또는 빈 슬롯으로 남김)
-        if (targetItem != null)
-        {
-            // 원본(드래그 중인) 슬롯에 이전 대상 아이템을 설정합니다.
-            // 만약 교체가 아닌 단순 이동이라면 이 부분을 생략하고 원본을 그냥 비워두면 됩니다.
-            DragSlot.instance.dragSlot.SetItem(targetItem);
-        }
+    //    // 대상 슬롯에 기존에 아이템이 있었다면 원본 슬롯으로 이동(또는 빈 슬롯으로 남김)
+    //    if (targetItem != null)
+    //    {
+    //        // 원본(드래그 중인) 슬롯에 이전 대상 아이템을 설정합니다.
+    //        // 만약 교체가 아닌 단순 이동이라면 이 부분을 생략하고 원본을 그냥 비워두면 됩니다.
+    //        DragSlot.instance.dragSlot.SetItem(targetItem);
+    //    }
 
-        Debug.Log($"Item Slot Swap 완료: {this.name} ↔ {DragSlot.instance.dragSlot.name}");
-    }
+    //    Debug.Log($"Item Slot Swap 완료: {this.name} ↔ {DragSlot.instance.dragSlot.name}");
+    //}
 
     // SetItem 메서드: 슬롯에 아이템을 할당하고 UI를 갱신하는 헬퍼 함수
     public void SetItem(MaterialItem newItem)
@@ -469,7 +454,7 @@ public class ItemSlotUI
         }
     }
 
-    /*private void ChangeSlot()
+    private void ChangeSlot()
 	{
         if (DragSlot.instance.dragSlot == null) return;
 
@@ -478,12 +463,12 @@ public class ItemSlotUI
 
         if (draggedItem == null) return;
 
-        *//* 같은 종류의 아이템일 경우 합침 *//*
+        /* 같은 종류의 아이템일 경우 합침 */
         if(targetItem != null && targetItem.Data.ItemId == draggedItem.Data.ItemId)
         {
 			AddItem(draggedItem);
 		}
-        else *//* 다른 종류의 아이템일 경우 교체 *//*
+        else /* 다른 종류의 아이템일 경우 교체 */
         {
 			MaterialItem tempItem = item;
 			int tempItenIndex = itemIndex;
@@ -502,8 +487,9 @@ public class ItemSlotUI
 			}
 		}
 
-		Debug.Log($"Item Slot Change: {this.name} ({itemIndex}) ↔ {DragSlot.instance.dragSlot.name} ({DragSlot.instance.dragSlot.GetItemIndex()})");
-	}*/
+		Debug.Log($"Item Slot Change: {this.name} ({itemIndex}) ↔ {DragSlot.instance.dragSlot.name} " +
+            $"({DragSlot.instance.dragSlot.GetItemIndex()})");
+	}
 
     private void UpdateTooltipUI()
 	{
@@ -549,9 +535,7 @@ public class ItemSlotUI
             EventManager.Subscribe("OnDestroyItem", OnDestroyItem);
             isSubscribe = true;
         }
-
         popupUICs.SetPopupUI(destroyText, "OnDestroyItem");
-
     }
 
     /// <summary>

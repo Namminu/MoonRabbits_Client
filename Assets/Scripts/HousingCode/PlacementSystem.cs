@@ -121,36 +121,6 @@ public class PlacementSystem : MonoBehaviour
 		//gridInfo = Helper.ChangeDataToTransInfo(GetRotatedGridPosition(), yRotation);
 	}
 
-	//private Vector3Int GetRotatedGridPosition()
-	//{
-	//	Vector3Int rotatedPos = gridInfo.ObjectPosition;
-	//	int width = objectSize.x;
-	//	int height = objectSize.y;
-
-	//	switch (gridInfo.ObjectYRotation)
-	//	{
-	//		case 90:
-	//			rotatedPos = new Vector3Int(gridInfo.ObjectPosition.x,
-	//				gridInfo.ObjectPosition.y, gridInfo.ObjectPosition.z + (width - 1));
-	//			rotatedPos.x -= (height - 1);
-	//			break;
-
-	//		case 180:
-	//			rotatedPos = new Vector3Int(gridInfo.ObjectPosition.x,
-	//				gridInfo.ObjectPosition.y, gridInfo.ObjectPosition.z);
-	//			rotatedPos.x -= (width - 1);
-	//			rotatedPos.z -= (height - 1);
-	//			break;
-
-	//		case 270:
-	//			rotatedPos = new Vector3Int(gridInfo.ObjectPosition.x,
-	//				gridInfo.ObjectPosition.y, gridInfo.ObjectPosition.z - (width - 1));
-	//			rotatedPos.x += (height - 1);
-	//			break;
-	//	}
-	//	return rotatedPos;
-	//}
-
 	public GridData GetFloorData() => floorData;
 	public GridData GetFurnitureData() => furnitureData;
 }

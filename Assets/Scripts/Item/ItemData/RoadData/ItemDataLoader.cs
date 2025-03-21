@@ -54,7 +54,8 @@ public static class ItemDataLoader
 
     private static void GenerateMaterialItems(List<MaterialItemJsonData> items)
     {
-        foreach (var item in items)
+		MaterialItemsList.Clear();
+		foreach (var item in items)
         {
             if (item.item_type != 1)
                 continue;
@@ -75,7 +76,8 @@ public static class ItemDataLoader
 
     private static void GenerateHousingItems(List<HousingItemJsonData> items)
     {
-        foreach (var item in items)
+        HousingItemsList.Clear();
+		foreach (var item in items)
         {
             if (item.item_type != 0)
                 continue;
